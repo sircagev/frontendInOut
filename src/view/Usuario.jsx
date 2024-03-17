@@ -132,11 +132,6 @@ const Usuario = () => {
 
               <form action="" onSubmit={handleForm} className="col-6">
 
-                <label>Id Usuario</label>
-                <input type="int" name="id_usuario" className="form-control"
-                  value={values.id_usuario}
-                  onChange={handleInputChange}
-                />
 
                 <label>Nombre</label>
                 <input type="text" name="nombre_usuario" className="form-control"
@@ -179,7 +174,7 @@ const Usuario = () => {
                 />
 
                 <label>ID Ficha</label>
-                <input type="int" name="ID_ficha" className="form-control"
+                <input type="int" name="Id_ficha" className="form-control"
                   value={values.Id_ficha}
                   onChange={handleInputChange}
 
