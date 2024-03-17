@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
+import logo from './../assets/logo.png'
 
 export const Sidebar = ({ state, setState }) => {
 
@@ -11,8 +12,9 @@ export const Sidebar = ({ state, setState }) => {
       <div className={`text-white bg-red-500 fixed pt-[20px] z-[1] h-full delay-100 ease-in-out overflow-y-auto overflow-x-hidden ${state ? "w-[220px]" : "w-[65px]"}`}>
         <div className='flex justify-center items-center pb-[60px]'>
           <div className={`flex justify-center items-center w-[30px] cursor-pointer delay-300 ease-linear ${state ? "scale-75" : "scale-150"} rotate-[360deg]`}>
-            <img className="w-full animation-flotar"></img>
+            <img className="w-full animation-flotar" src={logo}/>
           </div>
+          <h2 className={`font-bold ${state ? "block" : "hidden"}`}>InOut</h2>
         </div>
       </div>
     </div>
