@@ -14,16 +14,17 @@ function App() {
   return (
     <>
 
-      <main className={`grid grid-cols-[1fr] bg-black tablet:grid-cols-[65px_1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : ""}`}>
+      <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
         <section className="hidden tablet:initial">
           <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
         </section>
         <section className="grid gridColumnI w-full tablet:gridColumnII">
         <Navbar />
-          {/* <Routes>
-            <Route path='/' element={<Elemento />}></Route>
-            <Route path='/usuario' element={<Usuario />}></Route>
-          </Routes> */}
+          <Routes>
+            <Route path='/' element='Hola'/>
+            <Route path='/elementos' element={<Elemento />}/>
+            <Route path='/usuarios' element={<Usuario />}/>
+          </Routes>
         </section>
       </main>
 
