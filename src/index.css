@@ -1,3 +1,35 @@
-@tailwind base;   
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .initial {
+        display: initial;
+    }
+
+    .gridColumnI {
+        grid-column: 1
+    }
+
+    .gridColumnII {
+        grid-column: 2
+    }
+
+    .animation-flotar {
+        animation: flotar 1.7s ease-in-out infinite alternate;
+    }
+
+    @keyframes flotar {
+        0% {
+            transform: translate(0, 0px);
+        }
+
+        50% {
+            transform: translate(0, 4px);
+        }
+
+        100% {
+            transform: translate(0, -0px);
+        }
+    }
+}
