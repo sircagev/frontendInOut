@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import * as bootstrap from 'bootstrap';
+
 
 let myModal;
 
 const Usuario = () => {
 
   const [useUsuarios, setUsuarios] = useState([]);
-
 
   const [values, setValues] = useState({
     nombre_usuario: "",
@@ -17,51 +19,51 @@ const Usuario = () => {
     contraseña_usuario: "",
     Id_ficha: "",
     Estado: ""
-  })
+  });
 
   const handleInputChange = (event) => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
-  }
+  };
 
   const handleForm = async (event) => {
     try {
       event.preventDefault();
-      const response = await axios({
-        method: 'post',
-        url: `http://localhost:3000/usuario/registrar`,
-        data: values
-      })
-      if (response.status == 200)
+      const response = await axios.post(`http://localhost:3000/usuario/registrar`, values);
+      if (response.status === 200)
         alert(response.data.message);
       myModal.hide();
-      ListarUsuarios()
+      ListarUsuarios();
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      alert("Error al registrar usuario");
     }
-    catch (e) {
-      alert(response.data.message)
-    }
-  }
+  };
 
   const ListarUsuarios = async () => {
     try {
-      await axios.get(`http://localhost:3000/usuario/listar`)
-        .then(response => {
-          setUsuarios(response.data);
-        })
+      const response = await axios.get(`http://localhost:3000/usuario/listar`);
+      if (response.data && Array.isArray(response.data.result)) {
+        setUsuarios(response.data.result);
+      } else {
+        console.error("La respuesta de la solicitud GET no contiene un array en la propiedad 'result':", response.data);
+        alert("Error al obtener la lista de usuarios");
+      }
     } catch (error) {
-      console.log(error)
+      console.error("Error al obtener la lista de usuarios:", error);
+      alert("Error al obtener la lista de usuarios");
     }
-  }
+  };
+  
 
   useEffect(() => {
     myModal = new bootstrap.Modal('#myModal', {
       keyboard: false
-    })
+    });
     ListarUsuarios();
   }, []);
-
 
   return (
 
