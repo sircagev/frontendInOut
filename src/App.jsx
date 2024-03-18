@@ -20,10 +20,10 @@ function App() {
         </section>
         <section className="grid gridColumnI w-full tablet:gridColumnII">
         <Navbar />
-          {/* <Routes>
+          <Routes>
             <Route path='/' element={<Elemento />}></Route>
             <Route path='/usuario' element={<Usuario />}></Route>
-          </Routes> */}
+          </Routes> 
         </section>
       </main>
 
