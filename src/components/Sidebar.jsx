@@ -1,8 +1,40 @@
 import React, { useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import logo from './../assets/logo.png'
+import { LiSideBar } from './moleculas/LiSideBar';
+import { Accordion, AccordionItem } from '@nextui-org/react'
 
 export const Sidebar = ({ state, setState }) => {
+
+  const LinksArray = [
+    {
+      icon: IoIosArrowForward,
+      label: "Usuarios",
+      to: "/usuarios"
+    },
+    {
+      icon: IoIosArrowForward,
+      label: "Elementos",
+      to: "/elementos",
+      subitems: [
+        {
+          icon: IoIosArrowForward,
+          label: "Subelemento1",
+          to: "/elementos/subitem1",
+        },
+        {
+          icon: IoIosArrowForward,
+          label: "Subelemento 2",
+          to: "/elementos/subitem2",
+        }
+      ]
+    },
+    {
+      icon: IoIosArrowForward,
+      label: "Movimientos",
+      to: "/movimientos"
+    }
+  ];
 
   return (
     <div>
@@ -12,10 +44,14 @@ export const Sidebar = ({ state, setState }) => {
       <div className={`text-white bg-red-500 fixed pt-[20px] z-[1] h-full delay-100 ease-in-out overflow-y-auto overflow-x-hidden ${state ? "w-[220px]" : "w-[65px]"}`}>
         <div className='flex justify-center items-center pb-[60px]'>
           <div className={`flex justify-center items-center w-[30px] cursor-pointer delay-300 ease-linear ${state ? "scale-75" : "scale-150"} rotate-[360deg]`}>
-            <img className="w-full animation-flotar" src={logo}/>
+            <img className="w-full animation-flotar" src={logo} />
           </div>
           <h2 className={`font-bold ${state ? "block" : "hidden"}`}>InOut</h2>
         </div>
+        {LinksArray.map(({ icon, label, to, subitems }) => (
+          <LiSideBar icon={icon} label={label} to={to} state={state} subitems={subitems} />
+        ))
+        }
       </div>
     </div>
   )

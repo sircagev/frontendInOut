@@ -171,6 +171,7 @@ export const Elemento = () => {
 
   
   return (
+
     <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5'>
       <div>
       <div className='flex gap-3'>
