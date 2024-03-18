@@ -6,14 +6,13 @@ import {Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 
 
-  export const Modals = () => {
+
+  export const Modals = ({listarElementos, UseTipo, UseCategorias, UseUbicacion, UseEmpaques, UseMedidas} ) => {
     
     
-    const [UseTipo, SetTipo] = useState([]);
-    const [UseCategorias, setCategorias] = useState([]);
-    const [UseEmpaques, SetEmpaques] = useState([]);
-    const [UseMedidas, SetMedidas] = useState([]);
-    const [UseUbicacion, SetUbicacion] = useState([]);
+    
+    
+    
     
     const [values,setValues] = useState(
       {
@@ -43,89 +42,14 @@ import {Select, SelectItem} from "@nextui-org/react";
               data: values
           });
           if (response.status === 200) {
-              console.log(response.data.message);
+             
               onClose();
-              listarElementos(); // Actualiza la lista de elementos después de registrar uno nuevo
+              listarElementos();
           }
       } catch (error) {
           console.log(error);
       }
   };
-
-  const ListarTipo = async () => {
-    try {
-        await axios.get('http://localhost:3000/tipo/listar')
-            .then(response => {
-                SetTipo(response.data)
-                console.log(response.data)
-            })
-    } catch {
-
-    }
-  }
-
-const ListarCategorias = async () => {
-    try {
-        await axios.get('http://localhost:3000/categoria/listar')
-            .then(response => {
-                setCategorias(response.data)
-                console.log(response.data)
-            })
-    } catch {
-
-    }
-  }
-
-  const ListarEmpaques = async () => {
-    try {
-        await axios.get('http://localhost:3000/empaque/listar')
-            .then(response => {
-                SetEmpaques(response.data)
-                console.log(response.data)
-            })
-            
-            
-    } catch {
-
-    }
-  }
-  
-  const ListarMedidas = async () => {
-    try {
-        await axios.get('http://localhost:3000/medida/listar')
-            .then(response => {
-                SetMedidas(response.data)
-                console.log(response.data)
-            })
-            
-            
-    } catch {
-
-    }
-  } 
-
-  const Listarubicacion = async () => {
-    try {
-        await axios.get('http://localhost:3000/ubicacion/listar')
-            .then(response => {
-                SetUbicacion(response.data)
-                console.log(response.data)
-            })
-            
-            
-    } catch {
-
-    }
-  }
-
-  useEffect(() => {
-    ListarTipo()
-    ListarCategorias()
-    ListarEmpaques()
-    ListarMedidas()
-    Listarubicacion()
-    }, [])
-
     const {isOpen, onOpen, onClose} = useDisclosure();
     const size = '3xl'; // Establece el tamaño del modal como '3xl'
 
@@ -135,10 +59,10 @@ const ListarCategorias = async () => {
 
     return (
       <div className='w-full'>
-         <div className="flex flex-wrap gap-3">
+         <div className="flex gap-3 justify-between w-full">
           <Button color='success' onPress={handleOpen}
           className='bg-[#39A900] mb-2 text-[15px] text-white font-semibold'
-          >Registrar nuevo elemento</Button> {/* Muestra solo el botón para abrir el modal con tamaño '3xl' */}  
+          >Registrar nuevo elemento</Button>
         </div>
         <Modal 
           size={size} 
@@ -152,12 +76,12 @@ const ListarCategorias = async () => {
                 <ModalBody>
                   <form onSubmit={handleForm} action="">
                     <div className='flex flex-col gap-4'>
-                        <div className='flex gap-3'>
+                        <div className='flex gap-5'>
                           <Input
                             isRequired
                             type="text"
                             label="Nombre del elemento"
-                            value={values.nombre_elemento}
+                            value={values.Nombre_elemento}
                             onChange={(e) => setValues({ ...values, Nombre_elemento: e.target.value })}
                             className="max-w-xs"
                           />
@@ -234,7 +158,7 @@ const ListarCategorias = async () => {
                         <Select
                           label="Tipo Empaque"
                           placeholder="Seleccione un empaque"
-                          name='fk_detalleUbicacion'
+                          name='fk_tipoEmpaque'
                           selectionMode="multiple"
                           onChange={handleInputChange}
                           className="max-w-xs"
@@ -255,12 +179,13 @@ const ListarCategorias = async () => {
                         <Select
                           label="Ubicación"
                           placeholder="Seleccione una Ubicación"
+                          name = 'fk_detalleUbicacion'
                           onChange={handleInputChange}
                           className="max-w-xs"
                         > {
                           UseUbicacion.map(ubicacion => (
                             <SelectItem 
-                            key={ubicacion.codigo_detalle}
+                            key={ubicacion.codigo_Detalle}
                             value={ubicacion.fk_detalleUbicacion}
                             >
                               {ubicacion.Nombre_ubicacion}
@@ -270,15 +195,17 @@ const ListarCategorias = async () => {
                         </Select>
                         </div>
                     </div>
+                    <div className='w-full mt-5 flex justify-end gap-5'>
+                    <Button style={{width: '100px'}} color="danger"  onPress={onClose}>
+                    Close
+                    </Button>
+                    <Button style={{width: '100px'}} color="success" type='submit'>
+                      Registrar
+                    </Button>
+                    </div>
                   </form>
                 </ModalBody>
                 <ModalFooter>
-                  <Button style={{width: '100px'}} color="danger"  onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button style={{width: '100px'}} color="success" type='submit'>
-                    Registrar
-                  </Button>
                 </ModalFooter>
               </>
             )}
