@@ -8,21 +8,31 @@ export const Sidebar = ({ state, setState }) => {
 
   const LinksArray = [
     {
-      icon: <IoIosArrowForward />,
+      icon: IoIosArrowForward,
       label: "Usuarios",
       to: "/usuarios"
     },
     {
-      icon: <IoIosArrowForward />,
+      icon: IoIosArrowForward,
       label: "Elementos",
       to: "/elementos",
       subitems: [
         {
-          icon: <IoIosArrowForward />,
-          label: "Elementos",
-          to: "/elementos",
+          icon: IoIosArrowForward,
+          label: "Subelemento1",
+          to: "/elementos/subitem1",
+        },
+        {
+          icon: IoIosArrowForward,
+          label: "Subelemento 2",
+          to: "/elementos/subitem2",
         }
       ]
+    },
+    {
+      icon: IoIosArrowForward,
+      label: "Movimientos",
+      to: "/movimientos"
     }
   ];
 
@@ -38,10 +48,10 @@ export const Sidebar = ({ state, setState }) => {
           </div>
           <h2 className={`font-bold ${state ? "block" : "hidden"}`}>InOut</h2>
         </div>
-            {LinksArray.map(({ icon, label, to }) => (
-              <LiSideBar icon={icon} label={label} to={to} state={state}/> 
-            ))
-            }
+        {LinksArray.map(({ icon, label, to, subitems }) => (
+          <LiSideBar icon={icon} label={label} to={to} state={state} subitems={subitems} />
+        ))
+        }
       </div>
     </div>
   )
