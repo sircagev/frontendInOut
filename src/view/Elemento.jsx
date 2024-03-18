@@ -172,7 +172,7 @@ export const Elemento = () => {
   
   return (
 
-    <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5'>
+    <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
       <div>
       <div className='flex gap-3'>
         <Button className='bg-[#39A900] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Elemento</Button>
