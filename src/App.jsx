@@ -10,7 +10,6 @@ import { MenuHamburguer } from "./components/MenuHamburguer"
 import Usuario from "./view/Usuario"
 
 
-
 function App() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,11 +21,14 @@ function App() {
           <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
         </section>
         <section className="grid gridColumnI w-full tablet:gridColumnII">
-        <Navbar />
+          <Navbar />
           <Routes>
-            <Route path='/' element='Hola'/>
-            <Route path='/elementos' element={<Elemento />}/>
-            <Route path='/usuarios' element={<Usuario />}/>
+            <Route path='/' element='Hola' />
+            <Route path='/elementos' element={<Elemento />} />
+            <Route path='/elementos/categorias' element={<Categorias />} />
+            <Route path='/elementos/empaques' element={<Empaque />} />
+            <Route path='/elementos/medidas' element={<Medida />} />
+            <Route path='/usuarios' element={<Usuario />} />
           </Routes>
         </section>
       </main>
