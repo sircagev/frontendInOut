@@ -193,6 +193,7 @@ export const Elemento = () => {
             size={size} 
             isOpen={isOpen} 
             onClose={onClose} 
+            className='my-auto'
           >
             <ModalContent>
               {(onClose) => (
