@@ -8,6 +8,7 @@ import { Empaque } from "./view/Empaque"
 import { Medida } from "./view/Medida"
 import { MenuHamburguer } from "./components/MenuHamburguer"
 import Usuario from "./view/Usuario"
+import { Movimientos } from "./view/Movimientos"
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/elementos/empaques" element={<Empaque />} />
             <Route path="/elementos/medidas" element={<Medida />} />
             <Route path="/usuarios" element={<Usuario />} />
+            <Route path="/movimientos" element={<Movimientos />} />
           </Routes>
         </div>
       </section>
