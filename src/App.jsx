@@ -15,24 +15,24 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
-      <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
-        <section className="hidden tablet:initial">
-          <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
-        </section>
-        <section className="grid gridColumnI w-full tablet:gridColumnII">
-          <Navbar />
+    <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
+      <section className="hidden tablet:initial">
+        <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
+      </section>
+      <section className="flex flex-col w-full h-screen">
+        <Navbar />
+        <div className="flex-1 overflow-y-auto bg-gray-100">
           <Routes>
-            <Route path='/' element='Hola' />
-            <Route path='/elementos' element={<Elemento />} />
-            <Route path='/elementos/categorias' element={<Categorias />} />
-            <Route path='/elementos/empaques' element={<Empaque />} />
-            <Route path='/elementos/medidas' element={<Medida />} />
-            <Route path='/usuarios' element={<Usuario />} />
+            <Route path="/" element={<div>Hola</div>} />
+            <Route path="/elementos" element={<Elemento />} />
+            <Route path="/elementos/categorias" element={<Categorias />} />
+            <Route path="/elementos/empaques" element={<Empaque />} />
+            <Route path="/elementos/medidas" element={<Medida />} />
+            <Route path="/usuarios" element={<Usuario />} />
           </Routes>
-        </section>
-      </main>
-    </>
+        </div>
+      </section>
+    </main>
   )
 }
 

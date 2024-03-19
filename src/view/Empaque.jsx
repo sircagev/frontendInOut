@@ -140,7 +140,7 @@ export const Empaque = () => {
                     </button>
                 </div>
             </div>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpen} onClose={onClose} className='my-auto'> 
             <ModalContent>
                 {(onCloseModal) => (
                     <>
