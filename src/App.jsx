@@ -6,8 +6,11 @@ import { Elemento } from "./view/Elemento"
 import { Categorias } from "./view/Categorias"
 import { Empaque } from "./view/Empaque"
 import { Medida } from "./view/Medida"
+import { Bodegas } from "./view/Bodegas"
+import { Ubicacion } from "./view/Ubicacion" 
 import { MenuHamburguer } from "./components/MenuHamburguer"
 import Usuario from "./view/Usuario"
+
 
 
 function App() {
@@ -29,6 +32,8 @@ function App() {
             <Route path="/elementos/empaques" element={<Empaque />} />
             <Route path="/elementos/medidas" element={<Medida />} />
             <Route path="/usuarios" element={<Usuario />} />
+            <Route path="/bodegas" element={<Bodegas />} />
+            <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
           </Routes>
         </div>
       </section>

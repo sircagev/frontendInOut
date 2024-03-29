@@ -61,20 +61,47 @@ export const Empaque = () => {
         }
     };
 
+    const [codigoEmpaque, setCodigoEmpaque] = useState('');
+
     const ListarEmpaque = async () => {
-        await axios.get('http://localhost:3000/empaque/listar')
-            .then(response => {
-                setEmpaques(response.data)
-            })
+        try {
+            let response;
+            console.log(codigoEmpaque)
+            if (codigoEmpaque.trim() !== '') {
+                // Realizar una solicitud específica para obtener la categoría por su código
+                response = await axios.get(`http://localhost:3000/empaque/buscar/${codigoEmpaque}`);
+                console.log(response.data);
+                setEmpaques(response.data.Empaque ? response.data.Empaque : []);
+    
+            } else {
+                // Obtener todos las categorías si no se proporciona ningún código
+                response = await axios.get('http://localhost:3000/empaque/listar');
+                setEmpaques(response.data || []);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
+    
+    
+    
+
+    const handleSearch = async () => {
+     ListarEmpaque();
+    };
+      
 
     const DesactivarEmpaque = async (codigo_Empaque) => {
-        await axios.put(`http://localhost:3000/empaque/desactivar/${codigo_Empaque}`)
-            .then(response => {
-                setDesactivar(response.data)
-                ListarEmpaque();
-            })
+        try {
+            await axios.put(`http://localhost:3000/empaque/desactivar/${codigo_Empaque}`);
+            // Después de desactivar el empaque, volvemos a listar los empaques
+            ListarEmpaque();
+        } catch (error) {
+            console.log(error);
+        }
     };
+    
+    
 
     const handleInfo = (codigo_Empaque) => {
         const empaque = UseEmpaques.find((empaque) => empaque.codigo_Empaque === codigo_Empaque);
@@ -87,7 +114,6 @@ export const Empaque = () => {
         }
     };
 
-    
     const handleEditEmpaque = async () => {
         try {
             // Verificar si editedNombreEmpaque tiene un valor válido
@@ -111,30 +137,27 @@ export const Empaque = () => {
             console.log(error);
         }
     };
-    
-    
-    
-    
-    
 
     useEffect(() => {
         ListarEmpaque()
-    }, [])
+    }, [codigoEmpaque])
 
   return (
     <div className='w-90% flex justify-center mt-[70px]'>
         
         <div className=''>
             <div className='flex gap-3'>
-                <Button className='bg-[#39A900] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Categoría</Button>
+                <Button className='bg-[#39A900] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Empaques</Button>
                 <div className='flex justify-center'>
                     <input 
                     type="text" 
-                    className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Categoría' 
+                    className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Empaque' 
+                    onChange={(e) => {
+                        setCodigoEmpaque(e.target.value)
+                      }}
                     />
                     <button
-                        class="flex justify-center items-center middle none center mr-4 bg-blue-500 h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        data-ripple-light="true"
+                        className="flex justify-center items-center middle none center mr-4 bg-blue-500 h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                         <FaSearch className='w-[20px] h-auto ' />
                     </button>
