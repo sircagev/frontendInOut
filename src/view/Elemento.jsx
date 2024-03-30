@@ -244,18 +244,18 @@ export const Elemento = () => {
     <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
       <div className='w-[90%]'>
       <div className='flex gap-3'>
-        <Button className='bg-[#00670c] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Elemento</Button>
+        <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Elemento</Button>
         <div className='flex justify-center'>
           <input 
             type="text" 
             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' 
-            placeholder='Código Elemento' 
+            placeholder='Nombre Elemento' 
             onChange={(e) => {
               setCodigoElemento(e.target.value)
             }}       
           />
           <button
-            className="flex justify-center items-center middle none center mr-4 bg-[#000] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            className="flex justify-center items-center middle none center mr-4 bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             data-ripple-light="true"
            >
             <FaSearch className='w-[20px] h-auto ' />
@@ -294,7 +294,7 @@ export const Elemento = () => {
                             />
                           </div>
                           <div className='flex gap-5'>
-                            <select name="fk_tipoElemento" onChange={handleInputChange} class="bg-[#F4F4F5] border border-gray-300 w-[320px] h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <select name="fk_tipoElemento" onChange={handleInputChange} label='Tipo' class="bg-[#F4F4F5] border border-gray-300 w-[320px] h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                               <option disabled selected>Seleccione un tipo de elemento</option>
                               {UseTipo.map(tipo => (
                                   <option 
@@ -355,11 +355,11 @@ export const Elemento = () => {
                             </select>
                           </div>
                       </div>
-                      <div className='w-full mt-5 flex justify-end gap-2'>
-                        <Button style={{width: '100px'}} color="danger"  onPress={onClose}>
-                        Close
+                      <div className='w-full mt-5 flex justify-end gap-2 text-white'>
+                        <Button style={{width: '100px'}} className='font-bold bg-[#BF2A50]' color="danger"  onPress={onClose}>
+                        Cerrar
                         </Button>
-                        <Button style={{width: '100px'}} color="success" type='submit'>
+                        <Button style={{width: '100px'}} className='font-bold text-white' color="success" type='submit'>
                           Registrar
                         </Button>
                       </div>
@@ -490,10 +490,10 @@ export const Elemento = () => {
                           </div>
                       </div>
                       <div className='w-full mt-5 flex justify-end gap-2'>
-                        <Button style={{width: '100px'}} color="danger"  onPress={onClose}>
-                        Close
+                        <Button style={{width: '100px'}} className='font-bold text-white' color="danger"  onPress={onClose}>
+                          Cerrar
                         </Button>
-                        <Button style={{width: '100px'}} color="success" onPress={handleEditElemento}>
+                        <Button style={{width: '100px'}} className='font-bold text-white' color="success" onPress={handleEditElemento}>
                           Actualizar
                         </Button>
                       </div>
@@ -503,6 +503,35 @@ export const Elemento = () => {
                   </ModalFooter>
                 </>
               )}
+            </ModalContent>
+      </Modal>
+      <Modal className='my-auto'>
+            <ModalContent>
+                {(onCloseModal) => (
+                    <>
+                        <ModalHeader className="flex flex-col gap-1">Añadir nuevo stock</ModalHeader>
+                        <ModalBody>
+                            <form>
+                                <div class="relative mb-3" data-twe-input-wrapper-init>
+                                    <Input
+                                        type='number'
+                                        label='Añadir Stock'
+                                    />                    
+                                </div>
+                                <div className='flex justify-end gap-3 mt-2'>
+                                    <Button color="danger" className='bg-[#BF2A50] font-bold text-white' variant="light">
+                                        Cancelar
+                                    </Button>
+                                    <Button className='font-bold text-white' color="success">
+                                        Registrar
+                                    </Button>
+                                </div>
+                            </form>
+                        </ModalBody>
+                        <ModalFooter>   
+                        </ModalFooter>
+                    </>
+                )}
             </ModalContent>
       </Modal>
       <Table
@@ -545,13 +574,17 @@ export const Elemento = () => {
                             <TableCell className='font-semibold'>{elemento.Nombre_Medida}</TableCell>
                             <TableCell className='font-semibold'>{elemento.Nombre_ubicacion}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                              <Button color="danger" className='' onClick={()=> {desactivarElementos(elemento.Codigo_elemento)}} style={{fontSize: '15px'}}>
-                                Desactivar
-                              </Button>  
-                              <Button color='primary' onClick={()=> {handleInfo(elemento.Codigo_elemento);}}
+                              <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#E4B803]' onClick={()=> {handleInfo(elemento.Codigo_elemento);}}
                               style={{ fontSize: '15px' }}>
-                                Información
+                                Info
+                              </Button>
+                              <Button color='primary' className='font-semibold bg-[#0C6A6F] hover:bg-[#1E6C9B]'
+                              style={{ fontSize: '15px' }}>
+                                Añadir Stock
                               </Button> 
+                              <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={()=> {desactivarElementos(elemento.Codigo_elemento)}} style={{fontSize: '15px'}}>
+                                Desactivar
+                              </Button>   
                             </TableCell>
                         </TableRow>
                     ))}
