@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BiPrinter, BiSearch } from 'react-icons/bi';
 
 let myModal;
 let myModalEstado;
+
 const Usuario = () => {
   const [useUsuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRol, setSelectedRol] = useState("");
   const [Estado, setEstado] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [values, setValues] = useState({
     nombre_usuario: "",
     apellido_usuario: "",
@@ -18,6 +22,8 @@ const Usuario = () => {
     Id_ficha: ""
   });
 
+  
+
   const handleRolChange = (event) => {
     setSelectedRol(event.target.value);
   };
@@ -26,7 +32,7 @@ const Usuario = () => {
     const { name, value } = event.target;
     if (name === 'rol') {
       setSelectedRol(value);
-    } else if (name === 'Estado') { // Utiliza else if en lugar de else
+    } else if (name === 'Estado') { 
       setEstado(value);
     } 
   };
@@ -37,6 +43,11 @@ const Usuario = () => {
       [event.target.name]: event.target.value
     });
   };
+
+  const handleClose = () => {
+    myModal.hide(); 
+    ListarUsuarios();
+  };  
 
   const handleForm = async (event) => {
     try {
@@ -63,8 +74,7 @@ const Usuario = () => {
       myModal.hide();
       ListarUsuarios();
     } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      alert("Error al registrar usuario");
+      console.error("Error al Actualizar el usuario:", error);
       console.error("Detalles del error:", error.response.data);
     }
   };
@@ -114,6 +124,8 @@ const Usuario = () => {
     }
   };
 
+  
+
   useEffect(() => {
     myModal = new bootstrap.Modal('#myModal', {
       keyboard: false
@@ -124,92 +136,122 @@ const Usuario = () => {
     ListarUsuarios();
   }, []);
   
+  
 
   return (
     <div className="container">
-      <button 
-        type="button" 
-        className="ml-3 mt-[10px] gap-3 w-[20%] h-[44px] bg-[#9be874] hover:bg-[#9be874] rounded-[8px] cursor-pointer text-black hover:text-white" 
-        onClick={() => {
-          setSelectedUser(null);
-          setValues({
-            nombre_usuario: "",
-            apellido_usuario: "",
-            email_usuario: "",
-            rol: "",
-            numero: "",
-            contraseña_usuario: "",
-            Id_ficha: ""
-          });
-          myModal.show();
-        }}
-      >
-        Añadir Nuevo Usuario
+      <div className="row ">
+  <div className="col ">
+    <button 
+      type="button" 
+      className="bg-[#39A900] w-[200px] text-[12] bg-gree h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
+      text-xs font-bold uppercase text-white shadow-md  transition-all hover:shadow-lg hover:shadow-green-500/40 
+      focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+       disabled:opacity-50 disabled:shadow-nonepx] text-white font-semibold ml-[30px] " 
+      style={{ marginTop: '20px', borderRadius: '10px'  }}
+      onClick={() => {
+        setSelectedUser(null);
+        setValues({
+          nombre_usuario: "",
+          apellido_usuario: "",
+          email_usuario: "",
+          rol: "",
+          numero: "",
+          contraseña_usuario: "",
+          Id_ficha: ""
+        });
+        myModal.show();
+      }}
+    >
+      Registrar Usuario
+    </button>
+  </div>
+  <div className="col align-self-end">
+    <div className="input-group flex-grow-1 w-[250px]">
+      <input
+        type="text"
+        className="form-control "
+        placeholder="Buscar Usuario por ID..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button className="btn btn-outline-secondary" type="button">
+        <BiSearch />
       </button>
+    </div>
+  </div>
+</div>
+
 
       <br />
-      <br />
-      <h3 className='text-black'>Registro Usuarios</h3>
+  
       <br />
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Numero</th>
-            <th>Id Ficha</th>
-            <th>Estado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {useUsuarios.map(user => (
-            <tr key={user.id_usuario}>
-              <td>{user.id_usuario}</td>
-              <td>{user.nombre_usuario}</td>
-              <td>{user.apellido_usuario}</td>
-              <td>{user.email_usuario}</td>
-              <td>{user.rol}</td>
-              <td>{user.numero}</td>
-              <td>{user.Id_ficha}</td>
-              <td>{user.Estado}</td>
-              <td>
-                <button 
-                  className="btn btn-primary" 
-                  onClick={() => handleUpdateClick(user)}
-                >
-                  Actualizar
-                </button>
-                <button 
-                  className="btn btn-secondary" 
-                  onClick={() => {
-                    setSelectedUser(user);
-                    setEstado(user.Estado); 
-                    myModalEstado.show();
-                  }}
-                >
-                  Estado
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="mx-auto w-[95%]">
+  <table className="divide-y divide-gray-200">
+  <thead className="bg-[#39A900]">
+    <tr>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ">Id</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Rol</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Numero tel</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Id Ficha</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estado</th>
+      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Administrar</th>
+    </tr>
+  </thead>
+  <tbody className="bg-white divide-y divide-gray-200">
+    {useUsuarios.map(user => (
+      <tr key={user.id_usuario} className="hover:bg-gray-100">
+        <td className="px-3 whitespace-nowrap">{user.id_usuario}</td>
+        <td className="px-3 whitespace-nowrap">{user.nombre_usuario}</td>
+        <td className="px-3 whitespace-nowrap">{user.apellido_usuario}</td>
+        <td className="px-3 whitespace-nowrap">{user.email_usuario}</td>
+        <td className="px-3 whitespace-nowrap">{user.rol}</td>
+        <td className="px-3 whitespace-nowrap">{user.numero}</td>
+        <td className="px-3 whitespace-nowrap">{user.Id_ficha}</td>
+        <td className="px-3 whitespace-nowrap">{user.Estado}</td>
+        <tr key={user.id_usuario} className="hover:bg-gray-100">
+  <td className="px-6 py-4 whitespace-nowrap">
+    <button 
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-1 block"
+      onClick={() => handleUpdateClick(user)}
+    >
+      Actualizar
+    </button>
+    <button 
+      className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+      onClick={() => {
+        setSelectedUser(user);
+        setEstado(user.Estado); 
+        myModalEstado.show();
+      }}
+    >
+      Estado
+    </button>
+  </td>
+</tr>
+
+      </tr>
+    ))}
+  </tbody>
+</table>
+</div>
+
 
       <div className="modal" tabindex="-1" id="myModal">
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Usuarios</h5>
+        <div className="modal-dialog style={{ maxWidth: '20rem' }}">
+          <div className="modal-content" style={{ borderRadius: '10px' }}>
+            <div className="modal-header" style={{ backgroundColor: '#39A900', color: 'white', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
+            <h5 className="modal-title flex items-center justify-center">Ingresar Datos del Usuario</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div className="modal-body">
+            <div className="modal-body" style={{ padding: '20px' }}>
               <form action="" onSubmit={selectedUser ? handleFormm : handleForm} className="col-6">
+              <div className="form-group" style={{ marginBottom: '20px' }} />
                 <label>Nombre</label>
                 <input 
                   type="text" 
@@ -239,7 +281,7 @@ const Usuario = () => {
                 
                 <label>Rol</label>
                 <select name="rol" onChange={handleInputChange} className="form-control">
-                <option value="">Seleccione un Rol</option>
+                <option selected>Seleccione un Rol</option>
                   <option value="administrador">Administrador</option>
                   <option value="Encargado">Encargado</option>
                   <option value="Usuario">Usuario</option>
@@ -274,14 +316,18 @@ const Usuario = () => {
 
                 <br />
 
-                <div className="modal-footer">
-                  <button 
-                    type="submit" 
-                    className=" ml-6 mt-[10px] gap-3 w-[20%] h-[44px] bg-[#9be874] hover:bg-[#39A900] rounded-[8px] cursor-pointer text-black hover:text-white"
-                  >
-                    {selectedUser ? 'Actualizar' : 'Registrar'}
-                  </button>
-                </div>
+           <div className="modal-footer">
+            <button 
+              type="submit" 
+              className="mt-[11px] w-[40%] h-[40px] bg-[#10A900] hover:bg-[#39A900] rounded-[8px] cursor-pointer text-white hover:text-white"
+            >
+              {selectedUser ? 'Actualizar' : 'Registrar'}
+            </button>
+            </div>
+         
+        
+
+
               </form>
             </div>
           </div>
@@ -305,7 +351,7 @@ const Usuario = () => {
                   className="form-control" 
                   value={Estado}
                 >
-                  <option value="">Selecciona un Estado</option>
+                  <option selected>Selecciona un Estado</option>
                   <option value="Activo">Activo</option>
                   <option value="Inactivo">Inactivo</option>
                 </select>
