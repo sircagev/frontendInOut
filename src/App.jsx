@@ -8,6 +8,10 @@ import { Empaque } from "./view/Empaque"
 import { Medida } from "./view/Medida"
 import { MenuHamburguer } from "./components/MenuHamburguer"
 import Usuario from "./view/Usuario"
+import ReporteU from "./view/ReporteUsuario"
+import ReporteE from "./view/ReporteElemento"
+import ReporteB from "./view/ReporteBodega"
+import ReporteM from "./view/ReporteMovimiento"
 
 
 function App() {
@@ -29,6 +33,10 @@ function App() {
             <Route path="/elementos/empaques" element={<Empaque />} />
             <Route path="/elementos/medidas" element={<Medida />} />
             <Route path="/usuarios" element={<Usuario />} />
+            <Route path="/reportes/usuarios" element={<ReporteU />} />
+            <Route path="/reportes/elementos" element={<ReporteE />} />
+            <Route path="/reportes/bodegas" element={<ReporteB />} />
+            <Route path="/reportes/movimientos" element={<ReporteM />} />
           </Routes>
         </div>
       </section>
