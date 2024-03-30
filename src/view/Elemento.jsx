@@ -21,7 +21,7 @@ export const Elemento = () => {
   const [itemsToShow, setItemsToShow] = useState([]);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
+  
 
   const size = '3xl'; // Establece el tamaño del modal como '3xl'
 
@@ -507,35 +507,7 @@ export const Elemento = () => {
               )}
             </ModalContent>
       </Modal>
-      <Modal className='my-auto'>
-            <ModalContent>
-                {(onCloseModal) => (
-                    <>
-                        <ModalHeader className="flex flex-col gap-1">Añadir nuevo stock</ModalHeader>
-                        <ModalBody>
-                            <form>
-                                <div class="relative mb-3" data-twe-input-wrapper-init>
-                                    <Input
-                                        type='number'
-                                        label='Añadir Stock'
-                                    />                    
-                                </div>
-                                <div className='flex justify-end gap-3 mt-2'>
-                                    <Button color="danger" className='bg-[#BF2A50] font-bold text-white' variant="light">
-                                        Cancelar
-                                    </Button>
-                                    <Button className='font-bold text-white' color="success">
-                                        Registrar
-                                    </Button>
-                                </div>
-                            </form>
-                        </ModalBody>
-                        <ModalFooter>   
-                        </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-      </Modal>
+      
       <Table
             aria-label="Lista de Empaques"
             bottomContent={
