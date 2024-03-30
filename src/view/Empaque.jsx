@@ -36,16 +36,19 @@ export const Empaque = () => {
     )
     
     const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        // Convertir la primera letra en mayúscula y el resto en minúscula
+        const formattedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
         setValues({
             ...values,
-            [event.target.name]: event.target.value,
+            [name]: formattedValue,
         });
     };
     
     const handleForm = async (event) => {
         event.preventDefault();
         if (!values.Nombre_Empaque.trim()) {
-            alert('Por favor ingrese un nombre de empaque');
+            setMessage('Por favor ingrese un nombre de empaque');
             return;
         }
 
@@ -81,13 +84,6 @@ export const Empaque = () => {
         } catch (error) {
             console.log(error);
         }
-    };
-    
-    
-    
-
-    const handleSearch = async () => {
-     ListarEmpaque();
     };
       
 
@@ -147,7 +143,7 @@ export const Empaque = () => {
         
         <div className=''>
             <div className='flex gap-3'>
-                <Button className='bg-[#39A900] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Empaques</Button>
+                <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Empaques</Button>
                 <div className='flex justify-center'>
                     <input 
                     type="text" 
@@ -157,7 +153,7 @@ export const Empaque = () => {
                       }}
                     />
                     <button
-                        className="flex justify-center items-center middle none center mr-4 bg-blue-500 h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        className="flex justify-center items-center middle none center mr-4 bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         >
                         <FaSearch className='w-[20px] h-auto ' />
                     </button>
@@ -179,15 +175,16 @@ export const Empaque = () => {
                                         onChange={handleInputChange}
                                     />                    
                                 </div>
-                                <div className='flex justify-end gap-3 mt-5'>
-                                    <Button color="danger" variant="light" onPress={onCloseModal}>
+                                <div className='flex justify-end gap-3 mt-3'>
+                                    <Button color="danger" className='font-bold text-white bg-[#BF2A50]' onPress={onCloseModal}>
                                         Cancelar
                                     </Button>
-                                    <Button className='bg-[#39A900]' type='submit'>
+                                    <Button className='font-bold text-white' color="success" type='submit'>
                                         Registrar
                                     </Button>
                                 </div>
                             </form>
+                            
                         </ModalBody>
                         <ModalFooter>
                             
@@ -196,12 +193,12 @@ export const Empaque = () => {
                 )}
             </ModalContent>
             </Modal>
-            <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
+            <Modal isOpen={isOpenInfo} onClose={onCloseInfo} className='my-auto'>
             <ModalContent>
                         <>
                             <ModalHeader className='flex flex-col gap-1'>Información de Empaque</ModalHeader>
                             <ModalBody>
-                                <div className='relative mb-3' data-twe-input-wrapper-init>
+                                <div className='relative' data-twe-input-wrapper-init>
                                     <Input
                                         type='text'
                                         label='Nombre Categoría'
@@ -211,10 +208,10 @@ export const Empaque = () => {
                                 </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color='danger' variant='light' onPress={onCloseInfo}>
+                                <Button className='bg-[#BF2A50] font-bold text-white' onPress={onCloseInfo}>
                                     Cancelar
                                 </Button>
-                                <Button className='bg-[#39A900] font-semibold' onPress={handleEditEmpaque}>
+                                <Button className='font-bold text-white' color="success" onPress={handleEditEmpaque}>
                                     Actualizar Valor
                                 </Button>
                             </ModalFooter>
@@ -242,9 +239,9 @@ export const Empaque = () => {
                 className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
             >
                 <TableHeader>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="codigo">CÓDIGO</TableColumn>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="nombre">NOMBRE</TableColumn>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="acciones">ADMINISTRAR</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                 </TableHeader>
                 <TableBody items={itemsToShow}>
                     {itemsOnCurrentPage.map(empaque => (
@@ -252,11 +249,11 @@ export const Empaque = () => {
                             <TableCell className='font-semibold'>{empaque.codigo_Empaque}</TableCell>
                             <TableCell className='font-semibold'>{empaque.Nombre_Empaque}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                                    <Button color="danger" onClick={()=> {DesactivarEmpaque(empaque.codigo_Empaque)}} style={{fontSize: '15px'}}>
+                                    <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarEmpaque(empaque.codigo_Empaque)}} style={{fontSize: '15px'}}>
                                         Desactivar
                                     </Button>  
-                                    <Button color='primary' onClick={() => {handleInfo(empaque.codigo_Empaque);}} style={{ fontSize: '15px' }}>
-                                        Información
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(empaque.codigo_Empaque);}} style={{ fontSize: '15px' }}>
+                                        Info
                                     </Button> 
                             </TableCell>
                         </TableRow>

@@ -37,11 +37,15 @@ export const Categorias = () => {
 
 
     const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        // Convertir la primera letra en mayúscula y el resto en minúscula
+        const formattedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
         setValues({
             ...values,
-            [event.target.name]: event.target.value,
+            [name]: formattedValue,
         });
     };
+    
     
     const handleForm = async (event) => {
         event.preventDefault();
@@ -126,7 +130,7 @@ export const Categorias = () => {
     <div className='w-90% flex flex-col justify-center items-center mt-[70px]'>
         <div >
             <div className='flex gap-4'>
-                <Button className='bg-[#39A900] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
+                <Button className='bg-[#3d7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
                 <div className='flex justify-center'>
                     <input 
                     type="text" 
@@ -136,7 +140,7 @@ export const Categorias = () => {
                       }}
                     />
                     <button
-                        className="flex justify-center items-center middle none center mr-4 bg-blue-500 h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        className="flex justify-center items-center middle none center mr-4 bg-[#3d7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                         data-ripple-light="true"
                         >
                         <FaSearch className='w-[20px] h-auto ' />
@@ -159,11 +163,11 @@ export const Categorias = () => {
                                         onChange={handleInputChange}
                                     />                    
                                 </div>
-                                <div className='flex justify-end gap-3 mt-5'>
-                                    <Button color="danger" variant="light" onPress={onCloseModal}>
+                                <div className='flex justify-end gap-3 mt-2'>
+                                    <Button color="danger" className='bg-[#BF2A50] font-bold text-white' variant="light" onPress={onCloseModal}>
                                         Cancelar
                                     </Button>
-                                    <Button className='bg-[#39A900]' type='submit'>
+                                    <Button className='font-bold text-white' color="success" type='submit'>
                                         Registrar
                                     </Button>
                                 </div>
@@ -176,12 +180,12 @@ export const Categorias = () => {
                 )}
             </ModalContent>
         </Modal>
-        <Modal isOpen={isOpenInfo} onClose={onCloseInfo}>
+        <Modal isOpen={isOpenInfo} onClose={onCloseInfo} className='my-auto'>
             <ModalContent>
                         <>
                             <ModalHeader className='flex flex-col gap-1'>Información de Categoría</ModalHeader>
                             <ModalBody>
-                                <div className='relative mb-3' data-twe-input-wrapper-init>
+                                <div className='relative' data-twe-input-wrapper-init>
                                     <Input
                                         type='text'
                                         label='Nombre Categoría'
@@ -191,10 +195,10 @@ export const Categorias = () => {
                                 </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button color='danger' variant='light' onPress={onCloseInfo}>
+                                <Button color='danger' className='bg-[#BF2A50] font-bold text-white' onPress={onCloseInfo}>
                                     Cancelar
                                 </Button>
-                                <Button className='bg-[#39A900] font-semibold' onPress={handleEdit}>
+                                <Button className='font-bold text-white' color="success" onPress={handleEdit}>
                                     Actualizar Valor
                                 </Button>
                             </ModalFooter>
@@ -222,9 +226,9 @@ export const Categorias = () => {
                 className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
             >
                 <TableHeader>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="codigo">CÓDIGO</TableColumn>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="nombre">NOMBRE</TableColumn>
-                    <TableColumn  className='text-center font-bold bg-[#39A900] text-white' key="acciones">ADMINISTRAR</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3d7948] text-white' key="codigo">CÓDIGO</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3d7948] text-white' key="nombre">NOMBRE</TableColumn>
+                    <TableColumn  className='text-center font-bold bg-[#3d7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                 </TableHeader>
                 <TableBody items={itemsToShow}>
                     {itemsOnCurrentPage.map(categoria => (
@@ -232,11 +236,11 @@ export const Categorias = () => {
                             <TableCell className='font-semibold'>{categoria.codigo_Categoria}</TableCell>
                             <TableCell className='font-semibold'>{categoria.Nombre_Categoria}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                                    <Button color="danger" onClick={()=> {DesactivarCategorias(categoria.codigo_Categoria)}} style={{fontSize: '15px'}}>
+                                    <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarCategorias(categoria.codigo_Categoria)}} style={{fontSize: '15px'}}>
                                         Desactivar
                                     </Button>  
-                                    <Button color='primary' onClick={() => {handleInfo(categoria.codigo_Categoria);}} style={{ fontSize: '15px' }}>
-                                        Información
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(categoria.codigo_Categoria);}} style={{ fontSize: '15px' }}>
+                                        Info
                                     </Button> 
                             </TableCell>
                         </TableRow>
