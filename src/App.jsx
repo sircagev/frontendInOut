@@ -10,6 +10,7 @@ import { Bodegas } from "./view/Bodegas"
 import { Ubicacion } from "./view/Ubicacion" 
 import { MenuHamburguer } from "./components/MenuHamburguer"
 import Usuario from "./view/Usuario"
+import { Movimientos } from "./view/Movimientos"
 
 
 
@@ -34,6 +35,7 @@ function App() {
             <Route path="/usuarios" element={<Usuario />} />
             <Route path="/bodegas" element={<Bodegas />} />
             <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
+<Route path="/movimientos" element={<Movimientos />} />
           </Routes>
         </div>
       </section>

@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination } from "@nextui-org/react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
-import {Select, SelectItem} from "@nextui-org/react";
-import { FaSearch } from "react-icons/fa";  
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
+import { FaSearch } from "react-icons/fa";
 
 
 export const Elemento = () => {
@@ -19,8 +19,9 @@ export const Elemento = () => {
 
   const [page, setPage] = useState(1);
   const [itemsToShow, setItemsToShow] = useState([]);
-  const {isOpen, onOpen, onOpenChange,  onClose} = useDisclosure();
-  
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
 
   const size = '3xl'; // Establece el tamaño del modal como '3xl'
 
@@ -29,17 +30,17 @@ export const Elemento = () => {
   }
 
   const itemsPerPage = 5;
-    // Índice del primer elemento en la página actual
+  // Índice del primer elemento en la página actual
   const startIndex = (page - 1) * itemsPerPage;
-    // Obtener los elementos que se mostrarán en la página actual
+  // Obtener los elementos que se mostrarán en la página actual
   const itemsOnCurrentPage = useElementos.slice(startIndex, startIndex + itemsPerPage);
 
-    // Función para obtener el valor de una clave específica de un objeto
+  // Función para obtener el valor de una clave específica de un objeto
   const getKeyValue = (item, key) => {
-      return item[key];
+    return item[key];
   };
-  
-  const [values,setValues] = useState(
+
+  const [values, setValues] = useState(
     {
       Nombre_elemento: "",
       stock: "",
@@ -51,30 +52,30 @@ export const Elemento = () => {
     }
   )
 
-  const handleInputChange=(event) => {
+  const handleInputChange = (event) => {
     setValues({
-        ...values,
-        [event.target.name]:event.target.value
+      ...values,
+      [event.target.name]: event.target.value
     });
     console.log(values);
   }
 
   const handleForm = async (event) => {
     try {
-        event.preventDefault();
-        console.log(values)
-        const response = await axios({
-            method: 'post',
-            url: `http://localhost:3000/elemento/registrar`,
-            data: values
-        });
-        if (response.status === 200) {
-           
-            onClose();
-            listarElementos();
-        }
+      event.preventDefault();
+      const response = await axios({
+        method: 'post',
+        url: `http://localhost:3000/elemento/registrar`,
+        data: values
+      });
+      if (response.status === 200) {
+
+        onClose();
+        listarElementos();
+      }
+
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   };
 
@@ -119,11 +120,11 @@ export const Elemento = () => {
 
   const ListarCategorias = async () => {
     try {
-        await axios.get('http://localhost:3000/categoria/listar')
-            .then(response => {
-                setCategorias(response.data)
-                
-            })
+      await axios.get('http://localhost:3000/categoria/listar')
+        .then(response => {
+          setCategorias(response.data)
+
+        })
     } catch {
 
     }
@@ -131,13 +132,13 @@ export const Elemento = () => {
 
   const Listarubicacion = async () => {
     try {
-        await axios.get('http://localhost:3000/ubicacion/listar')
-            .then(response => {
-                SetUbicacion(response.data)
-                
-            })
-            
-            
+      await axios.get('http://localhost:3000/ubicacion/listar')
+        .then(response => {
+          SetUbicacion(response.data)
+
+        })
+
+
     } catch {
 
     }
@@ -145,27 +146,27 @@ export const Elemento = () => {
 
   const ListarEmpaques = async () => {
     try {
-        await axios.get('http://localhost:3000/empaque/listar')
-            .then(response => {
-                SetEmpaques(response.data)
-               
-            })
-            
-            
+      await axios.get('http://localhost:3000/empaque/listar')
+        .then(response => {
+          SetEmpaques(response.data)
+
+        })
+
+
     } catch {
 
     }
   }
-  
+
   const ListarMedidas = async () => {
     try {
-        await axios.get('http://localhost:3000/medida/listar')
-            .then(response => {
-                SetMedidas(response.data)
-                
-            })
-            
-            
+      await axios.get('http://localhost:3000/medida/listar')
+        .then(response => {
+          SetMedidas(response.data)
+
+        })
+
+
     } catch {
 
     }
@@ -238,7 +239,8 @@ export const Elemento = () => {
       ListarMedidas()
   }, [codigoElemento])
 
-  
+
+
   return (
 
     <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
@@ -558,7 +560,7 @@ export const Elemento = () => {
                 </TableBody>
       </Table>
       </div>
-      
+
     </div>
- )
+  )
 }
