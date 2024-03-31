@@ -11,6 +11,8 @@ const Usuario = () => {
   const [selectedRol, setSelectedRol] = useState("");
   const [Estado, setEstado] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [usuarioEncontrado, setUsuarioEncontrado] = useState("");
+  const [error, setError] = useState(null);
 
   const [values, setValues] = useState({
     nombre_usuario: "",
@@ -23,7 +25,6 @@ const Usuario = () => {
   });
 
   
-
   const handleRolChange = (event) => {
     setSelectedRol(event.target.value);
   };
@@ -44,10 +45,7 @@ const Usuario = () => {
     });
   };
 
-  const handleClose = () => {
-    myModal.hide(); 
-    ListarUsuarios();
-  };  
+ 
 
   const handleForm = async (event) => {
     try {
@@ -92,6 +90,37 @@ const Usuario = () => {
       alert("Error al actualizar Estado");
     }
   };
+      
+  
+  const buscarUsuario = async (id_usuario) => {
+    try {
+      if (id_usuario.trim() !== '') {
+        const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
+        console.log(response.data);
+        setUsuarioEncontrado(response.data);
+      } else {
+        setError("Ingrese un ID de usuario válido");
+        setUsuarioEncontrado(user);
+      }
+    } catch (error) {
+      console.log("Error al obtener Usuario:", error);
+      setError("Error al obtener Usuario: " + error.message);
+      alert("No existe Usuario con el ID Ingresado");
+    }
+    
+  };
+  const handleClose = () => {
+    myModal.hide();  
+    ListarUsuarios();
+    setUsuarioEncontrado(user);
+  };
+  
+  
+  
+  const handleSearch = async () => {
+    setError(null);
+    buscarUsuario(searchTerm);
+  };
 
   const handleUpdateClick = (user) => {
     setSelectedUser(user);
@@ -106,6 +135,7 @@ const Usuario = () => {
       contraseña_usuario: user.contraseña_usuario,
       Id_ficha: user.Id_ficha
     });
+ 
     myModal.show();
   };
 
@@ -125,7 +155,6 @@ const Usuario = () => {
   };
 
   
-
   useEffect(() => {
     myModal = new bootstrap.Modal('#myModal', {
       keyboard: false
@@ -141,69 +170,99 @@ const Usuario = () => {
   return (
     <div className="container">
       <div className="row ">
-  <div className="col ">
-    <button 
-      type="button" 
-      className="bg-[#39A900] w-[200px] text-[12] bg-gree h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
-      text-xs font-bold uppercase text-white shadow-md  transition-all hover:shadow-lg hover:shadow-green-500/40 
-      focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-       disabled:opacity-50 disabled:shadow-nonepx] text-white font-semibold ml-[30px] " 
-      style={{ marginTop: '20px', borderRadius: '10px'  }}
-      onClick={() => {
-        setSelectedUser(null);
-        setValues({
-          nombre_usuario: "",
-          apellido_usuario: "",
-          email_usuario: "",
-          rol: "",
-          numero: "",
-          contraseña_usuario: "",
-          Id_ficha: ""
-        });
-        myModal.show();
-      }}
-    >
-      Registrar Usuario
-    </button>
-  </div>
-  <div className="col align-self-end">
-    <div className="input-group flex-grow-1 w-[250px]">
-      <input
-        type="text"
-        className="form-control "
-        placeholder="Buscar Usuario por ID..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button className="btn btn-outline-secondary" type="button">
-        <BiSearch />
-      </button>
-    </div>
-  </div>
-</div>
-
+        <div className="col ">
+          <button 
+            type="button" 
+            className="bg-[#39A900] w-[200px] text-[12] bg-gree h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
+            text-xs font-bold uppercase text-white shadow-md  transition-all hover:shadow-lg hover:shadow-green-500/40 
+            focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+            disabled:opacity-50 disabled:shadow-nonepx] text-white font-semibold ml-[30px] " 
+            style={{ marginTop: '20px', borderRadius: '10px'  }}
+            onClick={() => {
+              setSelectedUser(null);
+              setValues({
+                nombre_usuario: "",
+                apellido_usuario: "",
+                email_usuario: "",
+                rol: "",
+                numero: "",
+                contraseña_usuario: "",
+                Id_ficha: ""
+              });
+              myModal.show();
+            }}
+          >
+            Registrar Usuario
+          </button>
+        </div>
+        <div className="col align-self-end">
+          <div className="input-group flex-grow-1 w-[250px]">
+            <input
+              type="text"
+              className="form-control "
+              placeholder="Buscar Usuario por ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
+              <BiSearch />
+            </button>
+            
+          </div>
+        </div>
+      </div>
 
       <br />
   
       <br />
 
       <div className="mx-auto w-[95%]">
-  <table className="divide-y divide-gray-200">
-  <thead className="bg-[#39A900]">
-    <tr>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ">Id</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Rol</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Numero tel</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Id Ficha</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estado</th>
-      <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Administrar</th>
+        <table className="divide-y divide-gray-200">
+          <thead className="bg-[#39A900]">
+            <tr>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ">Id</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Rol</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Numero tel</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Id Ficha</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estado</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Administrar</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+  {usuarioEncontrado ? (
+    <tr key={usuarioEncontrado.id_usuario} className="hover:bg-gray-100">
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.id_usuario}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.nombre_usuario}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.apellido_usuario}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.email_usuario}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.rol}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.numero}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.Id_ficha}</td>
+      <td className="px-3 whitespace-nowrap">{usuarioEncontrado.Estado}</td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <button 
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-1 block"
+          onClick={() => handleUpdateClick(usuarioEncontrado)}
+        >
+          Actualizar
+        </button>
+        <button 
+          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            setSelectedUser(usuarioEncontrado);
+            setEstado(usuarioEncontrado.Estado); 
+            myModalEstado.show();
+          }}
+        >
+          Estado
+        </button>
+      </td>
     </tr>
-  </thead>
-  <tbody className="bg-white divide-y divide-gray-200">
-    {useUsuarios.map(user => (
+  ) : (
+    useUsuarios.map(user => (
       <tr key={user.id_usuario} className="hover:bg-gray-100">
         <td className="px-3 whitespace-nowrap">{user.id_usuario}</td>
         <td className="px-3 whitespace-nowrap">{user.nombre_usuario}</td>
@@ -213,32 +272,31 @@ const Usuario = () => {
         <td className="px-3 whitespace-nowrap">{user.numero}</td>
         <td className="px-3 whitespace-nowrap">{user.Id_ficha}</td>
         <td className="px-3 whitespace-nowrap">{user.Estado}</td>
-        <tr key={user.id_usuario} className="hover:bg-gray-100">
-  <td className="px-6 py-4 whitespace-nowrap">
-    <button 
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-1 block"
-      onClick={() => handleUpdateClick(user)}
-    >
-      Actualizar
-    </button>
-    <button 
-      className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-      onClick={() => {
-        setSelectedUser(user);
-        setEstado(user.Estado); 
-        myModalEstado.show();
-      }}
-    >
-      Estado
-    </button>
-  </td>
-</tr>
-
+        <td className="px-6 py-4 whitespace-nowrap">
+          <button 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-1 block"
+            onClick={() => handleUpdateClick(user)}
+          >
+            Actualizar
+          </button>
+          <button 
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => {
+              setSelectedUser(user);
+              setEstado(user.Estado); 
+              myModalEstado.show();
+            }}
+          >
+            Estado
+          </button>
+        </td>
       </tr>
-    ))}
-  </tbody>
-</table>
-</div>
+    ))
+  )}
+</tbody>
+
+        </table>
+      </div>
 
 
       <div className="modal" tabindex="-1" id="myModal">
@@ -246,7 +304,7 @@ const Usuario = () => {
           <div className="modal-content" style={{ borderRadius: '10px' }}>
             <div className="modal-header" style={{ backgroundColor: '#39A900', color: 'white', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
             <h5 className="modal-title flex items-center justify-center">Ingresar Datos del Usuario</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div className="modal-body" style={{ padding: '20px' }}>
@@ -316,16 +374,21 @@ const Usuario = () => {
 
                 <br />
 
-           <div className="modal-footer">
-            <button 
-              type="submit" 
-              className="mt-[11px] w-[40%] h-[40px] bg-[#10A900] hover:bg-[#39A900] rounded-[8px] cursor-pointer text-white hover:text-white"
-            >
-              {selectedUser ? 'Actualizar' : 'Registrar'}
-            </button>
-            </div>
-         
-        
+                <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <button 
+                    type="submit" 
+                    className="mt-[11px] w-[40%] h-[40px] bg-[#10A900] hover:bg-[#39A900] rounded-[8px] cursor-pointer text-white hover:text-white"
+                  >
+                    {selectedUser ? 'Actualizar' : 'Registrar'}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="bg-gray-500 hover:bg-gray-700 text-white mt-[11px] w-[40%] h-[40px] rounded-[8px]"  
+                    data-bs-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
+                </div>
 
 
               </form>
@@ -339,6 +402,7 @@ const Usuario = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Actualizar Estado</h5>
+
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
@@ -357,21 +421,26 @@ const Usuario = () => {
                 </select>
 
                 <br />
-                <div className="modal-footer">
+                <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <button 
                     type="submit" 
                     className="btn btn-primary"
                     style={{ 
                       backgroundColor: '#00008B',
                       color: '#fff', 
-                  
                     }}
                   >
                     Actualizar Estado
-                    
                   </button>
-                  
+                  <button 
+                    type="button" 
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  
+                    data-bs-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
                 </div>
+
               </form>
             </div>
           </div>
