@@ -15,6 +15,7 @@ import ReporteE from "./view/ReporteElemento"
 import ReporteB from "./view/ReporteBodega"
 import ReporteM from "./view/ReporteMovimiento"
 import { Movimientos } from "./view/Movimientos"
+import { Movimientos2 } from "./view/Movimientos2"
 
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
             <Route path="/reportes/movimientos" element={<ReporteM />} />
             <Route path="/bodegas" element={<Bodegas />} />
             <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
-<Route path="/movimientos" element={<Movimientos />} />
+<Route path="/movimientos" element={<Movimientos2 />} />
           </Routes>
         </div>
       </section>
