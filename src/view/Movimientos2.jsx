@@ -26,24 +26,26 @@ export const Movimientos2 = () => {
 
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-    const handleInfo = async(codigo) => {
+    const handleInfo = async (codigo) => {
         try {
+            const response = await axios.get(`http://localhost:3000/movimientos/${codigo}/detalles`);
+            console.log(response);
+            setDetallesMovimiento(response.data.datos ? response.data.datos : []);
             onOpen();
         } catch (error) {
-            
+
         }
-            
-        
-      };
+    };
 
     const listarMovimientos = async () => {
         try {
             let response;
             if (codigoMovimiento.trim() !== '') {
+
                 // Realizar una solicitud específica para obtener un movimiento por su código
                 response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
-                console.log(response.data);
-                setElementos(response.data.Movimiento ? response.data.Movimiento : []);
+                console.log(response);
+                setMovimientos(response.data.Movimiento ? response.data.Movimiento : []);
 
             } else {
                 // Obtener todos los movimientos si no se proporciona ningún código
@@ -56,19 +58,30 @@ export const Movimientos2 = () => {
         }
     }
 
+    const listarDetallesMovimiento = async () => {
+        try {
+            // Realizar una solicitud específica para obtener un movimiento por su código
+            let response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
+            console.log(response);
+            setDetallesMovimiento(response.data.datos ? response.data.datos : []);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         listarMovimientos();
-    }, [])
+    }, [codigoMovimiento])
 
     return (
         <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
             <div className='w-[90%]'>
                 <div className='flex gap-3'>
-                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold '>Registrar Movimiento</Button>
                     <div className='flex justify-center'>
                         <input
                             type="text"
-                            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
+                            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md mb-2'
                             placeholder='Código Movimiento'
                             onChange={(e) => {
                                 setCodigoMovimiento(e.target.value)
@@ -95,6 +108,43 @@ export const Movimientos2 = () => {
                                 <ModalBody>
                                     <form action="">
                                         <div className='flex flex-col gap-4'>
+                                            <div className='w-full'>
+                                                <Table
+                                                    className="mx-auto"// Agregar la clase mx-auto para centrar horizontalmente
+                                                >
+                                                    <TableHeader>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">Código</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="elemento">Elemento</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">Estado</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="fecha"> Fecha</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="cantidad"> Cantidad</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="recibe"> Recibe</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="entrega"> Entrega</TableColumn>
+                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
+                                                    </TableHeader>
+                                                    <TableBody>
+                                                        {detallesMovimiento.map((detalle, index) => (
+                                                            <TableRow className='text-center font-semibold' key={detalle.Codigo}>
+                                                                <TableCell className='font-semibold'>{detalle.Codigo}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Elemento}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Estado}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Fecha}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Cantidad}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Recibe}</TableCell>
+                                                                <TableCell className='font-semibold'>{detalle.Entrega}</TableCell>
+                                                                <TableCell className='flex gap-2 justify-center'>
+                                                                    <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
+                                                                        Editar
+                                                                    </Button>
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))}
+                                                    </TableBody>
+                                                </Table>
+                                                <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
+                                                    Añadir Detalle
+                                                </Button>
+                                            </div>
                                         </div>
                                         <div className='w-full mt-5 flex justify-end gap-2 text-white'>
                                             <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={onClose}>
@@ -144,7 +194,9 @@ export const Movimientos2 = () => {
                                 <TableCell className='font-semibold'>{elemento.Usuario}</TableCell>
                                 <TableCell className='font-semibold'>{elemento.Tipo}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
-                                    <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#E4B803]' onClick={() => { handleInfo(elemento.Codigo); }}
+                                    <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#E4B803]' onClick={() => {
+                                        handleInfo(elemento.Codigo);
+                                    }}
                                         style={{ fontSize: '15px' }}>
                                         Info
                                     </Button>
