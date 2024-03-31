@@ -218,11 +218,11 @@ const Usuario = () => {
   
       <br />
 
-      <div className="mx-auto w-[95%]">
+      <div className="mx-auto w-[95%] ">
         <table className="divide-y divide-gray-200">
-          <thead className="bg-[#39A900]">
+          <thead className="bg-[#39A900] ">
             <tr>
-              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider ">Id</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  rounded-tl">Id</th>
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Email</th>
@@ -230,7 +230,7 @@ const Usuario = () => {
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Numero tel</th>
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Id Ficha</th>
               <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Estado</th>
-              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Administrar</th>
+              <th className="px-3 py-3 text-left text-xs font-medium text-white uppercase tracking-wider  rounded-tr">Administrar</th>
             </tr>
           </thead>
 
