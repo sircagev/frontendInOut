@@ -118,6 +118,21 @@ const Usuario = () => {
     buscarUsuario(searchTerm);
   };
 
+  const ListarUsuarios = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/usuario/listar`);
+      if (response.data && Array.isArray(response.data.result)) {
+        setUsuarios(response.data.result);
+      } else {
+        console.error("La respuesta de la solicitud GET no contiene un array en la propiedad 'result':", response.data);
+        alert("Error al obtener la lista de usuarios");
+      }
+    } catch (error) {
+      console.log("Error al obtener la lista de usuarios:", error);
+      alert("Error al obtener la lista de usuarios");
+    }
+  };
+
   const handleUpdateClick = (user) => {
     setSelectedUser(user);
     setSelectedRol(user.rol);
@@ -133,21 +148,6 @@ const Usuario = () => {
     });
 
     myModal.show();
-  };
-
-  const ListarUsuarios = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/usuario/listar`);
-      if (response.data && Array.isArray(response.data.result)) {
-        setUsuarios(response.data.result);
-      } else {
-        console.error("La respuesta de la solicitud GET no contiene un array en la propiedad 'result':", response.data);
-        alert("Error al obtener la lista de usuarios");
-      }
-    } catch (error) {
-      console.log("Error al obtener la lista de usuarios:", error);
-      alert("Error al obtener la lista de usuarios");
-    }
   };
 
 
@@ -207,7 +207,7 @@ const Usuario = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
+            <button className="btn bg-gray-500 hover:bg-gray-600 text-white font-bold w-[40px] " type="button" onClick={handleSearch}>
               <BiSearch />
             </button>
           </div>
