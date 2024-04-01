@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from './../assets/logo.jpg'
+import logo from './../assets/sena.png'
 import { LiSideBar } from './moleculas/LiSideBar';
 import { ImUsers } from "react-icons/im";
 import { FaTools, FaPencilRuler } from "react-icons/fa";
@@ -67,10 +67,23 @@ export const Sidebar = ({ state, setState }) => {
           icon: FaBoxesPacking,
           label: "Bodegas",
           to: "/reportes/bodegas",
-        }
+        },
       ]
-    }
-  ];
+    },
+    {
+      icon: AiOutlineFileText,
+      label: "Bodegas",
+      to: "/bodegas",
+      subitems: [
+        {
+          icon: ImUsers,
+          label: "Ubicacion",
+          to: "/bodegas/Ubicacion",
+        },
+      ]
+      }
+      ];
+
 
   return (
     <div>
@@ -80,9 +93,8 @@ export const Sidebar = ({ state, setState }) => {
       <div className={`text-black bg-[#00670c] fixed pt-[20px] z-[1] h-full delay-100 ease-in-out overflow-y-auto overflow-x-hidden ${state ? "w-[220px]" : "w-[65px]"}`}>
         <div className='flex justify-center items-center pb-[60px]'>
           <div className={`flex justify-center items-center w-[30px] cursor-pointer delay-300 ease-linear ${state ? "scale-75" : "scale-150"} rotate-[360deg]`}>
-            <img className="w-full animation-flotar rounded-full" src={logo} />
+            <img className="w-[40px] h-auto animation-flotar rounded-full" src={logo} />
           </div>
-          <h2 className={`font-bold ${state ? "block" : "hidden"}`}>InOut</h2>
         </div>
         {LinksArray.map(({ icon, label, to, subitems }, index) => (
           <LiSideBar icon={icon} label={label} to={to} state={state} subitems={subitems} llave={index}/>

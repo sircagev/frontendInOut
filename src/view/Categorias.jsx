@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination } from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import swal from 'sweetalert';
 
 export const Categorias = () => {
 
@@ -50,7 +51,13 @@ export const Categorias = () => {
     const handleForm = async (event) => {
         event.preventDefault();
         if (!values.Nombre_Categoria.trim()) {
-            alert('Por favor ingrese un nombre de categoría');
+            swal({
+                title: "Datos incompletos",
+                text: "Registre un nombre..",
+                icon: "warning",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+            });
             return;
         }
 
@@ -60,6 +67,14 @@ export const Categorias = () => {
                 ListarCategorias();
                 setValues({ Nombre_Categoria: '' }); // Resetear el formulario después de enviarlo
                 onClose()
+
+                swal({
+                    title: "Registro exitoso",
+                    text: "La categoría se ha registrado correctamente.",
+                    icon: "success",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
             }
         } catch (error) {
             console.log(error);
@@ -77,7 +92,7 @@ export const Categorias = () => {
             response = await axios.get(`http://localhost:3000/categoria/buscar/${codigoCategoria}`);
             console.log(response.data);
             setCategorias(response.data.categoria ? response.data.categoria : []);
-
+            setPage(1)
         } else {
             // Obtener todos las categorías si no se proporciona ningún código
             response = await axios.get('http://localhost:3000/categoria/listar');
@@ -88,13 +103,41 @@ export const Categorias = () => {
         }
     };
 
-    const DesactivarCategorias = async (codigo_Categoria) => {
-        await axios.put(`http://localhost:3000/categoria/desactivar/${codigo_Categoria}`)
-            .then(response => {
-                setDesactivar(response.data)
-                ListarCategorias();
-            })
-    };
+    const DesactivarCategorias = async (codigo_Categoria, estado) => { 
+    let mensaje;
+
+    if (estado === 'activo') {
+        mensaje = "¿Desea desactivar la categoría?";
+    } else if (estado === 'inactivo') {
+        mensaje = "¿Desea reactivar la categoría?";
+    }
+
+    swal({
+        title: "¿Está seguro?",
+        text: mensaje,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then(async (willDesactivar) => {
+        if (willDesactivar) {
+            await axios.put(`http://localhost:3000/categoria/desactivar/${codigo_Categoria}`)
+                .then(response => {
+                    setDesactivar(response.data);
+                    ListarCategorias(); // Vuelve a cargar la lista completa de categorías
+                    swal("¡Se ha actualizado el estado correctamente!", {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        } else {
+            swal("La categoría está segura.");
+        }
+    });
+    }; 
 
     const handleInfo = (codigo_Categoria) => {
         const categoria = UseCategorias.find((categoria) => categoria.codigo_Categoria === codigo_Categoria);
@@ -110,15 +153,46 @@ export const Categorias = () => {
 
     const handleEdit = async () => {
         try {
+            if (!editedNombreCategoria.trim()) {
+                swal({
+                    title: "Datos incompletos",
+                    text: "Ingrese un nombre para la categoría.",
+                    icon: "warning",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
+                return;
+            }
+    
             await axios.put(`http://localhost:3000/categoria/actualizar/${selectedCategoria.codigo_Categoria}`, {
                 Nombre_Categoria: editedNombreCategoria,
             });
             ListarCategorias();
             onCloseInfo();
+            swal({
+                title: "Actualización exitosa",
+                text: "La categoría se ha actualizado correctamente.",
+                icon: "success",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+            });
         } catch (error) {
             console.log(error);
         }
     };
+
+    const handleFilter = () => {
+        const filteredCategorias = UseCategorias.filter(
+            (categoria) =>
+                categoria.codigo_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase()) ||
+                categoria.Nombre_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase())
+        );
+        setCategorias(filteredCategorias);
+        // Vuelve a cargar la lista completa de categorías actualizada
+        ListarCategorias();
+    };
+    
+    
 
 
     useEffect(() => {
@@ -136,8 +210,10 @@ export const Categorias = () => {
                     type="text" 
                     className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Categoría' 
                     onChange={(e) => {
-                        setCodigoCategoria(e.target.value)
+                        setCodigoCategoria(e.target.value);
+                        handleFilter();
                       }}
+                    
                     />
                     <button
                         className="flex justify-center items-center middle none center mr-4 bg-[#3d7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -236,12 +312,17 @@ export const Categorias = () => {
                             <TableCell className='font-semibold'>{categoria.codigo_Categoria}</TableCell>
                             <TableCell className='font-semibold'>{categoria.Nombre_Categoria}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                                    <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarCategorias(categoria.codigo_Categoria)}} style={{fontSize: '15px'}}>
-                                        Desactivar
-                                    </Button>  
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(categoria.codigo_Categoria);}} style={{ fontSize: '15px' }}>
-                                        Info
-                                    </Button> 
+                            <Button
+                                color={categoria.estado === 'inactivo' ? 'success' : 'danger'}
+                                className={`bg-${categoria.estado === 'inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                onClick={() => { DesactivarCategorias(categoria.codigo_Categoria, categoria.estado) }}
+                                style={{ fontSize: '15px' }}
+                            >
+                                {categoria.estado === 'inactivo' ? 'Activar' : 'Desactivar'}
+                            </Button>
+                            <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(categoria.codigo_Categoria);}} style={{ fontSize: '15px' }}>
+                                Info
+                            </Button> 
                             </TableCell>
                         </TableRow>
                     ))}

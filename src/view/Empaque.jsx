@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination } from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import swal from 'sweetalert';
 
 export const Empaque = () => {
 
@@ -48,7 +49,13 @@ export const Empaque = () => {
     const handleForm = async (event) => {
         event.preventDefault();
         if (!values.Nombre_Empaque.trim()) {
-            setMessage('Por favor ingrese un nombre de empaque');
+            swal({
+                title: "Datos incompletos",
+                text: "Registre un nombre..",
+                icon: "warning",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+            });
             return;
         }
 
@@ -58,6 +65,14 @@ export const Empaque = () => {
                 ListarEmpaque();
                 setValues({ Nombre_Empaque: '' }); // Resetear el formulario después de enviarlo
                 onClose()
+
+                swal({
+                    title: "Registro exitoso",
+                    text: "La categoría se ha registrado correctamente.",
+                    icon: "success",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
             }
         } catch (error) {
             console.log(error);
@@ -75,7 +90,7 @@ export const Empaque = () => {
                 response = await axios.get(`http://localhost:3000/empaque/buscar/${codigoEmpaque}`);
                 console.log(response.data);
                 setEmpaques(response.data.Empaque ? response.data.Empaque : []);
-    
+                setPage(1)
             } else {
                 // Obtener todos las categorías si no se proporciona ningún código
                 response = await axios.get('http://localhost:3000/empaque/listar');
@@ -87,18 +102,41 @@ export const Empaque = () => {
     };
       
 
-    const DesactivarEmpaque = async (codigo_Empaque) => {
-        try {
-            await axios.put(`http://localhost:3000/empaque/desactivar/${codigo_Empaque}`);
-            // Después de desactivar el empaque, volvemos a listar los empaques
-            ListarEmpaque();
-        } catch (error) {
-            console.log(error);
+    const DesactivarEmpaque = async (codigo_Empaque, estado) => {
+        let mensaje;
+    
+        if (estado === 'activo') {
+            mensaje = "¿Desea desactivar el empaque?";
+        } else if (estado === 'inactivo') {
+            mensaje = "¿Desea reactivar el empaque?";
         }
+    
+        swal({
+            title: "¿Está seguro?",
+            text: mensaje,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDesactivar) => {
+            if (willDesactivar) {
+                try {
+                    await axios.put(`http://localhost:3000/empaque/desactivar/${codigo_Empaque}`);
+                    ListarEmpaque(); // Vuelve a cargar la lista completa de empaques
+                    swal("¡Se ha desactivado correctamente!", {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                swal("El empaque está seguro.");
+            }
+        });
     };
     
     
-
     const handleInfo = (codigo_Empaque) => {
         const empaque = UseEmpaques.find((empaque) => empaque.codigo_Empaque === codigo_Empaque);
         if (empaque) {
@@ -114,7 +152,13 @@ export const Empaque = () => {
         try {
             // Verificar si editedNombreEmpaque tiene un valor válido
             if (!editedNombreEmpaque.trim()) {
-                console.log('El nombre del empaque no puede estar vacío');
+                swal({
+                    title: "Datos incompletos",
+                    text: "Ingrese un nombre para el empaque.",
+                    icon: "warning",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
                 return;
             }
     
@@ -129,10 +173,19 @@ export const Empaque = () => {
     
             // Cerrar el modal de información
             onCloseInfo();
+    
+            swal({
+                title: "Actualización exitosa",
+                text: "El empaque se ha actualizado correctamente.",
+                icon: "success",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+            });
         } catch (error) {
             console.log(error);
         }
     };
+    
 
     useEffect(() => {
         ListarEmpaque()
@@ -249,9 +302,14 @@ export const Empaque = () => {
                             <TableCell className='font-semibold'>{empaque.codigo_Empaque}</TableCell>
                             <TableCell className='font-semibold'>{empaque.Nombre_Empaque}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                                    <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarEmpaque(empaque.codigo_Empaque)}} style={{fontSize: '15px'}}>
-                                        Desactivar
-                                    </Button>  
+                            <Button
+                                color={empaque.estado === 'inactivo' ? 'success' : 'danger'}
+                                className={`bg-${empaque.estado === 'inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                onClick={() => { DesactivarEmpaque(empaque.codigo_Empaque, empaque.estado) }}
+                                style={{ fontSize: '15px' }}
+                            >
+                                {empaque.estado === 'inactivo' ? 'Activar' : 'Desactivar'}
+                            </Button>  
                                     <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(empaque.codigo_Empaque);}} style={{ fontSize: '15px' }}>
                                         Info
                                     </Button> 

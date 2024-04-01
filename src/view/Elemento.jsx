@@ -4,6 +4,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagina
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import swal from 'sweetalert';
 
 
 export const Elemento = () => {
@@ -63,6 +64,7 @@ export const Elemento = () => {
   const handleForm = async (event) => {
     try {
       event.preventDefault();
+      console.log(values)
       const response = await axios({
         method: 'post',
         url: `http://localhost:3000/elemento/registrar`,

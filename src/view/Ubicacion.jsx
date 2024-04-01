@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, useBadge, Select, SelectItem } from "@nextui-org/react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import swal from 'sweetalert';
 
 export const Ubicacion = () => {
 
@@ -44,6 +45,7 @@ export const Ubicacion = () => {
             // Obtener todos las categorías si no se proporciona ningún código
             response = await axios.get('http://localhost:3000/ubicacion/listar');
             setUbicacion(response.data || []);
+            setPage(1)
         }
         } catch (error) {
         console.log(error);
@@ -80,26 +82,40 @@ export const Ubicacion = () => {
     };
 
     const handleForm = async (event) => {
-        try {
-            event.preventDefault();
-            console.log(values)
-            const response = await axios({
-                method: 'post',
-                url: `http://localhost:3000/ubicacion/registrar`,
-                data: values
+        event.preventDefault();
+    
+        // Verificar si alguno de los campos está vacío
+        if (!values.Nombre_ubicacion.trim() || !values.fk_bodega.trim()) {
+            swal({
+                title: "Datos incompletos",
+                text: "Por favor, complete todos los campos del formulario.",
+                icon: "warning",
+                buttons: false,
+                timer: 2000,
             });
+            return;
+        }
+    
+        try {
+            const response = await axios.post('http://localhost:3000/ubicacion/registrar', values);
             if (response.status === 200) {
-                onClose();
                 ListarUbicacion();
-                setValues({
-                    Nombre_ubicacion: "",
-                    fk_bodega: "",
+                setValues({ Nombre_ubicacion: '', fk_bodega: '' }); // Resetear el formulario después de enviarlo
+                onClose()
+    
+                swal({
+                    title: "Registro exitoso",
+                    text: "La ubicación se ha registrado correctamente.",
+                    icon: "success",
+                    buttons: false,
+                    timer: 2000,
                 });
             }
         } catch (error) {
             console.log(error);
         }
     };
+    
 
     const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
     const [selectedUbicacion, setSelectedUbicacion] = useState(null);
@@ -120,27 +136,93 @@ export const Ubicacion = () => {
         }
       };
 
-    const handleEditUbicacion = async () => {
-    try {
-        await axios.put(`http://localhost:3000/ubicacion/actualizar/${selectedUbicacion.codigo_Detalle}`, {
-            Nombre_ubicacion: editedUbicacion.Nombre_ubicacion,
-            fk_bodega: editedUbicacion.fk_bodega
-        });
-        ListarUbicacion();
-        // Cerrar el modal de información
-        onCloseInfo();
+      const handleEditUbicacion = async () => {
+        // Verificar si el nombre de la ubicación está vacío o es numérico
+        if (!editedUbicacion.Nombre_ubicacion.trim() || !isNaN(editedUbicacion.Nombre_ubicacion)) {
+            swal({
+                title: "Error",
+                text: "El nombre de la ubicación no puede estar vacío ni ser numérico. Ingrese un nombre válido.",
+                icon: "error",
+                buttons: false,
+                timer: 2000,
+            });
+            return;
+        }
+    
+        try {
+            const response = await axios.put(`http://localhost:3000/ubicacion/actualizar/${selectedUbicacion.codigo_Detalle}`, {
+                Nombre_ubicacion: editedUbicacion.Nombre_ubicacion,
+                fk_bodega: editedUbicacion.fk_bodega // Se mantiene el valor de fk_bodega sin validación
+            });
+            ListarUbicacion();
+            // Cerrar el modal de información
+            onCloseInfo();
+            if (response.status === 200) {
+                swal({
+                    title: "Actualización exitosa",
+                    text: "La ubicación se ha actualizado correctamente.",
+                    icon: "success",
+                    buttons: false,
+                    timer: 2000,
+                });
+            } else {
+                swal({
+                    title: "Error",
+                    text: "Hubo un error al actualizar la ubicación.",
+                    icon: "error",
+                    buttons: false,
+                    timer: 2000,
+                });
+            }
         } catch (error) {
             console.log(error);
+            swal({
+                title: "Error",
+                text: "Hubo un error al actualizar la ubicación.",
+                icon: "error",
+                buttons: false,
+                timer: 2000,
+            });
         }
-      };
-
-    const DesactivarUbicacion = async (codigo_Detalle) => {
-        await axios.put(`http://localhost:3000/ubicacion/desactivar/${codigo_Detalle}`)
-            .then(response => {
-                setDesactivar(response.data)
-                ListarUbicacion();
-            })
     };
+    
+
+    const DesactivarUbicacion = async (codigo_Detalle, estado) => {
+        let mensaje;
+    
+        if (estado === 'activo') {
+            mensaje = "¿Desea desactivar la ubicación?";
+        } else if (estado === 'inactivo') {
+            mensaje = "¿Desea reactivar la ubicación?";
+        }
+    
+        swal({
+            title: "¿Está seguro?",
+            text: mensaje,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDesactivar) => {
+            if (willDesactivar) {
+                await axios.put(`http://localhost:3000/ubicacion/desactivar/${codigo_Detalle}`)
+                    .then(response => {
+                        setDesactivar(response.data);
+                        ListarUbicacion(); // Vuelve a cargar la lista completa de ubicaciones
+                        swal("¡Se ha actualizado el estado correctamente!", {
+                            icon: "success",
+                            button: false,
+                            timer: 2000,
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                swal("La ubicación está segura.");
+            }
+        });
+    };
+    
 
     useEffect(() => {
         ListarUbicacion()
@@ -292,9 +374,15 @@ export const Ubicacion = () => {
                                 <TableCell className='font-semibold'>{ubicacion.Nombre_ubicacion}</TableCell>
                                 <TableCell className='font-semibold'>{ubicacion.Nombre_bodega}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
-                                        <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarUbicacion(ubicacion.codigo_Detalle)}} style={{fontSize: '15px'}}>
-                                            Desactivar
-                                        </Button>  
+                                <Button
+                                    color={ubicacion.estado === 'inactivo' ? 'success' : 'danger'}
+                                    className={`bg-${ubicacion.estado === 'inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                    onClick={() => { DesactivarUbicacion(ubicacion.codigo_Detalle, ubicacion.estado) }}
+                                    style={{ fontSize: '15px' }}
+                                >
+                                    {ubicacion.estado === 'inactivo' ? 'Activar' : 'Desactivar'}
+                                </Button>
+  
                                         <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={()=> {handleInfo(ubicacion.codigo_Detalle);}} style={{ fontSize: '15px' }}>
                                             Info
                                         </Button> 
