@@ -94,11 +94,10 @@ const Usuario = () => {
     try {
       if (id_usuario.trim() !== '') {
         const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
-        console.log(response.data);
-        setUsuarioEncontrado(response.data.Datos);
+        console.log(response.data.Datos);
+        setUsuarios(response.data.Datos);
       } else {
-        setError("Ingrese un ID de usuario válido");
-        setUsuarioEncontrado({});
+        ListarUsuarios();
       }
     } catch (error) {
       console.log("Error al obtener Usuario:", error);
@@ -128,7 +127,7 @@ const Usuario = () => {
         alert("Error al obtener la lista de usuarios");
       }
     } catch (error) {
-      console.log("Error al obtener la lista de usuarios:", error);
+      console.log( error);
       alert("Error al obtener la lista de usuarios");
     }
   };
@@ -176,10 +175,10 @@ const Usuario = () => {
         <div className="col ">
           <button 
             type="button" 
-            className="bg-[#39A900] w-[210px] text-[12] bg-gree h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
-            text-xs font-bold uppercase text-white shadow-md  transition-all hover:shadow-lg hover:shadow-green-500/40 
+            className="bg-[#39A900] w-[210px] text-[12] bg-gree h-[40px] rounded-tr-md rounded-br-md font-sans 
+            text-xs uppercase text-white shadow-md  transition-all hover:shadow-lg hover:shadow-green-500/40 
             focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-            disabled:opacity-50 disabled:shadow-nonepx] text-white font-semibold ml-[30px] " 
+            disabled:opacity-50 disabled:shadow-nonepx] font-semibold ml-[30px] " 
             style={{ marginTop: '20px', borderRadius: '10px'  }}
             onClick={() => {
               setSelectedUser(null);
