@@ -50,10 +50,10 @@ export const Categorias = () => {
     
     const handleForm = async (event) => {
         event.preventDefault();
-        if (!values.Nombre_Categoria.trim()) {
+        if (!values.Nombre_Categoria.trim() || /^\d+$/.test(values.Nombre_Categoria.trim())) {
             swal({
-                title: "Datos incompletos",
-                text: "Registre un nombre..",
+                title: "Datos incompletos o invalidos",
+                text: "Registre un nombre, no pude tener números.",
                 icon: "warning",
                 buttons: false, // Ocultar el botón "Aceptar"
                 timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
@@ -153,10 +153,10 @@ export const Categorias = () => {
 
     const handleEdit = async () => {
         try {
-            if (!editedNombreCategoria.trim()) {
+            if (!editedNombreCategoria.trim() || /^\d+$/.test(editedNombreCategoria.trim())) {
                 swal({
-                    title: "Datos incompletos",
-                    text: "Ingrese un nombre para la categoría.",
+                    title: "Datos incompletos o inválidos",
+                    text: "Ingrese un nombre, no puede tener números.",
                     icon: "warning",
                     buttons: false, // Ocultar el botón "Aceptar"
                     timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos

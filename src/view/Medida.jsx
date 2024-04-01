@@ -68,27 +68,28 @@ export const Medida = () => {
     
     const handleForm = async (event) => {
         event.preventDefault();
-        if (!values.Nombre_Medida.trim()) {
+        // Verificar si Nombre_Medida tiene un valor válido y no es numérico
+        if (!values.Nombre_Medida.trim() || /^\d+$/.test(values.Nombre_Medida.trim())) {
             swal({
-                title: "Datos incompletos",
-                text: "Registre un nombre..",
+                title: "Datos incompletos o inválidos",
+                text: "Ingrese un nombre, no puede tener números.",
                 icon: "warning",
                 buttons: false, // Ocultar el botón "Aceptar"
-                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 4 segundos
             });
             return;
         }
-
+    
         try {
             const response = await axios.post('http://localhost:3000/medida/registrar', values);
             if (response.status === 200) {
                 ListarMedidas();
                 setValues({ Nombre_Medida: '' }); // Resetear el formulario después de enviarlo
                 onClose()
-
+    
                 swal({
                     title: "Registro exitoso",
-                    text: "La categoría se ha registrado correctamente.",
+                    text: "La medida se ha registrado correctamente.",
                     icon: "success",
                     buttons: false, // Ocultar el botón "Aceptar"
                     timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
@@ -98,6 +99,7 @@ export const Medida = () => {
             console.log(error);
         }
     };
+    
 
     const DesactivarMedida = async (codigo_medida, estado) => {
         let mensaje;
@@ -150,10 +152,10 @@ export const Medida = () => {
     const handleEditMedida = async () => {
         try {
             // Verificar si editedNombreMedida tiene un valor válido
-            if (!editedNombreMedida.trim()) {
+            if (!editedNombreMedida.trim() || /^\d+$/.test(editedNombreMedida.trim())) {
                 swal({
-                    title: "Datos incompletos",
-                    text: "Ingrese un nombre para la medida.",
+                    title: "Datos incompletos o inválidos",
+                    text: "Ingrese un nombre, no puede tener números.",
                     icon: "warning",
                     buttons: false, // Ocultar el botón "Aceptar"
                     timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos

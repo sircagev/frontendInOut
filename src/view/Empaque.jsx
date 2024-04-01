@@ -48,10 +48,10 @@ export const Empaque = () => {
     
     const handleForm = async (event) => {
         event.preventDefault();
-        if (!values.Nombre_Empaque.trim()) {
+        if ((!values.Nombre_Empaque.trim()) || /^\d+$/.test(values.Nombre_Empaque.trim())) {
             swal({
-                title: "Datos incompletos",
-                text: "Registre un nombre..",
+                title: "Datos incompletos o invalidos",
+                text: "Registre un nombre, no puede tener numeros",
                 icon: "warning",
                 buttons: false, // Ocultar el botón "Aceptar"
                 timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
@@ -151,10 +151,10 @@ export const Empaque = () => {
     const handleEditEmpaque = async () => {
         try {
             // Verificar si editedNombreEmpaque tiene un valor válido
-            if (!editedNombreEmpaque.trim()) {
+            if (!editedNombreEmpaque.trim() || /^\d+$/.test(editedNombreEmpaque.trim())) {
                 swal({
                     title: "Datos incompletos",
-                    text: "Ingrese un nombre para el empaque.",
+                    text: "Ingrese un nombre, no pude tener números.",
                     icon: "warning",
                     buttons: false, // Ocultar el botón "Aceptar"
                     timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
