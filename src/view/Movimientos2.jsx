@@ -3,14 +3,40 @@ import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination } from "@nextui-org/react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
+import { ListarElementos } from '../functions/Listar';
 
 export const Movimientos2 = () => {
     //Sirve para guardar la información que se traiga al listar los datos 
     const [movimientos, setMovimientos] = useState([]);
     const [detallesMovimiento, setDetallesMovimiento] = useState([]);
 
+    const [nuevosDetalles, setNuevosDetalles] = useState([]);
+
+    const [dataElements, setDataElements] = useState([]);
+
+    // Definición de la función agregarNuevoDetalle
+    // Agrega un nuevo detalle con su elemento asociado
+    const agregarNuevoDetalle = () => {
+        setNuevosDetalles([...nuevosDetalles, { Elemento: '', Detalle: { Fecha: '', Cantidad: '', Recibe: '', Entrega: '' } }]);
+    };
+
+    const eliminarNuevoDetalle = (index) => {
+        const detallesActualizados = [...nuevosDetalles];
+        detallesActualizados.splice(index, 1);
+        setNuevosDetalles(detallesActualizados);
+    };
+
+    // Función para agregar un nuevo detalle al detalle del movimiento
+    const agregarDetalleMovimiento = (nuevoDetalle) => {
+        setDetallesMovimiento([...detallesMovimiento, nuevoDetalle]);
+    };
+
     //Para guardar la informacion del codigo de movimiento a usar
     const [codigoMovimiento, setCodigoMovimiento] = useState('');
+
+    //Para guardar la informacion del editar o no
+    const [editable, setEditable] = useState(false);
 
     //Inicializar page
     const [page, setPage] = useState(1);
@@ -44,13 +70,11 @@ export const Movimientos2 = () => {
 
                 // Realizar una solicitud específica para obtener un movimiento por su código
                 response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
-                console.log(response);
                 setMovimientos(response.data.Movimiento ? response.data.Movimiento : []);
 
             } else {
                 // Obtener todos los movimientos si no se proporciona ningún código
                 response = await axios.get('http://localhost:3000/movimientos/listar');
-                console.log(response.data.datos)
                 setMovimientos(response.data.datos || []);
             }
         } catch (error) {
@@ -70,8 +94,22 @@ export const Movimientos2 = () => {
         }
     }
 
+    const toggleEditables = () => {
+        setEditable(!editable);
+    }
+
+    const fectchData = async () => {
+        try {
+            const itemsData = await ListarElementos();
+            setDataElements(itemsData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         listarMovimientos();
+        fectchData();
     }, [codigoMovimiento])
 
     return (
@@ -117,17 +155,17 @@ export const Movimientos2 = () => {
                                                                 <div className='w-[10%] flex justify-center items-centerc text-4xl'> {detalle.Codigo}</div>
                                                                 <div className='flex w-[90%] gap-1'>
                                                                     <Input
-                                                                        isReadOnly
+                                                                        isReadOnly={editable}
                                                                         isRequired
                                                                         key="fecha"
                                                                         type="date"
                                                                         label="Fecha"
                                                                         variant="underlined"
                                                                         labelPlacement="outside"
-                                                                        defaultValue={detalle.Fecha.split('T')[0]}
+                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
                                                                     />
                                                                     <Input
-                                                                        isReadOnly
+                                                                        isReadOnly={editable}
                                                                         isRequired
                                                                         key="cantidad"
                                                                         type="number"
@@ -137,7 +175,7 @@ export const Movimientos2 = () => {
                                                                         defaultValue={detalle.Cantidad}
                                                                     />
                                                                     <Input
-                                                                        isReadOnly
+                                                                        isReadOnly={editable}
                                                                         isRequired
                                                                         key="recibio"
                                                                         type="text"
@@ -147,7 +185,7 @@ export const Movimientos2 = () => {
                                                                         defaultValue={detalle.Recibe}
                                                                     />
                                                                     <Input
-                                                                        isReadOnly
+                                                                        isReadOnly={editable}
                                                                         isRequired
                                                                         key="entrego"
                                                                         type="text"
@@ -157,16 +195,89 @@ export const Movimientos2 = () => {
                                                                         defaultValue={detalle.Entrega}
                                                                     />
                                                                     <div>
-                                                                        <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
-                                                                            Editar
+                                                                        <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={toggleEditables} style={{ fontSize: '15px' }}>
+                                                                            {editable ? "Editar" : "Cancelar"}
                                                                         </Button>
+                                                                        {editable ? "" : <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => alert('Realizando cambio')} style={{ fontSize: '15px' }}>
+                                                                            {editable ? "Editar" : "Realizar Cambios"}
+                                                                        </Button>}
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 ))}
-                                                <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
+                                                {nuevosDetalles.map((detalle, index) => (
+                                                    <div className='w-full mb-3' key={index}>
+                                                        <form action="" className='w-full'>
+                                                            {/* Aquí renderizas los campos de entrada para el elemento y los detalles */}
+                                                            <div className='flex w-full'>
+                                                                <div className='flex w-[90%] gap-1'>
+                                                                    <Input
+                                                                        isReadOnly={editable}
+                                                                        isRequired
+                                                                        key="elemento"
+                                                                        type="text"
+                                                                        label="Elemento"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly={editable}
+                                                                        isRequired
+                                                                        key="fecha"
+                                                                        type="date"
+                                                                        label="Fecha"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly={editable}
+                                                                        isRequired
+                                                                        key="cantidad"
+                                                                        type="number"
+                                                                        label="Cantidad"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Cantidad}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly={editable}
+                                                                        isRequired
+                                                                        key="recibio"
+                                                                        type="text"
+                                                                        label="Recibio"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Recibe}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly={editable}
+                                                                        isRequired
+                                                                        key="entrego"
+                                                                        type="text"
+                                                                        label="Entrego"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Entrega}
+                                                                    />
+                                                                    <div>
+                                                                        <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => {
+                                                                            agregarDetalleMovimiento(detalle)
+                                                                            eliminarNuevoDetalle(index)
+                                                                        }} style={{ fontSize: '15px' }}>
+                                                                            Registrar Detalle
+                                                                        </Button>
+                                                                        <button onClick={() => eliminarNuevoDetalle(index)}>Eliminar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                ))}
+                                                <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={agregarNuevoDetalle} style={{ fontSize: '15px' }}>
                                                     Añadir Detalle
                                                 </Button>
                                             </div>
