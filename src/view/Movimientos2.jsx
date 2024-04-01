@@ -4,7 +4,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagina
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
-import { ListarElementos } from '../functions/Listar';
+import { ListarElementos, ListarUsuarios } from '../functions/Listar';
 
 export const Movimientos2 = () => {
     //Sirve para guardar la información que se traiga al listar los datos 
@@ -14,11 +14,15 @@ export const Movimientos2 = () => {
     const [nuevosDetalles, setNuevosDetalles] = useState([]);
 
     const [dataElements, setDataElements] = useState([]);
+    const [dataUsuarios, setDataUsuarios] = useState([]);
+
+    //Para guardar la informacion del codigo de movimiento a usar
+    const [codigoMovimiento, setCodigoMovimiento] = useState('');
 
     // Definición de la función agregarNuevoDetalle
     // Agrega un nuevo detalle con su elemento asociado
     const agregarNuevoDetalle = () => {
-        setNuevosDetalles([...nuevosDetalles, { Elemento: '', Detalle: { Fecha: '', Cantidad: '', Recibe: '', Entrega: '' } }]);
+        setNuevosDetalles([...nuevosDetalles, { Movimiento: '', Elemento: '', Fecha: '', Cantidad: '', Recibe: '', Entrega: '' }]);
     };
 
     const eliminarNuevoDetalle = (index) => {
@@ -28,12 +32,45 @@ export const Movimientos2 = () => {
     };
 
     // Función para agregar un nuevo detalle al detalle del movimiento
-    const agregarDetalleMovimiento = (nuevoDetalle) => {
-        setDetallesMovimiento([...detallesMovimiento, nuevoDetalle]);
+    const agregarDetalleMovimiento = async (nuevoDetalle) => {
+        try {
+            nuevoDetalle.Movimiento = codigoMovimiento;
+            console.log(nuevoDetalle)
+
+            const response = await axios.post(`http://localhost:3000/movimientos/${nuevoDetalle.Movimiento}/aniadirDetalle`, nuevoDetalle)
+            
+            if (response.status === 200) {
+                handleInfo(codigoMovimiento);
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+
     };
 
-    //Para guardar la informacion del codigo de movimiento a usar
-    const [codigoMovimiento, setCodigoMovimiento] = useState('');
+    const handleInputChange = (index, fieldName, value) => {
+        const updatedDetalles = [...nuevosDetalles];
+        const detalle = updatedDetalles[index];
+
+        if (fieldName === 'elemento') {
+            detalle.Elemento = value;
+        } else if (fieldName === 'fecha') {
+            detalle.Fecha = value || null;
+        } else if (fieldName === 'cantidad') {
+            detalle.Cantidad = value;
+        } else if (fieldName === 'recibe') {
+            detalle.Recibe = value;
+        } else if (fieldName === 'entrega') {
+            detalle.Entrega = value;
+        }
+
+        updatedDetalles[index] = detalle;
+        setNuevosDetalles(updatedDetalles);
+    };
+
+
+    
 
     //Para guardar la informacion del editar o no
     const [editable, setEditable] = useState(false);
@@ -56,6 +93,7 @@ export const Movimientos2 = () => {
         try {
             const response = await axios.get(`http://localhost:3000/movimientos/${codigo}/detalles`);
             console.log(response);
+            setCodigoMovimiento(codigo)
             setDetallesMovimiento(response.data.datos ? response.data.datos : []);
             onOpen();
         } catch (error) {
@@ -100,8 +138,11 @@ export const Movimientos2 = () => {
 
     const fectchData = async () => {
         try {
-            const itemsData = await ListarElementos();
-            setDataElements(itemsData);
+            const itemsElements = await ListarElementos();
+            const itemsUsers = await ListarUsuarios();
+            setDataElements(itemsElements);
+            setDataUsuarios(itemsUsers);
+            console.log(itemsUsers);
         } catch (error) {
             console.log(error);
         }
@@ -158,11 +199,11 @@ export const Movimientos2 = () => {
                                                                         isReadOnly={editable}
                                                                         isRequired
                                                                         key="fecha"
-                                                                        type="date"
+                                                                        type={editable ? "text" : 'date'}
                                                                         label="Fecha"
                                                                         variant="underlined"
                                                                         labelPlacement="outside"
-                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
+                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : 'Sin fecha'}
                                                                     />
                                                                     <Input
                                                                         isReadOnly={editable}
@@ -212,57 +253,78 @@ export const Movimientos2 = () => {
                                                         <form action="" className='w-full'>
                                                             {/* Aquí renderizas los campos de entrada para el elemento y los detalles */}
                                                             <div className='flex w-full'>
-                                                                <div className='flex w-[90%] gap-1'>
-                                                                    <Input
-                                                                        isReadOnly={editable}
+                                                                <div className='flex w-full gap-1'>
+                                                                    <Autocomplete
+                                                                        label="Select an element"
+                                                                        placeholder="Search an animal"
                                                                         isRequired
-                                                                        key="elemento"
-                                                                        type="text"
-                                                                        label="Elemento"
                                                                         variant="underlined"
-                                                                        labelPlacement="outside"
-                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
-                                                                    />
+                                                                        selectedKey={detalle.Elemento}
+                                                                        onSelectionChange={(value) => handleInputChange(index, 'elemento', value)}
+                                                                    >
+                                                                        {dataElements.map((element) => (
+                                                                            <AutocompleteItem
+                                                                                key={element.Codigo_elemento}
+                                                                                value={element.Codigo_elemento}
+                                                                            >
+                                                                                {element.Nombre_elemento}
+                                                                            </AutocompleteItem>
+                                                                        ))}
+                                                                    </Autocomplete>
                                                                     <Input
-                                                                        isReadOnly={editable}
                                                                         isRequired
-                                                                        key="fecha"
                                                                         type="date"
                                                                         label="Fecha"
                                                                         variant="underlined"
                                                                         labelPlacement="outside"
-                                                                        defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : ''}
+                                                                        onChange={(e) => handleInputChange(index, 'fecha', e.target.value)}
+                                                                        value={detalle.Fecha}
                                                                     />
                                                                     <Input
-                                                                        isReadOnly={editable}
                                                                         isRequired
-                                                                        key="cantidad"
                                                                         type="number"
                                                                         label="Cantidad"
                                                                         variant="underlined"
                                                                         labelPlacement="outside"
-                                                                        defaultValue={detalle.Cantidad}
+                                                                        onChange={(e) => handleInputChange(index, 'cantidad', e.target.value)}
+                                                                        value={detalle.Cantidad}
                                                                     />
-                                                                    <Input
-                                                                        isReadOnly={editable}
+                                                                    <Autocomplete
+                                                                        label="Select a user"
+                                                                        placeholder="Search a user"
                                                                         isRequired
-                                                                        key="recibio"
-                                                                        type="text"
-                                                                        label="Recibio"
                                                                         variant="underlined"
-                                                                        labelPlacement="outside"
-                                                                        defaultValue={detalle.Recibe}
-                                                                    />
-                                                                    <Input
-                                                                        isReadOnly={editable}
+                                                                        selectedKey={detalle.Recibe}
+                                                                        onSelectionChange={(value) => handleInputChange(index, 'recibe', value)}
+                                                                    >
+                                                                        {dataUsuarios.map((user) => (
+                                                                            <AutocompleteItem
+                                                                                key={user.id_usuario}
+                                                                                value={user.id_usuario}
+                                                                            >
+                                                                                {user.nombre_usuario}
+                                                                            </AutocompleteItem>
+                                                                        ))}
+                                                                    </Autocomplete>
+                                                                    <Autocomplete
+                                                                        label="Select a user"
+                                                                        placeholder="Search a user"
                                                                         isRequired
-                                                                        key="entrego"
-                                                                        type="text"
-                                                                        label="Entrego"
                                                                         variant="underlined"
-                                                                        labelPlacement="outside"
-                                                                        defaultValue={detalle.Entrega}
-                                                                    />
+                                                                        selectedKey={detalle.Entrega}
+                                                                        onSelectionChange={(value) => handleInputChange(index, 'entrega', value)}
+                                                                    >
+                                                                        {dataUsuarios.map((user) => (
+                                                                            <AutocompleteItem
+                                                                                key={user.id_usuario}
+                                                                                value={user.id_usuario}
+                                                                            >
+                                                                                {user.nombre_usuario}
+                                                                            </AutocompleteItem>
+                                                                        ))}
+                                                                    </Autocomplete>
+
+
                                                                     <div>
                                                                         <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => {
                                                                             agregarDetalleMovimiento(detalle)
