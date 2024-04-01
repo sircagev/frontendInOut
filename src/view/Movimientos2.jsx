@@ -96,7 +96,7 @@ export const Movimientos2 = () => {
                     </div>
                 </div>
                 <Modal
-                    size={size}
+                    size="4xl"
                     isOpen={isOpen}
                     onClose={onClose}
                     className='my-auto'
@@ -109,38 +109,63 @@ export const Movimientos2 = () => {
                                     <form action="">
                                         <div className='flex flex-col gap-4'>
                                             <div className='w-full'>
-                                                <Table
-                                                    className="mx-auto"// Agregar la clase mx-auto para centrar horizontalmente
-                                                >
-                                                    <TableHeader>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">Código</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="elemento">Elemento</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">Estado</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="fecha"> Fecha</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="cantidad"> Cantidad</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="recibe"> Recibe</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="entrega"> Entrega</TableColumn>
-                                                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {detallesMovimiento.map((detalle, index) => (
-                                                            <TableRow className='text-center font-semibold' key={detalle.Codigo}>
-                                                                <TableCell className='font-semibold'>{detalle.Codigo}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Elemento}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Estado}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Fecha}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Cantidad}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Recibe}</TableCell>
-                                                                <TableCell className='font-semibold'>{detalle.Entrega}</TableCell>
-                                                                <TableCell className='flex gap-2 justify-center'>
-                                                                    <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
-                                                                        Editar
-                                                                    </Button>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
+                                                {detallesMovimiento.map((detalle, index) => (
+                                                    <div className='w-full mb-3' key={index}>
+                                                        <form action="" className='w-full'>
+                                                            <div className='flex items-start pl-3 font-bold pb-2'>{detalle.Elemento}</div>
+                                                            <div className='flex w-full'>
+                                                                <div className='w-[10%] flex justify-center items-centerc text-4xl'> {detalle.Codigo}</div>
+                                                                <div className='flex w-[90%] gap-1'>
+                                                                    <Input
+                                                                        isReadOnly
+                                                                        isRequired
+                                                                        key="fecha"
+                                                                        type="date"
+                                                                        label="Fecha"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Fecha.split('T')[0]}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly
+                                                                        isRequired
+                                                                        key="cantidad"
+                                                                        type="number"
+                                                                        label="Cantidad"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Cantidad}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly
+                                                                        isRequired
+                                                                        key="recibio"
+                                                                        type="text"
+                                                                        label="Recibio"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Recibe}
+                                                                    />
+                                                                    <Input
+                                                                        isReadOnly
+                                                                        isRequired
+                                                                        key="entrego"
+                                                                        type="text"
+                                                                        label="Entrego"
+                                                                        variant="underlined"
+                                                                        labelPlacement="outside"
+                                                                        defaultValue={detalle.Entrega}
+                                                                    />
+                                                                    <div>
+                                                                        <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
+                                                                            Editar
+                                                                        </Button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                ))}
                                                 <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
                                                     Añadir Detalle
                                                 </Button>
@@ -155,6 +180,7 @@ export const Movimientos2 = () => {
                                             </Button>
                                         </div>
                                     </form>
+
                                 </ModalBody>
                                 <ModalFooter>
                                 </ModalFooter>

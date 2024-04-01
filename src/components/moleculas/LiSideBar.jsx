@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 
 export const LiSideBar = ({ state, label, to, icon: Icono, subitems, llave }) => {
 
@@ -27,7 +27,7 @@ export const LiSideBar = ({ state, label, to, icon: Icono, subitems, llave }) =>
                         </span>
                     </div>
                     <div className={`p-[2px] flex w-[40px] transition-all ${subitems && state ? "" : "hidden"} ${isOpen ? "rotate-[180deg] translate-x-[-10px]" : ""}`} onClick={subitems ? handleToggle : null}>
-                        <IoIosArrowUp className="text-[18px]" />
+                        <IoIosArrowDown className="text-[18px]" />
                     </div>
                 </NavLink>
 
