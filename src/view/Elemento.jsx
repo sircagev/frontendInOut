@@ -4,6 +4,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagina
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
+import swal from 'sweetalert';
 
 
 export const Elemento = () => {
@@ -16,6 +17,22 @@ export const Elemento = () => {
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
 
+  const [NuevoStock, setStock] = useState('');
+
+  const [dataStock, setDataStock] = useState({
+    usuario_solicitud: '',
+    fk_movimiento: 1,
+    Estado: null,
+    detalles: [{
+      fk_elemento: '',
+      estado: null,
+      fecha_vencimiento: null,
+      cantidad: 0,
+      Usuario_recibe: '',
+      Usuario_entrega: '',
+      Observaciones: ''
+    }]
+  });
 
   const [page, setPage] = useState(1);
   const [itemsToShow, setItemsToShow] = useState([]);
@@ -40,17 +57,15 @@ export const Elemento = () => {
     return item[key];
   };
 
-  const [values, setValues] = useState(
-    {
-      Nombre_elemento: "",
-      stock: "",
-      fk_tipoElemento: "",
-      fk_unidadMedida: "",
-      fk_categoria: "",
-      fk_tipoEmpaque: "",
-      fk_detalleUbicacion: ""
-    }
-  )
+  const [values, setValues] = useState({
+    Nombre_elemento: "",
+    stock: "",
+    fk_tipoElemento: "",
+    fk_unidadMedida: "",
+    fk_categoria: "",
+    fk_tipoEmpaque: "",
+    fk_detalleUbicacion: ""
+  });
 
   const handleInputChange = (event) => {
     setValues({
@@ -63,15 +78,23 @@ export const Elemento = () => {
   const handleForm = async (event) => {
     try {
       event.preventDefault();
+      console.log(values)
       const response = await axios({
         method: 'post',
         url: `http://localhost:3000/elemento/registrar`,
         data: values
       });
       if (response.status === 200) {
-
-        onClose();
         listarElementos();
+        onClose();
+        swal({
+          title: "Registro exitoso",
+          text: "La ubicación se ha registrado correctamente.",
+          icon: "success",
+          buttons: false,
+          timer: 2000,
+      });
+        
       }
 
     } catch (error) {
@@ -172,23 +195,72 @@ export const Elemento = () => {
     }
   }
 
-  const [NuevoStock, setStock] = useState('');
+  const AnadirStock = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(dataStock);
+      const response = await axios.post(`http://localhost:3000/movimientos/aniadirStock`, dataStock);
 
-  const AnadirStock = async (Codigo_elemento) => {
-      const response = await axios.post(`http://localhost:3000/elemento/aniadir/${Codigo_elemento}`, {
-        cantidad: NuevoStock
-      });
+      console.log(response.data)
+      listarElementos();
+      onCloseStock();
+    } catch (error) {
+      console.log(error);
+    }
 
   };
 
+  const handleAniadirStock = async (fk_elemento) => {
+    try {
+      setDataStock({
+        usuario_solicitud: 1,
+        fk_movimiento: 1,
+        Estado: null,
+        detalles: [{
+          fk_elemento: fk_elemento,
+          estado: null,
+          fecha_vencimiento: null,
+          cantidad: 1,
+          Usuario_recibe: 1,
+          Usuario_entrega: 1,
+          Observaciones: 'Sin Observaciones'
+        }]
+      })
+      onOpenStock();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const desactivarElementos = async (Codigo_elemento) => {
-    await axios.put(`http://localhost:3000/elemento/desactivar/${Codigo_elemento}`)
-      .then(response => {
-        setDesactivar(response.data)
-        listarElementos();
-      })
-  };
+    // Utilizamos el swal directamente sin el condicional
+    await swal({
+        title: "¿Está seguro?",
+        text: "¿Desea desactivar la ubicación?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then(async (willDesactivar) => {
+        if (willDesactivar) {
+            await axios.put(`http://localhost:3000/elemento/desactivar/${Codigo_elemento}`)
+                .then(response => {
+                    setDesactivar(response.data);
+                    listarElementos();
+                    swal("¡Se ha actualizado el estado correctamente!", {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        } else {
+            swal("La ubicación está segura.");
+        }
+    });
+};
+
 
   const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
   const [selectedElemento, setSelectedElemento] = useState(null);
@@ -216,8 +288,8 @@ export const Elemento = () => {
 
   const handleEditElemento = async () => {
     try {
-      // Verificar si editedNombreEmpaque tiene un valor válido
-      // Realizar la solicitud PUT para actualizar el empaque
+      // Verificar si editedElemento tiene un valor válido
+      // Realizar la solicitud PUT para actualizar el elemento
       await axios.put(`http://localhost:3000/elemento/actualizar/${selectedElemento.Codigo_elemento}`, {
         Nombre_elemento: editedElemento.Nombre_elemento,
         stock: editedElemento.stock,
@@ -227,16 +299,26 @@ export const Elemento = () => {
         fk_tipoEmpaque: editedElemento.fk_tipoEmpaque,
         fk_detalleUbicacion: editedElemento.fk_detalleUbicacion
       });
-
-      // Actualizar la lista de empaques
+  
+      // Actualizar la lista de elementos
       listarElementos();
-
+  
       // Cerrar el modal de información
       onCloseInfo();
+  
+      // Mostrar una notificación de actualización exitosa
+      swal({
+        title: "Actualización exitosa",
+        text: "El elemento se ha actualizado correctamente.",
+        icon: "success",
+        buttons: false,
+        timer: 2000,
+      });
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   useEffect(() => {
     listarElementos()
@@ -246,7 +328,7 @@ export const Elemento = () => {
     ListarEmpaques()
     ListarMedidas()
   }, [codigoElemento])
-  
+
   return (
 
     <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
@@ -525,15 +607,32 @@ export const Elemento = () => {
                         type='number'
                         label='Añadir Stock'
                         name='stock'
-                        value={NuevoStock}
-                        onChange={(e) => setStock(e.target.value)} // Agrega esta línea para actualizar el estado de NuevoStock
-                      />
+                        
+                        onChange={(e) => {
+                          const currentFkElemento = dataStock.detalles[0].fk_elemento
+                            setDataStock({
+                              usuario_solicitud: 1,
+                              fk_movimiento: 1,
+                              Estado: null,
+                              detalles: [{
+                                fk_elemento: currentFkElemento,
+                                estado: null,
+                                fecha_vencimiento: null,
+                                cantidad: e.target.value,
+                                Usuario_recibe: 1,
+                                Usuario_entrega: 1,
+                                Observaciones: 'Sin Observaciones'
+                              }]
+                            })
+                            console.log(dataStock)
+                        } // Agrega esta línea para actualizar el estado de NuevoStock
+                        } />
                     </div>
                     <div className='flex justify-end gap-3'>
                       <Button color="danger" onPress={onCloseStock} className='bg-[#BF2A50] font-bold text-white'>
                         Cancelar
                       </Button>
-                      <Button className='font-bold text-white' color="success" type='submit'>
+                      <Button className='font-bold text-white' color="success" type='button' onClick={AnadirStock}>
                         Añadir Stock
                       </Button>
                     </div>
@@ -590,7 +689,7 @@ export const Elemento = () => {
                     style={{ fontSize: '15px' }}>
                     Info
                   </Button>
-                  <Button color='primary' className='font-semibold bg-[#0C6A6F] hover:bg-[#1E6C9B]'
+                  <Button color='primary' className='font-semibold bg-[#0C6A6F] hover:bg-[#1E6C9B]' onClick={() => { handleAniadirStock(elemento.Codigo_elemento) }}
                     style={{ fontSize: '15px' }}>
                     Añadir Stock
                   </Button>

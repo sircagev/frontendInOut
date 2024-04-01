@@ -39,7 +39,7 @@ export const Medida = () => {
                 response = await axios.get(`http://localhost:3000/medida/buscar/${codigoMedida}`);
                 console.log(response.data);
                 setMedidas(response.data.medida ? response.data.medida : []);
-    
+                setPage(1)
             } else {
                 // Obtener todos las categorías si no se proporciona ningún código
                 response = await axios.get('http://localhost:3000/medida/listar');
@@ -68,30 +68,75 @@ export const Medida = () => {
     
     const handleForm = async (event) => {
         event.preventDefault();
-        if (!values.Nombre_Medida.trim()) {
-            alert('Por favor ingrese un nombre de empaque');
+        // Verificar si Nombre_Medida tiene un valor válido y no es numérico
+        if (!values.Nombre_Medida.trim() || /^\d+$/.test(values.Nombre_Medida.trim())) {
+            swal({
+                title: "Datos incompletos o inválidos",
+                text: "Ingrese un nombre, no puede tener números.",
+                icon: "warning",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 4 segundos
+            });
             return;
         }
-
+    
         try {
             const response = await axios.post('http://localhost:3000/medida/registrar', values);
             if (response.status === 200) {
                 ListarMedidas();
                 setValues({ Nombre_Medida: '' }); // Resetear el formulario después de enviarlo
                 onClose()
+    
+                swal({
+                    title: "Registro exitoso",
+                    text: "La medida se ha registrado correctamente.",
+                    icon: "success",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
             }
         } catch (error) {
             console.log(error);
         }
     };
+    
 
-    const DesactivarMedida = async (codigo_medida) => {
-        await axios.put(`http://localhost:3000/medida/desactivar/${codigo_medida}`)
-            .then(response => {
-                setDesactivar(response.data)
-                ListarMedidas();
-            })
+    const DesactivarMedida = async (codigo_medida, estado) => {
+        let mensaje;
+    
+        if (estado === 'activo') {
+            mensaje = "¿Desea desactivar la medida?";
+        } else if (estado === 'inactivo') {
+            mensaje = "¿Desea reactivar la medida?";
+        }
+    
+        swal({
+            title: "¿Está seguro?",
+            text: mensaje,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willDesactivar) => {
+            if (willDesactivar) {
+                try {
+                    await axios.put(`http://localhost:3000/medida/desactivar/${codigo_medida}`);
+                    // Después de desactivar la medida, volvemos a listar las medidas
+                    ListarMedidas();
+                    swal("¡Se ha actualizado el estado correctamente!", {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                swal("La medida está segura.");
+            }
+        });
     };
+    
+    
 
     const handleInfo = (codigo_medida) => {
         const medida = UseMedidas.find((medida) => medida.codigo_medida === codigo_medida);
@@ -104,29 +149,44 @@ export const Medida = () => {
         }
     };
 
-    const handleEditMedida= async () => {
+    const handleEditMedida = async () => {
         try {
-            // Verificar si editedNombreEmpaque tiene un valor válido
-            if (!editedNombreMedida.trim()) {
-                console.log('El nombre de la medida no puede estar vacío');
+            // Verificar si editedNombreMedida tiene un valor válido
+            if (!editedNombreMedida.trim() || /^\d+$/.test(editedNombreMedida.trim())) {
+                swal({
+                    title: "Datos incompletos o inválidos",
+                    text: "Ingrese un nombre, no puede tener números.",
+                    icon: "warning",
+                    buttons: false, // Ocultar el botón "Aceptar"
+                    timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+                });
                 return;
             }
     
-            // Realizar la solicitud PUT para actualizar el empaque
+            // Realizar la solicitud PUT para actualizar la medida
             await axios.put(`http://localhost:3000/medida/actualizar/${selectedMedida.codigo_medida}`, {
                 Nombre_Medida: editedNombreMedida,
                 // Otros campos que desees actualizar
             });
     
-            // Actualizar la lista de empaques
+            // Actualizar la lista de medidas
             ListarMedidas();
     
             // Cerrar el modal de información
             onCloseInfo();
+    
+            swal({
+                title: "Actualización exitosa",
+                text: "La medida se ha actualizado correctamente.",
+                icon: "success",
+                buttons: false, // Ocultar el botón "Aceptar"
+                timer: 2000, // Cerrar el SweetAlert automáticamente después de 2 segundos
+            });
         } catch (error) {
             console.log(error);
         }
     };
+    
 
     useEffect(() => {
         ListarMedidas()
@@ -242,9 +302,15 @@ export const Medida = () => {
                                 <TableCell className='font-semibold'>{medida.codigo_medida}</TableCell>
                                 <TableCell className='font-semibold'>{medida.Nombre_Medida}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
-                                        <Button color="danger" className='bg-[#BF2A50] font-semibold' onClick={()=> {DesactivarMedida(medida.codigo_medida)}}  style={{fontSize: '15px'}}>
-                                            Desactivar
-                                        </Button>  
+                                <Button
+                                    color={medida.estado === 'inactivo' ? 'success' : 'danger'}
+                                    className={`bg-${medida.estado === 'inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                    onClick={() => { DesactivarMedida(medida.codigo_medida, medida.estado) }}
+                                    style={{ fontSize: '15px' }}
+                                >
+                                    {medida.estado === 'inactivo' ? 'Activar' : 'Desactivar'}
+                                </Button>
+ 
                                         <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => {handleInfo(medida.codigo_medida);}} style={{ fontSize: '15px' }}>
                                             Info
                                         </Button> 
