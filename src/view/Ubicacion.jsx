@@ -85,7 +85,7 @@ export const Ubicacion = () => {
         event.preventDefault();
     
         // Verificar si alguno de los campos está vacío
-        if (!values.Nombre_ubicacion.trim() || !values.fk_bodega.trim()) {
+        if (!values.Nombre_ubicacion.trim() ||  !values.fk_bodega.trim()) {
             swal({
                 title: "Datos incompletos",
                 text: "Por favor, complete todos los campos del formulario.",
@@ -141,7 +141,7 @@ export const Ubicacion = () => {
         if (!editedUbicacion.Nombre_ubicacion.trim() || !isNaN(editedUbicacion.Nombre_ubicacion)) {
             swal({
                 title: "Error",
-                text: "El nombre de la ubicación no puede estar vacío ni ser numérico. Ingrese un nombre válido.",
+                text: "No puede estar vacio el nombre y no de ser numerico",
                 icon: "error",
                 buttons: false,
                 timer: 2000,
