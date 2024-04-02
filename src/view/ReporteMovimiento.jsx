@@ -102,7 +102,7 @@ const Movimientos = () => {
         <tbody>
           {movimientos.map(movimiento => (
             <tr key={movimiento.Código}>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Código.toString()) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Codigo.toString()) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Fecha) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Usuario) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento["Tipo Movimiento"]) }}></td>
