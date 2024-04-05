@@ -43,7 +43,7 @@ function App() {
             <Route path="/reportes/movimientos" element={<ReporteM />} />
             <Route path="/bodegas" element={<Bodegas />} />
             <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
-            <Route path="/movimientos" element={<Movimientos2 />} />
+            <Route path="/movimientos" element={<Movimientos />} />
           </Routes>
         </div>
       </section>

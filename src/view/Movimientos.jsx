@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import axios from 'axios';
 import {
     Table,
@@ -17,98 +17,63 @@ import {
     User,
     Pagination,
 } from "@nextui-org/react";
+import { FaSearch } from "react-icons/fa";
+import { capitalize, convertirAMinusculas } from '../functions/Listar';
 
-//Iconos
-import { FaSearch, FaPlus } from "react-icons/fa";
-import { IoIosArrowDown } from "react-icons/io";
+const INITIAL_VISIBLE_COLUMNS = ["Codigo", "Fecha", "Usuario", "Tipo"];
 
 export const Movimientos = () => {
 
-    const movementTypeOptions = [
-        { name: "Ingreso", uid: "ingreso" },
-        { name: "Egreso", uid: "egreso" },
-        { name: "Prestamo", uid: "prestamo" },
+    const statusOptions = [
+        { name: "Ingreso", uid: "Ingreso" },
+        { name: "Salida", uid: "Salida" },
+        { name: "Préstamo", uid: "Prestamo" },
     ];
 
-    const [movimientos, setMovimientos] = useState([]);
-    const [keysColumns, setKeysColumns] = useState([]);
+    const [movements, setMovements] = useState([])
+    const [columns, setColumns] = useState([])
 
-    const [filterValue, setFilterValue] = React.useState("");
-    const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
-    const [visibleColumns, setVisibleColumns] = React.useState(new Set(keysColumns));
-    const [statusFilter, setStatusFilter] = React.useState("all");
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
     const [sortDescriptor, setSortDescriptor] = React.useState({
-        column: "age",
+        column: "estado",
         direction: "ascending",
     });
-    const [page, setPage] = React.useState(1);
 
-    const pages = Math.ceil(movimientos.length / rowsPerPage);
+    const [selectedKeys, setSelectedKeys] = useState(new Set([]));
+    const [filterValue, setFilterValue] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
+
+    const headerColumns = React.useMemo(() => {
+        if (visibleColumns === "all") return columns;
+
+        return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    }, [visibleColumns]);
+
+    const ListarMovimientos = async () => {
+        await axios.get('http://localhost:3000/movimientos/listar')
+            .then(response => {
+                setMovements(response.data.datos || []);
+                const columnas = Object.keys(response.data.datos[0])
+                const columnasTransformadas = columnas.map(columna => ({
+                    name: columna,
+                    uid: convertirAMinusculas(columna),
+                    sortable: false
+                }));
+                columnasTransformadas.push({
+                    name: "Acciones",
+                    uid: "acciones",
+                    sortable: false
+                })
+                setColumns(columnasTransformadas)
+            })
+    }
 
     const hasSearchFilter = Boolean(filterValue);
 
-    const headerColumns = React.useMemo(() => {
-        if (visibleColumns === "all") return keysColumns;
-
-        return keysColumns.filter((column) => Array.from(visibleColumns).includes(column));
-    }, [visibleColumns]);
-
-    const filteredItems = React.useMemo(() => {
-        let filteredMovements = [...movimientos];
-
-        if (hasSearchFilter) {
-            filteredMovements = filteredMovements.filter((movimiento) =>
-                movimiento.name.toLowerCase().includes(filterValue.toLowerCase()),
-            );
-        }
-        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-            filteredMovements = filteredMovements.filter((user) =>
-                Array.from(statusFilter).includes(user.status),
-            );
-        }
-
-        return filteredMovements;
-    }, [movimientos, filterValue, statusFilter]);
-
-    const items = React.useMemo(() => {
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-
-        return filteredItems.slice(start, end);
-    }, [page, filteredItems, rowsPerPage]);
-
-    const sortedItems = React.useMemo(() => {
-        return [...items].sort((a, b) => {
-          const first = a[sortDescriptor.column];
-          const second = b[sortDescriptor.column];
-          const cmp = first < second ? -1 : first > second ? 1 : 0;
-    
-          return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        });
-      }, [sortDescriptor, items]);
-
-    
-
-    function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    const ListarMovimientos = async () => {
-        try {
-            await axios.get('http://localhost:3000/movimientos/listar')
-                .then(response => {
-                    const keysInfo = Object.keys(response.data.datos[0])
-                    setMovimientos(response.data.datos)
-                    console.log(keysInfo)
-                    setKeysColumns(keysInfo)
-                })
-        } catch (error) {
-
-        }
-    }
-
-    const onSearchChange = React.useCallback((value) => {
+    const onSearchChange = useCallback((value) => {
         if (value) {
             setFilterValue(value);
             setPage(1);
@@ -117,14 +82,101 @@ export const Movimientos = () => {
         }
     }, []);
 
-    const onRowsPerPageChange = React.useCallback((e) => {
+    const onRowsPerPageChange = useCallback((e) => {
         setRowsPerPage(Number(e.target.value));
         setPage(1);
     }, []);
 
-    useEffect(() => {
-        ListarMovimientos();
+    const onPreviousPage = React.useCallback(() => {
+        if (page > 1) {
+            setPage(page - 1);
+        }
+    }, [page]);
+
+    const onClear = React.useCallback(() => {
+        setFilterValue("")
+        setPage(1)
     }, [])
+
+    const filteredItems = useMemo(() => {
+        let filteredMovements = [...movements];
+        console.log(filteredMovements)
+        if (hasSearchFilter) {
+            filteredMovements = filteredMovements.filter((movement) =>
+                movement.name.toLowerCase().includes(filterValue.toLowerCase()),
+            );
+        }
+        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+            filteredMovements = filteredMovements.filter((movement) =>
+                Array.from(statusFilter).includes(movement.Tipo),
+            );
+
+        }
+        return filteredMovements;
+    }, [movements, filterValue, statusFilter]);
+
+    const pages = Math.ceil(filteredItems.length / rowsPerPage);
+
+    const onNextPage = React.useCallback(() => {
+        if (page < pages) {
+            setPage(page + 1);
+        }
+    }, [page, pages]);
+
+    const items = React.useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return filteredItems.slice(start, end);
+    }, [page, filteredItems, rowsPerPage]);
+
+    const sortedItems = useMemo(() => {
+        return [...items].sort((a, b) => {
+            const first = a[sortDescriptor.column];
+            const second = b[sortDescriptor.column];
+            const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+            return sortDescriptor.direction === "descending" ? -cmp : cmp;
+        });
+    }, [sortDescriptor, items]);
+
+    const renderCell = useCallback((user, columnKey) => {
+
+        const cellValue = user[columnKey];
+
+        switch (columnKey) {
+            case "usuario":
+                return (
+                    <User
+                        avatarProps={{ radius: "lg", src: user.avatar }}
+                        description={user.email}
+                        name={cellValue}
+                    >
+                        {user.email}
+                    </User>
+                );
+            
+            case "acciones":
+                return (
+                    <div className="relative flex justify-end items-center gap-2">
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button isIconOnly size="sm" variant="light">
+                                    <VerticalDotsIcon className="text-default-300" />
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu>
+                                <DropdownItem>View</DropdownItem>
+                                <DropdownItem>Edit</DropdownItem>
+                                <DropdownItem>Delete</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
+                );
+            default:
+                return cellValue;
+        }
+    }, []);
 
     const topContent = React.useMemo(() => {
         return (
@@ -148,11 +200,11 @@ export const Movimientos = () => {
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button
-                                    endContent={<IoIosArrowDown className="text-small" />}
+                                    endContent={<FaSearch className="text-small" />}
                                     size="sm"
                                     variant="flat"
                                 >
-                                    Type
+                                    Status
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -163,9 +215,9 @@ export const Movimientos = () => {
                                 selectionMode="multiple"
                                 onSelectionChange={setStatusFilter}
                             >
-                                {movementTypeOptions.map((movementType) => (
-                                    <DropdownItem key={movementType.uid} className="capitalize">
-                                        {capitalize(movementType.name)}
+                                {statusOptions.map((status) => (
+                                    <DropdownItem key={status.uid} className="capitalize">
+                                        {capitalize(status.name)}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
@@ -173,11 +225,11 @@ export const Movimientos = () => {
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button
-                                    endContent={<IoIosArrowDown className="text-small" />}
+                                    endContent={<FaSearch className="text-small" />}
                                     size="sm"
                                     variant="flat"
                                 >
-                                    Columnas
+                                    Columns
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -188,25 +240,26 @@ export const Movimientos = () => {
                                 selectionMode="multiple"
                                 onSelectionChange={setVisibleColumns}
                             >
-                                {keysColumns.map((column) => (
-                                    <DropdownItem key={column} className="capitalize">
-                                        {capitalize(column)}
+                                {columns.map((column) => (
+                                    <DropdownItem key={column.uid} className="capitalize">
+                                        {capitalize(column.name)}
                                     </DropdownItem>
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
                         <Button
                             className="bg-foreground text-background"
-                            endContent={<FaPlus />}
+                            endContent={<FaSearch />}
                             size="sm"
                         >
-                            Realizar Movimiento
+                            Add New
                         </Button>
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total {movimientos.length} Movimientos</span>
+                    <span className="text-default-400 text-small">Total {movements.length} users</span>
                     <label className="flex items-center text-default-400 text-small">
+                        Rows per page:
                         <select
                             className="bg-transparent outline-none text-default-400 text-small"
                             onChange={onRowsPerPageChange}
@@ -214,8 +267,6 @@ export const Movimientos = () => {
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="15">15</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
                         </select>
                     </label>
                 </div>
@@ -227,55 +278,50 @@ export const Movimientos = () => {
         visibleColumns,
         onSearchChange,
         onRowsPerPageChange,
-        movimientos.length,
+        movements.length,
         hasSearchFilter,
     ]);
 
     const bottomContent = React.useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
-                <Pagination
-                    showControls
-                    classNames={{
-                        cursor: "bg-foreground text-background",
-                    }}
-                    color="default"
-                    isDisabled={hasSearchFilter}
-                    page={page}
-                    total={pages}
-                    variant="light"
-                    onChange={setPage}
-                />
-                <span className="text-small text-default-400">
+                <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
                         ? "All items selected"
-                        : `${selectedKeys.size} of ${items.length} selected`}
+                        : `${selectedKeys.size} of ${filteredItems.length} selected`}
                 </span>
+                <Pagination
+                    isCompact
+                    showControls
+                    showShadow
+                    color="primary"
+                    page={page}
+                    total={pages}
+                    onChange={setPage}
+                />
+                <div className="hidden sm:flex w-[30%] justify-end gap-2">
+                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+                        Previous
+                    </Button>
+                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+                        Next
+                    </Button>
+                </div>
             </div>
-        )
+        );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
-    const classNames = React.useMemo(
-        () => ({
-            wrapper: ["max-h-[382px]", "max-w-3xl"],
-            th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
-            td: [
-                // changing the rows border radius
-                // first
-                "group-data-[first=true]:first:before:rounded-none",
-                "group-data-[first=true]:last:before:rounded-none",
-                // middle
-                "group-data-[middle=true]:before:rounded-none",
-                // last
-                "group-data-[last=true]:first:before:rounded-none",
-                "group-data-[last=true]:last:before:rounded-none",
-            ],
-        }),
-        [],
-    );
+    //Ejecutar funciones
+    useEffect(() => {
+        ListarMovimientos();
+    }, [])
 
     return (
+
         <>
+            {topContent}
+            {bottomContent}
         </>
+
     )
 }
