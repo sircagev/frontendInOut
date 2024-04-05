@@ -5,7 +5,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import { FaSearch } from "react-icons/fa";
 import swal from 'sweetalert';
 
-export const Bodega = () => {
+const Bodega = () => {
     const [bodegas, setBodegas] = useState([]);
     const [codigoBodega, setCodigoBodega] = useState('');
     const [selectedBodega, setSelectedBodega] = useState(null);
@@ -38,11 +38,7 @@ export const Bodega = () => {
     };
 
     const handleForm = async (event) => {
-
-    
         event.preventDefault();
-
-        console.log("values del form",values)
 
         if ((!values.nombreBodega.trim()) || /^\d+$/.test(values.nombreBodega.trim())) {
             swal({
@@ -60,7 +56,6 @@ export const Bodega = () => {
             if (response.status === 200) {
                 ListarBodegas();
                 onClose();
-                console.log("bodegas", response.data)
                 swal({
                     title: "Registro exitoso",
                     text: "La bodega se ha registrado correctamente.",
@@ -68,55 +63,47 @@ export const Bodega = () => {
                     buttons: false,
                     timer: 2000,
                 });
-                
             }
-            
         } catch (error) {
             console.log(error);
         }
     };
-    
 
     const ListarBodegas = async () => {
         try {
             let response;
-            console.log(codigoBodega)
             if (codigoBodega.trim() !== '') {
                 response = await axios.get(`http://localhost:3000/bodega/buscar/${codigoBodega}`);
-                console.log(response.data);
                 setBodegas(response.data.Bodega ? response.data.Bodega : []);
                 setPage(1)
             } else {
                 response = await axios.get('http://localhost:3000/bodega/listar');
                 setBodegas(response.data || []);
-                console.log("bodegas", response.data)
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-    const DesactivarBodega = async (codigo_Bodega, estado) => {
+    const ReactivarBodega = async (codigo_Bodega, estado) => {
         let mensaje;
-
-        if (estado === 'activo') {
-            mensaje = "¿Desea desactivar la bodega?";
-        } else if (estado === 'inactivo') {
+    
+        if (estado === 'inactivo') {
             mensaje = "¿Desea reactivar la bodega?";
         }
-
+    
         swal({
             title: "¿Está seguro?",
             text: mensaje,
             icon: "warning",
             buttons: true,
             dangerMode: true,
-        }).then(async (willDesactivar) => {
-            if (willDesactivar) {
+        }).then(async (willReactivar) => {
+            if (willReactivar) {
                 try {
-                    await axios.put(`http://localhost:3000/bodega/desactivar/${codigo_Bodega}`);
+                    await axios.put(`http://localhost:3000/bodega/reactivar/${codigo_Bodega}`);
                     ListarBodegas();
-                    swal("¡Se ha desactivado correctamente!", {
+                    swal("¡Se ha reactivado correctamente!", {
                         icon: "success",
                         button: false,
                         timer: 2000,
@@ -125,20 +112,46 @@ export const Bodega = () => {
                     console.log(error);
                 }
             } else {
-                swal("La bodega está segura.");
+                swal("La bodega sigue inactiva.");
             }
         });
     };
 
-    const handleInfo = (codigo_Bodega) => {
-        const bodega = bodegas.find((bodega) => bodega.codigo_Bodega === codigo_Bodega);
-        if (bodega) {
-            setSelectedBodega(bodega);
-            setEditedNombreBodega(bodega.nombreBodega);
-            onOpenInfo();
-        } else {
-            console.log('La bodega no se encontró');
+    const ToggleEstadoBodega = async (codigo_Bodega, estado) => {
+        let mensaje;
+        let nuevoEstado;
+    
+        if (estado === 'activo') {
+            mensaje = "¿Desea desactivar la bodega?";
+            nuevoEstado = 'inactivo';
+        } else if (estado === 'inactivo') {
+            mensaje = "¿Desea activar la bodega?";
+            nuevoEstado = 'activo';
         }
+    
+        swal({
+            title: "¿Está seguro?",
+            text: mensaje,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willToggle) => {
+            if (willToggle) {
+                try {
+                    await axios.put(`http://localhost:3000/bodega/desactivar/${codigo_Bodega}`);
+                    ListarBodegas();
+                    swal(`¡Se ha ${nuevoEstado === 'activo' ? 'activado' : 'desactivado'} correctamente!`, {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                swal("La bodega se mantiene igual.");
+            }
+        });
     };
 
     const handleActualizarBodega = (codigo_Bodega) => {
@@ -182,6 +195,17 @@ export const Bodega = () => {
             });
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const handleInfo = (codigo_Bodega) => {
+        const bodega = bodegas.find((bodega) => bodega.codigo_Bodega === codigo_Bodega);
+        if (bodega) {
+            setSelectedBodega(bodega);
+            setEditedNombreBodega(bodega.nombreBodega);
+            onOpenInfo();
+        } else {
+            console.log('La bodega no se encontró');
         }
     };
 
@@ -252,7 +276,7 @@ export const Bodega = () => {
                     </ModalContent>
                 </Modal>
                 <Modal isOpen={isOpenInfo} onClose={onCloseInfo} className='my-auto'>
-                   
+                    {/* Contenido del Modal de Información */}
                 </Modal>
                 <Table
                     aria-label="Lista de Bodegas"
@@ -286,21 +310,9 @@ export const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.codigo_Bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.Nombre_bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
-                                <TableCell className='flex gap-2 justify-center'>
-                                    <Button
-                                        color={bodega.estado === 'inactivo' ? 'success' : 'danger'}
-                                        className={`bg-${bodega.estado === 'inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
-                                        onClick={() => { DesactivarBodega(bodega.codigo_Bodega, bodega.estado) }}
-                                        style={{ fontSize: '15px' }}
-                                    >
-                                        {bodega.estado === 'inactivo' ? 'Activar' : 'Desactivar'}
-                                    </Button>
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
-                                        Desactivar
-                                    </Button>
-                                    <Button color='primary' className='bg-[#FFC107] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
-                                        Actualizar
-                                    </Button>
+                                <TableCell>
+                                    <Button color="danger" className='mr-2 font-bold' onClick={() => ToggleEstadoBodega(bodega.codigo_Bodega, bodega.Estado)}>{bodega.Estado === 'activo' ? 'Activar' : 'Desactivar'}</Button>
+                                    <Button color="success" className='font-bold' onClick={() => ReactivarBodega(bodega.codigo_Bodega, bodega.Estado)}>Reactivar</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
