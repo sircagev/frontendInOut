@@ -17,28 +17,10 @@ export const Elemento = () => {
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
 
-  const [NuevoStock, setStock] = useState('');
-
-  const [dataStock, setDataStock] = useState({
-    usuario_solicitud: '',
-    fk_movimiento: 1,
-    Estado: null,
-    detalles: [{
-      fk_elemento: '',
-      estado: null,
-      fecha_vencimiento: null,
-      cantidad: 0,
-      Usuario_recibe: '',
-      Usuario_entrega: '',
-      Observaciones: ''
-    }]
-  });
-
   const [page, setPage] = useState(1);
   const [itemsToShow, setItemsToShow] = useState([]);
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { isOpen: isOpenStock, onOpen: onOpenStock, onClose: onCloseStock } = useDisclosure();
 
   const size = '3xl'; // Establece el tamaño del modal como '3xl'
 
@@ -124,7 +106,6 @@ export const Elemento = () => {
     }
   };
 
-
   const handleSearch = async () => {
     listarElementos();
   };
@@ -195,43 +176,6 @@ export const Elemento = () => {
     }
   }
 
-  const AnadirStock = async (e) => {
-    e.preventDefault();
-    try {
-      console.log(dataStock);
-      const response = await axios.post(`http://localhost:3000/movimientos/aniadirStock`, dataStock);
-
-      console.log(response.data)
-      listarElementos();
-      onCloseStock();
-    } catch (error) {
-      console.log(error);
-    }
-
-  };
-
-  const handleAniadirStock = async (fk_elemento) => {
-    try {
-      setDataStock({
-        usuario_solicitud: 1,
-        fk_movimiento: 1,
-        Estado: null,
-        detalles: [{
-          fk_elemento: fk_elemento,
-          estado: null,
-          fecha_vencimiento: null,
-          cantidad: 1,
-          Usuario_recibe: 1,
-          Usuario_entrega: 1,
-          Observaciones: 'Sin Observaciones'
-        }]
-      })
-      onOpenStock();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const desactivarElementos = async (Codigo_elemento) => {
     // Utilizamos el swal directamente sin el condicional
     await swal({
@@ -260,7 +204,6 @@ export const Elemento = () => {
         }
     });
 };
-
 
   const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
   const [selectedElemento, setSelectedElemento] = useState(null);
@@ -319,7 +262,6 @@ export const Elemento = () => {
     }
   };
   
-
   useEffect(() => {
     listarElementos()
     ListarTipo()
