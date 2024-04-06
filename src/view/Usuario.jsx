@@ -193,19 +193,37 @@ const Usuario = () => {
     ListarUsuarios();
   };
 
-  const buscarUsuario = async (term) => {
+  const buscarUsuario = async (id_usuario) => {
     try {
-     
-      console.log("Buscando usuario con término:", term);
+        const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
+        console.log(response.data);
+        setUsuarios(response.data.Datos ? response.data.Datos : []);
     } catch (error) {
-      console.error("Error al buscar usuario:", error);
+        console.error("Error al buscar usuario:", error);
     }
-  };
+};
 
-  const handleSearch = async () => {
-    setError(null);
-    buscarUsuario(searchTerm);
-  };
+
+const handleSearch = async () => {
+  setError(null);
+  if (searchTerm.trim() !== '') {
+    setCodigoUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
+    buscarUsuario(searchTerm.trim());
+  } else {
+    // Si el campo de búsqueda está vacío, actualizar la lista de usuarios
+    try {
+      await ListarUsuarios();
+    } catch (error) {
+      console.error("Error al listar usuarios:", error);
+      // Aquí puedes mostrar un mensaje de error si lo deseas
+    }
+  }
+};
+
+
+
+
+
 
   const ListarUsuarios = async () => {
     try {
@@ -214,7 +232,7 @@ const Usuario = () => {
       if (id_usuario.trim() !== '') {
         response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
         console.log(response.data);
-        setUsuarios(response.data.result ? response.data.result : []);
+        setUsuarios(response.data.Datos ? response.data.Datos : []);
 
       } else {
         response = await axios.get('http://localhost:3000/usuario/listar');
@@ -320,14 +338,15 @@ const Usuario = () => {
           </button>
 
           <input
-            type="text"
-            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
-            placeholder='Nombre Usuario'
-            onChange={(e) => {
-              setCodigoUsuario(e.target.value)
-            }}
-            style={{ marginBottom: '-19px' }} 
-          />
+  type="text"
+  className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
+  placeholder='Código de Usuario...'
+  onChange={(e) => {
+    setSearchTerm(e.target.value);
+  }}
+  style={{ marginBottom: '-19px' }} 
+/>
+
 
           <button
             className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
@@ -365,6 +384,7 @@ const Usuario = () => {
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="rol">ROL</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="numero">N_TELEFONO</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">FICHA</TableColumn>
+          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">IDENTIFICACIÓN</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Estado">ESTADO</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
         </TableHeader>
@@ -378,6 +398,7 @@ const Usuario = () => {
               <TableCell className='font-semibold'>{user.rol}</TableCell>
               <TableCell className='font-semibold'>{user.numero}</TableCell>
               <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
+              <TableCell className='font-semibold'>{user.identificacion}</TableCell>
               <TableCell className='font-semibold'>{user.Estado}</TableCell>
               <TableCell className='flex gap-2 justify-center'>
                 <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
@@ -394,6 +415,7 @@ const Usuario = () => {
               <TableCell className='font-semibold'>{user.rol}</TableCell>
               <TableCell className='font-semibold'>{user.numero}</TableCell>
               <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
+              <TableCell className='font-semibold'>{user.identificacion}</TableCell>
               <TableCell className='font-semibold'>{user.Estado}</TableCell>
               <TableCell className='flex gap-2 justify-center'>
                 <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
@@ -419,9 +441,23 @@ const Usuario = () => {
                   <input type="text" id="nombre_usuario" name="nombre_usuario" className="form-control" placeholder="Nombre Usuario" style={{ width: '100%', marginRight: '10px', fontSize: '0.9rem' }} value={values.nombre_usuario} onChange={handleInputChange} />
                   <input type="text" id="apellido_usuario" name="apellido_usuario" className="form-control" placeholder="Apellido Usuario" style={{ width: '100%', fontSize: '0.9rem' }} value={values.apellido_usuario} onChange={handleInputChange} />
                 </div>
-                <div className="mb-3">
-                  <input type="text" id="email_usuario" name="email_usuario" className="form-control" placeholder="Email Usuario" style={{ width: '100%', fontSize: '0.9rem' }} value={values.email_usuario} onChange={handleInputChange} />
+                <div className="mb-3" style={{ display: 'flex' }}>
+                  <input type="text" id="email_usuario" name="email_usuario" className="form-control" placeholder="Email Usuario *" style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }} value={values.email_usuario} onChange={handleInputChange} />
+                  <input
+                      type="text"
+                      id="identificacion"
+                      name="identificacion"
+                      className="form-control"
+                      placeholder="ID Usuario"
+                      style={{ width: '50%', fontSize: '0.9rem' }}
+                      value={values.identificacion}
+                      onChange={(e) => {
+                        const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                        handleInputChange({ target: { name: 'identificacion', value: onlyNumbers }});
+                      }}
+                    />
                 </div>
+
                 <div className="mb-3">
                   <select id="rol" name="rol" onChange={handleInputChange} className="form-select" style={{ width: '100%', fontSize: '0.9rem' }}>
                     <option value="">Seleccione un Rol</option>
@@ -430,10 +466,35 @@ const Usuario = () => {
                     <option value="Usuario">Usuario</option>
                   </select>
                 </div>
+
                 <div className="mb-3" style={{ display: 'flex' }}>
-                  <input type="text" id="numero" name="numero" className="form-control" placeholder="Número Telefonico" style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }} value={values.numero} onChange={handleInputChange} />
-                  <input type="int" id="Id_ficha" name="Id_ficha" className="form-control" placeholder="ID Ficha" style={{ width: '50%', fontSize: '0.9rem' }} value={values.Id_ficha} onChange={handleInputChange} />
-                </div>
+                        <input
+                          type="text"
+                          id="numero"
+                          name="numero"
+                          className="form-control"
+                          placeholder="Número Telefónico"
+                          style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }}
+                          value={values.numero}
+                          onChange={(e) => {
+                            const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                            handleInputChange({ target: { name: 'numero', value: onlyNumbers }});
+                          }}
+                      />
+                      <input
+                        type="text"
+                        id="Id_ficha"
+                        name="Id_ficha"
+                        className="form-control"
+                        placeholder="ID Ficha"
+                        style={{ width: '50%', fontSize: '0.9rem' }}
+                        value={values.Id_ficha}
+                        onChange={(e) => {
+                          const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                          handleInputChange({ target: { name: 'Id_ficha', value: onlyNumbers }});
+                        }}
+                      />
+                    </div>
 
                 <div className="d-flex justify-content-center">
                   <button type="submit" className="btn bg-[#3D7948] hover:bg-[#3D7948] text-white me-2">{selectedUser ? 'Actualizar' : 'Registrar'}</button>
