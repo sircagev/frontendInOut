@@ -48,7 +48,13 @@ const Bodegas = () => {
     return (
       <PDFDownloadLink document={<MyDocument />} fileName="bodegas.pdf">
         {({ loading }) =>
-          loading ? 'Cargando documento...' : 'Descargar Reporte'
+          <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
+          text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
+          focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+          disabled:opacity-50 disabled:shadow-none font-semibold" onClick={handlePrint}>
+            <BiPrinter style={{ marginRight: '5px' }} />
+            {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+          </button>
         }
       </PDFDownloadLink>
     );
@@ -67,22 +73,23 @@ const Bodegas = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
+        
+            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
+            text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
+            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+              <BiSearch />
+            </button>
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar Bodega..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-secondary" type="button">
-              <BiSearch />
-            </button>
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
-          <button className="btn btn-primary flex-shrink-0 mr-5">
-            <BiPrinter />
-          </button>
+        
           {handlePrint()}
         </div>
       </div>
