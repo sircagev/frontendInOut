@@ -25,7 +25,8 @@ const Usuario = () => {
     rol: "",
     numero: "",
     contraseña_usuario: "",
-    Id_ficha: ""
+    Id_ficha: "",
+    identificacion: ""
   });
 
   const handleInputChange = (event) => {
@@ -38,7 +39,7 @@ const Usuario = () => {
   const handleForm = async (event) => {
     try {
       event.preventDefault();
-      
+
       // Realizar validaciones del lado del cliente
       const errors = validationResult(values);
       if (!errors.isEmpty()) {
@@ -50,16 +51,16 @@ const Usuario = () => {
         swal("Error de validación", errorMessage, "error");
         return; // Detener el proceso de registro si hay errores de validación
       }
-      
+
       // Preguntar al usuario si está seguro de realizar el registro
       const confirmRegistration = await swal({
         title: "¿Estás seguro?",
         text: "¿Quieres registrar este usuario?",
         icon: "warning",
-        buttons:  ["Cancelar", "Registrar"],
+        buttons: ["Cancelar", "Registrar"],
         dangerMode: true,
       });
-      
+
       if (confirmRegistration) {
         console.log("Valores enviados en la solicitud:", values);
         const response = await axios.post(`http://localhost:3000/usuario/registrar`, values);
@@ -92,7 +93,7 @@ const Usuario = () => {
   const handleFormm = async (event) => {
     try {
       event.preventDefault();
-  
+
       // Mostrar confirmación
       const confirmacion = await swal({
         title: "¿Estás seguro?",
@@ -101,7 +102,7 @@ const Usuario = () => {
         buttons: ["Cancelar", "Actualizar"],
         dangerMode: true,
       });
-  
+
       // Si el usuario confirma la actualización
       if (confirmacion) {
         const response = await axios.put(`http://localhost:3000/usuario/actualizar/${selectedUser.id_usuario}`, values);
@@ -134,10 +135,10 @@ const Usuario = () => {
     try {
       // Obtener el usuario actual
       const userToUpdate = usuarios.find(user => user.id_usuario === id_usuario);
-  
+
       // Determino el nuevo estado (si el usuario estaba activo, lo desactivo, y viceversa)
       const newEstado = userToUpdate.Estado === 'Activo' ? 'Inactivo' : 'Activo';
-  
+
       // Mostrar confirmación
       const confirmacion = await swal({
         title: "¿Estás seguro?",
@@ -146,12 +147,12 @@ const Usuario = () => {
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
       });
-  
+
       // Si el usuario confirma el cambio de estado
       if (confirmacion) {
         // Realizo la solicitud para cambiar el estado del usuario
         const response = await axios.put(`http://localhost:3000/usuario/estado/${id_usuario}`, { Estado: newEstado });
-  
+
         // Actualizo el estado del usuario en la lista de usuarios
         const updatedUsuarios = usuarios.map(user => {
           if (user.id_usuario === id_usuario) {
@@ -162,9 +163,9 @@ const Usuario = () => {
           }
           return user;
         });
-  
+
         setUsuarios(updatedUsuarios);
-  
+
         if (response.status === 200) {
           swal({
             title: "Estado Éxito",
@@ -189,41 +190,39 @@ const Usuario = () => {
     }
   };
   const handleClose = () => {
-    myModal.hide();  
+    myModal.hide();
     ListarUsuarios();
   };
 
   const buscarUsuario = async (id_usuario) => {
     try {
-        const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
-        console.log(response.data);
-        setUsuarios(response.data.Datos ? response.data.Datos : []);
+      const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
+      console.log(response.data);
+      setUsuarios(response.data.Datos ? response.data.Datos : []);
     } catch (error) {
-        console.error("Error al buscar usuario:", error);
+      console.error("Error al buscar usuario:", error);
     }
-};
+  };
 
 
-const handleSearch = async () => {
-  setError(null);
-  if (searchTerm.trim() !== '') {
-    setCodigoUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
-    buscarUsuario(searchTerm.trim());
-  } else {
-    // Si el campo de búsqueda está vacío, actualizar la lista de usuarios
-    try {
-      await ListarUsuarios();
-    } catch (error) {
-      console.error("Error al listar usuarios:", error);
-      // Aquí puedes mostrar un mensaje de error si lo deseas
+  const handleSearch = async () => {
+    setError(null);
+    console.log(searchTerm.trim())
+    if (searchTerm.trim() !== '') {
+      setCodigoUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
+      console.log(searchTerm);
+      buscarUsuario(searchTerm.trim());
+    } else {
+      setCodigoUsuario('');
+      // Si el campo de búsqueda está vacío, actualizar la lista de usuarios
+      try {
+        await ListarUsuarios();
+      } catch (error) {
+        console.error("Error al listar usuarios:", error);
+        // Aquí puedes mostrar un mensaje de error si lo deseas
+      }
     }
-  }
-};
-
-
-
-
-
+  };
 
   const ListarUsuarios = async () => {
     try {
@@ -253,7 +252,8 @@ const handleSearch = async () => {
       rol: user.rol,
       numero: user.numero,
       contraseña_usuario: user.contraseña_usuario,
-      Id_ficha: user.Id_ficha
+      Id_ficha: user.Id_ficha,
+      identificacion: user.identificacion
     });
     myModal.show();
   };
@@ -263,8 +263,8 @@ const handleSearch = async () => {
       keyboard: false
     });
     ListarUsuarios();
-  }, []);
-  
+  }, [id_usuario]);
+
   // Lógica para mostrar la página actual
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -287,9 +287,9 @@ const handleSearch = async () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
-        <Pagination.Item 
-          key={i} 
-          active={i === currentPage} 
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
           onClick={() => paginate(i)}
         >
           {i}
@@ -313,12 +313,12 @@ const handleSearch = async () => {
     <div className="container">
       <div className="col">
         <div className="flex gap-10 items-center">
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded-tr-md rounded-br-md font-sans 
             text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
             focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-            disabled:opacity-50 disabled:shadow-none font-semibold" 
+            disabled:opacity-50 disabled:shadow-none font-semibold"
             style={{ marginTop: '20px', borderRadius: '10px', marginLeft: '-10px' }}
             onClick={() => {
               setSelectedUser(null);
@@ -329,7 +329,8 @@ const handleSearch = async () => {
                 rol: "",
                 numero: "",
                 contraseña_usuario: "",
-                Id_ficha: ""
+                Id_ficha: "",
+                identificacion: ""
               });
               myModal.show();
             }}
@@ -338,31 +339,33 @@ const handleSearch = async () => {
           </button>
 
           <input
-  type="text"
-  className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
-  placeholder='Código de Usuario...'
-  onChange={(e) => {
-    setSearchTerm(e.target.value);
-  }}
-  style={{ marginBottom: '-19px' }} 
-/>
-
+            type="text"
+            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
+            placeholder='Código de Usuario...'
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }
+            }
+            style={
+              { marginBottom: '-19px' }
+            }
+          />
 
           <button
             className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
             text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
             focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             data-ripple-light="true"
-            style={{ marginLeft: '-40px', marginTop: '19px' }} 
-            onClick={handleSearch} 
+            style={{ marginLeft: '-40px', marginTop: '19px' }}
+            onClick={handleSearch}
           >
             <BiSearch className='w-[20px] h-auto ' />
           </button>
         </div>
       </div>
-  
+
       <br />
-  
+
       <br />
 
       <Table
@@ -384,7 +387,7 @@ const handleSearch = async () => {
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="rol">ROL</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="numero">N_TELEFONO</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">FICHA</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">IDENTIFICACIÓN</TableColumn>
+          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="identificacion">IDENTIFICACIÓN</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Estado">ESTADO</TableColumn>
           <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
         </TableHeader>
@@ -444,18 +447,18 @@ const handleSearch = async () => {
                 <div className="mb-3" style={{ display: 'flex' }}>
                   <input type="text" id="email_usuario" name="email_usuario" className="form-control" placeholder="Email Usuario *" style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }} value={values.email_usuario} onChange={handleInputChange} />
                   <input
-                      type="text"
-                      id="identificacion"
-                      name="identificacion"
-                      className="form-control"
-                      placeholder="ID Usuario"
-                      style={{ width: '50%', fontSize: '0.9rem' }}
-                      value={values.identificacion}
-                      onChange={(e) => {
-                        const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
-                        handleInputChange({ target: { name: 'identificacion', value: onlyNumbers }});
-                      }}
-                    />
+                    type="text"
+                    id="identificacion"
+                    name="identificacion"
+                    className="form-control"
+                    placeholder="ID Usuario"
+                    style={{ width: '50%', fontSize: '0.9rem' }}
+                    value={values.identificacion}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'identificacion', value: onlyNumbers } });
+                    }}
+                  />
                 </div>
 
                 <div className="mb-3">
@@ -468,33 +471,33 @@ const handleSearch = async () => {
                 </div>
 
                 <div className="mb-3" style={{ display: 'flex' }}>
-                        <input
-                          type="text"
-                          id="numero"
-                          name="numero"
-                          className="form-control"
-                          placeholder="Número Telefónico"
-                          style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }}
-                          value={values.numero}
-                          onChange={(e) => {
-                            const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
-                            handleInputChange({ target: { name: 'numero', value: onlyNumbers }});
-                          }}
-                      />
-                      <input
-                        type="text"
-                        id="Id_ficha"
-                        name="Id_ficha"
-                        className="form-control"
-                        placeholder="ID Ficha"
-                        style={{ width: '50%', fontSize: '0.9rem' }}
-                        value={values.Id_ficha}
-                        onChange={(e) => {
-                          const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
-                          handleInputChange({ target: { name: 'Id_ficha', value: onlyNumbers }});
-                        }}
-                      />
-                    </div>
+                  <input
+                    type="text"
+                    id="numero"
+                    name="numero"
+                    className="form-control"
+                    placeholder="Número Telefónico"
+                    style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }}
+                    value={values.numero}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'numero', value: onlyNumbers } });
+                    }}
+                  />
+                  <input
+                    type="text"
+                    id="Id_ficha"
+                    name="Id_ficha"
+                    className="form-control"
+                    placeholder="ID Ficha"
+                    style={{ width: '50%', fontSize: '0.9rem' }}
+                    value={values.Id_ficha}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'Id_ficha', value: onlyNumbers } });
+                    }}
+                  />
+                </div>
 
                 <div className="d-flex justify-content-center">
                   <button type="submit" className="btn bg-[#3D7948] hover:bg-[#3D7948] text-white me-2">{selectedUser ? 'Actualizar' : 'Registrar'}</button>

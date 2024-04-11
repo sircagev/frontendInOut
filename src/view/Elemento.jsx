@@ -537,56 +537,7 @@ export const Elemento = () => {
             )}
           </ModalContent>
         </Modal>
-        <Modal isOpen={isOpenStock} onClose={onCloseStock} className='my-auto'>
-          <ModalContent>
-            {(onCloseStock) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">Añadir Stock</ModalHeader>
-                <ModalBody>
-                  <form>
-                    <div class="relative mb-3" data-twe-input-wrapper-init>
-                      <Input
-                        type='number'
-                        label='Añadir Stock'
-                        name='stock'
-                        
-                        onChange={(e) => {
-                          const currentFkElemento = dataStock.detalles[0].fk_elemento
-                            setDataStock({
-                              usuario_solicitud: 1,
-                              fk_movimiento: 1,
-                              Estado: null,
-                              detalles: [{
-                                fk_elemento: currentFkElemento,
-                                estado: null,
-                                fecha_vencimiento: null,
-                                cantidad: e.target.value,
-                                Usuario_recibe: 1,
-                                Usuario_entrega: 1,
-                                Observaciones: 'Sin Observaciones'
-                              }]
-                            })
-                            console.log(dataStock)
-                        } // Agrega esta línea para actualizar el estado de NuevoStock
-                        } />
-                    </div>
-                    <div className='flex justify-end gap-3'>
-                      <Button color="danger" onPress={onCloseStock} className='bg-[#BF2A50] font-bold text-white'>
-                        Cancelar
-                      </Button>
-                      <Button className='font-bold text-white' color="success" type='button' onClick={AnadirStock}>
-                        Añadir Stock
-                      </Button>
-                    </div>
-                  </form>
-
-                </ModalBody>
-                <ModalFooter>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+        
         <Table
           aria-label="Lista de Empaques"
           bottomContent={
@@ -631,10 +582,7 @@ export const Elemento = () => {
                     style={{ fontSize: '15px' }}>
                     Info
                   </Button>
-                  <Button color='primary' className='font-semibold bg-[#0C6A6F] hover:bg-[#1E6C9B]' onClick={() => { handleAniadirStock(elemento.Codigo_elemento) }}
-                    style={{ fontSize: '15px' }}>
-                    Añadir Stock
-                  </Button>
+                  
                   <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo_elemento) }} style={{ fontSize: '15px' }}>
                     Desactivar
                   </Button>
