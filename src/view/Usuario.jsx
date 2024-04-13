@@ -14,7 +14,7 @@ let myModal;
 const Usuario = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [id_usuario, setCodigoUsuario] = useState('');
+  const [identificacion, setIdentificacionUsuario] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -98,7 +98,7 @@ const Usuario = () => {
       // Mostrar confirmación
       const confirmacion = await swal({
         title: "¿Estás seguro?",
-        text: "¿Quieres actualizar el usuario?",
+        text: "¿Quieres actualizar los Datos del Usuario?",
         icon: "warning",
         buttons: ["Cancelar", "Actualizar"],
         dangerMode: true,
@@ -195,13 +195,14 @@ const Usuario = () => {
     ListarUsuarios();
   };
 
-  const buscarUsuario = async (id_usuario) => {
+  const buscarUsuario = async (identificacion) => {
     try {
-      const response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
-      console.log(response.data);
+      const response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
       setUsuarios(response.data.Datos ? response.data.Datos : []);
     } catch (error) {
       console.error("Error al buscar usuario:", error);
+      swal("Error", "No se encontro usuario con la identificación ingresada", "error");
+
     }
   };
 
@@ -210,11 +211,11 @@ const Usuario = () => {
     setError(null);
     console.log(searchTerm.trim())
     if (searchTerm.trim() !== '') {
-      setCodigoUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
+      setIdentificacionUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
       console.log(searchTerm);
       buscarUsuario(searchTerm.trim());
     } else {
-      setCodigoUsuario('');
+      setIdentificacionUsuario('');
       // Si el campo de búsqueda está vacío, actualizar la lista de usuarios
       try {
         await ListarUsuarios();
@@ -228,9 +229,9 @@ const Usuario = () => {
   const ListarUsuarios = async () => {
     try {
       let response;
-      console.log(id_usuario)
-      if (id_usuario.trim() !== '') {
-        response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
+      console.log(identificacion)
+      if (identificacion.trim() !== '') {
+        response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
         console.log(response.data);
         setUsuarios(response.data.Datos ? response.data.Datos : []);
 
@@ -264,7 +265,7 @@ const Usuario = () => {
       keyboard: false
     });
     ListarUsuarios();
-  }, [id_usuario]);
+  }, [identificacion]);
 
   // Lógica para mostrar la página actual
   const indexOfLastUser = currentPage * usersPerPage;
@@ -337,7 +338,7 @@ const Usuario = () => {
             <input
               type="text"
               className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
-              placeholder='Código de Usuario...'
+              placeholder='Identificación Usuario...'
               onChange={(e) => {
                 setSearchTerm(e.target.value);
               }
