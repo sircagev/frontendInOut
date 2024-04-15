@@ -276,7 +276,7 @@ export const Elemento = () => {
     <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
       <div className='w-[90%]'>
         <div className='flex gap-3'>
-          <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Elemento</Button>
+          <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Elemento</Button>
           <div className='flex justify-center'>
             <input
               type="text"
@@ -582,6 +582,9 @@ export const Elemento = () => {
                     style={{ fontSize: '15px' }}>
                     Info
                   </Button>
+
+                  
+
                   <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo_elemento) }} style={{ fontSize: '15px' }}>
                     Desactivar
                   </Button>
