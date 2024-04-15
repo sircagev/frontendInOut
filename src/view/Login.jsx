@@ -29,7 +29,7 @@ function Login({ setLoggedIn }) {
   };
 
   return (
-    <div className='ml-[750px] mt-[180px] flex justify-center items-center flex-col'>
+    <div className='w-full flex justify-center items-center flex-col h-screen'>
       <div className='w-[500px] h-auto bg-[#3d7948] rounded-lg'>
         <h2 className='text-center mt-3 mb-4 text-3xl font-semibold text-white'>In-Out</h2>
         <form onSubmit={handleSubmit}>
