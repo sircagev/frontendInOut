@@ -177,7 +177,7 @@ export const Movimientos2 = () => {
          const itemsElements = await ListarElementos();
          const itemsUsers = await ListarUsuarios();
          setDataElements(itemsElements);
-         setDataUsuarios(itemsUsers);
+         setDataUsuarios(itemsUsers.result);
       } catch (error) {
          console.log(error);
       }
@@ -202,6 +202,7 @@ export const Movimientos2 = () => {
    useEffect(() => {
       listarMovimientos();
       fectchData();
+      console.log(dataUsuarios)
    }, [codigoMovimiento])
 
    return (
@@ -594,3 +595,5 @@ export const Movimientos2 = () => {
       </div>
    )
 }
+
+//Debo Realizar un movimineto de prestamo, este movimiento tiene estados de entrega o en prestamo, se listan los que tienen el estado en prestamo para saber cuantos elementos en total hay prestados, sobre estos se hacen los calculos  
