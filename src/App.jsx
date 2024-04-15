@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { Navbar } from "./components/Navbar";
 import { Elementos } from "./view/Elementos";
@@ -24,12 +24,15 @@ function App() {
    const [sidebarOpen, setSidebarOpen] = useState(false);
    const [loggedIn, setLoggedIn] = useState(false);
 
+   const navigate = useNavigate();
+
    useEffect(() => {
       // Verificar si hay un token en el localStorage al cargar la aplicación
       const token = localStorage.getItem('token');
       if (token) {
          // Si hay un token, el usuario está autenticado
          setLoggedIn(true);
+         navigate('/')
       }
    }, []);
 
