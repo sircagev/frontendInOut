@@ -582,7 +582,9 @@ export const Elemento = () => {
                     style={{ fontSize: '15px' }}>
                     Info
                   </Button>
+
                   
+
                   <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo_elemento) }} style={{ fontSize: '15px' }}>
                     Desactivar
                   </Button>
