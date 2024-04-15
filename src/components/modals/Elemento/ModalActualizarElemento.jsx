@@ -118,22 +118,6 @@ export const ModalActualizarElemento = ({ isOpen, onClose, elemento, listarEleme
                                         </select>
                                     </div>
                                     <div className='flex gap-5'>
-                                        <Input
-                                            type="text"
-                                            label="Fecha de Creación"
-                                            value={elemento && elemento.fecha_creacion}
-                                            disabled // Deshabilitamos la edición
-                                            className="max-w-xs"
-                                        />
-                                        <Input
-                                            type="text"
-                                            label="Fecha de Actualización"
-                                            value={elemento && elemento.fecha_actualizacion}
-                                            disabled
-                                            className="max-w-xs"
-                                        />
-                                    </div>
-                                    <div className='flex gap-5'>
                                         <select
                                             name="fk_tipoElemento"
                                             className="bg-[#F4F4F5] border border-gray-300 w-[320px] h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -167,7 +151,7 @@ export const ModalActualizarElemento = ({ isOpen, onClose, elemento, listarEleme
                                             ))}
                                         </select>
                                     </div>
-                                    <div className='flex gap-5 mb-5'>
+                                    <div className='flex gap-5'>
                                         <select
                                             name='fk_tipoEmpaque'
                                             className="bg-[#F4F4F5] border border-gray-300 w-[320px] h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -200,6 +184,15 @@ export const ModalActualizarElemento = ({ isOpen, onClose, elemento, listarEleme
                                                 </option>
                                             ))}
                                         </select>
+                                    </div>
+                                    <div className='flex mb-5'>
+                                        <Input
+                                            type="text"
+                                            label="Fecha de Creación"
+                                            value={elemento && elemento.fecha_creacion}
+                                            disabled // Deshabilitamos la edición
+                                            className="max-w-xs"
+                                        />
                                     </div>
                                 </div>
                                 <div className='w-full mb-3 flex justify-end gap-2'>

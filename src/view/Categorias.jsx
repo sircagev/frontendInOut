@@ -323,7 +323,6 @@ export const Categorias = () => {
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="codigo">CÓDIGO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="nombre">NOMBRE</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="creacion">CREACIÓN</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="actualizacion">ACTUALIZACIÓN</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="estado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
@@ -333,7 +332,7 @@ export const Categorias = () => {
                                 <TableCell className='font-semibold'>{categoria.codigo_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{categoria.Nombre_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(categoria.fecha_creacion).toLocaleDateString()}</TableCell>
-                                <TableCell className='font-semibold'>{new Date(categoria.fecha_actualizacion).toLocaleDateString()}</TableCell>
+                                
                                 <TableCell className='font-semibold'>{categoria.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button

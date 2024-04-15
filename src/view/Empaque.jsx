@@ -307,7 +307,7 @@ export const Empaque = () => {
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="creacion">CREACIÓN</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="actulizacion">ACTUALIZACIÓN</TableColumn>
+                        
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
@@ -317,7 +317,6 @@ export const Empaque = () => {
                                 <TableCell className='font-semibold'>{empaque.codigo_Empaque}</TableCell>
                                 <TableCell className='font-semibold'>{empaque.Nombre_Empaque}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(empaque.fecha_creacion).toLocaleDateString()}</TableCell>
-                                <TableCell className='font-semibold'>{new Date(empaque.fecha_actualizacion).toLocaleDateString()}</TableCell>
                                 <TableCell className='font-semibold'>{empaque.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button

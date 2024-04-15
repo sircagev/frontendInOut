@@ -138,7 +138,7 @@ export const Ubicacion = () => {
         setSelectedUbicacion(null);
         setEditedUbicacion('');
     };
-    
+
 
 
     const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
@@ -298,20 +298,17 @@ export const Ubicacion = () => {
                                             )}
                                         </div>
                                         <div class="relative mb-4" data-twe-input-wrapper-init>
-                                            <Select
-                                                name='fk_bodega'
-                                                onChange={handleInputChange}
-                                                label="Seleccione una Bodega"
-                                                placeholder="Bodega"
-                                                selectionMode="multiple"
-                                                className="w-full"
-                                            >
+                                            <select name="fk_bodega" required onChange={handleInputChange} label='Seleccione una Bodega' class="bg-[#F4F4F5] border border-gray-300 w-full h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option selected disabled>Seleccione un tipo de elemento</option>
                                                 {UseBodega.map((bodega) => (
-                                                    <SelectItem key={bodega.fk_bodega} value={bodega.codigo_Bodega}>
+                                                    <option
+                                                    value={bodega.codigo_Bodega}
+                                                        key={bodega.fk_bodega}
+                                                    >
                                                         {bodega.Nombre_bodega}
-                                                    </SelectItem>
+                                                    </option>
                                                 ))}
-                                            </Select>
+                                            </select>
                                             {errorBodega && (
                                                 <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
                                                     <FaExclamationCircle className="mr-1" />
@@ -353,7 +350,7 @@ export const Ubicacion = () => {
                                         name="fk_bodega"
                                         value={editedUbicacion.fk_bodega}
                                         onChange={(e) => setEditedUbicacion({ ...editedUbicacion, fk_bodega: e.target.value })}
-                                        class="bg-[#F4F4F5] w-full border border-gray-300 h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-[#F4F4F5] w-full border border-gray-300 h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     >
                                         <option disabled selected>Seleccione una Bodega</option>
                                         {UseBodega.map(bodega => (
@@ -403,7 +400,6 @@ export const Ubicacion = () => {
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="bodega">BODEGA</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="creacion">CREACION</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="actualizacion">ACTUALIZACION</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
@@ -414,7 +410,6 @@ export const Ubicacion = () => {
                                 <TableCell className='font-semibold'>{ubicacion.Nombre_ubicacion}</TableCell>
                                 <TableCell className='font-semibold'>{ubicacion.Nombre_bodega}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(ubicacion.fecha_creacion).toLocaleDateString()}</TableCell>
-                                <TableCell className='font-semibold'>{new Date(ubicacion.fecha_actualizacion).toLocaleDateString()}</TableCell>
                                 <TableCell className='font-semibold'>{ubicacion.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button

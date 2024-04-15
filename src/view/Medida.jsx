@@ -301,7 +301,6 @@ export const Medida = () => {
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="creacion">CREACIÓN</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="actualizacion">ACTUALIZACIÓN</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
@@ -311,7 +310,7 @@ export const Medida = () => {
                                 <TableCell className='font-semibold'>{medida.codigo_medida}</TableCell>
                                 <TableCell className='font-semibold'>{medida.Nombre_Medida}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(medida.fecha_creacion).toLocaleDateString()}</TableCell>
-                                <TableCell className='font-semibold'>{new Date(medida.fecha_actualizacion).toLocaleDateString()}</TableCell>
+                                
                                 <TableCell className='font-semibold'>{medida.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button
