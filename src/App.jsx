@@ -35,10 +35,12 @@ function App() {
 
    return (
       <Routes>
-         {loggedIn ? (
-            <Route
-               path="/*"
-               element={
+         <Route path="/login" element={<Login setLoggedIn={setLoggedIn}/>} />
+
+         <Route
+            path="/*"
+            element={
+               loggedIn ? (
                   <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
                      <section className="hidden tablet:initial bg-gray-100">
                         <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
@@ -65,15 +67,11 @@ function App() {
                         </div>
                      </section>
                   </main>
-
-               }
-            />
-         ) : (
-            <Route
-               path="/login"
-               element={loggedIn ? <Navigate to="/" replace/> : <Login setLoggedIn={setLoggedIn} />}
-            />
-         )}
+               ) : (
+                  <Navigate to="/login" />
+               )
+            }
+         />
       </Routes>
    );
 }
