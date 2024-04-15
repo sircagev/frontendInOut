@@ -47,7 +47,7 @@ export const Sidebar = ({ state, setState }) => {
       icon: AiOutlineFileText,
       label: "Reportes",
       to: "/reportes",
-      subitems: [
+     /* subitems: [
         {
           icon: ImUsers,
           label: "Usuarios",
@@ -68,7 +68,7 @@ export const Sidebar = ({ state, setState }) => {
           label: "Bodegas",
           to: "/reportes/bodegas",
         },
-      ]
+      ]*/
     },
     {
       icon: AiOutlineFileText,
