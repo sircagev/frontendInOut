@@ -11,6 +11,7 @@ const Movimientos = () => {
     try {
       const response = await axios.get('http://localhost:3000/movimientos/listar');
       setMovimientos(response.data.datos);
+      console.log(response.data.datos);
     } catch (error) {
       console.error("Error al obtener la lista de movimientos:", error);
     }
@@ -124,13 +125,13 @@ const Movimientos = () => {
             <tr key={movimiento.Codigo}>
               <td dangerouslySetInnerHTML={{ __html: (movimiento.Codigo.toString()) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (formatDate(movimiento.Fecha)) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: (movimiento.Usuario_solicitud) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Usuario) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (movimiento.Estado) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (movimiento["fk_elemento"]) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (movimiento["cantidad"]) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (movimiento["Usuario_recibe"]) }}></td>
               <td dangerouslySetInnerHTML={{ __html: (movimiento["Usuario_entrega"]) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: (movimiento.Observaciones) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Tipo) }}></td>
             </tr>
           ))}
         </tbody>

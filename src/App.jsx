@@ -34,12 +34,12 @@ function App() {
    }, []);
 
    return (
-      <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
+      <>
          {!loggedIn && <Login setLoggedIn={setLoggedIn} />}
 
          {
             loggedIn && (
-               <>
+               <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
                   <section className="hidden tablet:initial bg-gray-100">
                      <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
                   </section>
@@ -64,10 +64,10 @@ function App() {
                         </Routes>
                      </div>
                   </section>
-               </>
+               </main >
             )
          }
-      </main >
+      </>
    );
 }
 
