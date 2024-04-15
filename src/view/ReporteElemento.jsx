@@ -11,16 +11,28 @@ const Elemento = () => {
     try {
       const response = await axios.get(`http://localhost:3000/elemento/listar`);
       if (response && response.data && Array.isArray(response.data)) {
-        setElementos(response.data);
+        // Filtrar elementos según el término de búsqueda
+        const elementos = response.data.filter((elemento) =>
+          Object.values(elemento).some((value) =>
+            value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+        // Actualizar el estado useElementos con los elementos filtrados
+        setElementos(elementos);
       } else {
-        console.error("La respuesta del servidor no contiene los datos esperados:", response);
-        alert("Error al obtener la lista de elementos: respuesta no válida");
+        console.error('La respuesta del servidor no contiene los datos esperados:', response);
+        alert('Error al obtener la lista de elementos: respuesta no válida');
       }
     } catch (error) {
-      console.log("Error al obtener la lista de elementos:", error);
-      alert("Error al obtener la lista de elementos: " + error.message);
+      console.log('Error al obtener la lista de elementos:', error);
+      alert('Error al obtener la lista de elementos: ' + error.message);
     }
   };
+  
+  useEffect(() => {
+    // Llamar a ListarElementos cada vez que el término de búsqueda cambie
+    ListarElementos();
+  }, [searchTerm]);
   
 
   useEffect(() => {
@@ -42,6 +54,8 @@ const Elemento = () => {
               <Text style={styles.tableHeader}>Empaque</Text>
               <Text style={styles.tableHeader}>Medida</Text>
               <Text style={styles.tableHeader}>Ubicación</Text>
+              <Text style={styles.tableHeader}>Estado</Text>
+              <Text style={styles.tableHeader}>F/ registro</Text>
             </View>
             {useElementos.map(elemento => (
               <View style={styles.tableRow} key={elemento.Codigo_elemento}>
@@ -53,6 +67,8 @@ const Elemento = () => {
                 <Text style={styles.tableCell}>{elemento.Nombre_empaque}</Text>
                 <Text style={styles.tableCell}>{elemento.Nombre_Medida}</Text>
                 <Text style={styles.tableCell}>{elemento.Nombre_ubicacion}</Text>
+                <Text style={styles.tableCell}>{elemento.Estado}</Text>
+                <Text style={styles.tableCell}>{formatDate(elemento.fecha_creacion)}</Text>
               </View>
             ))}
           </View>
@@ -65,7 +81,13 @@ const Elemento = () => {
     return (
       <PDFDownloadLink document={<MyDocument />} fileName="elementos.pdf">
         {({ loading }) =>
-          loading ? 'Cargando documento...' : 'Descargar Reporte'
+           <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
+           text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
+           focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+           disabled:opacity-50 disabled:shadow-none font-semibold" onClick={handlePrint}>
+             <BiPrinter style={{ marginRight: '5px' }} />
+             {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+           </button>
         }
       </PDFDownloadLink>
     );
@@ -77,6 +99,15 @@ const Elemento = () => {
     return text.replace(regex, '<mark>$1</mark>');
   };
 
+    //Formato de fecha día/mes/año
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear().toString().substr(-2);
+      return `${day}/${month}/${year}`;
+    };
+
   return (
     <div className="container">
       <h1 className="text-center mb-4 mt-4">Reporte de Elementos</h1>
@@ -84,22 +115,22 @@ const Elemento = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
+           
+            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
+            text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
+            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+              <BiSearch />
+            </button>
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar elemento..."
+              placeholder="Buscar ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-secondary" type="button">
-              <BiSearch />
-            </button>
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
-          <button className="btn btn-primary flex-shrink-0 mr-2">
-            <BiPrinter />
-          </button>
           {handlePrint()}
         </div>
       </div>
@@ -109,12 +140,14 @@ const Elemento = () => {
           <tr>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Stok</th>
+            <th>Stock</th>
             <th>Tipo</th>
             <th>Categoría</th>
             <th>Empaque</th>
             <th>Medida</th>
             <th>Ubicación</th>
+            <th>Estado</th>
+            <th>F/ Registro</th>
           </tr>
         </thead>
         <tbody>
@@ -128,6 +161,8 @@ const Elemento = () => {
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_empaque) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_Medida) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_ubicacion) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Estado) }}></td>
+              <td style={{ textAlign: 'center' }}  dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(elemento.fecha_creacion)) }}></td>
             </tr>
           ))}
         </tbody>

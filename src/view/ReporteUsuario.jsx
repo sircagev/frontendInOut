@@ -4,26 +4,38 @@ import { BiPrinter, BiSearch } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 const Usuario = () => {
-  const [useUsuarios, setUsuarios] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [usuarios, setUsuarios] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const ListarUsuarios = async () => {
+  const listarUsuarios = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/usuario/listar`);
+      const response = await axios.get('http://localhost:3000/usuario/listar');
       if (response.data && Array.isArray(response.data.result)) {
         setUsuarios(response.data.result);
       } else {
         console.error("La respuesta de la solicitud GET no contiene un array en la propiedad 'result':", response.data);
-        alert("Error al obtener la lista de usuarios");
+        alert('Error al obtener la lista de usuarios');
       }
     } catch (error) {
-      console.log("Error al obtener la lista de usuarios:", error);
-      alert("Error al obtener la lista de usuarios");
+      console.log('Error al obtener la lista de usuarios:', error);
+      alert('Error al obtener la lista de usuarios');
     }
   };
 
+  const buscarUsuarios = () => {
+    let filteredUsers = usuarios;
+    if (searchTerm.trim() !== '') {
+      filteredUsers = usuarios.filter(usuario =>
+        Object.values(usuario).some(value =>
+          value.toString().toLowerCase() === searchTerm.toLowerCase()
+        )
+      );
+    }
+    return filteredUsers;
+  };
+
   useEffect(() => {
-    ListarUsuarios();
+    listarUsuarios();
   }, []);
 
   const MyDocument = () => (
@@ -33,25 +45,23 @@ const Usuario = () => {
           <Text style={styles.title}>Reporte de Usuarios</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableHeader}>Id</Text>
-              <Text style={styles.tableHeader}>Nombre</Text>
-              <Text style={styles.tableHeader}>Apellido</Text>
+              <Text style={styles.tableHeader}>Nombre</Text>              
               <Text style={styles.tableHeader}>Email</Text>
               <Text style={styles.tableHeader}>Rol</Text>
-              <Text style={styles.tableHeader}>Numero</Text>
+              <Text style={styles.tableHeader}>Teléfono</Text>
               <Text style={styles.tableHeader}>Id Ficha</Text>
               <Text style={styles.tableHeader}>Estado</Text>
+              <Text style={styles.tableHeader}>Fecha de registro</Text>
             </View>
-            {useUsuarios.map(user => (
-              <View style={styles.tableRow} key={user.id_usuario}>
-                <Text style={styles.tableCell}>{user.id_usuario}</Text>
-                <Text style={styles.tableCell}>{user.nombre_usuario}</Text>
-                <Text style={styles.tableCell}>{user.apellido_usuario}</Text>
+            {buscarUsuarios().map(user => (
+              <View style={styles.tableRow} key={user.id_usuario}>                
+                <Text style={styles.tableCell}>{`${user.nombre_usuario} ${user.apellido_usuario}`}</Text>                
                 <Text style={styles.tableCell}>{user.email_usuario}</Text>
                 <Text style={styles.tableCell}>{user.rol}</Text>
                 <Text style={styles.tableCell}>{user.numero}</Text>
                 <Text style={styles.tableCell}>{user.Id_ficha}</Text>
                 <Text style={styles.tableCell}>{user.Estado}</Text>
+                <Text style={styles.tableCell}>{formatDate(user.fecha_creacion)}</Text>
               </View>
             ))}
           </View>
@@ -60,15 +70,23 @@ const Usuario = () => {
     </Document>
   );
 
-  const handlePrint = () => {
-    return (
-      <PDFDownloadLink document={<MyDocument />} fileName="usuarios.pdf">
-        {({ loading }) =>
-          loading ? 'Cargando documento...' : 'Descargar Reporte'
-        }
-      </PDFDownloadLink>
-    );
+  const handleSearch = () => {
+    setUsuarios(buscarUsuarios());
   };
+
+  const handlePrint = () => (
+    <PDFDownloadLink document={<MyDocument />} fileName="usuarios.pdf">
+      {({ loading }) => (
+        <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
+        text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
+        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+        disabled:opacity-50 disabled:shadow-none font-semibold" onClick={handlePrint}>
+          <BiPrinter style={{ marginRight: '5px' }} />
+          {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+        </button>
+      )}
+    </PDFDownloadLink>
+  );
 
   const highlightSearchTerm = (text) => {
     if (!searchTerm) return text;
@@ -76,6 +94,15 @@ const Usuario = () => {
     return text.replace(regex, '<mark>$1</mark>');
   };
 
+  //Formato de fecha día/mes/año
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().substr(-2);
+    return `${day}/${month}/${year}`;
+  };
+  
   return (
     <div className="container">
       <h1 className="text-center mb-4 mt-4">Reporte de Usuarios</h1>
@@ -83,22 +110,21 @@ const Usuario = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
+            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
+            text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
+            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" onClick={handleSearch}>
+              <BiSearch />
+            </button>
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar usuario..."
+              placeholder="Buscar ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-secondary" type="button">
-              <BiSearch />
-            </button>
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
-          <button className="btn btn-primary flex-shrink-0 mr-2">
-            <BiPrinter />
-          </button>
           {handlePrint()}
         </div>
       </div>
@@ -106,31 +132,28 @@ const Usuario = () => {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Nombre</th>
-            <th>Apellido</th>
             <th>Email</th>
             <th>Rol</th>
-            <th>Número</th>
+            <th>Teléfono</th>
             <th>Id Ficha</th>
             <th>Estado</th>
+            <th>Fecha de Registro</th>
           </tr>
         </thead>
         <tbody>
-        {useUsuarios.map(user => (
-          <tr key={user.id_usuario}>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.id_usuario.toString()) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.nombre_usuario) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.apellido_usuario) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.email_usuario) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.rol) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.numero.toString()) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Id_ficha.toString()) }}></td>
-            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
-          </tr>
-        ))}
-      </tbody>
-
+          {buscarUsuarios().map(user => (
+            <tr key={user.id_usuario}>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(`${user.nombre_usuario} ${user.apellido_usuario}`) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.email_usuario) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.rol) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.numero.toString()) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Id_ficha.toString()) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
+              <td style={{ textAlign: 'center' }}  dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(user.fecha_creacion)) }}></td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
@@ -139,7 +162,7 @@ const Usuario = () => {
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
-    padding: 20,
+    padding: 50,
   },
   title: {
     fontSize: 24,
@@ -153,6 +176,8 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#000',
+ 
+    alignItems: 'center',
   },
   tableRow: {
     flexDirection: 'row',
@@ -160,13 +185,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
   },
   tableHeader: {
-    width: '12.5%',
+    width: '14.2%',
     backgroundColor: '#f2f2f2',
     textAlign: 'center',
     padding: 5,
+    marginTop: 5,
+    marginBottom: 5,
   },
   tableCell: {
-    width: '12.5%',
+    width: '14.2%',
     textAlign: 'center',
     padding: 5,
   },
