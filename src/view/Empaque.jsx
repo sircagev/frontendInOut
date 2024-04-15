@@ -226,7 +226,7 @@ export const Empaque = () => {
                                 <ModalHeader className="flex flex-col gap-1">Registrar Nuevo Empaque</ModalHeader>
                                 <ModalBody>
                                     <form onSubmit={handleForm}>
-                                        <div class="relative mb-4" data-twe-input-wrapper-init>
+                                        <div class="relative mb-4 h-[65px]" data-twe-input-wrapper-init>
                                             <Input
                                                 type='text'
                                                 label='Nombre Empaque'

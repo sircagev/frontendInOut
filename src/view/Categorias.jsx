@@ -243,7 +243,7 @@ export const Categorias = () => {
                                 <ModalBody>
                                     <form onSubmit={handleForm}>
                                         <div className='flex justify-center items-center'></div>
-                                        <div class="relative mb-4 justify-center items-center" data-twe-input-wrapper-init>
+                                        <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                                             <Input
                                                 type='text'
                                                 label='Nombre Categoría'
@@ -258,7 +258,6 @@ export const Categorias = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-
                                         </div>
                                         <div className='flex justify-end gap-3 mb-3'>
                                             <Button color="danger" className='bg-[#BF2A50] font-bold text-white' variant="light" onPress={onCloseModal}>
