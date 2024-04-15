@@ -14,6 +14,7 @@ import ReporteU from "./view/ReporteUsuario"
 import ReporteE from "./view/ReporteElemento"
 import ReporteB from "./view/ReporteBodega"
 import ReporteM from "./view/ReporteMovimiento"
+import Reporte from "./view/Reportes"
 import { Movimientos } from "./view/Movimientos"
 import { Movimientos2 } from "./view/Movimientos2"
 
@@ -41,7 +42,12 @@ function App() {
             <Route path="/reportes/elementos" element={<ReporteE />} />
             <Route path="/reportes/bodegas" element={<ReporteB />} />
             <Route path="/reportes/movimientos" element={<ReporteM />} />
+
             <Route path="/bodegas" element={<Bodega/>} />
+
+            <Route path="/reportes" element={<Reporte />} />
+
+
             <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
             <Route path="/movimientos" element={<Movimientos2 />} />
           </Routes>

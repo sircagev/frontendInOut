@@ -31,13 +31,17 @@ const Movimientos = () => {
               <Text style={styles.tableHeader}>Fecha</Text>
               <Text style={styles.tableHeader}>Usuario</Text>
               <Text style={styles.tableHeader}>Tipo de Movimiento</Text>
+              <Text style={styles.tableHeader}>Estado</Text>
+              <Text style={styles.tableHeader}>Observación</Text>
             </View>
             {movimientos.map(movimiento => (
-              <View style={styles.tableRow} key={movimiento.Código}>
-                <Text style={styles.tableCell}>{movimiento.Código}</Text>
-                <Text style={styles.tableCell}>{movimiento.Fecha}</Text>
-                <Text style={styles.tableCell}>{movimiento.Usuario}</Text>
-                <Text style={styles.tableCell}>{movimiento["Tipo Movimiento"]}</Text>
+              <View style={styles.tableRow} key={movimiento.Codigo}>
+                <Text style={styles.tableCell}>{movimiento.Codigo}</Text>
+                <Text style={styles.tableCell}>{formatDate(movimiento.Fecha)}</Text>
+                <Text style={styles.tableCell}>{movimiento.Usuario_solicitud}</Text>
+                <Text style={styles.tableCell}>{movimiento["Nombre_movimiento"]}</Text>
+                <Text style={styles.tableCell}>{movimiento.Estado}</Text>
+                <Text style={styles.tableCell}>{movimiento["Observaciones"]}</Text>
               </View>
             ))}
           </View>
@@ -50,18 +54,28 @@ const Movimientos = () => {
     return (
       <PDFDownloadLink document={<MyDocument />} fileName="movimientos.pdf">
         {({ loading }) =>
-          loading ? 'Cargando documento...' : 'Descargar Reporte'
+           <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
+           text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
+           focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
+           disabled:opacity-50 disabled:shadow-none font-semibold" >
+             <BiPrinter style={{ marginRight: '5px' }} />
+             {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+           </button>
         }
       </PDFDownloadLink>
     );
   };
 
-  const highlightSearchTerm = (text) => {
-    if (!searchTerm || typeof searchTerm === 'undefined') return text;
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-  };
+
   
+    //Formato de fecha día/mes/año
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear().toString().substr(-2);
+      return `${day}/${month}/${year}`;
+    };
 
   return (
     <div className="container">
@@ -70,22 +84,23 @@ const Movimientos = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
+            
+            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
+            text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
+            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+              <BiSearch />
+            </button>
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar movimiento..."
+              placeholder="Buscar ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button className="btn btn-outline-secondary" type="button">
-              <BiSearch />
-            </button>
           </div>
         </div>
-        <div className="col d-flex align-items-center">
-          <button className="btn btn-primary flex-shrink-0" >
-            <BiPrinter /> 
-          </button>
+        <div className="col d-flex align-items-center ml-5">
+         
           {handlePrint()}
         </div>
       </div>
@@ -95,17 +110,27 @@ const Movimientos = () => {
           <tr>
             <th>Código</th>
             <th>Fecha</th>
-            <th>Usuario</th>
-            <th>Tipo de Movimiento</th>
+            <th>Solicitud</th>
+            <th>Estado</th>
+            <th>Elemento</th>
+            <th>Cantidad</th>
+            <th>Recibe</th>
+            <th>Devolución</th>
+            <th>Observación</th>
           </tr>
         </thead>
         <tbody>
           {movimientos.map(movimiento => (
-            <tr key={movimiento.Código}>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Codigo.toString()) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Fecha) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento.Usuario) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(movimiento["Tipo Movimiento"]) }}></td>
+            <tr key={movimiento.Codigo}>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Codigo.toString()) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (formatDate(movimiento.Fecha)) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Usuario_solicitud) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Estado) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento["fk_elemento"]) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento["cantidad"]) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento["Usuario_recibe"]) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento["Usuario_entrega"]) }}></td>
+              <td dangerouslySetInnerHTML={{ __html: (movimiento.Observaciones) }}></td>
             </tr>
           ))}
         </tbody>
