@@ -26,6 +26,8 @@ function App() {
 
    const navigate = useNavigate();
 
+   //Solo para ensayo
+
    useEffect(() => {
       // Verificar si hay un token en el localStorage al cargar la aplicación
       const token = localStorage.getItem('token');
