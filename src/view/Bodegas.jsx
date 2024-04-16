@@ -117,16 +117,16 @@ const Bodega = () => {
         });
     };
 
-    const ToggleEstadoBodega = async (codigo_Bodega, estado) => {
+    const ToggleEstadoBodega = async (codigo_Bodega, Estado) => {
         let mensaje;
         let nuevoEstado;
     
-        if (estado === 'activo') {
+        if (Estado === 'Activo') {
             mensaje = "¿Desea desactivar la bodega?";
-            nuevoEstado = 'inactivo';
-        } else if (estado === 'inactivo') {
+            nuevoEstado = 'Inactivo';
+        } else if (Estado === 'Inactivo') {
             mensaje = "¿Desea activar la bodega?";
-            nuevoEstado = 'activo';
+            nuevoEstado = 'Activo';
         }
     
         swal({
@@ -137,10 +137,10 @@ const Bodega = () => {
             dangerMode: true,
         }).then(async (willToggle) => {
             if (willToggle) {
-                try {
+                try {   
                     await axios.put(`http://localhost:3000/bodega/desactivar/${codigo_Bodega}`);
                     ListarBodegas();
-                    swal(`¡Se ha ${nuevoEstado === 'activo' ? 'activado' : 'desactivado'} correctamente!`, {
+                    swal(`¡Se ha ${nuevoEstado === 'Activo' ? 'activado' : 'desactivado'} correctamente!`, {
                         icon: "success",
                         button: false,
                         timer: 2000,
@@ -311,8 +311,13 @@ const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.Nombre_bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
                                 <TableCell>
-                                    <Button color="danger" className='mr-2 font-bold' onClick={() => ToggleEstadoBodega(bodega.codigo_Bodega, bodega.Estado)}>{bodega.Estado === 'activo' ? 'Activar' : 'Desactivar'}</Button>
-                                    <Button color="success" className='font-bold' onClick={() => ReactivarBodega(bodega.codigo_Bodega, bodega.Estado)}>Reactivar</Button>
+                                <Button
+                                    color="danger"
+                                    className={`mr-2 font-bold ${bodega.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'}`}
+                                    onClick={() => ToggleEstadoBodega(bodega.codigo_Bodega, bodega.Estado)}
+                                >
+                                    {bodega.Estado === 'Activo' ? 'Desactivar' : 'Activar'}
+                                </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
