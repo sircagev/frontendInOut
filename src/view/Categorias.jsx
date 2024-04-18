@@ -22,18 +22,11 @@ export const Categorias = () => {
     const [editedNombreCategoria, setEditedNombreCategoria] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-
     const itemsPerPage = 5;
-    // Índice del primer elemento en la página actual
+
     const startIndex = (page - 1) * itemsPerPage;
-    // Obtener los elementos que se mostrarán en la página actual
+
     const itemsOnCurrentPage = UseCategorias.slice(startIndex, startIndex + itemsPerPage);
-
-    // Función para obtener el valor de una clave específica de un objeto
-    const getKeyValue = (item, key) => {
-        return item[key];
-    };
-
 
     const [values, setValues] = useState(
         {
@@ -63,7 +56,6 @@ export const Categorias = () => {
         } else {
             setErrorMessage('');
         }
-        
 
         try {
             // Si no hay ningún mensaje de error, enviar el formulario
@@ -90,8 +82,6 @@ export const Categorias = () => {
         setErrorMessage('');
       };
       
-
-
     const [codigoCategoria, setCodigoCategoria] = useState('');
 
     const ListarCategorias = async () => {
@@ -117,9 +107,9 @@ export const Categorias = () => {
     const DesactivarCategorias = async (codigo_Categoria, estado) => {
         let mensaje;
 
-        if (estado === 'activo') {
+        if (estado === 'Activo') {
             mensaje = "¿Desea desactivar la categoría?";
-        } else if (estado === 'inactivo') {
+        } else if (estado === 'Inactivo') {
             mensaje = "¿Desea reactivar la categoría?";
         }
 
@@ -203,19 +193,15 @@ export const Categorias = () => {
         ListarCategorias();
     };
 
-
-
-
     useEffect(() => {
         ListarCategorias()
     }, [codigoCategoria])
 
 
     return (
-        <div className='w-90% flex flex-col justify-center items-center mt-[50px]'>
-            <ToastContainer />
-            <div >
-                <div className='flex gap-4'>
+        <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex gap-4 w-[90%]'>
                     <Button className='bg-[#3d7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
                     <div className='flex justify-center'>
                         <input
@@ -313,10 +299,7 @@ export const Categorias = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[900px]",
-                    }}
-                    className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
+                    className="w-[90%]" // Agregar la clase mx-auto para centrar horizontalmente
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="codigo">CÓDIGO</TableColumn>
