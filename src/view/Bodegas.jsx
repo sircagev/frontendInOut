@@ -74,8 +74,8 @@ const Bodega = () => {
             let response;
             if (codigoBodega.trim() !== '') {
                 response = await axios.get(`http://localhost:3000/bodega/buscar/${codigoBodega}`);
-                setBodegas(response.data.Bodega ? response.data.Bodega : []);
-                setPage(1)
+                setBodegas(response.data || []);
+            
             } else {
                 response = await axios.get('http://localhost:3000/bodega/listar');
                 setBodegas(response.data || []);
