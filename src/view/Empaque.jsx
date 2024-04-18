@@ -109,9 +109,9 @@ export const Empaque = () => {
     const DesactivarEmpaque = async (codigo_Empaque, estado) => {
         let mensaje;
 
-        if (estado === 'activo') {
+        if (estado === 'Activo') {
             mensaje = "¿Desea desactivar el empaque?";
-        } else if (estado === 'inactivo') {
+        } else if (estado === 'Inactivo') {
             mensaje = "¿Desea reactivar el empaque?";
         }
 
