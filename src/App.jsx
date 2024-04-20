@@ -6,6 +6,7 @@
    import { Categorias } from "./view/Categorias";
    import { Categoria } from "./view/Categoria";
    import { Empaque } from "./view/Empaque";
+   import { Empaques } from "./view/Empaques";
    import { Medida } from "./view/Medida";
    import { Ubicacion } from "./view/Ubicacion";
    import { MenuHamburguer } from "./components/MenuHamburguer";
@@ -55,7 +56,7 @@
                                  <Route path="/" element={<div>Hola</div>} />
                                  <Route path="/elementos" element={<Elementos />} />
                                  <Route path="/elementos/categorias" element={<Categoria />} />
-                                 <Route path="/elementos/empaques" element={<Empaque />} />
+                                 <Route path="/elementos/empaques" element={<Empaques />} />
                                  <Route path="/elementos/medidas" element={<Medida />} />
                                  <Route path="/usuarios" element={<Usuario />} />
                                  <Route path="/reportes/usuarios" element={<ReporteU />} />
