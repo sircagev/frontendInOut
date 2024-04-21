@@ -22,18 +22,9 @@ export const Categorias = () => {
     const [editedNombreCategoria, setEditedNombreCategoria] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-
-    const itemsPerPage = 5;
-    // Índice del primer elemento en la página actual
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-    // Obtener los elementos que se mostrarán en la página actual
-    const itemsOnCurrentPage = UseCategorias.slice(startIndex, startIndex + itemsPerPage);
-
-    // Función para obtener el valor de una clave específica de un objeto
-    const getKeyValue = (item, key) => {
-        return item[key];
-    };
-
+    const itemsOnCurrentPage = UseCategorias.slice(startIndex, startIndex + itemsPerPage) // Obtener los elementos que se mostrarán en la página actu
 
     const [values, setValues] = useState(
         {
@@ -63,7 +54,6 @@ export const Categorias = () => {
         } else {
             setErrorMessage('');
         }
-        
 
         try {
             // Si no hay ningún mensaje de error, enviar el formulario
@@ -88,9 +78,7 @@ export const Categorias = () => {
     const clearForm = () => {
         setValues({ Nombre_Categoria: '' });
         setErrorMessage('');
-      };
-      
-
+    };
 
     const [codigoCategoria, setCodigoCategoria] = useState('');
 
@@ -117,9 +105,9 @@ export const Categorias = () => {
     const DesactivarCategorias = async (codigo_Categoria, estado) => {
         let mensaje;
 
-        if (estado === 'activo') {
+        if (estado === 'Activo') {
             mensaje = "¿Desea desactivar la categoría?";
-        } else if (estado === 'inactivo') {
+        } else if (estado === 'Inactivo') {
             mensaje = "¿Desea reactivar la categoría?";
         }
 
@@ -192,19 +180,7 @@ export const Categorias = () => {
         }
     };
 
-    const handleFilter = () => {
-        const filteredCategorias = UseCategorias.filter(
-            (categoria) =>
-                categoria.codigo_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase()) ||
-                categoria.Nombre_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase())
-        );
-        setCategorias(filteredCategorias);
-        // Vuelve a cargar la lista completa de categorías actualizada
-        ListarCategorias();
-    };
-
-
-
+    
 
     useEffect(() => {
         ListarCategorias()
@@ -212,10 +188,9 @@ export const Categorias = () => {
 
 
     return (
-        <div className='w-90% flex flex-col justify-center items-center mt-[50px]'>
-            <ToastContainer />
-            <div >
-                <div className='flex gap-4'>
+        <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex gap-4 w-[90%]'>
                     <Button className='bg-[#3d7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
                     <div className='flex justify-center'>
                         <input
@@ -234,6 +209,15 @@ export const Categorias = () => {
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
                     </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
+                    >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
                 <Modal isOpen={isOpen} onClose={() => { onClose(); clearForm(); }} className='my-auto'>
                     <ModalContent>
@@ -243,7 +227,7 @@ export const Categorias = () => {
                                 <ModalBody>
                                     <form onSubmit={handleForm}>
                                         <div className='flex justify-center items-center'></div>
-                                        <div class="relative mb-4 justify-center items-center" data-twe-input-wrapper-init>
+                                        <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                                             <Input
                                                 type='text'
                                                 label='Nombre Categoría'
@@ -258,7 +242,6 @@ export const Categorias = () => {
                                                     {errorMessage}
                                                 </div>
                                             )}
-
                                         </div>
                                         <div className='flex justify-end gap-3 mb-3'>
                                             <Button color="danger" className='bg-[#BF2A50] font-bold text-white' variant="light" onPress={onCloseModal}>
@@ -314,10 +297,7 @@ export const Categorias = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[900px]",
-                    }}
-                    className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
+                    className="w-[90%]" // Agregar la clase mx-auto para centrar horizontalmente
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3d7948] text-white' key="codigo">CÓDIGO</TableColumn>
@@ -332,7 +312,7 @@ export const Categorias = () => {
                                 <TableCell className='font-semibold'>{categoria.codigo_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{categoria.Nombre_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(categoria.fecha_creacion).toLocaleDateString()}</TableCell>
-                                
+
                                 <TableCell className='font-semibold'>{categoria.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button

@@ -12,17 +12,14 @@ export const Ubicacion = () => {
     const [itemsToShow, setItemsToShow] = useState([]);
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-
     const [UseUbicacion, setUbicacion] = useState([]);
     const [UseDesactivar, setDesactivar] = useState([]);
     const [UseBodega, SetBodega] = useState([]);
 
 
-    const itemsPerPage = 5;
-    // Índice del primer elemento en la página actual
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-    // Obtener los elementos que se mostrarán en la página actual
-    const itemsOnCurrentPage = UseUbicacion.slice(startIndex, startIndex + itemsPerPage);
+    const itemsOnCurrentPage = UseUbicacion.slice(startIndex, startIndex + itemsPerPage)
 
     // Función para obtener el valor de una clave específica de un objeto
     const getKeyValue = (item, key) => {
@@ -254,9 +251,9 @@ export const Ubicacion = () => {
     }, [codigoUbicacion])
 
     return (
-        <div className='w-90% flex flex-col justify-center items-center mt-[70px]'>
-            <div>
-                <div className='flex gap-3'>
+        <div className='w-[full] flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex w-[90%] gap-3'>
                     <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Ubicación</Button>
                     <div className='flex justify-center'>
                         <input
@@ -272,6 +269,15 @@ export const Ubicacion = () => {
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
                     </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
+                    >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
                 <Modal isOpen={isOpen} onClose={() => { onClose(); clearForm(); }} className='my-auto'>
                     <ModalContent>
@@ -281,7 +287,7 @@ export const Ubicacion = () => {
                                 <ModalBody>
                                     <form onSubmit={handleForm}>
 
-                                        <div class="relative mb-3" data-twe-input-wrapper-init>
+                                        <div class="relative mb-4 h-[65px]" data-twe-input-wrapper-init>
                                             <Input
                                                 type='text'
                                                 label='Ubicación'
@@ -297,7 +303,7 @@ export const Ubicacion = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div class="relative mb-4" data-twe-input-wrapper-init>
+                                        <div class="relative mb-4 h-[65px]" data-twe-input-wrapper-init>
                                             <select name="fk_bodega" required onChange={handleInputChange} label='Seleccione una Bodega' class="bg-[#F4F4F5] border border-gray-300 w-full h-[55px] text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 <option selected disabled>Seleccione un tipo de elemento</option>
                                                 {UseBodega.map((bodega) => (
@@ -390,10 +396,7 @@ export const Ubicacion = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[1000px]",
-                    }}
-                    className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
+                    className="w-[90%]" // Agregar la clase mx-auto para centrar horizontalmente
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
