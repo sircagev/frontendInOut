@@ -132,25 +132,27 @@ const Usuario = () => {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
+            <th>Nombre</th>         
             <th>Teléfono</th>
             <th>Id Ficha</th>
+            <th>Fecha de Reserva</th>
+            <th>Elemento</th>
+            <th>Cantidad</th>
             <th>Estado</th>
-            <th>Fecha de Registro</th>
+            <th>Observaciones</th>
           </tr>
         </thead>
         <tbody>
           {buscarUsuarios().map(user => (
             <tr key={user.id_usuario}>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(`${user.nombre_usuario} ${user.apellido_usuario}`) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.email_usuario) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.rol) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.numero.toString()) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Id_ficha.toString()) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
               <td style={{ textAlign: 'center' }}  dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(user.fecha_creacion)) }}></td>
+              <td></td>
+              <td></td>
+              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
+              <td></td>
             </tr>
           ))}
         </tbody>

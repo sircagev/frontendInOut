@@ -74,8 +74,8 @@ const Bodega = () => {
             let response;
             if (codigoBodega.trim() !== '') {
                 response = await axios.get(`http://localhost:3000/bodega/buscar/${codigoBodega}`);
-                setBodegas(response.data.Bodega ? response.data.Bodega : []);
-                setPage(1)
+                setBodegas(response.data || []);
+            
             } else {
                 response = await axios.get('http://localhost:3000/bodega/listar');
                 setBodegas(response.data || []);
@@ -85,16 +85,49 @@ const Bodega = () => {
         }
     };
 
-    const DesactivarBodega = async (codigo_Bodega, estado) => {
+    const ReactivarBodega = async (codigo_Bodega, estado) => {
+        let mensaje;
+    
+        if (estado === 'inactivo') {
+            mensaje = "¿Desea reactivar la bodega?";
+        }
+    
+        swal({
+            title: "¿Está seguro?",
+            text: mensaje,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(async (willReactivar) => {
+            if (willReactivar) {
+                try {
+                    await axios.put(`http://localhost:3000/bodega/reactivar/${codigo_Bodega}`);
+                    ListarBodegas();
+                    swal("¡Se ha reactivado correctamente!", {
+                        icon: "success",
+                        button: false,
+                        timer: 2000,
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                swal("La bodega sigue inactiva.");
+            }
+        });
+    };
+
+    const ToggleEstadoBodega = async (codigo_Bodega, Estado) => {
         let mensaje;
         let nuevoEstado;
+    
+        if (Estado === 'Activo') {
 
-        if (estado === 'activo') {
             mensaje = "¿Desea desactivar la bodega?";
-            nuevoEstado = 'inactivo';
-        } else if (estado === 'inactivo') {
+            nuevoEstado = 'Inactivo';
+        } else if (Estado === 'Inactivo') {
             mensaje = "¿Desea activar la bodega?";
-            nuevoEstado = 'activo';
+            nuevoEstado = 'Activo';
         }
 
         swal({
@@ -105,10 +138,10 @@ const Bodega = () => {
             dangerMode: true,
         }).then(async (willToggle) => {
             if (willToggle) {
-                try {
+                try {   
                     await axios.put(`http://localhost:3000/bodega/desactivar/${codigo_Bodega}`);
                     ListarBodegas();
-                    swal(`¡Se ha ${nuevoEstado === 'activo' ? 'activado' : 'desactivado'} correctamente!`, {
+                    swal(`¡Se ha ${nuevoEstado === 'Activo' ? 'activado' : 'desactivado'} correctamente!`, {
                         icon: "success",
                         button: false,
                         timer: 2000,
