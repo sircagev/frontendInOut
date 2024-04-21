@@ -10,7 +10,6 @@ import { FaBoxesPacking, FaArrowRightArrowLeft } from "react-icons/fa6";
 const Reportes = () => {
   const [currentComponent, setCurrentComponent] = useState('Bodegas');
 
-  // Función que devuelve los estilos de los botones
   const buttonStyles = () => ({
     className: "d-flex align-items-center bg-blue-500 w-[140px] text-[10] bg-blue-600 h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold mr-5 flex",
   });
