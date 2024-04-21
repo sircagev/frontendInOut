@@ -9,15 +9,15 @@ const Bodega = () => {
     const [bodegas, setBodegas] = useState([]);
     const [codigoBodega, setCodigoBodega] = useState('');
     const [selectedBodega, setSelectedBodega] = useState(null);
-    const [editedNombreBodega, setEditedNombreBodega] = useState('');
+    const [editedBodega, setEditedBodega] = useState('');
     const [page, setPage] = useState(1);
     const [itemsToShow, setItemsToShow] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
-    const itemsPerPage = 5;
 
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-    const itemsOnCurrentPage = bodegas.slice(startIndex, startIndex + itemsPerPage);
+    const itemsOnCurrentPage = bodegas.slice(startIndex, startIndex + itemsPerPage)
 
     const getKeyValue = (item, key) => {
         return item[key];
@@ -159,16 +159,20 @@ const Bodega = () => {
         const bodega = bodegas.find((bodega) => bodega.codigo_Bodega === codigo_Bodega);
         if (bodega) {
             setSelectedBodega(bodega);
-            setEditedNombreBodega(bodega.nombreBodega);
+            setEditedBodega({
+                Nombre_bodega: bodega.Nombre_bodega,
+                ubicacion: bodega.ubicacion,
+            });
             onOpenInfo();
         } else {
             console.log('La bodega no se encontró');
         }
     };
 
+
     const handleEditBodega = async () => {
         try {
-            if (!editedNombreBodega.trim() || /^\d+$/.test(editedNombreBodega.trim())) {
+            if (!editedBodega.Nombre_bodega.trim() || /^\d+$/.test(editedBodega.Nombre_bodega.trim())) {
                 swal({
                     title: "Datos incompletos",
                     text: "Ingrese un nombre válido para la bodega.",
@@ -180,7 +184,8 @@ const Bodega = () => {
             }
 
             await axios.put(`http://localhost:3000/bodega/actualizar/${selectedBodega.codigo_Bodega}`, {
-                nombreBodega: editedNombreBodega,
+                Nombre_bodega: editedBodega.Nombre_bodega,
+                ubicacion: editedBodega.ubicacion,
             });
 
             ListarBodegas();
@@ -196,17 +201,6 @@ const Bodega = () => {
             });
         } catch (error) {
             console.log(error);
-        }
-    };
-
-    const handleInfo = (codigo_Bodega) => {
-        const bodega = bodegas.find((bodega) => bodega.codigo_Bodega === codigo_Bodega);
-        if (bodega) {
-            setSelectedBodega(bodega);
-            setEditedNombreBodega(bodega.nombreBodega);
-            onOpenInfo();
-        } else {
-            console.log('La bodega no se encontró');
         }
     };
 
@@ -234,6 +228,15 @@ const Bodega = () => {
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
                     </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
+                    >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
                 <Modal isOpen={isOpen} onClose={onClose} className='my-auto'>
                     <ModalContent>
@@ -277,7 +280,37 @@ const Bodega = () => {
                     </ModalContent>
                 </Modal>
                 <Modal isOpen={isOpenInfo} onClose={onCloseInfo} className='my-auto'>
-                    {/* Contenido del Modal de Información */}
+                    <ModalContent>
+                        <>
+                            <ModalHeader className='flex flex-col gap-1'>Información de Categoría</ModalHeader>
+                            <ModalBody>
+                                <div className='relative flex flex-col gap-3' data-twe-input-wrapper-init>
+                                    <Input
+                                        type='text'
+                                        label='Nombre Bodega'
+                                        name='Nombre_bodega'
+                                        value={editedBodega.Nombre_bodega}
+                                        onChange={(e) => setEditedBodega({ ...editedBodega, Nombre_bodega: e.target.value })}
+                                    />
+                                    <Input
+                                        type='text'
+                                        label='Ubicación'
+                                        name='ubicacion'
+                                        value={editedBodega.ubicacion}
+                                        onChange={(e) => setEditedBodega({ ...editedBodega, ubicacion: e.target.value })}
+                                    />
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color='danger' className='bg-[#BF2A50] font-bold text-white' onPress={onCloseInfo}>
+                                    Cancelar
+                                </Button>
+                                <Button className='font-bold text-white' color="success" onPress={handleEditBodega}>
+                                    Actualizar Valor
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    </ModalContent>
                 </Modal>
                 <Table
                     aria-label="Lista de Bodegas"
@@ -294,7 +327,7 @@ const Bodega = () => {
                             />
                         </div>
                     }
-                
+
                     className="w-[90%]"
                 >
                     <TableHeader>
@@ -310,14 +343,19 @@ const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.codigo_Bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.Nombre_bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
-                                <TableCell>
-                                <Button
-                                    color="danger"
-                                    className={`mr-2 font-bold ${bodega.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'}`}
-                                    onClick={() => ToggleEstadoBodega(bodega.codigo_Bodega, bodega.Estado)}
-                                >
-                                    {bodega.Estado === 'Activo' ? 'Desactivar' : 'Activar'}
-                                </Button>
+                                <TableCell className='font-semibold'>{bodega.Estado}</TableCell>
+                                <TableCell className='flex gap-3 justify-center'>
+                                    <Button
+                                        color={bodega.Estado === 'Inactivo' ? 'success' : 'danger'}
+                                        className={`bg-${bodega.Estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                        onClick={() => { DesactivarBodega(bodega.codigo_Bodega, bodega.Estado) }}
+                                        style={{ fontSize: '15px' }}
+                                    >
+                                        {bodega.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
+                                    </Button>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
+                                        Info
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}

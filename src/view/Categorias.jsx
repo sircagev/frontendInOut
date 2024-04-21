@@ -180,16 +180,7 @@ export const Categorias = () => {
         }
     };
 
-    const handleFilter = () => {
-        const filteredCategorias = UseCategorias.filter(
-            (categoria) =>
-                categoria.codigo_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase()) ||
-                categoria.Nombre_Categoria.toLowerCase().includes(codigoCategoria.toLowerCase())
-        );
-        setCategorias(filteredCategorias);
-        // Vuelve a cargar la lista completa de categorías actualizada
-        ListarCategorias();
-    };
+    
 
     useEffect(() => {
         ListarCategorias()
