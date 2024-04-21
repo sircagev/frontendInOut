@@ -19,7 +19,7 @@ export const TableElementos = ({ items }) => {
     const [page, setPage] = useState(1);
     const [itemsToShow, setItemsToShow] = useState([]);
 
-    const itemsPerPage = 5;
+    const itemsPerPage = 8;
     const startIndex = (page - 1) * itemsPerPage; // Índice del primer elemento en la página actual
     const itemsOnCurrentPage = useElementos.slice(startIndex, startIndex + itemsPerPage); // Obtener los elementos que se mostrarán en la página actual
 
@@ -115,7 +115,7 @@ export const TableElementos = ({ items }) => {
     }, [selectedElemento]);
 
     return (
-        <div className='w-[90%]'>
+        <div className='w-[90%] mb-5'>
             <div className='flex gap-3'>
                 <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onClick={() => setIsOpenModalRegistrar(true)}>Registrar Elemento</Button>
                 <div className='flex justify-center'>
