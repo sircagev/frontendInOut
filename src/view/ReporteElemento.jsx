@@ -55,7 +55,7 @@ const Elemento = () => {
               <Text style={styles.tableHeader}>Medida</Text>
               <Text style={styles.tableHeader}>Ubicación</Text>
               <Text style={styles.tableHeader}>Estado</Text>
-              <Text style={styles.tableHeader}>F/ registro</Text>
+              <Text style={styles.tableHeader}>F/ Registro</Text>
             </View>
             {useElementos.map(elemento => (
               <View style={styles.tableRow} key={elemento.Codigo_elemento}>

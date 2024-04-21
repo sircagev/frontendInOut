@@ -7,13 +7,14 @@ import Pagination from 'react-bootstrap/Pagination';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { check, validationResult } from 'express-validator';
+import swal from 'sweetalert';
 
 let myModal;
 
 const Usuario = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [id_usuario, setCodigoUsuario] = useState('');
+  const [identificacion, setIdentificacionUsuario] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,7 +26,8 @@ const Usuario = () => {
     rol: "",
     numero: "",
     contraseña_usuario: "",
-    Id_ficha: ""
+    Id_ficha: "",
+    identificacion: ""
   });
 
   const handleInputChange = (event) => {
@@ -38,7 +40,7 @@ const Usuario = () => {
   const handleForm = async (event) => {
     try {
       event.preventDefault();
-      
+
       // Realizar validaciones del lado del cliente
       const errors = validationResult(values);
       if (!errors.isEmpty()) {
@@ -50,16 +52,16 @@ const Usuario = () => {
         swal("Error de validación", errorMessage, "error");
         return; // Detener el proceso de registro si hay errores de validación
       }
-      
+
       // Preguntar al usuario si está seguro de realizar el registro
       const confirmRegistration = await swal({
         title: "¿Estás seguro?",
         text: "¿Quieres registrar este usuario?",
         icon: "warning",
-        buttons:  ["Cancelar", "Registrar"],
+        buttons: ["Cancelar", "Registrar"],
         dangerMode: true,
       });
-      
+
       if (confirmRegistration) {
         console.log("Valores enviados en la solicitud:", values);
         const response = await axios.post(`http://localhost:3000/usuario/registrar`, values);
@@ -92,16 +94,16 @@ const Usuario = () => {
   const handleFormm = async (event) => {
     try {
       event.preventDefault();
-  
+
       // Mostrar confirmación
       const confirmacion = await swal({
         title: "¿Estás seguro?",
-        text: "¿Quieres actualizar el usuario?",
+        text: "¿Quieres actualizar los Datos del Usuario?",
         icon: "warning",
         buttons: ["Cancelar", "Actualizar"],
         dangerMode: true,
       });
-  
+
       // Si el usuario confirma la actualización
       if (confirmacion) {
         const response = await axios.put(`http://localhost:3000/usuario/actualizar/${selectedUser.id_usuario}`, values);
@@ -122,7 +124,7 @@ const Usuario = () => {
       console.error("Detalles del error:", error.response.data);
       swal({
         title: "Error",
-        text: "Error al actualizar el usuario",
+        text: "Error al actualizar el usuario\n" + error.response.data.message ,
         icon: "error",
         buttons: false,
         timer: 2000,
@@ -134,10 +136,10 @@ const Usuario = () => {
     try {
       // Obtener el usuario actual
       const userToUpdate = usuarios.find(user => user.id_usuario === id_usuario);
-  
+
       // Determino el nuevo estado (si el usuario estaba activo, lo desactivo, y viceversa)
       const newEstado = userToUpdate.Estado === 'Activo' ? 'Inactivo' : 'Activo';
-  
+
       // Mostrar confirmación
       const confirmacion = await swal({
         title: "¿Estás seguro?",
@@ -146,12 +148,12 @@ const Usuario = () => {
         buttons: ["Cancelar", "Aceptar"],
         dangerMode: true,
       });
-  
+
       // Si el usuario confirma el cambio de estado
       if (confirmacion) {
         // Realizo la solicitud para cambiar el estado del usuario
         const response = await axios.put(`http://localhost:3000/usuario/estado/${id_usuario}`, { Estado: newEstado });
-  
+
         // Actualizo el estado del usuario en la lista de usuarios
         const updatedUsuarios = usuarios.map(user => {
           if (user.id_usuario === id_usuario) {
@@ -162,9 +164,9 @@ const Usuario = () => {
           }
           return user;
         });
-  
+
         setUsuarios(updatedUsuarios);
-  
+
         if (response.status === 200) {
           swal({
             title: "Estado Éxito",
@@ -189,32 +191,49 @@ const Usuario = () => {
     }
   };
   const handleClose = () => {
-    myModal.hide();  
+    myModal.hide();
     ListarUsuarios();
   };
 
-  const buscarUsuario = async (term) => {
+  const buscarUsuario = async (identificacion) => {
     try {
-     
-      console.log("Buscando usuario con término:", term);
+      const response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
+      setUsuarios(response.data.Datos ? response.data.Datos : []);
     } catch (error) {
       console.error("Error al buscar usuario:", error);
+      swal("Error", "No se encontro usuario con la identificación ingresada", "error");
+
     }
   };
 
+
   const handleSearch = async () => {
     setError(null);
-    buscarUsuario(searchTerm);
+    console.log(searchTerm.trim())
+    if (searchTerm.trim() !== '') {
+      setIdentificacionUsuario(searchTerm.trim()); // Actualizar id_usuario con el valor de searchTerm
+      console.log(searchTerm);
+      buscarUsuario(searchTerm.trim());
+    } else {
+      setIdentificacionUsuario('');
+      // Si el campo de búsqueda está vacío, actualizar la lista de usuarios
+      try {
+        await ListarUsuarios();
+      } catch (error) {
+        console.error("Error al listar usuarios:", error);
+        // Aquí puedes mostrar un mensaje de error si lo deseas
+      }
+    }
   };
 
   const ListarUsuarios = async () => {
     try {
       let response;
-      console.log(id_usuario)
-      if (id_usuario.trim() !== '') {
-        response = await axios.get(`http://localhost:3000/usuario/buscar/${id_usuario}`);
+      console.log(identificacion)
+      if (identificacion.trim() !== '') {
+        response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
         console.log(response.data);
-        setUsuarios(response.data.result ? response.data.result : []);
+        setUsuarios(response.data.Datos ? response.data.Datos : []);
 
       } else {
         response = await axios.get('http://localhost:3000/usuario/listar');
@@ -235,7 +254,8 @@ const Usuario = () => {
       rol: user.rol,
       numero: user.numero,
       contraseña_usuario: user.contraseña_usuario,
-      Id_ficha: user.Id_ficha
+      Id_ficha: user.Id_ficha,
+      identificacion: user.identificacion
     });
     myModal.show();
   };
@@ -245,8 +265,8 @@ const Usuario = () => {
       keyboard: false
     });
     ListarUsuarios();
-  }, []);
-  
+  }, [identificacion]);
+
   // Lógica para mostrar la página actual
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -269,9 +289,9 @@ const Usuario = () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
-        <Pagination.Item 
-          key={i} 
-          active={i === currentPage} 
+        <Pagination.Item
+          key={i}
+          active={i === currentPage}
           onClick={() => paginate(i)}
         >
           {i}
@@ -292,16 +312,11 @@ const Usuario = () => {
   };
 
   return (
-    <div className="container">
-      <div className="col">
-        <div className="flex gap-10 items-center">
-          <button 
-            type="button" 
-            className="bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded-tr-md rounded-br-md font-sans 
-            text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
-            focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-            disabled:opacity-50 disabled:shadow-none font-semibold" 
-            style={{ marginTop: '20px', borderRadius: '10px', marginLeft: '-10px' }}
+    <div className="w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto">
+      <div className="w-[90%]">
+        <div className="flex gap-3">
+          <Button
+            className="bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold"
             onClick={() => {
               setSelectedUser(null);
               setValues({
@@ -311,98 +326,98 @@ const Usuario = () => {
                 rol: "",
                 numero: "",
                 contraseña_usuario: "",
-                Id_ficha: ""
+                Id_ficha: "",
+                identificacion: ""
               });
               myModal.show();
             }}
           >
             Registrar Usuario
-          </button>
+          </Button>
+          <div className='flex justify-center'>
+            <input
+              type="text"
+              className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
+              placeholder='Identificación Usuario...'
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }
+              }
+            />
 
-          <input
-            type="text"
-            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
-            placeholder='Nombre Usuario'
-            onChange={(e) => {
-              setCodigoUsuario(e.target.value)
-            }}
-            style={{ marginBottom: '-19px' }} 
-          />
-
-          <button
-            className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
+            <button
+              className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans 
             text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
             focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            data-ripple-light="true"
-            style={{ marginLeft: '-40px', marginTop: '19px' }} 
-            onClick={handleSearch} 
-          >
-            <BiSearch className='w-[20px] h-auto ' />
-          </button>
-        </div>
-      </div>
-  
-      <br />
-  
-      <br />
-
-      <Table
-        aria-label="Lista de Usuarios"
-        bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination>
-              {renderPageNumbers()}
-            </Pagination>
+              data-ripple-light="true"
+              onClick={handleSearch}
+            >
+              <BiSearch className='w-[20px] h-auto' />
+            </button>
           </div>
-        }
-        className="mx-auto"
-      >
-        <TableHeader>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="id_usuario">CÓDIGO</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre_usuario">NOMBRE</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="apellido_usuario">APELLIDO</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="email_usuario">EMAIL</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="rol">ROL</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="numero">N_TELEFONO</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">FICHA</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Estado">ESTADO</TableColumn>
-          <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {activeUsers.map(user => (
-            <TableRow className='text-center font-semibold' key={user.id_usuario}>
-              <TableCell className='font-semibold'>{user.id_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.nombre_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.apellido_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.email_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.rol}</TableCell>
-              <TableCell className='font-semibold'>{user.numero}</TableCell>
-              <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
-              <TableCell className='font-semibold'>{user.Estado}</TableCell>
-              <TableCell className='flex gap-2 justify-center'>
-                <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
-                <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-          {inactiveUsers.map(user => (
-            <TableRow className='text-center font-semibold' key={user.id_usuario}>
-              <TableCell className='font-semibold'>{user.id_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.nombre_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.apellido_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.email_usuario}</TableCell>
-              <TableCell className='font-semibold'>{user.rol}</TableCell>
-              <TableCell className='font-semibold'>{user.numero}</TableCell>
-              <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
-              <TableCell className='font-semibold'>{user.Estado}</TableCell>
-              <TableCell className='flex gap-2 justify-center'>
-                <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
-                <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+        </div>
+
+        <Table
+          aria-label="Lista de Usuarios"
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination>
+                {renderPageNumbers()}
+              </Pagination>
+            </div>
+          }
+          className="mx-auto w-[90% ]"
+        >
+          <TableHeader>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="id_usuario">CÓDIGO</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre_usuario">NOMBRE</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="apellido_usuario">APELLIDO</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="email_usuario">EMAIL</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="rol">ROL</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="numero">N_TELEFONO</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Id_ficha">FICHA</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="identificacion">IDENTIFICACIÓN</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="Estado">ESTADO</TableColumn>
+            <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {activeUsers.map(user => (
+              <TableRow className='text-center font-semibold' key={user.id_usuario}>
+                <TableCell className='font-semibold'>{user.id_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.nombre_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.apellido_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.email_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.rol}</TableCell>
+                <TableCell className='font-semibold'>{user.numero}</TableCell>
+                <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
+                <TableCell className='font-semibold'>{user.identificacion}</TableCell>
+                <TableCell className='font-semibold'>{user.Estado}</TableCell>
+                <TableCell className='flex gap-2 justify-center'>
+                  <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
+                  <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+            {inactiveUsers.map(user => (
+              <TableRow className='text-center font-semibold' key={user.id_usuario}>
+                <TableCell className='font-semibold'>{user.id_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.nombre_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.apellido_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.email_usuario}</TableCell>
+                <TableCell className='font-semibold'>{user.rol}</TableCell>
+                <TableCell className='font-semibold'>{user.numero}</TableCell>
+                <TableCell className='font-semibold'>{user.Id_ficha}</TableCell>
+                <TableCell className='font-semibold'>{user.identificacion}</TableCell>
+                <TableCell className='font-semibold'>{user.Estado}</TableCell>
+                <TableCell className='flex gap-2 justify-center'>
+                  <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
+                  <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <div className="modal" tabIndex="-1" id="myModal">
         <div className="modal-dialog" style={{ maxWidth: '40rem' }}>
@@ -419,9 +434,24 @@ const Usuario = () => {
                   <input type="text" id="nombre_usuario" name="nombre_usuario" className="form-control" placeholder="Nombre Usuario" style={{ width: '100%', marginRight: '10px', fontSize: '0.9rem' }} value={values.nombre_usuario} onChange={handleInputChange} />
                   <input type="text" id="apellido_usuario" name="apellido_usuario" className="form-control" placeholder="Apellido Usuario" style={{ width: '100%', fontSize: '0.9rem' }} value={values.apellido_usuario} onChange={handleInputChange} />
                 </div>
-                <div className="mb-3">
-                  <input type="text" id="email_usuario" name="email_usuario" className="form-control" placeholder="Email Usuario" style={{ width: '100%', fontSize: '0.9rem' }} value={values.email_usuario} onChange={handleInputChange} />
+                <div className="mb-3" style={{ display: 'flex' }}>
+                  <input type="text" id="email_usuario" name="email_usuario" className="form-control" placeholder="Email Usuario *" style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }} value={values.email_usuario} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="identificacion"
+                    name="identificacion"
+                    className="form-control"
+                    placeholder="ID Usuario"
+                    maxLength={10}
+                    style={{ width: '50%', fontSize: '0.9rem' }}
+                    value={values.identificacion}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'identificacion', value: onlyNumbers } });
+                    }}
+                  />
                 </div>
+
                 <div className="mb-3">
                   <select id="rol" name="rol" onChange={handleInputChange} className="form-select" style={{ width: '100%', fontSize: '0.9rem' }}>
                     <option value="">Seleccione un Rol</option>
@@ -430,9 +460,36 @@ const Usuario = () => {
                     <option value="Usuario">Usuario</option>
                   </select>
                 </div>
+
                 <div className="mb-3" style={{ display: 'flex' }}>
-                  <input type="text" id="numero" name="numero" className="form-control" placeholder="Número Telefonico" style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }} value={values.numero} onChange={handleInputChange} />
-                  <input type="int" id="Id_ficha" name="Id_ficha" className="form-control" placeholder="ID Ficha" style={{ width: '50%', fontSize: '0.9rem' }} value={values.Id_ficha} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="numero"
+                    name="numero"
+                    className="form-control"
+                    placeholder="Número Telefónico"
+                    maxLength={10}
+                    style={{ width: '50%', marginRight: '10px', fontSize: '0.9rem' }}
+                    value={values.numero}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'numero', value: onlyNumbers } });
+                    }}
+                  />
+                  <input
+                    type="text"
+                    id="Id_ficha"
+                    name="Id_ficha"
+                    className="form-control"
+                    placeholder="ID Ficha"
+                    maxLength={10}
+                    style={{ width: '50%', fontSize: '0.9rem' }}
+                    value={values.Id_ficha}
+                    onChange={(e) => {
+                      const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
+                      handleInputChange({ target: { name: 'Id_ficha', value: onlyNumbers } });
+                    }}
+                  />
                 </div>
 
                 <div className="d-flex justify-content-center">

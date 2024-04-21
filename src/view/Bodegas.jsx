@@ -122,13 +122,14 @@ const Bodega = () => {
         let nuevoEstado;
     
         if (Estado === 'Activo') {
+
             mensaje = "¿Desea desactivar la bodega?";
             nuevoEstado = 'Inactivo';
         } else if (Estado === 'Inactivo') {
             mensaje = "¿Desea activar la bodega?";
             nuevoEstado = 'Activo';
         }
-    
+
         swal({
             title: "¿Está seguro?",
             text: mensaje,
@@ -214,9 +215,9 @@ const Bodega = () => {
     }, [codigoBodega]);
 
     return (
-        <div className='w-90% flex justify-center mt-[70px]'>
-            <div className=''>
-                <div className='flex gap-3'>
+        <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex gap-4 w-[90%]'>
                     <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Bodega</Button>
                     <div className='flex justify-center'>
                         <input
@@ -293,15 +294,14 @@ const Bodega = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[900px]",
-                    }}
-                    className="mx-auto"
+                
+                    className="w-[90%]"
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">Nombre</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="ubicacion">Ubicación</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="ubicacion">UBICACIÓN</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="est6ado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
                     <TableBody items={itemsToShow}>
