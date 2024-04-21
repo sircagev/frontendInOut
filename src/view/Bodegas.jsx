@@ -14,10 +14,10 @@ const Bodega = () => {
     const [itemsToShow, setItemsToShow] = useState([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
-    const itemsPerPage = 5;
 
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-    const itemsOnCurrentPage = bodegas.slice(startIndex, startIndex + itemsPerPage);
+    const itemsOnCurrentPage = bodegas.slice(startIndex, startIndex + itemsPerPage)
 
     const getKeyValue = (item, key) => {
         return item[key];
@@ -171,17 +171,6 @@ const Bodega = () => {
         }
     };
 
-    const handleInfo = (codigo_Bodega) => {
-        const bodega = bodegas.find((bodega) => bodega.codigo_Bodega === codigo_Bodega);
-        if (bodega) {
-            setSelectedBodega(bodega);
-            setEditedNombreBodega(bodega.nombreBodega);
-            onOpenInfo();
-        } else {
-            console.log('La bodega no se encontró');
-        }
-    };
-
     useEffect(() => {
         ListarBodegas();
     }, [codigoBodega]);
@@ -206,6 +195,15 @@ const Bodega = () => {
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
                     </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
+                    >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
                 <Modal isOpen={isOpen} onClose={onClose} className='my-auto'>
                     <ModalContent>
@@ -259,14 +257,14 @@ const Bodega = () => {
                                         label='Nombre Bodega'
                                         name='Nombre_bodega'
                                         value={editedBodega.Nombre_bodega}
-                                        onChange={(e) => setEditedBodega({ ...editedBodega, Nombre_bodega: e.target.value})}
+                                        onChange={(e) => setEditedBodega({ ...editedBodega, Nombre_bodega: e.target.value })}
                                     />
                                     <Input
                                         type='text'
                                         label='Ubicación'
                                         name='ubicacion'
                                         value={editedBodega.ubicacion}
-                                        onChange={(e) => setEditedBodega({ ...editedBodega, ubicacion: e.target.value})}
+                                        onChange={(e) => setEditedBodega({ ...editedBodega, ubicacion: e.target.value })}
                                     />
                                 </div>
                             </ModalBody>

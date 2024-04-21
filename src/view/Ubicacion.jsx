@@ -12,7 +12,6 @@ export const Ubicacion = () => {
     const [itemsToShow, setItemsToShow] = useState([]);
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-
     const [UseUbicacion, setUbicacion] = useState([]);
     const [UseDesactivar, setDesactivar] = useState([]);
     const [UseBodega, SetBodega] = useState([]);
