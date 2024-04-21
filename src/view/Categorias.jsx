@@ -22,11 +22,9 @@ export const Categorias = () => {
     const [editedNombreCategoria, setEditedNombreCategoria] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const itemsPerPage = 5;
-
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-
-    const itemsOnCurrentPage = UseCategorias.slice(startIndex, startIndex + itemsPerPage);
+    const itemsOnCurrentPage = UseCategorias.slice(startIndex, startIndex + itemsPerPage) // Obtener los elementos que se mostrarán en la página actu
 
     const [values, setValues] = useState(
         {
@@ -80,8 +78,8 @@ export const Categorias = () => {
     const clearForm = () => {
         setValues({ Nombre_Categoria: '' });
         setErrorMessage('');
-      };
-      
+    };
+
     const [codigoCategoria, setCodigoCategoria] = useState('');
 
     const ListarCategorias = async () => {
@@ -220,6 +218,15 @@ export const Categorias = () => {
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
                     </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
+                    >
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
                 <Modal isOpen={isOpen} onClose={() => { onClose(); clearForm(); }} className='my-auto'>
                     <ModalContent>
@@ -314,7 +321,7 @@ export const Categorias = () => {
                                 <TableCell className='font-semibold'>{categoria.codigo_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{categoria.Nombre_Categoria}</TableCell>
                                 <TableCell className='font-semibold'>{new Date(categoria.fecha_creacion).toLocaleDateString()}</TableCell>
-                                
+
                                 <TableCell className='font-semibold'>{categoria.estado}</TableCell>
                                 <TableCell className='flex gap-2 justify-center'>
                                     <Button

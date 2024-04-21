@@ -21,11 +21,9 @@ export const Empaque = () => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
     const { isOpen: isOpenInfo, onOpen: onOpenInfo, onClose: onCloseInfo } = useDisclosure();
 
-    const itemsPerPage = 7;
-    // Índice del primer elemento en la página actual
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const startIndex = (page - 1) * itemsPerPage;
-    // Obtener los elementos que se mostrarán en la página actual
-    const itemsOnCurrentPage = UseEmpaques.slice(startIndex, startIndex + itemsPerPage);
+    const itemsOnCurrentPage = UseEmpaques.slice(startIndex, startIndex + itemsPerPage)
 
     // Función para obtener el valor de una clave específica de un objeto
     const getKeyValue = (item, key) => {
@@ -80,7 +78,7 @@ export const Empaque = () => {
     const clearForm = () => {
         setValues({ Nombre_Empaque: '' });
         setErrorMessage('');
-      };
+    };
 
     const [codigoEmpaque, setCodigoEmpaque] = useState('');
 
@@ -199,10 +197,9 @@ export const Empaque = () => {
     }, [codigoEmpaque])
 
     return (
-        <div className='w-90% flex justify-center mt-[70px]'>
-
-            <div className=''>
-                <div className='flex gap-3'>
+        <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex gap-4 w-[90%]'>
                     <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Empaques</Button>
                     <div className='flex justify-center'>
                         <input
@@ -217,6 +214,15 @@ export const Empaque = () => {
                         >
                             <FaSearch className='w-[20px] h-auto ' />
                         </button>
+                        <select
+                            className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                            onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                            value={itemsPerPage}
+                        >
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
                     </div>
                 </div>
                 <Modal isOpen={isOpen} onClose={() => { onClose(); clearForm(); }} className='my-auto'>
@@ -243,14 +249,14 @@ export const Empaque = () => {
                                             )}
                                         </div>
                                         <div>
-                                        <div className='flex justify-end gap-3 mb-3'>
-                                            <Button color="danger" className='font-bold text-white bg-[#BF2A50]' onPress={onCloseModal}>
-                                                Cancelar
-                                            </Button>
-                                            <Button className='font-bold text-white' color="success" type='submit'>
-                                                Registrar
-                                            </Button>
-                                        </div>
+                                            <div className='flex justify-end gap-3 mb-3'>
+                                                <Button color="danger" className='font-bold text-white bg-[#BF2A50]' onPress={onCloseModal}>
+                                                    Cancelar
+                                                </Button>
+                                                <Button className='font-bold text-white' color="success" type='submit'>
+                                                    Registrar
+                                                </Button>
+                                            </div>
                                         </div>
                                     </form>
                                 </ModalBody>
@@ -298,16 +304,13 @@ export const Empaque = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[900px]",
-                    }}
-                    className="mx-auto" // Agregar la clase mx-auto para centrar horizontalmente
+                    className="w-[90%]" // Agregar la clase mx-auto para centrar horizontalmente
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="creacion">CREACIÓN</TableColumn>
-                        
+
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="estado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>

@@ -56,8 +56,8 @@ useEffect(() => {
                               <Routes>
                                  <Route path="/" element={<div>Hola</div>} />
                                  <Route path="/elementos" element={<Elementos />} />
-                                 <Route path="/elementos/categorias" element={<Categoria />} />
-                                 <Route path="/elementos/empaques" element={<Empaques />} />
+                                 <Route path="/elementos/categorias" element={<Categorias />} />
+                                 <Route path="/elementos/empaques" element={<Empaque />} />
                                  <Route path="/elementos/medidas" element={<Medida />} />
                                  <Route path="/usuarios" element={<Usuario />} />
                                  <Route path="/reportes/usuarios" element={<ReporteU />} />
