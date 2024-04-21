@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
+import imgLogin from '../assets/imgLogin.png';
+import logo from '../assets/logo.png';
 
 function Login({ setLoggedIn }) {
   const navigate = useNavigate();
@@ -42,8 +44,8 @@ function Login({ setLoggedIn }) {
             </p>
           </div>
         </div>
-        <div>
-            <p>Hola</p>
+          <div className='ml-[60px] mt-5'>
+            <img src={imgLogin} alt="Descripción de la imagen" className='w-[300px] h-[250px]' /> 
           </div>
       </div>
       <div
@@ -83,7 +85,7 @@ function Login({ setLoggedIn }) {
               <div className=''>
                 <a className='w-full text-[14px] text-[#39A900] flex justify-end mb-[45px]' href="">¿Olvidaste tu contraeña?</a>
               </div>
-              <Button color="primary" className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
+              <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                 Ingresar
               </Button>
             </div>
