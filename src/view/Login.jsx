@@ -30,8 +30,21 @@ function Login({ setLoggedIn }) {
 
   return (
     <div className='w-full h-screen relative'> {/* Contenedor padre con posición relativa */}
-      <div className='w-full h-[50%] bg-[#39A900]'> 
-        <h1 className='text-white text-xl font-bold'>Your Logo</h1>
+      <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
+        <div>
+          <h1 className='text-white text-xl font-bold ml-9'>Your Logo</h1>
+          <div className='ml-[60px] mt-[60px] h-[200px] w-[300px]'>
+            <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
+            <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventgarios</h2>
+            <p className='text-sm mt-4 text-white font-light text-justify'>
+              InOut es un software que aumenta la eficiencia en la gestión de préstamos, y esto se logra a través de múltiples funciones.
+              Al gestionar préstamos, se pueden automatizar procesos, optimizar recursos, y mejorar la experiencia del cliente.
+            </p>
+          </div>
+        </div>
+        <div>
+            <p>Hola</p>
+          </div>
       </div>
       <div
         className='w-[500px] h-auto bg-[#fff] rounded-[25px] absolute shadow-xl'
