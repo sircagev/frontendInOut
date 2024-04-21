@@ -12,16 +12,14 @@ export const TableElementos = ({ items }) => {
     const [useElementos, setElementos] = useState([]);
     const [SetTipo, setCategorias, SetUbicacion, SetEmpaques, SetMedidas] = useState([]);
     const [useDesactivar, setDesactivar] = useState([]);
-
     const [isOpenModalActualizar, setIsOpenModalActualizar] = useState(false);
     const [isOpenModalRegistrar, setIsOpenModalRegistrar] = useState(false);
-
     const [page, setPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [itemsToShow, setItemsToShow] = useState([]);
 
-    const itemsPerPage = 8;
-    const startIndex = (page - 1) * itemsPerPage; // Índice del primer elemento en la página actual
-    const itemsOnCurrentPage = useElementos.slice(startIndex, startIndex + itemsPerPage); // Obtener los elementos que se mostrarán en la página actual
+    const startIndex = (page - 1) * itemsPerPage;
+    const itemsOnCurrentPage = useElementos.slice(startIndex, startIndex + itemsPerPage) // Obtener los elementos que se mostrarán en la página actual
 
     const [codigoElemento, setCodigoElemento] = useState('');
 
@@ -117,22 +115,33 @@ export const TableElementos = ({ items }) => {
     return (
         <div className='w-[90%] mb-5'>
             <div className='flex gap-3'>
-                <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onClick={() => setIsOpenModalRegistrar(true)}>Registrar Elemento</Button>
-                <div className='flex justify-center'>
-                    <input
-                        type="text"
-                        className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
-                        placeholder='Nombre Elemento'
-                        onChange={(e) => {
-                            setCodigoElemento(e.target.value)
-                        }}
-                    />
-                    <button
-                        className="flex justify-center items-center middle none center mr-4 bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                        data-ripple-light="true"
+                <div className='flex gap-3'>
+                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onClick={() => setIsOpenModalRegistrar(true)}>Registrar Elemento</Button>
+                    <div className='flex justify-center'>
+                        <input
+                            type="text"
+                            className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
+                            placeholder='Nombre Elemento'
+                            onChange={(e) => {
+                                setCodigoElemento(e.target.value)
+                            }}
+                        />
+                        <button
+                            className="flex justify-center items-center middle none center mr-4 bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                            data-ripple-light="true"
+                        >
+                            <FaSearch className='w-[20px] h-auto ' />
+                        </button>
+                    </div>
+                    <select
+                        className='w-[55px] h-[40px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
+                        onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                        value={itemsPerPage}
                     >
-                        <FaSearch className='w-[20px] h-auto ' />
-                    </button>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
                 </div>
             </div>
             <ModalRegistrar isOpen={isOpenModalRegistrar} onClose={() => setIsOpenModalRegistrar(false)} />
@@ -147,11 +156,10 @@ export const TableElementos = ({ items }) => {
                         <Pagination
                             isCompact
                             showControls
-                            showShadow
                             color="secondary"
                             page={page}
                             total={Math.ceil(useElementos.length / itemsPerPage)}
-                            onChange={(page) => setPage(page)}
+                            onChange={(newPage) => setPage(newPage)}
                         />
                     </div>
                 }

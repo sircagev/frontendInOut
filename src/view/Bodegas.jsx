@@ -85,42 +85,10 @@ const Bodega = () => {
         }
     };
 
-    const ReactivarBodega = async (codigo_Bodega, estado) => {
-        let mensaje;
-    
-        if (estado === 'inactivo') {
-            mensaje = "¿Desea reactivar la bodega?";
-        }
-    
-        swal({
-            title: "¿Está seguro?",
-            text: mensaje,
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then(async (willReactivar) => {
-            if (willReactivar) {
-                try {
-                    await axios.put(`http://localhost:3000/bodega/reactivar/${codigo_Bodega}`);
-                    ListarBodegas();
-                    swal("¡Se ha reactivado correctamente!", {
-                        icon: "success",
-                        button: false,
-                        timer: 2000,
-                    });
-                } catch (error) {
-                    console.log(error);
-                }
-            } else {
-                swal("La bodega sigue inactiva.");
-            }
-        });
-    };
-
-    const ToggleEstadoBodega = async (codigo_Bodega, estado) => {
+    const DesactivarBodega = async (codigo_Bodega, estado) => {
         let mensaje;
         let nuevoEstado;
-    
+
         if (estado === 'activo') {
             mensaje = "¿Desea desactivar la bodega?";
             nuevoEstado = 'inactivo';
@@ -128,7 +96,7 @@ const Bodega = () => {
             mensaje = "¿Desea activar la bodega?";
             nuevoEstado = 'activo';
         }
-    
+
         swal({
             title: "¿Está seguro?",
             text: mensaje,
@@ -214,9 +182,9 @@ const Bodega = () => {
     }, [codigoBodega]);
 
     return (
-        <div className='w-90% flex justify-center mt-[70px]'>
-            <div className=''>
-                <div className='flex gap-3'>
+        <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
+            <div className='w-full flex flex-col justify-center items-center'>
+                <div className='flex gap-4 w-[90%]'>
                     <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Bodega</Button>
                     <div className='flex justify-center'>
                         <input
@@ -293,15 +261,14 @@ const Bodega = () => {
                             />
                         </div>
                     }
-                    classNames={{
-                        wrapper: "w-[900px]",
-                    }}
-                    className="mx-auto"
+                
+                    className="w-[90%]"
                 >
                     <TableHeader>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="codigo">CÓDIGO</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">Nombre</TableColumn>
-                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="ubicacion">Ubicación</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="nombre">NOMBRE</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="ubicacion">UBICACIÓN</TableColumn>
+                        <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="est6ado">ESTADO</TableColumn>
                         <TableColumn className='text-center font-bold bg-[#3D7948] text-white' key="acciones">ADMINISTRAR</TableColumn>
                     </TableHeader>
                     <TableBody items={itemsToShow}>
@@ -310,9 +277,19 @@ const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.codigo_Bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.Nombre_bodega}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
-                                <TableCell>
-                                    <Button color="danger" className='mr-2 font-bold' onClick={() => ToggleEstadoBodega(bodega.codigo_Bodega, bodega.Estado)}>{bodega.Estado === 'activo' ? 'Activar' : 'Desactivar'}</Button>
-                                    <Button color="success" className='font-bold' onClick={() => ReactivarBodega(bodega.codigo_Bodega, bodega.Estado)}>Reactivar</Button>
+                                <TableCell className='font-semibold'>{bodega.Estado}</TableCell>
+                                <TableCell className='flex gap-3 justify-center'>
+                                    <Button
+                                        color={bodega.Estado === 'Inactivo' ? 'success' : 'danger'}
+                                        className={`bg-${bodega.Estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
+                                        onClick={() => { DesactivarBodega(bodega.codigo_Bodega, bodega.Estado) }}
+                                        style={{ fontSize: '15px' }}
+                                    >
+                                        {bodega.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
+                                    </Button>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(categoria.codigo_Categoria); }} style={{ fontSize: '15px' }}>
+                                        Info
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
