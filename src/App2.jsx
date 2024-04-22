@@ -28,6 +28,7 @@ function App2() {
     return (
         <Routes >
             <Route index element={<Navigate to="/login"/>}/>
+            <Route path='/*' element={<h1>Page not found</h1>}/>
             <Route path="/login" element={<ProtectedRoutesLogin>
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />

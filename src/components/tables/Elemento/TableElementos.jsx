@@ -27,11 +27,11 @@ export const TableElementos = ({ items, user }) => {
     const listarElementos = async () => {
         try {
             let response;
-            console.log(codigoElemento)
+ 
             if (codigoElemento.trim() !== '') {
                 // Realizar una solicitud específica para obtener el elemento por su código
                 response = await axios.get(`http://localhost:3000/elemento/buscar/${codigoElemento}`);
-                console.log(response.data);
+                
                 setElementos(response.data.Elemento ? response.data.Elemento : []);
                 setPage(1)
             } else {
@@ -106,8 +106,6 @@ export const TableElementos = ({ items, user }) => {
         listarElementos()
         fectchData()
         setRoleUserLogin(user.role);
-        console.log(user.role)
-        console.log(roleUserLogin);
     }, [codigoElemento])
 
     useEffect(() => {
