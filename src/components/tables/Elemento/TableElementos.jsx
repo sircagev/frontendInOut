@@ -144,7 +144,7 @@ export const TableElementos = ({ items }) => {
                     </select>
                 </div>
             </div>
-            <ModalRegistrar isOpen={isOpenModalRegistrar} onClose={() => setIsOpenModalRegistrar(false)} />
+            <ModalRegistrar isOpen={isOpenModalRegistrar} onClose={() => setIsOpenModalRegistrar(false)} listarElementos={listarElementos} />
             <ModalActualizarElemento isOpen={isOpenModalActualizar} onClose={() => {
                 setIsOpenModalActualizar(false);
                 setSelectedElemento(null); // Restablecer el elemento seleccionado

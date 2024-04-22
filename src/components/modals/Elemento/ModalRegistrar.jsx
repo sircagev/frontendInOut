@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import { ListarTipo, ListarCategorias, Listarubicacion, ListarEmpaques, ListarMedidas } from '../../../functions/Listar';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-export const ModalRegistrar = ({ isOpen, onClose }) => {
+export const ModalRegistrar = ({ isOpen, onClose, listarElementos }) => {
 
   const [UseTipo, SetTipo] = useState([]);
   const [UseCategorias, setCategorias] = useState([]);
@@ -50,7 +50,7 @@ export const ModalRegistrar = ({ isOpen, onClose }) => {
         data: values
       });
       if (response.status === 200) {
-
+        listarElementos();
         onClose();
         swal({
           title: "Registro exitoso",
