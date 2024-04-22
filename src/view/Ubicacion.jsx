@@ -6,7 +6,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaExclamationCircle } from 'react-icons/fa';
 import swal from 'sweetalert';
 
-export const Ubicacion = () => {
+export const Ubicacion = ({user}) => {
 
     const [page, setPage] = useState(1);
     const [itemsToShow, setItemsToShow] = useState([]);
@@ -254,8 +254,8 @@ export const Ubicacion = () => {
         <div className='w-[full] flex flex-col justify-center items-center mt-[50px]'>
             <div className='w-full flex flex-col justify-center items-center'>
                 <div className='flex w-[90%] gap-3'>
-                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Ubicación</Button>
-                    <div className='flex justify-center'>
+                    {user.role === 'administrador' && (<Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Ubicación</Button>)}
+                    <div className='flex justify-center mb-3'>
                         <input
                             type="text"
                             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Empaque'
@@ -420,11 +420,12 @@ export const Ubicacion = () => {
                                         className={`bg-${ubicacion.estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
                                         onClick={() => { DesactivarUbicacion(ubicacion.codigo_Detalle, ubicacion.estado) }}
                                         style={{ fontSize: '15px' }}
+                                        isDisabled={user.role === 'administrador' ? false : true}
                                     >
                                         {ubicacion.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
                                     </Button>
 
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(ubicacion.codigo_Detalle); }} style={{ fontSize: '15px' }}>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(ubicacion.codigo_Detalle); }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
                                         Info
                                     </Button>
                                 </TableCell>

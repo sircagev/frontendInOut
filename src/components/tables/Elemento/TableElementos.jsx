@@ -7,7 +7,7 @@ import { ModalRegistrar } from '../../modals/Elemento/ModalRegistrar';
 import { ModalActualizarElemento } from '../../modals/Elemento/ModalActualizarElemento';
 import swal from 'sweetalert';
 
-export const TableElementos = ({ items }) => {
+export const TableElementos = ({ items, user }) => {
 
     const [useElementos, setElementos] = useState([]);
     const [SetTipo, setCategorias, SetUbicacion, SetEmpaques, SetMedidas] = useState([]);
@@ -17,6 +17,7 @@ export const TableElementos = ({ items }) => {
     const [page, setPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
     const [itemsToShow, setItemsToShow] = useState([]);
+    const [roleUserLogin, setRoleUserLogin] = useState('')
 
     const startIndex = (page - 1) * itemsPerPage;
     const itemsOnCurrentPage = useElementos.slice(startIndex, startIndex + itemsPerPage) // Obtener los elementos que se mostrarán en la página actual
@@ -104,6 +105,9 @@ export const TableElementos = ({ items }) => {
     useEffect(() => {
         listarElementos()
         fectchData()
+        setRoleUserLogin(user.role);
+        console.log(user.role)
+        console.log(roleUserLogin);
     }, [codigoElemento])
 
     useEffect(() => {
@@ -116,8 +120,8 @@ export const TableElementos = ({ items }) => {
         <div className='w-[90%] mb-5'>
             <div className='flex gap-3'>
                 <div className='flex gap-3'>
-                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onClick={() => setIsOpenModalRegistrar(true)}>Registrar Elemento</Button>
-                    <div className='flex justify-center'>
+                    {user.role === 'administrador' && (<Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onClick={() => setIsOpenModalRegistrar(true)}>Registrar Elemento</Button>)}
+                    <div className='flex justify-center mb-3'>
                         <input
                             type="text"
                             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
@@ -190,10 +194,10 @@ export const TableElementos = ({ items }) => {
                             <TableCell className='font-semibold'>{elemento.Nombre_ubicacion}</TableCell>
                             <TableCell className='font-semibold'>{elemento.Estado}</TableCell>
                             <TableCell className='flex gap-2 justify-center'>
-                                <Button color="danger" className={`${elemento.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`} onClick={() => { desactivarElementos(elemento.Codigo_elemento) }} style={{ fontSize: '15px' }}>
+                                <Button color="danger" className={`${elemento.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`} onClick={() => { desactivarElementos(elemento.Codigo_elemento) }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true }>
                                     {elemento.Estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
                                 </Button>
-                                <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#E4B803]' onClick={() => handleInfo(elemento)} style={{ fontSize: '15px' }}>
+                                <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#E4B803]' onClick={() => handleInfo(elemento)} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true }>
                                     Info
                                 </Button>
                             </TableCell>
