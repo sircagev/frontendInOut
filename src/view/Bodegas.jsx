@@ -350,6 +350,7 @@ const Bodega = ({user}) => {
                                 </Button>
                                     <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
                                         Info
+
                                     </Button>
                                 </TableCell>
                             </TableRow>
