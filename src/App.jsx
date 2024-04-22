@@ -33,6 +33,7 @@ useEffect(() => {
          const token = localStorage.getItem('token');
          if (token) {
             // Si hay un token, el usuario está autenticado
+            console.log(true)
             setLoggedIn(true);
             navigate('/')
          }
