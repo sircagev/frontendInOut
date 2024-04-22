@@ -11,8 +11,9 @@ import swal from 'sweetalert';
 
 let myModal;
 
-const Usuario = () => {
+const Usuario = ({ userLogin }) => {
   const [usuarios, setUsuarios] = useState([]);
+  const [roleUserLogin, setRoleUserLogin] = useState('')
   const [selectedUser, setSelectedUser] = useState(null);
   const [identificacion, setIdentificacionUsuario] = useState('');
   const [searchTerm, setSearchTerm] = useState("");
@@ -124,7 +125,7 @@ const Usuario = () => {
       console.error("Detalles del error:", error.response.data);
       swal({
         title: "Error",
-        text: "Error al actualizar el usuario\n" + error.response.data.message ,
+        text: "Error al actualizar el usuario\n" + error.response.data.message,
         icon: "error",
         buttons: false,
         timer: 2000,
@@ -229,7 +230,6 @@ const Usuario = () => {
   const ListarUsuarios = async () => {
     try {
       let response;
-      console.log(identificacion)
       if (identificacion.trim() !== '') {
         response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
         console.log(response.data);
@@ -265,6 +265,9 @@ const Usuario = () => {
       keyboard: false
     });
     ListarUsuarios();
+    setRoleUserLogin(userLogin.role);
+    console.log(userLogin.role)
+    console.log(roleUserLogin);
   }, [identificacion]);
 
   // Lógica para mostrar la página actual
@@ -315,26 +318,28 @@ const Usuario = () => {
     <div className="w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto">
       <div className="w-[90%]">
         <div className="flex gap-3">
-          <Button
-            className="bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold"
-            onClick={() => {
-              setSelectedUser(null);
-              setValues({
-                nombre_usuario: "",
-                apellido_usuario: "",
-                email_usuario: "",
-                rol: "",
-                numero: "",
-                contraseña_usuario: "",
-                Id_ficha: "",
-                identificacion: ""
-              });
-              myModal.show();
-            }}
-          >
-            Registrar Usuario
-          </Button>
-          <div className='flex justify-center'>
+          {userLogin.role === 'administrador' && (
+            <Button
+              className="bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold"
+              onClick={() => {
+                setSelectedUser(null);
+                setValues({
+                  nombre_usuario: "",
+                  apellido_usuario: "",
+                  email_usuario: "",
+                  rol: "",
+                  numero: "",
+                  contraseña_usuario: "",
+                  Id_ficha: "",
+                  identificacion: ""
+                });
+                myModal.show();
+              }}
+            >
+              Registrar Usuario
+            </Button>
+          )}
+          <div className='flex justify-center mb-3'>
             <input
               type="text"
               className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
@@ -393,8 +398,8 @@ const Usuario = () => {
                 <TableCell className='font-semibold'>{user.identificacion}</TableCell>
                 <TableCell className='font-semibold'>{user.Estado}</TableCell>
                 <TableCell className='flex gap-2 justify-center'>
-                  <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
-                  <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
+                  <Button color='primary' className={`font-semibold ${userLogin.role === 'administrador' ? 'bg-[#1E6C9B] hover:bg-[#1E6C9B]' : 'bg-gray-500'} `} onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }} isDisabled={userLogin.role === 'administrador' ? false : true}>Actualizar</Button>
+                  <Button color="danger" className={`font-semibold ${userLogin.role === 'administrador' ? 'bg-[#BF2A50] hover:bg-[#BF2A50]' : 'bg-gray-500'} `} onClick={() => DesactivarUsuario(user.id_usuario)} isDisabled={userLogin.role === 'administrador' ? false : true}>Estado</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -410,8 +415,8 @@ const Usuario = () => {
                 <TableCell className='font-semibold'>{user.identificacion}</TableCell>
                 <TableCell className='font-semibold'>{user.Estado}</TableCell>
                 <TableCell className='flex gap-2 justify-center'>
-                  <Button color='primary' className='font-semibold bg-[#1E6C9B] hover:bg-[#1E6C9B]' onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }}>Actualizar</Button>
-                  <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => DesactivarUsuario(user.id_usuario)}>Estado</Button>
+                <Button color='primary' className={`font-semibold ${userLogin.role === 'administrador' ? 'bg-[#1E6C9B] hover:bg-[#1E6C9B]' : 'bg-gray-500'} `} onClick={() => { handleUpdateClick(user) }} style={{ fontSize: '15px' }} isDisabled={userLogin.role === 'administrador' ? false : true}>Actualizar</Button>
+                  <Button color="danger" className={`font-semibold ${userLogin.role === 'administrador' ? 'bg-[#BF2A50] hover:bg-[#BF2A50]' : 'bg-gray-500'} `} onClick={() => DesactivarUsuario(user.id_usuario)} isDisabled={userLogin.role === 'administrador' ? false : true}>Estado</Button>
                 </TableCell>
               </TableRow>
             ))}

@@ -23,6 +23,7 @@ import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/Protect
 function App2() {
 
     const [loggedIn, setLoggedIn] = useState(false);
+    const [user, setUser] = useState({role: ""})
 
     return (
         <Routes >
@@ -30,21 +31,21 @@ function App2() {
             <Route path="/login" element={<ProtectedRoutesLogin>
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />
-            <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} />} >
+            <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser}/>} >
                 <Route path="/home" element={<h1>Home</h1>} />
-                <Route path="/elementos" element={<Elementos />} />
-                <Route path="/elementos/categorias" element={<Categorias />} />
-                <Route path="/elementos/empaques" element={<Empaque />} />
-                <Route path="/elementos/medidas" element={<Medida />} />
-                <Route path="/usuarios" element={<Usuario />} />
+                <Route path="/elementos" element={<Elementos user={user} />} />
+                <Route path="/elementos/categorias" element={<Categorias user={user} />} />
+                <Route path="/elementos/empaques" element={<Empaque user={user} />} />
+                <Route path="/elementos/medidas" element={<Medida user={user}/>} />
+                <Route path="/usuarios" element={<Usuario  userLogin={user}/>} />
                 <Route path="/reportes/usuarios" element={<ReporteU />} />
                 <Route path="/reportes/elementos" element={<ReporteE />} />
                 <Route path="/reportes/bodegas" element={<ReporteB />} />
                 <Route path="/reportes/movimientos" element={<ReporteM />} />
-                <Route path="/bodegas" element={<Bodega />} />
+                <Route path="/bodegas" element={<Bodega user={user} />} />
                 <Route path="/reportes" element={<Reporte />} />
-                <Route path="/bodegas/ubicacion" element={<Ubicacion />} />
-                <Route path="/movimientos" element={<Movimientos2 />} />
+                <Route path="/bodegas/ubicacion" element={<Ubicacion user={user}/>} />
+                <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
             </Route>
         </Routes>
     );
