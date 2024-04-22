@@ -345,14 +345,9 @@ const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.Estado}</TableCell>
                                 <TableCell className='flex gap-3 justify-center'>
-                                    <Button
-                                        color={bodega.Estado === 'Inactivo' ? 'success' : 'danger'}
-                                        className={`bg-${bodega.Estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
-                                        onClick={() => { DesactivarBodega(bodega.codigo_Bodega, bodega.Estado) }}
-                                        style={{ fontSize: '15px' }}
-                                    >
-                                        {bodega.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
-                                    </Button>
+                                <Button color="danger" className={`${bodega.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`} onClick={() => { ToggleEstadoBodega(bodega.codigo_Bodega) }} style={{ fontSize: '15px' }}>
+                                    {bodega.Estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
+                                </Button>
                                     <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
                                         Info
                                     </Button>
