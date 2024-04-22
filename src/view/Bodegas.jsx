@@ -348,8 +348,8 @@ const Bodega = () => {
                                 <Button color="danger" className={`${bodega.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`} onClick={() => { ToggleEstadoBodega(bodega.codigo_Bodega) }} style={{ fontSize: '15px' }}>
                                     {bodega.Estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
                                 </Button>
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
-                                        Info
+                                    <Button color='primary' className='bg-[#2b34b0] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
+                                        Actualizar
                                     </Button>
                                 </TableCell>
                             </TableRow>
