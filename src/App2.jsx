@@ -19,6 +19,7 @@ import Bodega from "./view/Bodegas"
 import Reporte from "./view/Reportes"
 import { DashboardTemplate } from './view/DashboardTemplate';
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
+import { PageNotFound } from './view/PageNotFound';
 
 function App2() {
 
@@ -28,7 +29,7 @@ function App2() {
     return (
         <Routes >
             <Route index element={<Navigate to="/login"/>}/>
-            <Route path='/*' element={<h1>Page not found</h1>}/>
+            <Route path='/*' element={<PageNotFound/>}/>
             <Route path="/login" element={<ProtectedRoutesLogin>
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />
