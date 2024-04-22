@@ -24,20 +24,9 @@ function App2() {
 
     const [loggedIn, setLoggedIn] = useState(false);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        // Verificar si hay un token en el localStorage al cargar la aplicación
-        const token = localStorage.getItem('token');
-        console.log(token)
-        if (token) {
-            // Si hay un token, el usuario está autenticado
-            setLoggedIn(true);
-        }
-    }, []);
-
     return (
-        <Routes>
+        <Routes >
+            <Route index element={<Navigate to="/login"/>}/>
             <Route path="/login" element={<ProtectedRoutesLogin>
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />

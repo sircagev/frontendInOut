@@ -14,7 +14,7 @@ export const DashboardTemplate = ({ setLoggedIn, children }) => {
             <section className="flex flex-col w-full h-screen">
                 <Navbar setLogIn={setLoggedIn} />
                 <div className="flex-1 overflow-y-auto bg-gray-100">
-                        <Outlet/>
+                    <Outlet />
                 </div>
             </section>
         </main>
