@@ -17,11 +17,14 @@ function Login({ setLoggedIn }) {
     try {
       const response = await axios.post('http://localhost:3000/validate/validar', {
         email_usuario: email,
-        contraseña_usuario: password
+        contraseña_usuario: password,
       });
 
       if (response.status === 200) {
+        // Guardar el token y el nombre del usuario
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('userName', response.data.userName); // Guardar solo el nombre
+        localStorage.setItem('role', response.data.role);
         setLoggedIn(true);
         navigate('/elementos');
       }
