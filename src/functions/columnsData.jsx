@@ -103,3 +103,22 @@ export const columnsEmpaques = [
         }
     }
 ]
+
+export const columnsPrestamos = [
+    {
+        name: "Codigo",
+        label: "Codigo",
+    },
+    {
+        name: "Usuario",
+        label: "Usuario",
+    },
+    {
+        name: "Fecha",
+        label: "Fecha",
+    },
+    {
+        name: 'options', // Nombre de la nueva columna
+        label: 'Opciones',
+    }
+]

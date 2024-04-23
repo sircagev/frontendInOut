@@ -20,7 +20,7 @@ export const TableGeneral = ({ funcionListar, columns, title}) => {
     };
 
     return (
-        <div className='w-[90%] h-screen'>
+        <div className='w-[90%]'>
             <div>
                 <MUIDataTable
                     title={title}
