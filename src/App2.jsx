@@ -17,8 +17,9 @@ import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
 import Bodega from "./view/Bodegas"
 import Reporte from "./view/Reportes"
-import { DashboardTemplate } from './view/DashboardTemplate';
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
+import { PageNotFound } from './view/PageNotFound';
+import { Prestamos } from './view/Prestamos';
 
 function App2() {
 
@@ -28,6 +29,7 @@ function App2() {
     return (
         <Routes >
             <Route index element={<Navigate to="/login"/>}/>
+            <Route path='/*' element={<PageNotFound/>}/>
             <Route path="/login" element={<ProtectedRoutesLogin>
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />
@@ -46,6 +48,7 @@ function App2() {
                 <Route path="/reportes" element={<Reporte />} />
                 <Route path="/bodegas/ubicacion" element={<Ubicacion user={user}/>} />
                 <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
+                <Route path="/movimientos/prestamos" element={<Prestamos user={user}/>} />
             </Route>
         </Routes>
     );
