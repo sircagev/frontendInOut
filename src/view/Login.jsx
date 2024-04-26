@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
+import Swal from 'sweetalert2'; 
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/logoInout.png';
+
 
 function Login({ setLoggedIn }) {
   const navigate = useNavigate();
@@ -21,15 +23,27 @@ function Login({ setLoggedIn }) {
       });
 
       if (response.status === 200) {
-        // Guardar el token y el nombre del usuario
         localStorage.setItem('token', response.data.token);
-        localStorage.setItem('userName', response.data.userName); // Guardar solo el nombre
+        localStorage.setItem('userName', response.data.userName);
         localStorage.setItem('role', response.data.role);
         setLoggedIn(true);
-        navigate('/elementos');
+        navigate('/home');
       }
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      // Verifica si el error es debido a que el usuario está inactivo
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Usuario inactivo. Por favor, contacta al administrador.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Por favor, Ingresa los Datos Correctamente.',
+        });
+      }
     }
   };
 
@@ -38,10 +52,10 @@ function Login({ setLoggedIn }) {
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
           <h1 className='text-white text-xl font-bold ml-9'><img src={logo} alt="" className='h-[50px] w-[auto]' /></h1>
-          <div className='ml-[60px] mt-[60px] h-[200px] w-[300px]'>
+          <div className='ml-[60px] mt-[50px] h-[200px] w-[300px]'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
-            <p className='text-sm mt-4 text-white font-light text-justify'>
+            <p className='text-sm mt-2 text-white font-light text-justify'>
               InOut es un software que aumenta la eficiencia en la gestión de préstamos, y esto se logra a través de múltiples funciones.
               Al gestionar préstamos, se pueden automatizar procesos, optimizar recursos, y mejorar la experiencia del cliente.
             </p>
@@ -62,10 +76,10 @@ function Login({ setLoggedIn }) {
       >
         <div className='w-[80%] mt-7 ml-[10%] mr-[10%]'>
           <h3 className='text-lg font-bold'>Bienvenido a <span className='text-[#00AC4F]'>IN-OUT</span></h3>
-          <h2 className='mt-1 mb-[80px] text-4xl font-semibold text-black'>Sign In</h2>
+          <h2 className='mt-1 mb-[60px] text-4xl font-semibold text-black'>Sign In</h2>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
-              <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingresa tu usuario o número de identificación.</label>
+              <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
               <Input
                 required
                 type="email"
@@ -75,7 +89,7 @@ function Login({ setLoggedIn }) {
                 variant="bordered" // Mantiene el borde
                 className="w-full mb-[45px]" // Limita el ancho máximo
               />
-              <label className='text-[15px] font-semibold mb-3'>Ingrese su contraseña</label>
+              <label className='text-[15px] font-semibold mb-3'>Ingrese su contraseña:</label>
               <Input
                 required
                 type="password"
@@ -102,4 +116,3 @@ function Login({ setLoggedIn }) {
 }
 
 export default Login;
-
