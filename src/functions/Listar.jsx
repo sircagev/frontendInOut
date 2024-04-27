@@ -80,6 +80,10 @@ export const convertirAMinusculas = (texto) => {
     return texto.toLowerCase();
 }
 
+export const convertirAMayusculas = (texto) => {
+    return texto.toUpperCase();
+}
+
 export const ListarMovimientosSolicitados = async () => {
     try {
         const response = await axios.get('http://localhost:3000/movimientos/listar')

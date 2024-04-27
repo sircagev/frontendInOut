@@ -23,7 +23,7 @@ import { FaSearch } from "react-icons/fa";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
 import { ListarElementos, ListarUsuarios } from '../functions/Listar';
 
-export const Movimientos2 = () => {
+export const Movimientos2 = ({user}) => {
    //Sirve para guardar la información que se traiga al listar los datos 
    const [movimientos, setMovimientos] = useState([]);
    const [detallesMovimiento, setDetallesMovimiento] = useState([]);
@@ -228,14 +228,22 @@ export const Movimientos2 = () => {
                   <button className='bg-green-700 hover:bg-green-800 h-10 px-2 rounded text-white font-semibold' onClick={() => {
                      setDataStock(prevDataStock => ({
                         ...prevDataStock,
-                        fk_movimiento: 1
+                        fk_movimiento: 1,
+                        detalles: [{
+                           ...prevDataStock.detalles[0],
+                           Usuario_recibe: user.code,
+                        }]
                      }));
                      onOpenStock()
                   }}>Registrar Ingreso</button>
                   <button className='bg-red-700 hover:bg-red-800 h-10 px-2 rounded text-white font-semibold' onClick={() => {
                      setDataStock(prevDataStock => ({
                         ...prevDataStock,
-                        fk_movimiento: 2
+                        fk_movimiento: 2,
+                        detalles: [{
+                           ...prevDataStock.detalles[0],
+                           Usuario_entrega: user.code,
+                        }]
                      }));
                      onOpenStock()
                   }}>Registrar Salida</button>
