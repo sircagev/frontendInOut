@@ -3,8 +3,8 @@ import { convertirAMayusculas } from '../../../../../functions/Listar'
 
 export const TableHeaderMaterial = ({ columns }) => {
     return (
-        <thead>
-            <tr>
+        <thead className=''>
+            <tr className='rounded overflow-hidden'>
                 {
                     columns.map(column => (
                         (column !== "Correo" && column !== "Apellido") ? (

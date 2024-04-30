@@ -26,7 +26,7 @@ function Login({ setLoggedIn }) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
         localStorage.setItem('role', response.data.role);
-        localStorage.setItem('codigo', response.data.coodigo);
+        localStorage.setItem('codigo', response.data.codigo);
         setLoggedIn(true);
         navigate('/home');
       }

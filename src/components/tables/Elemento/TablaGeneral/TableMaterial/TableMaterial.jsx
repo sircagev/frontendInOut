@@ -4,14 +4,14 @@ import { TableBodyMaterial } from './TableBodyMaterial'
 import { PaginationMaterial } from './PaginationMaterial'
 import { InputSearch } from '../../../../moleculas/InputSearch'
 
-export const TableMaterial = ({ funcionListar }) => {
+export const TableMaterial = ({ funcionListar, funcionBuscar }) => {
 
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
 
     const [activePage, setActivePage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
-
+    
     const pages = Math.ceil(data.length / itemsPerPage);
     const startIndex = (activePage - 1) * itemsPerPage;
     const itemsOnCurrentPage = data.slice(startIndex, startIndex + itemsPerPage);
@@ -36,11 +36,11 @@ export const TableMaterial = ({ funcionListar }) => {
     }, [])
 
     return (
-        <div className="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
+        <div className="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-xl bg-clip-border mb-5">
             <div className="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white rounded-none bg-clip-border">
                 <div className="flex flex-col justify-between gap-8 mb-4 md:flex-row md:items-center">
                     <div className="flex w-full gap-2 shrink-0 md:w-max">
-                        <InputSearch setData={setData} funcionListar={funcionListar} />
+                        <InputSearch setData={setData} funcionListar={funcionListar} funcionBuscar={funcionBuscar}/>
                         <button
                             className="flex select-none items-center gap-3 rounded-lg bg-gray-900 py-2 px-4 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                             type="button">
@@ -50,7 +50,7 @@ export const TableMaterial = ({ funcionListar }) => {
                                     d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3">
                                 </path>
                             </svg>
-                            Añadir Préstamo
+                            Realizar Préstamo
                         </button>
                     </div>
                 </div>

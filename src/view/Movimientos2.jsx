@@ -188,7 +188,6 @@ export const Movimientos2 = ({user}) => {
       try {
          console.log(dataStock);
          const response = await axios.post(`http://localhost:3000/movimientos/aniadirStock`, dataStock);
-
          console.log(response.data)
          listarMovimientos();
          setUsuarioSeleccionado(null)
@@ -231,9 +230,10 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 1,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_recibe: user.code,
+                           Usuario_recibe: user.codigo,
                         }]
                      }));
+                     console.log(dataStock);
                      onOpenStock()
                   }}>Registrar Ingreso</button>
                   <button className='bg-red-700 hover:bg-red-800 h-10 px-2 rounded text-white font-semibold' onClick={() => {
@@ -242,7 +242,7 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 2,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_entrega: user.code,
+                           Usuario_entrega: user.codigo,
                         }]
                      }));
                      onOpenStock()
@@ -554,7 +554,8 @@ export const Movimientos2 = ({user}) => {
                                           ...prevDataStock,
                                           detalles: [{
                                              ...prevDataStock.detalles[0],
-                                             Usuario_entrega: value,
+                                             [prevDataStock.fk_movimiento === 2 ? 'Usuario_recibe' : 'Usuario_entrega']: value,
+                                             
                                           }]
                                        }));
 
@@ -634,4 +635,4 @@ export const Movimientos2 = ({user}) => {
    )
 }
 
-//Debo Realizar un movimineto de prestamo, este movimiento tiene estados de entrega o en prestamo, se listan los que tienen el estado en prestamo para saber cuantos elementos en total hay prestados, sobre estos se hacen los cálculos  
+//Debo Realizar un movimineto de préstamo, este movimiento tiene estados de entrega o en prestamo, se listan los que tienen el estado en prestamo para saber cuantos elementos en total hay prestados, sobre estos se hacen los cálculos  

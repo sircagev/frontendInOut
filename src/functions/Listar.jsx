@@ -88,15 +88,39 @@ export const ListarMovimientosSolicitados = async () => {
     try {
         const response = await axios.get('http://localhost:3000/movimientos/listar')
         const datos = response.data.datos;
-        const newData = []
+        const newData = [];
         datos.forEach(dato => {
-            if (dato.Tipo === "Prestamo" && (dato.Estado === "En espera" || dato.Estado === "Confirmada")){
+            if (dato.Tipo === "Prestamo" && (dato.Estado === "En espera" || dato.Estado === "Confirmada")) {
                 newData.push(dato)
             }
         });
-        return newData
+        return newData;
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const BuscarMovimientosSolicitados = async (codigoMovimiento) => {
+    try {
+        // Realizar una solicitud específica para obtener un movimiento por su código
+        const response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
+        const data = response.data.Movimiento;
+        console.log(data)
+        const newData = [];
+        data.forEach(datum => {
+            if (datum.Tipo === "Prestamo" && (datum.Estado === "En espera" || datum.Estado === "Confirmada")) {
+                newData.push(datum)
+            }
+        });
+
+        return newData;
+    } catch (error) {
+        console.log(error)
+        const status = error.response.request.status;
+        if (status === 404) {
+            // Si la respuesta es 404, devolver un arreglo vacío
+            return [];
+        }
     }
 }
 
@@ -106,7 +130,7 @@ export const ListarMovimientosEnPrestamo = async () => {
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {
-            if (dato.Tipo === "Prestamo" && dato.Estado === "En Prestamo"){
+            if (dato.Tipo === "Prestamo" && dato.Estado === "En Prestamo") {
                 newData.push(dato)
             }
         });
@@ -122,7 +146,7 @@ export const ListarMovimientosCancelados = async () => {
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {
-            if (dato.Tipo === "Prestamo" && (dato.Estado === "Cancelada" || dato.Estado === "Finalizada")){
+            if (dato.Tipo === "Prestamo" && (dato.Estado === "Cancelada" || dato.Estado === "Finalizada")) {
                 newData.push(dato)
             }
         });

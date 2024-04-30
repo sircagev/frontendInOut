@@ -26,17 +26,18 @@ export const PaginationMaterial = ({ activePage, setActivePage, pages, itemsPerP
         setActivePage(activePage - 1);
     };
 
-
     for (let i = 1; i <= pages; i++) {
         buttons.push(<IconButton {...getItemProps(i)}>{i}</IconButton>);
     }
-
 
     return (
         <div className="w-full flex items-center justify-end gap-4">
             <select
                 className='w-[45px] h-[35px] pl-2 border-1 rounded-lg border-[#c3c3c6] text-[14px] font-semibold outline-none'
-                onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+                onChange={(e) => {
+                    setItemsPerPage(parseInt(e.target.value))
+                    setActivePage(1)
+                }}
                 value={itemsPerPage}
             >
                 <option value="5">5</option>

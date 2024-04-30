@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios';
 
-export const InputSearch = ({ setData, funcionListar }) => {
+export const InputSearch = ({ setData, funcionListar, funcionBuscar }) => {
 
     const [codigoMovimiento, setCodigoMovimiento] = useState('');
 
@@ -9,11 +9,11 @@ export const InputSearch = ({ setData, funcionListar }) => {
         try {
             if (codigoMovimiento.trim() !== '') {
                 // Realizar una solicitud específica para obtener un movimiento por su código
-                const response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
-                setData(response.data.Movimiento ? response.data.Movimiento : []);
+                const items = await funcionBuscar(codigoMovimiento);
+                setData(items) 
             } else {
-                const items = await funcionListar()
-                setData(items)
+                const items = await funcionListar();
+                setData(items);
             }
         } catch (error) {
             console.log(error);
