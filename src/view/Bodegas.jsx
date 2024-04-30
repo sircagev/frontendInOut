@@ -5,7 +5,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import { FaSearch } from "react-icons/fa";
 import swal from 'sweetalert';
 
-const Bodega = () => {
+const Bodega = ({user}) => {
     const [bodegas, setBodegas] = useState([]);
     const [codigoBodega, setCodigoBodega] = useState('');
     const [selectedBodega, setSelectedBodega] = useState(null);
@@ -212,8 +212,8 @@ const Bodega = () => {
         <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
             <div className='w-full flex flex-col justify-center items-center'>
                 <div className='flex gap-4 w-[90%]'>
-                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Bodega</Button>
-                    <div className='flex justify-center'>
+                    {user.role === 'administrador' && (<Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Bodega</Button>)}
+                    <div className='flex justify-center mb-3'>
                         <input
                             type="text"
                             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md'
@@ -345,16 +345,12 @@ const Bodega = () => {
                                 <TableCell className='font-semibold'>{bodega.ubicacion}</TableCell>
                                 <TableCell className='font-semibold'>{bodega.Estado}</TableCell>
                                 <TableCell className='flex gap-3 justify-center'>
-                                    <Button
-                                        color={bodega.Estado === 'Inactivo' ? 'success' : 'danger'}
-                                        className={`bg-${bodega.Estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
-                                        onClick={() => { DesactivarBodega(bodega.codigo_Bodega, bodega.Estado) }}
-                                        style={{ fontSize: '15px' }}
-                                    >
-                                        {bodega.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
-                                    </Button>
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }}>
+                                <Button color="danger" className={`${bodega.Estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`} onClick={() => { ToggleEstadoBodega(bodega.codigo_Bodega) }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
+                                    {bodega.Estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
+                                </Button>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleActualizarBodega(bodega.codigo_Bodega); }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
                                         Info
+
                                     </Button>
                                 </TableCell>
                             </TableRow>

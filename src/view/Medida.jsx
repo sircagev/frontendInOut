@@ -6,7 +6,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { FaSearch } from "react-icons/fa";
 
 
-export const Medida = () => {
+export const Medida = ({user}) => {
 
     const [UseMedidas, setMedidas] = useState([]);
     const [UseDesactivar, setDesactivar] = useState([]);
@@ -196,8 +196,8 @@ export const Medida = () => {
         <div className='w-[full] flex flex-col justify-center items-center mt-[50px]'>
             <div className='w-full flex flex-col justify-center items-center'>
             <div className='flex gap-4 w-[90%]'>
-                    <Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Medida</Button>
-                    <div className='flex justify-center'>
+                    {user.role === 'administrador' && (<Button className='bg-[#3D7948] mb-3 w-[150px] text-[14px] text-white font-semibold ' onPress={onOpen}>Registrar Medida</Button>)}
+                    <div className='flex justify-center mb-3'>
                         <input
                             type="text"
                             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Medida'
@@ -323,11 +323,12 @@ export const Medida = () => {
                                         className={`bg-${medida.estado === 'Inactivo' ? 'green-500' : 'red-500'} text-white font-semibold`}
                                         onClick={() => { DesactivarMedida(medida.codigo_medida, medida.estado) }}
                                         style={{ fontSize: '15px' }}
+                                        isDisabled={user.role === 'administrador' ? false : true}
                                     >
                                         {medida.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
                                     </Button>
 
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(medida.codigo_medida); }} style={{ fontSize: '15px' }}>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(medida.codigo_medida); }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
                                         Info
                                     </Button>
                                 </TableCell>

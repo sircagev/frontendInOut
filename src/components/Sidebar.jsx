@@ -44,7 +44,14 @@ export const Sidebar = ({ state, setState }) => {
     {
       icon: FaArrowRightArrowLeft,
       label: "Movimientos",
-      to: "/movimientos"
+      to: "/movimientos",
+      subitems: [
+        {
+          icon: ImUsers,
+          label: "Prestamos",
+          to: "/movimientos/prestamos",
+        }
+      ]
     },
     {
       icon: AiOutlineFileText,

@@ -9,7 +9,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-export const Categorias = () => {
+export const Categorias = ({user}) => {
 
     const [page, setPage] = useState(1);
     const [itemsToShow, setItemsToShow] = useState([]);
@@ -191,8 +191,10 @@ export const Categorias = () => {
         <div className='w-full flex flex-col justify-center items-center mt-[50px]'>
             <div className='w-full flex flex-col justify-center items-center'>
                 <div className='flex gap-4 w-[90%]'>
-                    <Button className='bg-[#3d7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
-                    <div className='flex justify-center'>
+                    {user.role === 'administrador' && (
+                        <Button className='bg-[#3d7948] mb-3 w-[150px] text-[14px] text-white font-semibold' onPress={onOpen}>Registrar Categoría</Button>
+                    )}
+                    <div className='flex justify-center mb-3'>
                         <input
                             type="text"
                             className='w-[170px] h-[40px] pl-3 border-1 border-[#c3c3c6] text-[14px] font-semibold outline-none rounded-tl-md rounded-bl-md' placeholder='Código Categoría'
@@ -320,10 +322,11 @@ export const Categorias = () => {
                                         className={`${categoria.estado === 'Inactivo' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`}
                                         onClick={() => { DesactivarCategorias(categoria.codigo_Categoria, categoria.estado) }}
                                         style={{ fontSize: '15px' }}
+                                        isDisabled={user.role === 'administrador' ? false : true}
                                     >
                                         {categoria.estado === 'Inactivo' ? 'Activar' : 'Desactivar'}
                                     </Button>
-                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(categoria.codigo_Categoria); }} style={{ fontSize: '15px' }}>
+                                    <Button color='primary' className='bg-[#1E6C9B] font-semibold' onClick={() => { handleInfo(categoria.codigo_Categoria); }} style={{ fontSize: '15px' }} isDisabled={user.role === 'administrador' ? false : true}>
                                         Info
                                     </Button>
                                 </TableCell>
