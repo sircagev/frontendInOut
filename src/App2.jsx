@@ -21,6 +21,7 @@ import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/Protect
 import { PageNotFound } from './view/PageNotFound';
 import { Prestamos } from './view/Prestamos';
 
+
 function App2() {
 
     const [loggedIn, setLoggedIn] = useState(false);
