@@ -37,7 +37,7 @@ function ResetPassword() {
     event.preventDefault();
     try {
       if (contraseña_usuario.contraseña_usuario === confirm.confirm ) {
-        await axios.put('http://localhost:3000/contraseña_usuario/reset', { token, contraseña_usuario: contraseña_usuario.contraseña_usuario});
+        await axios.put('http://localhost:3000/contrasena/cambiar', { token, contraseña_usuario: contraseña_usuario.contraseña_usuario});
         alert('Contraseña restablecida con éxito');
         navigate('/');
       } else {
