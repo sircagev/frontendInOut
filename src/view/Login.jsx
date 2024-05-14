@@ -37,7 +37,7 @@ function Login({ setLoggedIn }) {
     <div className='w-full h-screen relative'> {/* Contenedor padre con posición relativa */}
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
-          <h1 className='text-white text-xl font-bold ml-9'><img src={logo} alt="" className='h-[50px] w-[auto]' /></h1>
+          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className='h-[50px] w-[auto]' /></h1>
           <div className='ml-[60px] mt-[60px] h-[200px] w-[300px]'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>

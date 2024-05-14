@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@nextui-org/react";
 
 export const ModalGeneral = ({isOpen, onClose, form, title}) => {
     const { onOpenChange } = useDisclosure();

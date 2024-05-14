@@ -1,5 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 
 export const ListarElementos = async () => {
     try {
@@ -30,7 +31,7 @@ export const ListarUsuarios = async () => {
 
 export const ListarTipo = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/tipo/listar')
+        const response = await axiosClient.get('tipo/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -39,7 +40,8 @@ export const ListarTipo = async () => {
 
 export const ListarCategorias = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/categoria/listar')
+        
+        const response = await axiosClient.get('categoria/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -57,7 +59,7 @@ export const ListarCategorias = async () => {
 
  export const ListarEmpaques = async () => {
     try {
-     const response = await axios.get('http://localhost:3000/empaque/listar')
+     const response = await axiosClient.get('empaque/listar')
       return response.data
     } catch (error) {
         console.log(error);
@@ -79,3 +81,4 @@ export const capitalize = (str) => {
 export const convertirAMinusculas = (texto) => {
     return texto.toLowerCase();
   }
+  
