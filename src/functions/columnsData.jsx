@@ -28,7 +28,6 @@ export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) 
       customBodyRender: (value, tableMeta, updateValue) => {
         const rowData = tableMeta.rowData;
         const Active = rowData[3] === "Activo";
-        const codigoCategoria = rowData[0];
 
         const handleEstado = async () => {
           const codigoCategoria = rowData[0];

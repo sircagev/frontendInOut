@@ -3,7 +3,7 @@ import { Input, Button } from "@nextui-org/react";
 import axios from 'axios';
 import swal from 'sweetalert';
 
-export const FormUpdateCategoria = ({ onClose, category }) => {
+export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) => {
   const [nombre, setNombre] = useState('');
 
   useEffect(() => {
@@ -16,11 +16,13 @@ export const FormUpdateCategoria = ({ onClose, category }) => {
     event.preventDefault();
     try {
       await axios.put(`http://localhost:3000/categoria/actualizar/${category.codigo}`, {
-        nombre: nombre,
+        Nombre_Categoria: nombre,
       });
       swal("Actualizado", "La categoría ha sido actualizada con éxito", "success");
       onClose();
+      onRegisterSuccess();
     } catch (error) {
+      console.log(error)
       swal("Error", "Hubo un problema al actualizar la categoría", "error");
     }
   };
