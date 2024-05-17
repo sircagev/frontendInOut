@@ -6,13 +6,14 @@ export const ProtectedRoutes = ({ children, setLoggedIn, setUser }) => {
 
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
+    const code = localStorage.getItem('codigo')
 
     //Ejecutar funciones
     useEffect(() => {
         if (!token) {
             return <Navigate to="/login" />
         } else {
-            setUser({ role: role })
+            setUser({ role: role, codigo: code })
         }
     }, [])
 

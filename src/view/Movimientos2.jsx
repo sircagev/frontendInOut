@@ -23,7 +23,7 @@ import { FaSearch } from "react-icons/fa";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
 import { ListarElementos, ListarUsuarios } from '../functions/Listar';
 
-export const Movimientos2 = () => {
+export const Movimientos2 = ({user}) => {
    //Sirve para guardar la información que se traiga al listar los datos 
    const [movimientos, setMovimientos] = useState([]);
    const [detallesMovimiento, setDetallesMovimiento] = useState([]);
@@ -50,7 +50,7 @@ export const Movimientos2 = () => {
    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
    const { isOpen: isOpenStock, onOpen: onOpenStock, onOpenChange: onOpenChangeStock, onClose: onCloseStock } = useDisclosure();
 
-   //Guardar la información que se envia paraa ejecutar un cambio en el Stock
+   //Guardar la información que se envia para ejecutar un cambio en el Stock
    const [dataStock, setDataStock] = useState({
       usuario_solicitud: 1,
       fk_movimiento: '',
@@ -60,7 +60,7 @@ export const Movimientos2 = () => {
          estado: null,
          fecha_vencimiento: null,
          cantidad: 0,
-         Usuario_recibe: 1,
+         Usuario_recibe: '',
          Usuario_entrega: '',
          Observaciones: null
       }]
@@ -188,7 +188,6 @@ export const Movimientos2 = () => {
       try {
          console.log(dataStock);
          const response = await axios.post(`http://localhost:3000/movimientos/aniadirStock`, dataStock);
-
          console.log(response.data)
          listarMovimientos();
          setUsuarioSeleccionado(null)
@@ -202,7 +201,6 @@ export const Movimientos2 = () => {
    useEffect(() => {
       listarMovimientos();
       fectchData();
-      console.log(dataUsuarios)
    }, [codigoMovimiento])
 
    return (
@@ -226,17 +224,26 @@ export const Movimientos2 = () => {
                   </button>
                </div>
                <div className='flex mr-6 gap-3'>
-                  <button className='bg-green-700 hover:bg-green-800 h-10 px-2 rounded text-white font-semibold' onClick={()=>{
+                  <button className='bg-green-700 hover:bg-green-800 h-10 px-2 rounded text-white font-semibold' onClick={() => {
                      setDataStock(prevDataStock => ({
                         ...prevDataStock,
-                        fk_movimiento: 1
+                        fk_movimiento: 1,
+                        detalles: [{
+                           ...prevDataStock.detalles[0],
+                           Usuario_recibe: user.codigo,
+                        }]
                      }));
+                     console.log(dataStock);
                      onOpenStock()
                   }}>Registrar Ingreso</button>
                   <button className='bg-red-700 hover:bg-red-800 h-10 px-2 rounded text-white font-semibold' onClick={() => {
                      setDataStock(prevDataStock => ({
                         ...prevDataStock,
-                        fk_movimiento: 2
+                        fk_movimiento: 2,
+                        detalles: [{
+                           ...prevDataStock.detalles[0],
+                           Usuario_entrega: user.codigo,
+                        }]
                      }));
                      onOpenStock()
                   }}>Registrar Salida</button>
@@ -429,7 +436,6 @@ export const Movimientos2 = () => {
                   )}
                </ModalContent>
             </Modal>
-
             <Modal
                isOpen={isOpenStock}
                onClose={onCloseStock}
@@ -440,7 +446,7 @@ export const Movimientos2 = () => {
                <ModalContent>
                   {(onCloseStock) => (
                      <>
-                        <ModalHeader className="flex flex-col gap-1 text-green-700 font-bold">Registrar Ingreso</ModalHeader>
+                        <ModalHeader className={`flex flex-col gap-1 ${dataStock.fk_movimiento == 1 ? 'text-green-700' : 'text-red-700'} font-bold`}>{dataStock.fk_movimiento == 1 ? 'Registrar Ingreso' : 'Registrar Salida'}</ModalHeader>
                         <ModalBody>
                            <form action="" className='flex flex-col'>
                               <div className='flex gap-6 justify-center mb-3'>
@@ -449,7 +455,7 @@ export const Movimientos2 = () => {
                                     placeholder="Busca un elemento"
                                     isRequired
                                     variant="underlined"
-                                    className='w-[60%] h-[60px]'
+                                    className='w-[75%] h-[60px]'
                                     onSelectionChange={(value) => {
                                        const element = value;
                                        setDataStock(prevDataStock => ({
@@ -500,19 +506,56 @@ export const Movimientos2 = () => {
                                  />
                               </div>
                               <div className='flex gap-6 justify-center'>
+                              {
+                                    dataStock.fk_movimiento == 2 && (
+                                       <Autocomplete
+                                          label="Tipo Salida"
+                                          placeholder="Tipo Salida"
+                                          isRequired
+                                          variant="underlined"
+                                          className='w-[25%] h-[60px]'
+                                          /* onSelectionChange={(value) => {
+                                             const element = value;
+                                             setDataStock(prevDataStock => ({
+                                                ...prevDataStock,
+                                                detalles: [{
+                                                   ...prevDataStock.detalles[0],
+                                                   fk_elemento: element
+                                                }]
+                                             }));
+
+                                             console.log(dataStock)
+                                          }} */
+                                       >
+                                             <AutocompleteItem
+                                                key='asignacion'
+                                                value= '1'
+                                             >
+                                                Asignación
+                                             </AutocompleteItem>
+                                             <AutocompleteItem
+                                                key='prestamo'
+                                                value= '2'
+                                             >
+                                                Préstamo
+                                             </AutocompleteItem>
+                                       </Autocomplete>
+                                    )
+                                 }
                                  <Autocomplete
                                     label="Seleccione un usuario"
                                     placeholder="Busca un usuario"
                                     isRequired
                                     variant="underlined"
-                                    className='w-[20%]'
+                                    className='w-[30%]'
                                     onSelectionChange={(value) => {
                                        handleUsuarioSeleccionado(parseInt(value))
                                        setDataStock(prevDataStock => ({
                                           ...prevDataStock,
                                           detalles: [{
                                              ...prevDataStock.detalles[0],
-                                             Usuario_entrega: value,
+                                             [prevDataStock.fk_movimiento === 2 ? 'Usuario_recibe' : 'Usuario_entrega']: value,
+                                             
                                           }]
                                        }));
 
@@ -528,7 +571,7 @@ export const Movimientos2 = () => {
                                        </AutocompleteItem>
                                     ))}
                                  </Autocomplete>
-                                 <label className='flex pl-5 items-center w-[60%]'>{usuarioSeleccionado ? usuarioSeleccionado.nombre_usuario + ' ' + usuarioSeleccionado.apellido_usuario : ''}</label>
+                                 <label className='flex pl-5 items-center w-[40%]'>{usuarioSeleccionado ? usuarioSeleccionado.nombre_usuario + ' ' + usuarioSeleccionado.apellido_usuario : ''}</label>
                               </div>
                            </form>
                         </ModalBody>
@@ -544,7 +587,6 @@ export const Movimientos2 = () => {
                   )}
                </ModalContent>
             </Modal>
-
             <Table
                aria-label="Lista de Empaques"
                bottomContent={
@@ -583,9 +625,6 @@ export const Movimientos2 = () => {
                               style={{ fontSize: '15px' }}>
                               Info
                            </Button>
-                           <Button color="danger" className='font-semibold bg-[#BF2A50] hover:bg-[#BF2A50]' onClick={() => { desactivarElementos(elemento.Codigo) }} style={{ fontSize: '15px' }}>
-                              Desactivar
-                           </Button>
                         </TableCell>
                      </TableRow>
                   ))}
@@ -596,4 +635,4 @@ export const Movimientos2 = () => {
    )
 }
 
-//Debo Realizar un movimineto de prestamo, este movimiento tiene estados de entrega o en prestamo, se listan los que tienen el estado en prestamo para saber cuantos elementos en total hay prestados, sobre estos se hacen los calculos  
+//Debo Realizar un movimineto de préstamo, este movimiento tiene estados de entrega o en prestamo, se listan los que tienen el estado en prestamo para saber cuantos elementos en total hay prestados, sobre estos se hacen los cálculos  
