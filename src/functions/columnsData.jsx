@@ -1,64 +1,77 @@
+import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
-import { Switch } from "@nextui-org/react";
+import { Switch, Button } from "@nextui-org/react";
 import { DesactivarCategorias } from "./Desactivar";
 
-export const columnsCategorias = [
-    {
-        name: "codigo_Categoria",
-        label: "Código",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: "Nombre_Categoria",
-        label: "Nombre",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: "estado",
-        label: "Estado",
-    },
-    {
-        name: "fecha_creacion",
-        label: "Creación",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: 'options',
-        label: 'Opciones',
-        options: {
-            customBodyRender: (value, tableMeta, updateValue) => {
-                const codigoCategoria = tableMeta.rowData[0];
-                const estado = tableMeta.rowData[2];
-                const isActive = estado === 'Activo';
+export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "codigo_Categoria",
+    label: "Código",
+  },
+  {
+    name: "Nombre_Categoria",
+    label: "Nombre",
+  },
+  {
+    name: "fecha_creacion",
+    label: "Creación",
+  },
+  {
+    name: "estado",
+    label: "Estado",
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[3] === "Activo";
 
-                const handleSwitchChange = async () => {
-                    const nuevoEstado = isActive ? 'Inactivo' : 'Activo';
-                    await DesactivarCategorias(codigoCategoria, nuevoEstado);
-                    updateValue(nuevoEstado); // Actualiza el estado en la tabla.
-                };
+        const handleEstado = async () => {
+          const codigoCategoria = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarCategorias(codigoCategoria, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
 
-                return (
-                    <div className='flex justify-center items-center gap-3 text-xl'>
-                        <Switch
-                            isSelected={isActive} // El switch se selecciona cuando es 'Activo'
-                            onChange={handleSwitchChange} // Cambia el estado
-                        />
-                        <button>
-                            <FaPencilAlt />
-                        </button>
-                    </div>
-                );
-            },
-            filter: false,
-        },
+        const handleEdit = () => {
+            setIsOpenUpdate(true);
+            const data = {
+              codigo: rowData[0],
+              nombre: rowData[1],
+            };
+            setSelectedCategory(data);
+          };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
     },
+  },
 ];
+
+
+
 
 
 export const columnsEmpaques = [

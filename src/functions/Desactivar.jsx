@@ -1,11 +1,13 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import axios from 'axios';
-import { ListarCategorias } from './Listar';
+import axiosClient from '../components/config/axiosClient';
 
-export const DesactivarCategorias = async (codigo_Categoria, estado) => {
+
+export const DesactivarCategorias = async (codigoCategoria, nuevoEstado) => {
     try {
-        await axios.put(`http://localhost:3000/categoria/desactivar/${codigo_Categoria}`);
-        ListarCategorias();
+        // Realiza la solicitud para desactivar/activar la categoría
+        await axiosClient.put(`categoria/desactivar/${codigoCategoria}`, { estado: nuevoEstado });
+
     } catch (error) {
         console.error("Error al desactivar la categoría:", error);
     }

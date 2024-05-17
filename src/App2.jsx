@@ -28,6 +28,7 @@ function App2() {
     const [user, setUser] = useState({role: ""})
 
     return (
+
         <Routes >
             <Route index element={<Navigate to="/login"/>}/>
             <Route path='/*' element={<PageNotFound/>}/>
