@@ -14,7 +14,6 @@ export const TableGeneral = ({ funcionListar, columns, title, updateTable, setIs
     listar();
   }, [updateTable]);
 
-
   const options = {
     rowsPerPageOptions: [4, 10, 15],
     rowsPerPage: rowsPerPage,

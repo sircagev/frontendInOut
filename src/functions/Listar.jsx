@@ -36,7 +36,7 @@ export const ListarTipo = async () => {
     } catch (error) {
         console.log(error);
     }
-}
+  }
 
 export const ListarCategorias = async () => {
     try {
@@ -46,34 +46,33 @@ export const ListarCategorias = async () => {
     } catch (error) {
         console.log(error);
     }
-}
+  }
 
-export const Listarubicacion = async () => {
+ export const Listarubicacion = async () => {
     try {
         const response = await axios.get('http://localhost:3000/ubicacion/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
-}
+  }
 
-export const ListarEmpaques = async () => {
+ export const ListarEmpaques = async () => {
     try {
      const response = await axiosClient.get('empaque/listar')
       return response.data
-
     } catch (error) {
         console.log(error);
     }
-}
-export const ListarMedidas = async () => {
+  }
+  export const ListarMedidas = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/medida/listar')
-        return response.data
+     const response = await axios.get('http://localhost:3000/medida/listar')
+      return response.data
     } catch (error) {
         console.log(error);
     }
-}
+  } 
 
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);

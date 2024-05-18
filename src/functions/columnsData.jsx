@@ -70,11 +70,7 @@ export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) 
   },
 ];
 
-
-
-
-
-export const columnsEmpaques = [
+export const columnsEmpaques = (listar, setIsOpenUpdate, setSelectedCategory) => [
     {
         name: "codigo_Empaque",
         label: "Codigo",
