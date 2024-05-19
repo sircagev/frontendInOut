@@ -222,6 +222,89 @@ export const columnsMedidas = (listar, setIsOpenUpdate, setSelectedCategory) => 
   }
 ];
 
+export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "codigo_Detalle",
+    label: "Codigo",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: "Nombre_ubicacion",
+    label: "Nombre",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: "Nombre_bodega",
+    label: "Bodega",
+  },
+  {
+    name: "fecha_creacion",
+    label: "creacion",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: "estado",
+    label: "Estado",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[4] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoMedida = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarMedida(codigoMedida, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
+          };
+          setSelectedCategory(data);
+        };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+      filter: false
+    }
+  }
+];
+
 export const columnsPrestamos = [
     {
         name: "Codigo",

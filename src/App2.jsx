@@ -8,6 +8,7 @@ import { Empaques } from "./view/Empaques";
 import { Medida } from "./view/Medida";
 import { Medidas } from "./view/Medidas";
 import { Ubicacion } from "./view/Ubicacion";
+import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
 import ReporteU from "./view/ReporteUsuario";
 import ReporteE from "./view/ReporteElemento";
@@ -48,7 +49,7 @@ function App2() {
                     <Route path="/reportes/movimientos" element={<ReporteM />} />
                     <Route path="/bodegas" element={<Bodega user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
-                    <Route path="/bodegas/ubicacion" element={<Ubicacion user={user}/>} />
+                    <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user}/>} />
                     <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
                 </Route>
             </Routes>

@@ -74,6 +74,27 @@ export const ListarCategorias = async () => {
     }
   } 
 
+  export const Listarbodegas = async () => {
+    try {
+        const response = await axios.get('http://localhost:3000/bodega/listar')
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+  export const ListarUbicacionesYBodegas = async () => {
+    try {
+        const [ubicaciones, bodegas] = await Promise.all([
+            Listarubicacion(),
+            Listarbodegas()
+        ]);
+        return [...ubicaciones, ...bodegas];
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
