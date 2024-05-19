@@ -12,3 +12,13 @@ export const DesactivarCategorias = async (codigoCategoria, nuevoEstado) => {
         console.error("Error al desactivar la categoría:", error);
     }
 };
+
+export const DesactivarEmpaque = async (codigoEmpaque, nuevoEstado) => {
+    try {
+        // Realiza la solicitud para desactivar/activar el empaque
+        await axiosClient.put(`empaque/desactivar/${codigoEmpaque}`, { estado: nuevoEstado });
+
+    } catch (error) {
+        console.error("Error al desactivar el empaque:", error);
+    }
+};
