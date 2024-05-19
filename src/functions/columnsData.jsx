@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida } from "./Desactivar";
 
 export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
@@ -109,6 +109,82 @@ export const columnsEmpaques = (listar, setIsOpenUpdate, setSelectedCategory) =>
           const nuevoEstado = Active ? "Inactivo" : "Activo";
           try {
             await DesactivarEmpaque(codigoEmpaque, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
+          };
+          setSelectedCategory(data);
+        };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+      filter: false
+    }
+  }
+];
+
+export const columnsMedidas = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "codigo_medida",
+    label: "Codigo",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: "Nombre_Medida",
+    label: "Nombre",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: "fecha_creacion",
+    label: "Creacion",
+  },
+  {
+    name: "estado",
+    label: "Estado",
+    options: {
+      filter: false,
+    },
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[3] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoMedida = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarMedida(codigoMedida, nuevoEstado);
             updateValue(nuevoEstado);
             listar();
           } catch (error) {
