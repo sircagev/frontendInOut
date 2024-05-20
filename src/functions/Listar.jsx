@@ -89,11 +89,24 @@ export const ListarCategorias = async () => {
             Listarubicacion(),
             Listarbodegas()
         ]);
-        return [...ubicaciones, ...bodegas];
+
+        // Crear un mapa de bodegas para un acceso más rápido
+        const bodegasMap = bodegas.reduce((acc, bodega) => {
+            acc[bodega.codigo_Bodega] = bodega.Nombre_bodega; // Asume que la bodega tiene una propiedad 'id' y 'Nombre_bodega'
+            return acc;
+        }, {});
+
+        // Agregar el nombre de la bodega a cada ubicación
+        const ubicacionesConBodega = ubicaciones.map(ubicacion => ({
+            ...ubicacion,
+            Nombre_bodega: bodegasMap[ubicacion.fk_bodega] // Asume que ubicacion tiene una propiedad 'bodegaId'
+        }));
+
+        return ubicacionesConBodega;
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);

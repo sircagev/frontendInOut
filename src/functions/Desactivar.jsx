@@ -32,3 +32,13 @@ export const DesactivarMedida = async (codigoMedida, nuevoEstado) => {
         console.error("Error al desactivar la medida:", error);
     }
 };
+
+export const DesactivarUbicacion = async (codigoUbicacion, nuevoEstado) => {
+    try {
+        // Realiza la solicitud para desactivar/activar el empaque
+        await axiosClient.put(`ubicacion/desactivar/${codigoUbicacion}`, { estado: nuevoEstado });
+
+    } catch (error) {
+        console.error("Error al desactivar la medida:", error);
+    }
+};

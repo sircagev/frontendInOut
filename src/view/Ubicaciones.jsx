@@ -4,7 +4,11 @@ import { ListarUbicacionesYBodegas } from "../functions/Listar";
 import { columnsUbicacion } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
 import { ModalGeneral } from "../components/Modal";
+import { FormDataUbicacion } from "../functions/Register/FormDataUbicacion";
 import { Modalupdatel } from "../components/ModalUpdate";
+import { FormUpdateUbicacion } from "../functions/Update/UpdateElemento/FormUpdateUbicacion";
+FormUpdateUbicacion
+
 
 export const Ubicaciones = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -19,12 +23,25 @@ export const Ubicaciones = () => {
     return (
       <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
         <div className="w-[90%] flex justify-end">
-          <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Categoría"} onClick={() => setIsOpen(true)} />
+          <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Ubicación"} onClick={() => setIsOpen(true)} />
         </div>
+        <ModalGeneral
+         isOpen={isOpen}
+         onClose={() => setIsOpen(false)}
+         form={<FormDataUbicacion onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
+         title={"Registrar Ubicación"}
+        />
+        <Modalupdatel
+         title={"Actualizar Ubicación"}
+         isOpen={isOpenUpdate}
+         onClose={() => setIsOpenUpdate(false)}
+         formUpdate={<FormUpdateUbicacion onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCatego
+        />
         <TableGeneral
-          funcionListar={ListarUbicacionesYBodegas}
-          columns={columnsUbicacion}
-          title={"Lista de Categorías"}
+         funcionListar={ListarUbicacionesYBodegas}
+         columns={(listar) => columnsUbicacion(listar, setIsOpenUpdate, setSelectedCategory)}
+         title={"Lista de Categorías"}
+         updateTable={updateTable}
         />
       </div>
     );

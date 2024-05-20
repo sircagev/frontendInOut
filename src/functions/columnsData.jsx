@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion } from "./Desactivar";
 
 export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
@@ -264,10 +264,10 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
         const Active = rowData[4] === "Activo";
 
         const handleEstado = async () => {
-          const codigoMedida = rowData[0];
+          const codigoUbicacion = rowData[0];
           const nuevoEstado = Active ? "Inactivo" : "Activo";
           try {
-            await DesactivarMedida(codigoMedida, nuevoEstado);
+            await DesactivarUbicacion(codigoUbicacion, nuevoEstado);
             updateValue(nuevoEstado);
             listar();
           } catch (error) {
@@ -280,6 +280,7 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
           const data = {
             codigo: rowData[0],
             nombre: rowData[1],
+            nombreBodega: rowData[2],
           };
           setSelectedCategory(data);
         };
