@@ -51,6 +51,7 @@ function App2() {
                     <Route path="/reportes" element={<Reporte />} />
                     <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user}/>} />
                     <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
+                    <Route path="/movimientos/prestamos" element={<Prestamos user={user}/>} />
                 </Route>
             </Routes>
         </div>
