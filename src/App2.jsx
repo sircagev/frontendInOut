@@ -15,8 +15,9 @@ import ReporteM from "./view/ReporteMovimiento";
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
-import Bodega from "./view/Bodegas"
-import Reporte from "./view/Reportes"
+import Bodega from "./view/Bodegas";
+import Reporte from "./view/Reportes";
+import Home from "./view/Home";
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
 import { PageNotFound } from './view/PageNotFound';
 import { Prestamos } from './view/Prestamos';
@@ -35,7 +36,7 @@ function App2() {
                 <Login setLoggedIn={setLoggedIn} />
             </ProtectedRoutesLogin>} />
             <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser}/>} >
-                <Route path="/home" element={<h1>Home</h1>} />
+                <Route path="/" element={<h1>Home</h1>} />
                 <Route path="/elementos" element={<Elementos user={user} />} />
                 <Route path="/elementos/categorias" element={<Categorias user={user} />} />
                 <Route path="/elementos/empaques" element={<Empaque user={user} />} />
@@ -50,6 +51,7 @@ function App2() {
                 <Route path="/bodegas/ubicacion" element={<Ubicacion user={user}/>} />
                 <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
                 <Route path="/movimientos/prestamos" element={<Prestamos user={user}/>} />
+                <Route path="/home" element={<Home user={user}/>} />
             </Route>
         </Routes>
     );

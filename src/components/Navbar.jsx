@@ -37,6 +37,7 @@ export const Navbar = ({ setLogIn }) => {
    }, []);
 
    return (
+     
       <div className='w-full flex items-center justify-between h-[100px] bg-[#D9DADF text-white'>
          <div className='flex items-center gap-4'>
             <img src={logo} className='w-[60px] h-auto ml-10' alt="" />
