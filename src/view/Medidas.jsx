@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { ListarCategorias } from "../functions/Listar";
-import { columnsCategorias } from "../functions/columnsData";
+import { ListarCategorias, ListarMedidas } from "../functions/Listar";
+import { columnsMedidas } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
 import { ModalGeneral } from "../components/Modal";
-import { FormData } from "../functions/FormData";
+import { FormDataMedida } from "../functions/Register/FormDataMedida";
 import { Modalupdatel } from "../components/ModalUpdate";
-import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
+import { FormUpdateMedida } from "../functions/Update/UpdateElemento/FormUpdateMedida";
 
-export const Categoria = () => {
+export const Medidas = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [updateTable, setUpdateTable] = useState(false);
@@ -26,18 +26,18 @@ export const Categoria = () => {
       <ModalGeneral
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Categoría"}
+        form={<FormDataMedida onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
+        title={"Registrar Medida"}
       />
       <Modalupdatel
-        title={"Actualizar Categoría"}
+        title={"Actualizar Medida"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        formUpdate={<FormUpdateMedida onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral
-        funcionListar={ListarCategorias}
-        columns={(listar) => columnsCategorias(listar, setIsOpenUpdate, setSelectedCategory)} 
+        funcionListar={ListarMedidas}
+        columns={(listar) => columnsMedidas(listar, setIsOpenUpdate, setSelectedCategory)}
         title={"Lista de Categorías"}
         updateTable={updateTable}
       />

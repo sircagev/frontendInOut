@@ -4,13 +4,13 @@ import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-export const FormData = ( {onRegisterSuccess, onClose} ) => {
-
+export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
+    
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Categoria: "",
+            Nombre_Medida: "",
         }
     )
 
@@ -26,7 +26,7 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Categoria.trim() || /\d/.test(values.Nombre_Categoria.trim())) {
+        if (!values.Nombre_Medida.trim() || /\d/.test(values.Nombre_Medida.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -34,13 +34,13 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/categoria/registrar', values);
+            const response = await axios.post('http://localhost:3000/medida/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Categoria: '' });
+                setValues({ Nombre_Medida: '' });
                 swal({
                     title: "Registro exitoso",
-                    text: "La categoría se ha registrado correctamente.",
+                    text: "La medida se ha registrado correctamente.",
                     icon: "success",
                     buttons: false,
                     timer: 2000, 
@@ -62,9 +62,9 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
                     <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
-                            label='Nombre Categoría'
-                            name='Nombre_Categoria'
-                            value={values.Nombre_Categoria}
+                            label='Nombre_Medida'
+                            name='Nombre_Medida'
+                            value={values.Nombre_Medida}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
