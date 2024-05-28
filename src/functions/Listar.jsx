@@ -90,7 +90,6 @@ export const ListarCategorias = async () => {
             Listarbodegas()
         ]);
 
-        // Crear un mapa de bodegas para un acceso más rápido
         const bodegasMap = bodegas.reduce((acc, bodega) => {
             acc[bodega.codigo_Bodega] = bodega.Nombre_bodega; // Asume que la bodega tiene una propiedad 'id' y 'Nombre_bodega'
             return acc;

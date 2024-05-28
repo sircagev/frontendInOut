@@ -81,7 +81,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                             name="fk_bodega"
                             value={values.fk_bodega}
                             onChange={handleInputChange}
-                            className="w-[100%] h-[55px] bg-[#e4e4e7] pl-3 rounded-[12px]"
+                            className="w-[100%] h-[55px] bg-[#e4e4e7] pl-3 rounded-[12px] text-[15px]"
                         >
                             <option value="">Selecciona una bodega</option>
                             {bodegas.map(bodega => (

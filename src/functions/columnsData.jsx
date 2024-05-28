@@ -1,7 +1,81 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento } from "./Desactivar";
+
+export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "Codigo_elemento",
+    label: "Código",
+  },
+  {
+    name: "Nombre_elemento",
+    label: "Nombre",
+  },
+  {
+    name: "stock",
+    label: "Cantidad",
+  },
+  {
+    name: "fecha_creacion",
+    label: "Fecha",
+  },
+  {
+    name: "fk_tipoElemento",
+    label: "Tipo",
+  },
+  {
+    name: "fk_unidadMedida",
+    label: "Medida",
+  },
+  {
+    name: "fk_categoria",
+    label: "Categoria",
+  },
+  {
+    name: "fk_tipoEmpaque",
+    label: "Tipo",
+  },
+  {
+    name: "fk_detalleUbicacion",
+    label: "Tipo",
+  },
+  {
+    name: "Estado",
+    label: "Estado",
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[9] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoElemento = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarElemento(codigoElemento, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+          </div>
+        );
+    },
+  },
+  },
+];
 
 export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
@@ -238,7 +312,7 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
     },
   },
   {
-    name: "Nombre_bodega",
+    name: "fk_bodega",
     label: "Bodega",
   },
   {

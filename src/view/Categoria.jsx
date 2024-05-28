@@ -38,7 +38,7 @@ export const Categoria = () => {
       <TableGeneral
         funcionListar={ListarCategorias}
         columns={(listar) => columnsCategorias(listar, setIsOpenUpdate, setSelectedCategory)} 
-        title={"Lista de Categorías"}
+        title={"Listar de Categorías"}
         updateTable={updateTable}
       />
     </div>

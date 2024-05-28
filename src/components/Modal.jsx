@@ -16,7 +16,7 @@ export const ModalGeneral = ({isOpen, onClose, form, title}) => {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
+                            <ModalHeader className="w-[90%] ml-[5%]">{title}</ModalHeader>
                             <ModalBody>
                                 {form}
                             </ModalBody>

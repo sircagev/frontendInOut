@@ -7,7 +7,6 @@ import { ModalGeneral } from "../components/Modal";
 import { FormDataUbicacion } from "../functions/Register/FormDataUbicacion";
 import { Modalupdatel } from "../components/ModalUpdate";
 import { FormUpdateUbicacion } from "../functions/Update/UpdateElemento/FormUpdateUbicacion";
-FormUpdateUbicacion
 
 
 export const Ubicaciones = () => {
@@ -40,7 +39,7 @@ export const Ubicaciones = () => {
         <TableGeneral
          funcionListar={ListarUbicacionesYBodegas}
          columns={(listar) => columnsUbicacion(listar, setIsOpenUpdate, setSelectedCategory)}
-         title={"Lista de Categorías"}
+         title={"Lista de Ubicaciones"}
          updateTable={updateTable}
         />
       </div>
