@@ -92,6 +92,11 @@ export const Sidebar = ({ state, setState }) => {
         },
       ]
     },
+    {
+      icon: ImUsers,
+      label: " Vista Usuarios",
+      to: "/home"
+    }
   ];
 
 

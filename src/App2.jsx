@@ -17,8 +17,9 @@ import ReporteM from "./view/ReporteMovimiento";
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
-import Bodega from "./view/Bodegas"
-import Reporte from "./view/Reportes"
+import Bodega from "./view/Bodegas";
+import Reporte from "./view/Reportes";
+import Home from "./view/Home";
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
 import { PageNotFound } from './view/PageNotFound';
 import { Prestamos } from './view/Prestamos';
@@ -30,14 +31,16 @@ function App2() {
     const [user, setUser] = useState({role: ""})
 
     return (
-        <div className="h-screen">
+    
+      <div className="h-screen">
             <Routes >
                 <Route index element={<Navigate to="/login"/>}/>
+                <Route path='/*' element={<PageNotFound/>}/>
                 <Route path="/login" element={<ProtectedRoutesLogin>
                     <Login setLoggedIn={setLoggedIn} />
                 </ProtectedRoutesLogin>} />
                 <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser}/>} >
-                    <Route path="/home" element={<h1>Home</h1>} />
+                    <Route path="/home" element={<Home user={user}/>} />
                     <Route path="/elementos" element={<Elementos user={user} />} />
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
@@ -55,6 +58,7 @@ function App2() {
                 </Route>
             </Routes>
         </div>
+
     );
 }
 
