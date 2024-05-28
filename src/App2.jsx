@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Elementos } from "./view/Elementos";
+import { Elementos } from "./view/Elementos"
+import { Elemento } from "./view/Elemento";
 import { Categorias } from "./view/Categorias";
 import { Categoria } from "./view/Categoria";
 import { Empaque } from "./view/Empaque";
@@ -21,7 +22,7 @@ import Bodega from "./view/Bodegas"
 import Reporte from "./view/Reportes"
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
 import { PageNotFound } from './view/PageNotFound';
-import { Prestamos } from './view/Prestamos';
+import { Prestamos } from './view/Prestamos'
 
 
 function App2() {
@@ -38,7 +39,7 @@ function App2() {
                 </ProtectedRoutesLogin>} />
                 <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser}/>} >
                     <Route path="/home" element={<h1>Home</h1>} />
-                    <Route path="/elementos" element={<Elementos user={user} />} />
+                    <Route path="/elementos" element={<Elemento user={user} />} />
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
                     <Route path="/elementos/medidas" element={<Medidas user={user}/>} />

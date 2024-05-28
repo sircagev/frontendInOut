@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MUIDataTable from "mui-datatables";
 
-export const TableGeneral = ({ funcionListar, columns, title, updateTable, setIsOpenUpdate }) => {
+export const TableGeneral = ({ funcionListar, columns, title, updateTable }) => {
   const [data, setData] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(4);
 
@@ -20,11 +20,12 @@ export const TableGeneral = ({ funcionListar, columns, title, updateTable, setIs
     onChangeRowsPerPage: (newRowsPerPage) => {
       setRowsPerPage(newRowsPerPage);
     },
-    customBodyRender: (value) => <div className="text-center">{value}</div>
+    customBodyRender: (value) => <div className="text-center">{value}</div>,
+    selectableRows: 'none' // Desactivar selección de filas
   };
 
   return (
-    <div className='w-[90%] h-screen flex flex-col'>
+    <div className='w-[95%] h-screen flex flex-col'>
       <div>
         <MUIDataTable
           title={title}

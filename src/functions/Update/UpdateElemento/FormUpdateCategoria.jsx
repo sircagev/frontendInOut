@@ -27,33 +27,33 @@ export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) =>
     }
   };
 
-  return (
-    <div>
+    return (
       <div>
         <div>
-          <form onSubmit={handleSubmit}>
-            <div className='flex justify-center items-center'></div>
-            <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
-              <Input
-                type='text'
-                label='Nombre Categoría'
-                className="w-[100%]"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-              />
-            </div>
-            <div className='flex justify-end gap-3 mb-3'>
-              <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button className='font-bold text-white' color="success" type='submit'>
-                Actualizar
-              </Button>
-            </div>
-          </form>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className='flex justify-center items-center'></div>
+              <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+                <Input
+                  type='text'
+                  label='Nombre Categoría'
+                  className="w-[100%]"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                />
+              </div>
+              <div className='flex justify-end gap-3 mb-3'>
+                <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button className='font-bold text-white' color="success" type='submit'>
+                  Actualizar
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
