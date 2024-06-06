@@ -7,38 +7,74 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
   {
     name: "Codigo_elemento",
     label: "Código",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "Nombre_elemento",
     label: "Nombre",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "stock",
     label: "Cantidad",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fecha_creacion",
     label: "Fecha",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_tipoElemento",
     label: "Tipo",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_unidadMedida",
     label: "Medida",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_categoria",
     label: "Categoria",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_tipoEmpaque",
-    label: "Tipo",
+    label: "Empaque",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_detalleUbicacion",
-    label: "Tipo",
+    label: "Ubicación",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "Estado",
@@ -64,12 +100,35 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
             console.log(error);
           }
         };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1], 
+            tipo: rowData[4],
+            medida: rowData[5],
+            categoria: rowData[6],
+            empaque: rowData[7],
+            ubicacion: rowData[8],
+          }
+          console.log(data);
+          setSelectedCategory(data);
+          console.log(data);
+        };
         return (
-          <div>
+          <div className='flex'>
             <Switch
               isSelected={Active}
               onChange={handleEstado}
             />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
           </div>
         );
     },
@@ -356,6 +415,7 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
             nombre: rowData[1],
             nombreBodega: rowData[2],
           };
+          console.log(data)
           setSelectedCategory(data);
         };
 
