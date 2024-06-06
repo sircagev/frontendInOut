@@ -69,8 +69,8 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
                             className="w-[100%]"
                         />
                         {errorMessage && (
-                            <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                                <FaExclamationCircle className="mr-1" />
+                            <div className="flex items-center gap-2 text-red-500 text-xs mt-2 ml-3">
+                                <FaExclamationCircle className="" />
                                 {errorMessage}
                             </div>
                         )}

@@ -16,7 +16,7 @@ export const ModalGeneral = ({isOpen, onClose, form, title}) => {
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="w-[90%] ml-[5%]">{title}</ModalHeader>
+                            <ModalHeader>{title}</ModalHeader>
                             <ModalBody>
                                 {form}
                             </ModalBody>

@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import axios from 'axios';
 import swal from 'sweetalert';
+import { FaExclamationCircle } from 'react-icons/fa';
 
-export const FormUpdateEmpaque = ({onClose, category, onRegisterSuccess}) => {
+export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
+  
   const [nombre, setNombre] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (category) {
@@ -14,6 +17,14 @@ export const FormUpdateEmpaque = ({onClose, category, onRegisterSuccess}) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!nombre.trim() || /\d/.test(nombre.trim())) {
+      setErrorMessage('No debe estar vacío ni tener números.');
+      return;
+    } else {
+      setErrorMessage('');
+    }
+
     try {
       await axios.put(`http://localhost:3000/empaque/actualizar/${category.codigo}`, {
         Nombre_Empaque: nombre,
@@ -41,6 +52,12 @@ export const FormUpdateEmpaque = ({onClose, category, onRegisterSuccess}) => {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
               />
+              {errorMessage && (
+                <div className="flex items-center gap-2 text-red-500 text-xs mt-2 ml-3">
+                  <FaExclamationCircle className="" />
+                  {errorMessage}
+                </div>
+              )}
             </div>
             <div className='flex justify-end gap-3 mb-3'>
               <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
