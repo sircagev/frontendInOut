@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
-import axios from 'axios';
+import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 
@@ -30,7 +30,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
   const BodegasListar = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/bodega/listar');
+      const response = await axiosCliente.get('bodega/listar');
       setBodegas(response.data);
     } catch (error) {
       console.error("Error fetching bodegas:", error);
@@ -65,7 +65,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     if (!validateForm()) return;
 
     try {
-      await axios.put(`http://localhost:3000/ubicacion/actualizar/${category.codigo}`, {
+      await axiosClient.put(`ubicacion/actualizar/${category.codigo}`, {
         Nombre_ubicacion: values.nombre,
         fk_bodega: values.nombreBodega,
       });

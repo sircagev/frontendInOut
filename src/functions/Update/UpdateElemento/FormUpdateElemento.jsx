@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/select";
-import axios from 'axios';
+import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubicacion } from '../../Listar';
 
@@ -57,7 +57,7 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.put(`http://localhost:3000/elemento/actualizar/${category.codigo}`, {
+      await axiosClient.put(`elemento/actualizar/${category.codigo}`, {
         Nombre_elemento: nombre,
         fk_tipoElemento: tipo,
         fk_unidadMedida: medida,

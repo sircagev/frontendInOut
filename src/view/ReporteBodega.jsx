@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { BiPrinter, BiSearch } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
@@ -9,7 +9,7 @@ const Bodega = () => {
 
   const ListarBodegas = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/bodega/listar');
+      const response = await axiosClient.get('bodega/listar');
       setBodegas(response.data);
     } catch (error) {
       console.error("Error al obtener la lista de bodegas:", error);

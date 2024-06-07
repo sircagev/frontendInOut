@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+import axiosClient from '../../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
@@ -114,7 +114,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
     if (hasError) return;
 
     try {
-      const response = await axios.post('http://localhost:3000/elemento/registrar', values);
+      const response = await axiosClient.post('elemento/registrar', values);
       if (response.status === 200) {
 
         setValues({

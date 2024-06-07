@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination } from "@nextui-org/react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
@@ -52,7 +52,7 @@ const Bodega = ({user}) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/bodega/registrar', values);
+            const response = await axiosClient.post('bodega/registrar', values);
             if (response.status === 200) {
                 ListarBodegas();
                 onClose();
@@ -73,11 +73,11 @@ const Bodega = ({user}) => {
         try {
             let response;
             if (codigoBodega.trim() !== '') {
-                response = await axios.get(`http://localhost:3000/bodega/buscar/${codigoBodega}`);
+                response = await axiosClient.get(`bodega/buscar/${codigoBodega}`);
                 setBodegas(response.data || []);
             
             } else {
-                response = await axios.get('http://localhost:3000/bodega/listar');
+                response = await axiosClient.get('bodega/listar');
                 setBodegas(response.data || []);
             }
         } catch (error) {
@@ -101,7 +101,7 @@ const Bodega = ({user}) => {
         }).then(async (willReactivar) => {
             if (willReactivar) {
                 try {
-                    await axios.put(`http://localhost:3000/bodega/reactivar/${codigo_Bodega}`);
+                    await axiosClient.put(`bodega/reactivar/${codigo_Bodega}`);
                     ListarBodegas();
                     swal("¡Se ha reactivado correctamente!", {
                         icon: "success",
@@ -139,7 +139,7 @@ const Bodega = ({user}) => {
         }).then(async (willToggle) => {
             if (willToggle) {
                 try {   
-                    await axios.put(`http://localhost:3000/bodega/desactivar/${codigo_Bodega}`);
+                    await axiosClient.put(`bodega/desactivar/${codigo_Bodega}`);
                     ListarBodegas();
                     swal(`¡Se ha ${nuevoEstado === 'Activo' ? 'activado' : 'desactivado'} correctamente!`, {
                         icon: "success",
@@ -183,7 +183,7 @@ const Bodega = ({user}) => {
                 return;
             }
 
-            await axios.put(`http://localhost:3000/bodega/actualizar/${selectedBodega.codigo_Bodega}`, {
+            await axiosClient.put(`bodega/actualizar/${selectedBodega.codigo_Bodega}`, {
                 Nombre_bodega: editedBodega.Nombre_bodega,
                 ubicacion: editedBodega.ubicacion,
             });

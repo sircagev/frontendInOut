@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import {
    Table,
    TableHeader,
@@ -52,7 +52,7 @@ export const Movimientos2 = ({user}) => {
 
    //Guardar la información que se envia para ejecutar un cambio en el Stock
    const [dataStock, setDataStock] = useState({
-      usuario_solicitud: 1,
+      usuario_solicitud: user.codigo,
       fk_movimiento: '',
       Estado: null,
       detalles: [{
@@ -83,7 +83,7 @@ export const Movimientos2 = ({user}) => {
          nuevoDetalle.Movimiento = codigoMovimiento;
          console.log(nuevoDetalle)
 
-         const response = await axios.post(`http://localhost:3000/movimientos/${nuevoDetalle.Movimiento}/aniadirDetalle`, nuevoDetalle)
+         const response = await axiosClient.post(`movimientos/${nuevoDetalle.Movimiento}/aniadirDetalle`, nuevoDetalle)
 
          if (response.status === 200) {
             handleInfo(codigoMovimiento);
@@ -139,7 +139,7 @@ export const Movimientos2 = ({user}) => {
    //Buscar detalles de movimientos de un movimiento especifico mediante su ID
    const handleInfo = async (codigo) => {
       try {
-         const response = await axios.get(`http://localhost:3000/movimientos/${codigo}/detalles`);
+         const response = await axiosClient.get(`movimientos/${codigo}/detalles`);
          console.log(response);
          setCodigoMovimiento(codigo)
          setDetallesMovimiento(response.data.datos ? response.data.datos : []);
@@ -154,11 +154,11 @@ export const Movimientos2 = ({user}) => {
          let response;
          if (codigoMovimiento.trim() !== '') {
             // Realizar una solicitud específica para obtener un movimiento por su código
-            response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
+            response = await axiosClient.get(`movimientos/buscar/${codigoMovimiento}`);
             setMovimientos(response.data.Movimiento ? response.data.Movimiento : []);
          } else {
             // Obtener todos los movimientos si no se proporciona ningún código
-            response = await axios.get('http://localhost:3000/movimientos/listar');
+            response = await axiosClient.get('movimientos/listar');
             setMovimientos(response.data.datos || []);
          }
       } catch (error) {
@@ -187,7 +187,7 @@ export const Movimientos2 = ({user}) => {
       e.preventDefault();
       try {
          console.log(dataStock);
-         const response = await axios.post(`http://localhost:3000/movimientos/aniadirStock`, dataStock);
+         const response = await axiosClient.post(`movimientos/aniadirStock`, dataStock);
          console.log(response.data)
          listarMovimientos();
          setUsuarioSeleccionado(null)
