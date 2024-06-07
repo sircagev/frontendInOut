@@ -4,7 +4,7 @@ import axiosClient from '../components/config/axiosClient';
 
 export const ListarElementos = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/elemento/listar');
+        const response = await axiosClient.get('elemento/listar');
         return response.data
     } catch (error) {
         console.log(error);
@@ -13,7 +13,7 @@ export const ListarElementos = async () => {
 
 export const BuscarElemento = async (codigoElemento) => {
     try {
-        const response = await axios.get(`http://localhost:3000/elemento/buscar/${codigoElemento}`);
+        const response = await axiosClient.get(`elemento/buscar/${codigoElemento}`);
         return response.data
     } catch (error) {
         console.log(error);
@@ -22,7 +22,7 @@ export const BuscarElemento = async (codigoElemento) => {
 
 export const ListarUsuarios = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/usuario/listar');
+        const response = await axiosClient.get('usuario/listar');
         return response.data
     } catch (error) {
         console.log(error);
@@ -50,7 +50,7 @@ export const ListarCategorias = async () => {
 
  export const Listarubicacion = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/ubicacion/listar')
+        const response = await axiosClient.get('ubicacion/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -67,7 +67,7 @@ export const ListarCategorias = async () => {
   }
   export const ListarMedidas = async () => {
     try {
-     const response = await axios.get('http://localhost:3000/medida/listar')
+     const response = await axiosClient.get('medida/listar')
       return response.data
     } catch (error) {
         console.log(error);
@@ -76,7 +76,7 @@ export const ListarCategorias = async () => {
 
   export const Listarbodegas = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/bodega/listar')
+        const response = await axiosClient.get('bodega/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -122,7 +122,7 @@ export const convertirAMayusculas = (texto) => {
 
 export const ListarMovimientosSolicitados = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = [];
         datos.forEach(dato => {
@@ -139,7 +139,7 @@ export const ListarMovimientosSolicitados = async () => {
 export const BuscarMovimientosSolicitados = async (codigoMovimiento) => {
     try {
         // Realizar una solicitud específica para obtener un movimiento por su código
-        const response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
+        const response = await axiosClient.get(`movimientos/buscar/${codigoMovimiento}`);
         const data = response.data.Movimiento;
         console.log(data)
         const newData = [];
@@ -162,7 +162,7 @@ export const BuscarMovimientosSolicitados = async (codigoMovimiento) => {
 
 export const ListarMovimientosEnPrestamo = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {
@@ -178,7 +178,7 @@ export const ListarMovimientosEnPrestamo = async () => {
 
 export const ListarMovimientosCancelados = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {

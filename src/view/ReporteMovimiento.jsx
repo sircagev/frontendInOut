@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { BiSearch, BiPrinter } from 'react-icons/bi';
 
@@ -9,7 +9,7 @@ const Movimientos = () => {
 
   const listarMovimientos = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/movimientos/listar');
+      const response = await axiosClient.get('movimientos/listar');
       setMovimientos(response.data.datos);
       console.log(response.data.datos);
     } catch (error) {
