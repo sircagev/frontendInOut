@@ -18,7 +18,7 @@ import ReporteM from "./view/ReporteMovimiento";
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
-import Bodega from "./view/Bodegas";
+import Bodegas from "./view/Bodegas";
 import Reporte from "./view/Reportes";
 import Home from "./view/Home";
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
@@ -51,7 +51,7 @@ function App2() {
                     <Route path="/reportes/elementos" element={<ReporteE />} />
                     <Route path="/reportes/bodegas" element={<ReporteB />} />
                     <Route path="/reportes/movimientos" element={<ReporteM />} />
-                    <Route path="/bodegas" element={<Bodega user={user} />} />
+                    <Route path="/bodegas" element={<Bodegas user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
                     <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user}/>} />
                     <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
