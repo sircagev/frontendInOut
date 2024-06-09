@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega } from "./Desactivar";
 
 export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
@@ -180,6 +180,79 @@ export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) 
               codigo: rowData[0],
               nombre: rowData[1],
             };
+            setSelectedCategory(data);
+          };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+    },
+  },
+];
+
+export const columnsBodegas = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "codigo_Bodega",
+    label: "Código",
+  },
+  {
+    name: "Nombre_bodega",
+    label: "Nombre",
+  },
+  {
+    name: "ubicacion",
+    label: "Ubicación",
+  },
+  {
+    name: "fecha_creacion",
+    label: "Creación",
+  },
+  {
+    name: "Estado",
+    label: "Estado",
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[4] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoBodega = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarBodega(codigoBodega, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+            setIsOpenUpdate(true);
+            const data = {
+              codigo: rowData[0],
+              nombre: rowData[1],
+              ubicacion: rowData[2],
+            };
+            console.log(data);
             setSelectedCategory(data);
           };
 

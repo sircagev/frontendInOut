@@ -4,11 +4,12 @@ import { Listarbodegas } from "../functions/Listar";
 import { columnsBodegas } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
 import { ModalGeneral } from "../components/Modal";
+import { FormData } from "../functions/FormData";
 import { Modalupdatel } from "../components/ModalUpdate";
-import { FormDataBodega } from "../functions/Register/FormDataBodega";
-import { FormUpdateBodega } from "../functions/Update/UpdateBodega/FormUpdateBodega";
+import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
+import Bodega from "./ReporteBodega";
 
-const Bodegas = () => {
+const Categoria = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [updateTable, setUpdateTable] = useState(false);
@@ -21,29 +22,28 @@ const Bodegas = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
       <div className="w-[95%] flex justify-end">
-        <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Bodega"} onClick={() => setIsOpen(true)} />
+        <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Categoría"} onClick={() => setIsOpen(true)} />
       </div>
       <ModalGeneral
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormDataBodega onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Bodega"}
+        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
+        title={"Registrar Categoría"}
       />
       <Modalupdatel
-        title={"Actualizar Bodega"}
+        title={"Actualizar Categoría"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateBodega onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        formUpdate={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral
         funcionListar={Listarbodegas}
         columns={(listar) => columnsBodegas(listar, setIsOpenUpdate, setSelectedCategory)} 
-        title={"Lista de Bodegas"}
+        title={"Lista de Categorías"}
         updateTable={updateTable}
       />
     </div>
   );
-
 };
 
-export default Bodegas;
+export default Bodega;
