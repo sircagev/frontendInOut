@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
-import axios from 'axios';
+import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 
@@ -25,7 +25,7 @@ export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) =>
       setErrorMessage('');
     }
     try {
-      await axios.put(`http://localhost:3000/categoria/actualizar/${category.codigo}`, {
+      await axiosClient.put(`categoria/actualizar/${category.codigo}`, {
         Nombre_Categoria: nombre,
       });
       swal("Actualizado", "La categoría ha sido actualizada con éxito", "success");

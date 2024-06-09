@@ -43,6 +43,7 @@ const Bodegas = () => {
       />
     </div>
   );
+
 };
 
 export default Bodegas;

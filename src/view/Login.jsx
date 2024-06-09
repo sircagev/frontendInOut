@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
 import Swal from 'sweetalert2'; 
@@ -17,7 +18,7 @@ function Login({ setLoggedIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/validate/validar', {
+      const response = await axiosClient.post('validate/validar', {
         email_usuario: email,
         contraseña_usuario: password,
       });

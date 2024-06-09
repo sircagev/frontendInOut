@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/select";
 import swal from 'sweetalert';
@@ -19,7 +19,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
     useEffect(() => {
         const fetchBodegas = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/bodega/listar');
+                const response = await axiosClient.get('bodega/listar');
                 setBodegas(response.data);
             } catch (error) {
                 console.log(error);
@@ -64,7 +64,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
         if (!validateForm()) return;
 
         try {
-            const response = await axios.post('http://localhost:3000/ubicacion/registrar', values);
+            const response = await axiosClient.post('ubicacion/registrar', values);
             if (response.status === 200) {
                 setValues({ Nombre_ubicacion: '', fk_bodega: '' });
                 swal({
