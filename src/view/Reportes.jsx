@@ -1,51 +1,43 @@
-import React, { useState } from 'react';
-import Bodegas from './ReporteBodega';
-import Elemento from './ReporteElemento';
-import Movimientos from './ReporteMovimiento';
-import Usuario from './ReporteUsuario';
-import { ImUsers } from "react-icons/im";
-import { FaTools, FaPencilRuler } from "react-icons/fa";
-import { FaBoxesPacking, FaArrowRightArrowLeft } from "react-icons/fa6";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import elementosImg from "../assets/elementos.jpg";
+import usuariosImg from "../assets/usuarios.jpg";
+import bodegasImg from "../assets/bodegas.jpg";
+import movimientosImg from "../assets/movimientos.jpg";
 
 const Reportes = () => {
-  const [currentComponent, setCurrentComponent] = useState('Bodegas');
+  const navigate = useNavigate();
 
-  const buttonStyles = () => ({
-    className: "d-flex align-items-center bg-blue-500 w-[140px] text-[10] bg-blue-600 h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold mr-5 flex",
-  });
+  const buttonStyles = {
+    className: "flex flex-col m-2 items-center justify-center w-full h-full text-lg rounded font-sans text-sm uppercase text-green-800 shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold",
+  };
 
-  const renderComponent = () => {
-    switch (currentComponent) {
-      case 'Movimientos':
-        return <Movimientos />;
-      case 'Elemento':
-        return <Elemento />;
-      case 'Usuario':
-        return <Usuario />;
-      case 'Bodegas':
-        return <Bodegas />;
-      default:
-        return null;
-    }
+  const buttonImages = {
+    Elementos: { img: elementosImg, path: '/reportes/elementos' },
+    Usuarios: { img: usuariosImg, path: '/reportes/usuarios' },
+    Bodegas: { img: bodegasImg, path: '/reportes/bodegas' },
+    Movimientos: { img: movimientosImg, path: '/reportes/movimientos' },
   };
 
   return (
-    <div className="container">
-      <div className="mb-4 mt-4 d-flex ml-3">
-        <button {...buttonStyles()} onClick={() => setCurrentComponent('Elemento')}>
-          <FaPencilRuler className='mr-2 flex mt-1 text-lg ml-2'/> Elementos
+    <div className="container p-5 h-screen flex flex-wrap">
+      {Object.keys(buttonImages).map((key) => (
+        <button 
+          {...buttonStyles} 
+          key={key} 
+          onClick={() => navigate(buttonImages[key].path)} 
+          style={{ width: '48%', height: '48%' }}
+        >
+          <img 
+            src={buttonImages[key].img} 
+            alt={key} 
+            className="mb-2" 
+            style={{ width: '70%', height: '70%' }} 
+          />
+          {key}
         </button>
-        <button {...buttonStyles()} onClick={() => setCurrentComponent('Usuario')}>
-          <ImUsers className='mr-2 flex mt-1 text-lg ml-2'/> Usuarios
-        </button>
-        <button {...buttonStyles()} onClick={() => setCurrentComponent('Bodegas')}>
-          <FaBoxesPacking className='mr-2 flex mt-1 text-lg ml-2'/> Bodegas
-        </button>
-        <button {...buttonStyles()} onClick={() => setCurrentComponent('Movimientos')}>
-          <FaArrowRightArrowLeft className='mr-2 flex mt-1 text-lg ml-2'/> Movimientos
-        </button>
-      </div>
-      {renderComponent()}
+      ))}
     </div>
   );
 };

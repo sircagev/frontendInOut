@@ -26,13 +26,14 @@ const Usuario = () => {
     let filteredUsers = usuarios;
     if (searchTerm.trim() !== '') {
       filteredUsers = usuarios.filter(usuario =>
-        Object.values(usuario).some(value =>
-          value.toString().toLowerCase() === searchTerm.toLowerCase()
+        ['nombre_usuario', 'apellido_usuario', 'email_usuario', 'rol', 'numero', 'Id_ficha', 'Estado'].some(key =>
+          usuario[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
     }
     return filteredUsers;
   };
+  
 
   useEffect(() => {
     listarUsuarios();
@@ -45,7 +46,7 @@ const Usuario = () => {
           <Text style={styles.title}>Reporte de Usuarios</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableHeader}>Nombre</Text>              
+              <Text style={styles.tableHeader}>Nombre</Text>
               <Text style={styles.tableHeader}>Email</Text>
               <Text style={styles.tableHeader}>Rol</Text>
               <Text style={styles.tableHeader}>Teléfono</Text>
@@ -54,8 +55,8 @@ const Usuario = () => {
               <Text style={styles.tableHeader}>Fecha de registro</Text>
             </View>
             {buscarUsuarios().map(user => (
-              <View style={styles.tableRow} key={user.id_usuario}>                
-                <Text style={styles.tableCell}>{`${user.nombre_usuario} ${user.apellido_usuario}`}</Text>                
+              <View style={styles.tableRow} key={user.id_usuario}>
+                <Text style={styles.tableCell}>{`${user.nombre_usuario} ${user.apellido_usuario}`}</Text>
                 <Text style={styles.tableCell}>{user.email_usuario}</Text>
                 <Text style={styles.tableCell}>{user.rol}</Text>
                 <Text style={styles.tableCell}>{user.numero}</Text>
@@ -77,12 +78,13 @@ const Usuario = () => {
   const handlePrint = () => (
     <PDFDownloadLink document={<MyDocument />} fileName="usuarios.pdf">
       {({ loading }) => (
-        <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
-        text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
-        focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-        disabled:opacity-50 disabled:shadow-none font-semibold" onClick={handlePrint}>
-          <BiPrinter style={{ marginRight: '5px' }} />
-          {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+        <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
+          <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
+            <BiPrinter style={{ fontSize: '1.5em' }} />
+          </div>
+          <div className="text-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+          </div>
         </button>
       )}
     </PDFDownloadLink>
@@ -94,7 +96,7 @@ const Usuario = () => {
     return text.replace(regex, '<mark>$1</mark>');
   };
 
-  //Formato de fecha día/mes/año
+  // Formato de fecha día/mes/año
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
@@ -102,7 +104,7 @@ const Usuario = () => {
     const year = date.getFullYear().toString().substr(-2);
     return `${day}/${month}/${year}`;
   };
-  
+
   return (
     <div className="container">
       <h1 className="text-center mb-4 mt-4">Reporte de Usuarios</h1>
@@ -110,9 +112,7 @@ const Usuario = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
-            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
-            text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
-            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" onClick={handleSearch}>
+            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" onClick={handleSearch}>
               <BiSearch />
             </button>
             <input
@@ -132,7 +132,7 @@ const Usuario = () => {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Nombre</th>         
+            <th>Nombre</th>
             <th>Teléfono</th>
             <th>Id Ficha</th>
             <th>Fecha de Reserva</th>
@@ -148,7 +148,7 @@ const Usuario = () => {
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(`${user.nombre_usuario} ${user.apellido_usuario}`) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.numero.toString()) }}></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Id_ficha.toString()) }}></td>
-              <td style={{ textAlign: 'center' }}  dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(user.fecha_creacion)) }}></td>
+              <td style={{ textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(user.fecha_creacion)) }}></td>
               <td></td>
               <td></td>
               <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#000',
- 
     alignItems: 'center',
   },
   tableRow: {

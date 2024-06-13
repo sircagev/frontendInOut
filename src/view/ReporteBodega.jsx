@@ -7,17 +7,17 @@ const Bodega = () => {
   const [bodegas, setBodegas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const ListarBodegas = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/bodega/listar');
-      setBodegas(response.data);
-    } catch (error) {
-      console.error("Error al obtener la lista de bodegas:", error);
-    }
-  };
-
   useEffect(() => {
-    ListarBodegas();
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/reporte/elementosubicacion');
+        setBodegas(response.data); 
+      } catch (error) {
+        console.error("Error al obtener la información de bodegas:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const MyDocument = () => (
@@ -27,16 +27,22 @@ const Bodega = () => {
           <Text style={styles.title}>Reporte de Bodegas</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
+              <Text style={styles.tableHeader}>Bodega</Text>
+              <Text style={styles.tableHeader}>Elemento</Text>
               <Text style={styles.tableHeader}>Código</Text>
-              <Text style={styles.tableHeader}>Nombre</Text>
+              <Text style={styles.tableHeader}>Cantidad</Text>
               <Text style={styles.tableHeader}>Ubicación</Text>
             </View>
-            {bodegas.map(bodega => (
-              <View style={styles.tableRow} key={bodega.codigo_Bodega}>
-                <Text style={styles.tableCell}>{highlightSearchTerm(bodega.codigo_Bodega.toString())}</Text>
-                <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Nombre_bodega)}</Text>
-                <Text style={styles.tableCell}>{highlightSearchTerm(bodega.ubicacion)}</Text>
-              </View>
+            {Object.keys(bodegas).map(bodegaNombre => (
+              bodegas[bodegaNombre].map(bodega => (
+                <View style={styles.tableRow} key={`${bodegaNombre}_${bodega.Id_elemento}`}>
+                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Bodega)}</Text>
+                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Nombre_elemento)}</Text>
+                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Id_elemento.toString())}</Text>
+                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Stock  !== undefined ?bodega.Stock: '0')}</Text>
+                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Nombre_ubicacion)}</Text>
+                </View>
+              ))
             ))}
           </View>
         </View>
@@ -44,21 +50,22 @@ const Bodega = () => {
     </Document>
   );
 
-  const handlePrint = () => {
-    return (
+  const handlePrint = () => (
     <PDFDownloadLink document={<MyDocument />} fileName="bodegas.pdf">
-    {({ loading }) =>
-       <button className=" d-flex align-items-center bg-[#3D7948] w-[140px] text-[10] bg-gree h-[40px] rounded font-sans 
-       text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 
-       focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none
-       disabled:opacity-50 disabled:shadow-none font-semibold" onClick={handlePrint}>
-         <BiPrinter style={{ marginRight: '5px' }} />
-         {loading ? 'Cargando documento...' : 'Descargar Reporte'}
-       </button>
-    }
-  </PDFDownloadLink>
+      {({ loading }) =>
+        <button
+          className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold"
+        >
+          <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
+            <BiPrinter style={{ fontSize: '1.5em' }} />
+          </div>
+          <div className="text-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+            {loading ? 'Cargando documento...' : 'Descargar Reporte'}
+          </div>
+        </button>
+      }
+    </PDFDownloadLink>
   );
-};
 
   const highlightSearchTerm = (text) => {
     if (!searchTerm) return text;
@@ -70,14 +77,14 @@ const Bodega = () => {
     <div className="container">
       <h1 className="text-center mb-4 mt-4">Reporte de Bodegas</h1>
 
-      {/* Barra de búsqueda */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
-          <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans 
-            text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] 
-            focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-              <BiSearch />
+            <button
+              className="flex justify-center items-center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+            >
+              <BiSearch style={{ fontSize: '1em' }} />
             </button>
             <input
               type="text"
@@ -93,24 +100,27 @@ const Bodega = () => {
         </div>
       </div>
 
-      {/* Tabla de bodegas */}
       <table className="table table-striped">
         <thead>
           <tr>
+            <th>Bodega</th>
+            <th>Elemento</th>
             <th>Código</th>
-            <th>Nombre</th>
+            <th>Cantidad</th>
             <th>Ubicación</th>
-            <th>Cantidad Elementos</th>
           </tr>
         </thead>
         <tbody>
-          {bodegas.map(bodega => (
-            <tr key={bodega.codigo_Bodega}>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.codigo_Bodega.toString()) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Nombre_bodega) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.ubicacion) }}></td>
-              <td></td>
-            </tr>
+          {Object.keys(bodegas).map(bodegaNombre => (
+            bodegas[bodegaNombre].map(bodega => (
+              <tr key={`${bodegaNombre}_${bodega.Id_elemento}`}>
+                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Bodega) }}></td>
+                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Nombre_elemento) }}></td>
+                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Id_elemento.toString()) }}></td>
+                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Stock  !== undefined ?bodega.Stock: '0') }}></td>
+                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Nombre_ubicacion) }}></td>
+              </tr>
+            ))
           ))}
         </tbody>
       </table>
@@ -142,13 +152,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
   },
   tableHeader: {
-    width: '12.5%',
+    width: '20%',
     backgroundColor: '#f2f2f2',
     textAlign: 'center',
     padding: 5,
   },
   tableCell: {
-    width: '12.5%',
+    width: '20%',
     textAlign: 'center',
     padding: 5,
   },
