@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import elementosImg from "../assets/elementos.jpg";
-import usuariosImg from "../assets/usuarios.jpg";
-import bodegasImg from "../assets/bodegas.jpg";
-import movimientosImg from "../assets/movimientos.jpg";
+import elementosImg from "../assets/tools.png";
+import usuariosImg from "../assets/team.png";
+import bodegasImg from "../assets/stock.png";
+import movimientosImg from "../assets/move.png";
 
 const Reportes = () => {
   const navigate = useNavigate();
@@ -27,13 +27,13 @@ const Reportes = () => {
           {...buttonStyles} 
           key={key} 
           onClick={() => navigate(buttonImages[key].path)} 
-          style={{ width: '48%', height: '48%' }}
+          style={{ width: 'calc(48% - 18px)', height: 'calc(48% - 18px)' }} 
         >
           <img 
             src={buttonImages[key].img} 
             alt={key} 
             className="mb-2" 
-            style={{ width: '70%', height: '70%' }} 
+            style={{ width: '70%', height: '70%', objectFit: 'contain' }}
           />
           {key}
         </button>
