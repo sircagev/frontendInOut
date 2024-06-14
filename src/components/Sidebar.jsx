@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import logo from './../assets/sena.png'
 import { LiSideBar } from './moleculas/LiSideBar';
 import { ImUsers } from "react-icons/im";
-import { FaTools, FaPencilRuler } from "react-icons/fa";
+import { FaTools, FaPencilRuler, FaMapMarkerAlt } from "react-icons/fa";
 import { IoIosArrowForward } from 'react-icons/io';
 import { TbCategoryPlus } from "react-icons/tb";
 import { FaBoxesPacking, FaArrowRightArrowLeft } from "react-icons/fa6";
@@ -81,12 +81,12 @@ export const Sidebar = ({ state, setState }) => {
       ]
     },
     {
-      icon: AiOutlineFileText,
+      icon: FaBoxesPacking,
       label: "Bodegas",
       to: "/bodegas",
       subitems: [
         {
-          icon: ImUsers,
+          icon: FaMapMarkerAlt,
           label: "Ubicacion",
           to: "/bodegas/Ubicacion",
         },
