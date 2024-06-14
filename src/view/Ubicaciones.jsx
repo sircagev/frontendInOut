@@ -21,7 +21,7 @@ export const Ubicaciones = () => {
     
     return (
       <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
-        <div className="w-[90%] flex justify-end">
+        <div className="w-[95%] flex justify-end">
           <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Ubicación"} onClick={() => setIsOpen(true)} />
         </div>
         <ModalGeneral

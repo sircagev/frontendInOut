@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { ListarCategorias, ListarMedidas } from "../functions/Listar";
-import { columnsMedidas } from "../functions/columnsData";
+import { Listarbodegas } from "../functions/Listar";
+import { columnsBodegas } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
 import { ModalGeneral } from "../components/Modal";
-import { FormDataMedida } from "../functions/Register/FormDataMedida";
+import { FormData } from "../functions/FormData";
 import { Modalupdatel } from "../components/ModalUpdate";
-import { FormUpdateMedida } from "../functions/Update/UpdateElemento/FormUpdateMedida";
+import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
+import Bodega from "./ReporteBodega";
 
-export const Medidas = () => {
+const Categoria = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [updateTable, setUpdateTable] = useState(false);
@@ -21,26 +22,28 @@ export const Medidas = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
       <div className="w-[95%] flex justify-end">
-        <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Medida"} onClick={() => setIsOpen(true)} />
+        <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Categoría"} onClick={() => setIsOpen(true)} />
       </div>
       <ModalGeneral
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormDataMedida onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Medida"}
+        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
+        title={"Registrar Categoría"}
       />
       <Modalupdatel
-        title={"Actualizar Medida"}
+        title={"Actualizar Categoría"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateMedida onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        formUpdate={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral
-        funcionListar={ListarMedidas}
-        columns={(listar) => columnsMedidas(listar, setIsOpenUpdate, setSelectedCategory)}
-        title={"Lista de Medidas"}
+        funcionListar={Listarbodegas}
+        columns={(listar) => columnsBodegas(listar, setIsOpenUpdate, setSelectedCategory)} 
+        title={"Lista de Categorías"}
         updateTable={updateTable}
       />
     </div>
   );
 };
+
+export default Bodega;

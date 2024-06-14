@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MUIDataTable from "mui-datatables";
 
+
 export const TableGeneral = ({ funcionListar, columns, title, updateTable }) => {
   const [data, setData] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(4);

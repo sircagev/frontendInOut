@@ -1,44 +1,80 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega } from "./Desactivar";
 
 export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
     name: "Codigo_elemento",
     label: "Código",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "Nombre_elemento",
     label: "Nombre",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "stock",
     label: "Cantidad",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fecha_creacion",
     label: "Fecha",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_tipoElemento",
     label: "Tipo",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_unidadMedida",
     label: "Medida",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_categoria",
     label: "Categoria",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_tipoEmpaque",
-    label: "Tipo",
+    label: "Empaque",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "fk_detalleUbicacion",
-    label: "Tipo",
+    label: "Ubicación",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false, 
+    },
   },
   {
     name: "Estado",
@@ -64,12 +100,35 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
             console.log(error);
           }
         };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1], 
+            tipo: rowData[4],
+            medida: rowData[5],
+            categoria: rowData[6],
+            empaque: rowData[7],
+            ubicacion: rowData[8],
+          }
+          console.log(data);
+          setSelectedCategory(data);
+          console.log(data);
+        };
         return (
-          <div>
+          <div className='flex'>
             <Switch
               isSelected={Active}
               onChange={handleEstado}
             />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
           </div>
         );
     },
@@ -121,6 +180,79 @@ export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) 
               codigo: rowData[0],
               nombre: rowData[1],
             };
+            setSelectedCategory(data);
+          };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+    },
+  },
+];
+
+export const columnsBodegas = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "codigo_Bodega",
+    label: "Código",
+  },
+  {
+    name: "Nombre_bodega",
+    label: "Nombre",
+  },
+  {
+    name: "ubicacion",
+    label: "Ubicación",
+  },
+  {
+    name: "fecha_creacion",
+    label: "Creación",
+  },
+  {
+    name: "Estado",
+    label: "Estado",
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[4] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoBodega = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarBodega(codigoBodega, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+            setIsOpenUpdate(true);
+            const data = {
+              codigo: rowData[0],
+              nombre: rowData[1],
+              ubicacion: rowData[2],
+            };
+            console.log(data);
             setSelectedCategory(data);
           };
 
@@ -356,6 +488,7 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
             nombre: rowData[1],
             nombreBodega: rowData[2],
           };
+          console.log(data)
           setSelectedCategory(data);
         };
 

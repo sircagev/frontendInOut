@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { BiSearch, BiPrinter } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
@@ -14,13 +14,15 @@ const Movimientos = () => {
 
   const listarMovimientos = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/reporte/movimientoshistorial');
+
+      const response = await axiosClient.get('reporte/movimientoshistorial');
       const dataWithUbicacion = response.data.datos.map(movimiento => ({
         ...movimiento,
         Ubicacion: `${movimiento.Nombre_bodega} - ${movimiento.Nombre_ubicacion}`
       }));
       setMovimientos(dataWithUbicacion);
       setFilteredMovimientos(dataWithUbicacion);
+
     } catch (error) {
       console.error("Error al obtener la lista de movimientos:", error);
     }

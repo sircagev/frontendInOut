@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { BiPrinter, BiSearch } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
@@ -9,7 +9,7 @@ const Elemento = () => {
 
   const ListarElementos = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/elemento/listar`);
+      const response = await axiosClient.get(`elemento/listar`);
       if (response && response.data && Array.isArray(response.data)) {
         const elementos = response.data.map(elemento => ({
           ...elemento,

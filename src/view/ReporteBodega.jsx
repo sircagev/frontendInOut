@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { BiPrinter, BiSearch } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
@@ -10,7 +10,7 @@ const Bodega = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/reporte/elementosubicacion');
+        const response = await axiosClient.get('/reporte/elementosubicacion');
         setBodegas(response.data); 
       } catch (error) {
         console.error("Error al obtener la información de bodegas:", error);

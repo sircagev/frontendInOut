@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
@@ -34,7 +35,7 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/categoria/registrar', values);
+            const response = await axiosClient.post('categoria/registrar', values);
             if (response.status === 200) {
                 
                 setValues({ Nombre_Categoria: '' });
@@ -69,8 +70,8 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
                             className="w-[100%]"
                         />
                         {errorMessage && (
-                            <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                                <FaExclamationCircle className="mr-1" />
+                            <div className="flex items-center gap-2 text-red-500 text-xs mt-2 ml-3">
+                                <FaExclamationCircle className="" />
                                 {errorMessage}
                             </div>
                         )}

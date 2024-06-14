@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 import { BiSearch } from 'react-icons/bi';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button } from "@nextui-org/react";
 import { Modal } from 'bootstrap';
@@ -65,7 +66,7 @@ const Usuario = ({ userLogin }) => {
 
       if (confirmRegistration) {
         console.log("Valores enviados en la solicitud:", values);
-        const response = await axios.post(`http://localhost:3000/usuario/registrar`, values);
+        const response = await axiosClient.post(`usuario/registrar`, values);
         if (response.status === 200) {
           swal({
             title: "Registro exitoso",
@@ -107,7 +108,7 @@ const Usuario = ({ userLogin }) => {
 
       // Si el usuario confirma la actualización
       if (confirmacion) {
-        const response = await axios.put(`http://localhost:3000/usuario/actualizar/${selectedUser.id_usuario}`, values);
+        const response = await axiosClient.put(`usuario/actualizar/${selectedUser.id_usuario}`, values);
         if (response.status === 200) {
           swal({
             title: "Actualización Éxitosa",
@@ -153,7 +154,7 @@ const Usuario = ({ userLogin }) => {
       // Si el usuario confirma el cambio de estado
       if (confirmacion) {
         // Realizo la solicitud para cambiar el estado del usuario
-        const response = await axios.put(`http://localhost:3000/usuario/estado/${id_usuario}`, { Estado: newEstado });
+        const response = await axiosClient.put(`usuario/estado/${id_usuario}`, { Estado: newEstado });
 
         // Actualizo el estado del usuario en la lista de usuarios
         const updatedUsuarios = usuarios.map(user => {
@@ -198,7 +199,7 @@ const Usuario = ({ userLogin }) => {
 
   const buscarUsuario = async (identificacion) => {
     try {
-      const response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
+      const response = await axiosClient.get(`usuario/buscar/${identificacion}`);
       setUsuarios(response.data.Datos ? response.data.Datos : []);
     } catch (error) {
       console.error("Error al buscar usuario:", error);
@@ -231,12 +232,12 @@ const Usuario = ({ userLogin }) => {
     try {
       let response;
       if (identificacion.trim() !== '') {
-        response = await axios.get(`http://localhost:3000/usuario/buscar/${identificacion}`);
+        response = await axiosClient.get(`usuario/buscar/${identificacion}`);
         console.log(response.data);
         setUsuarios(response.data.Datos ? response.data.Datos : []);
 
       } else {
-        response = await axios.get('http://localhost:3000/usuario/listar');
+        response = await axiosClient.get('usuario/listar');
         setUsuarios(response.data.result || []);
       }
     } catch (error) {
