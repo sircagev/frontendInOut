@@ -65,7 +65,13 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
         fk_tipoEmpaque: empaque,
         fk_detalleUbicacion: ubicacion
       });
-      swal("Actualizado", "El elemento ha sido actualizado con éxito", "success");
+      swal({
+        title: "Actualizado",
+        text: "Elemento actualizado con éxito.",
+        icon: "success",
+        buttons: false,
+        timer: 2000, 
+    });
       onClose();
       onRegisterSuccess();
     } catch (error) {

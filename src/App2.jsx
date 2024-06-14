@@ -11,6 +11,7 @@ import { Medidas } from "./view/Medidas";
 import { Ubicacion } from "./view/Ubicacion";
 import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
+import { Usuarios } from './view/Usuarios';
 import ReporteU from "./view/ReporteUsuario";
 import ReporteE from "./view/ReporteElemento";
 import ReporteB from "./view/ReporteBodega";

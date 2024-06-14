@@ -51,7 +51,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
             formErrors.Nombre_ubicacion = 'El nombre no debe estar vacío ni tener números.';
         }
 
-        if (!values.fk_bodega.trim()) {
+        if (!values.fk_bodega || !values.fk_bodega.trim()) {
             formErrors.fk_bodega = 'Debe seleccionar una bodega.';
         }
 
@@ -108,11 +108,14 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                             label="Seleccione una bodega"
                             name='fk_bodega'
                             value={values.fk_bodega}
-                            onChange={handleSelectChange}
+                            onChange={handleInputChange}
                             className="w-[100%]"
                         >
+                            <SelectItem key="" value="">
+                                Seleccione una bodega
+                            </SelectItem>
                             {bodegas.map((bodega) => (
-                                <SelectItem key={bodega.codigo_Bodega} value={bodega.codigo_Bodega}>
+                                <SelectItem key={bodega.codigo_Bodega} value={bodega.Nombre_bodega}>
                                     {bodega.Nombre_bodega}
                                 </SelectItem>
                             ))}

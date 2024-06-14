@@ -3,10 +3,11 @@ import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { Listarbodegas } from "../functions/Listar";
 import { columnsBodegas } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
+import Modal1 from "../components/Modal1";
 import { Modalupdatel } from "../components/ModalUpdate";
-import { FormDataBodega } from "../functions/Register/FormDataBodega";
+import { FormDataBodega } from "../functions/Register/RegisterBodega/FormDataBodega";
 import { FormUpdateBodega } from "../functions/Update/UpdateBodega/FormUpdateBodega";
+
 
 const Bodegas = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,11 +24,12 @@ const Bodegas = () => {
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Bodega"} onClick={() => setIsOpen(true)} />
       </div>
-      <ModalGeneral
+      <Modal1
+        title={"Registrar Bodega"}
+        size={"md"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormDataBodega onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Bodega"}
+        form={<FormDataBodega onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
       <Modalupdatel
         title={"Actualizar Bodega"}
