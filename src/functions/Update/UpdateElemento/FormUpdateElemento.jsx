@@ -70,8 +70,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
         text: "Elemento actualizado con éxito.",
         icon: "success",
         buttons: false,
-        timer: 2000, 
-    });
+        timer: 2000,
+      });
       onClose();
       onRegisterSuccess();
     } catch (error) {
@@ -83,84 +83,92 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <Input
-            type='text'
-            label='Nombre Ubicación'
-            className="w-[100%]"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-          />
-        </div>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <select
-              className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-            >
-              <option value="" disabled>Seleccione un Tipo</option>
-              {tipos.map((tipo) => (
-                <option key={tipo.codigo_Tipo} value={tipo.nombre_tipoElemento}>
-                  {tipo.nombre_tipoElemento}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <select
-              className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-              value={medida}
-              onChange={(e) => setMedida(e.target.value)}
-            >
-              <option value="" disabled>Seleccione una medida</option>
-              {medidas.map((medida) => (
-                <option key={medida.codigo_medida} value={medida.Nombre_Medida}>
-                  {medida.Nombre_Medida}
-                </option>
-              ))}
-            </select>
-        </div>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <select
-              className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-            >
-              <option value="" disabled>Seleccione una categoría</option>
-              {categorias.map((categoria) => (
-                <option key={categoria.codigo_Categoria} value={categoria.Nombre_Categoria}>
-                  {categoria.Nombre_Categoria}
-                </option>
-              ))}
-            </select>
-        </div>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <select
-              className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-              value={empaque}
-              onChange={(e) => setEmpaque(e.target.value)}
-            >
-              <option value="" disabled>Seleccione un Emapaque</option>
-              {empaques.map((empaque) => (
-                <option key={empaque.codigo_Empaque} value={empaque.Nombre_Empaque}>
-                  {empaque.Nombre_Empaque}
-                </option>
-              ))}
-            </select>
-        </div>
-        <div className="relative mb-3 justify-center items-center" data-twe-input-wrapper-init>
-          <select
-              className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-              value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
-            >
-              <option value="" disabled>Seleccione una ubicación</option>
-              {ubicaciones.map((ubicacion) => (
-                <option key={ubicacion.codigo_Detalle} value={ubicacion.Nombre_ubicacion}>
-                  {ubicacion.Nombre_ubicacion}
-                </option>
-              ))}
-            </select>
+        <div className='flex flex-col justify-center items-center gap-3 mb-4'>
+          <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+            <div>
+              <Input
+                type='text'
+                label='Nombre Ubicación'
+                className="w-[310px]"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
+            </div>
+            <div>
+              <select
+                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+              >
+                <option value="" disabled>Seleccione un Tipo</option>
+                {tipos.map((tipo) => (
+                  <option key={tipo.codigo_Tipo} value={tipo.nombre_tipoElemento}>
+                    {tipo.nombre_tipoElemento}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+            <div>
+              <select
+                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                value={medida}
+                onChange={(e) => setMedida(e.target.value)}
+              >
+                <option value="" disabled>Seleccione una medida</option>
+                {medidas.map((medida) => (
+                  <option key={medida.codigo_medida} value={medida.Nombre_Medida}>
+                    {medida.Nombre_Medida}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <select
+                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                value={categoria}
+                onChange={(e) => setCategoria(e.target.value)}
+              >
+                <option value="" disabled>Seleccione una categoría</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.codigo_Categoria} value={categoria.Nombre_Categoria}>
+                    {categoria.Nombre_Categoria}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+            <div>
+              <select
+                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                value={empaque}
+                onChange={(e) => setEmpaque(e.target.value)}
+              >
+                <option value="" disabled>Seleccione un Emapaque</option>
+                {empaques.map((empaque) => (
+                  <option key={empaque.codigo_Empaque} value={empaque.Nombre_Empaque}>
+                    {empaque.Nombre_Empaque}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <select
+                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                value={ubicacion}
+                onChange={(e) => setUbicacion(e.target.value)}
+              >
+                <option value="" disabled>Seleccione una ubicación</option>
+                {ubicaciones.map((ubicacion) => (
+                  <option key={ubicacion.codigo_Detalle} value={ubicacion.Nombre_ubicacion}>
+                    {ubicacion.Nombre_ubicacion}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
         <div className='flex justify-end gap-3 mb-3'>
           <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>

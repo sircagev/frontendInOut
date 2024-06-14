@@ -33,7 +33,7 @@ export const Elemento = () => {
         />
         <Modal1
           title={"Actualizar Elemento"}
-          size={"md"}
+          size={"2xl"}
           isOpen={isOpenUpdate}
           form={<FormUpdateElemento onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate}/>}
           onClose={() => setIsOpenUpdate(false)}
