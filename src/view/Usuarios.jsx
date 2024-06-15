@@ -3,11 +3,9 @@ import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarUsuarios } from "../functions/Listar";
 import { columnsUsuarios } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
-import { FormData } from "../functions/FormData";
-import { Modalupdatel } from "../components/ModalUpdate";
 import { FormDataUsuario } from "../functions/Register/RegisterUsuario/FormDataUsuario";
 import Modal1 from "../components/Modal1";
+import { FormUpdateUsuario } from "../functions/Update/UpdateUsuario/FormUpdateUsuario";
 
 export const Usuarios = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +28,13 @@ export const Usuarios = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         form={<FormDataUsuario onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
+      />
+      <Modal1
+        title={"Actualizar Usuario"}
+        size={"2xl"}
+        isOpen={isOpenUpdate}
+        onClose={() => setIsOpenUpdate(false)}
+        form={<FormUpdateUsuario onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />}
       />
       <TableGeneral
           funcionListar={ListarUsuarios}

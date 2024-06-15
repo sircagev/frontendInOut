@@ -1,33 +1,46 @@
-import React, { useState, useEffect } from 'react'
-import axiosClient from '../../../components/config/axiosClient';
-import { Input, Button, Select, SelectItem } from "@nextui-org/react";
+import React, { useState, useEffect } from 'react';
+import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import axiosClient from '../../../components/config/axiosClient';
 
-
-export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
-
-    const [values, setValues] = useState(
-        {
-            nombre_usuario: "",
-            apellido_usuario: "",
-            email_usuario: "",
-            rol: "",
-            numero: "",
-            Id_ficha: "",
-            identificacion: ""
-        }
-    )
-
-    const [errorMessages, setErrorMessages] = useState({
-        nombre_usuario: '',
-        apellido_usuario: '',
-        email_usuario: '',
+export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
+    const [values, setValues] = useState({
+        nombre: '',
+        apellido: '',
+        email: '',
         rol: '',
         numero: '',
-        Id_ficha: '',
+        contraseña: '',
+        ficha: '',
         identificacion: ''
     });
+
+    const [errorMessages, setErrorMessages] = useState({
+        nombre: '',
+        apellido: '',
+        email: '',
+        rol: '',
+        numero: '',
+        contraseña: '',
+        ficha: '',
+        identificacion: ''
+    });
+
+    useEffect(() => {
+        if (category) {
+            setValues({
+                nombre: category.nombre,
+                apellido: category.apellido,
+                email: category.email,
+                rol: category.rol,
+                numero: category.numero,
+                contraseña: category.contraseña,
+                ficha: category.ficha,
+                identificacion: category.identificacion,
+            });
+        }
+    }, [category]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -44,117 +57,119 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
         }
     };
 
-    const handleForm = async (event) => {
-        event.preventDefault();
-
+    const validateForm = () => {
         let hasError = false;
         let newErrorMessages = {
-            nombre_usuario: '',
-            apellido_usuario: '',
-            email_usuario: '',
+            nombre: '',
+            apellido: '',
+            email: '',
             rol: '',
             numero: '',
-            Id_ficha: '',
+            contraseña: '',
+            ficha: '',
             identificacion: ''
         };
 
-        if (!values.nombre_usuario.trim()) {
-            newErrorMessages.nombre_usuario = 'El nombre de usuario es requerido.';
-            hasError = true;
-        } else if (/\d/.test(values.nombre_usuario)) {
-            newErrorMessages.nombre_usuario = 'El nombre de usuario no puede contener números.';
+        // Convert all values to strings
+        const strValues = Object.fromEntries(
+            Object.entries(values).map(([key, value]) => [key, String(value)])
+        );
+
+        if (!strValues.nombre.trim() || /\d/.test(strValues.nombre)) {
+            newErrorMessages.nombre = !strValues.nombre.trim()
+                ? 'El nombre del usuario no puede estar vacío.'
+                : 'El nombre del usuario no puede contener números.';
             hasError = true;
         }
 
-        if (!values.apellido_usuario.trim()) {
-            newErrorMessages.apellido_usuario = 'El apellido de usuario es requerido.';
-            hasError = true;
-        } else if (/\d/.test(values.apellido_usuario)) {
-            newErrorMessages.apellido_usuario = 'El apellido de usuario no puede contener números.';
-            hasError = true;
-        }
-
-        if (!values.email_usuario.trim()) {
-            newErrorMessages.email_usuario = 'El correo electrónico es requerido.';
-            hasError = true;
-        } else if (!/^\S+@\S+\.\S+$/.test(values.email_usuario)) {
-            newErrorMessages.email_usuario = 'El correo electrónico no es válido.';
+        if (!strValues.apellido.trim() || /\d/.test(strValues.apellido)) {
+            newErrorMessages.apellido = !strValues.apellido.trim()
+                ? 'El apellido del usuario no puede estar vacío.'
+                : 'El apellido del usuario no puede contener números.';
             hasError = true;
         }
 
-        if (!values.rol.trim()) {
+        if (!strValues.email.trim()) {
+            newErrorMessages.email = 'El correo electrónico es requerido.';
+            hasError = true;
+        } else if (!/^\S+@\S+\.\S+$/.test(strValues.email)) {
+            newErrorMessages.email = 'El correo electrónico no es válido.';
+            hasError = true;
+        }
+
+        if (!strValues.rol.trim()) {
             newErrorMessages.rol = 'El campo de rol es requerido.';
             hasError = true;
         }
 
-        if (!values.numero.trim()) {
+        if (!strValues.numero.trim()) {
             newErrorMessages.numero = 'El campo de teléfono es requerido.';
             hasError = true;
         }
 
-        if (!values.Id_ficha.trim()) {
-            newErrorMessages.Id_ficha = 'El campo de ficha es requerido.';
+        if (!strValues.ficha.trim()) {
+            newErrorMessages.ficha = 'El campo de ficha es requerido.';
             hasError = true;
         }
 
-        if (!values.identificacion.trim()) {
+        if (!strValues.identificacion.trim()) {
             newErrorMessages.identificacion = 'El campo de identificación es requerido.';
             hasError = true;
         }
 
-
-
         setErrorMessages(newErrorMessages);
+        return !hasError;
+    };
 
-        if (hasError) return
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!validateForm()) return;
 
         try {
-            const response = await axiosClient.post('usuario/registrar', values);
-            if (response.status === 200) {
-
-                setValues({
-                    nombre_usuario: '',
-                    apellido_usuario: '',
-                    email_usuario: '',
-                    rol: '',
-                    numero: '',
-                    Id_ficha: '',
-                    identificacion: ''
-                });
-                swal({
-                    title: "Registro exitoso",
-                    text: "El Usuario se ha registrado correctamente.",
-                    icon: "success",
-                    buttons: false,
-                    timer: 2000,
-                });
-
-                onClose();
-                onRegisterSuccess();
-            }
+            await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
+                nombre_usuario: values.nombre,
+                apellido_usuario: values.apellido,
+                email_usuario: values.email,
+                rol: values.rol,
+                numero: values.numero,
+                contraseña_usuario: values.contraseña,
+                Id_ficha: values.ficha,
+                identificacion: values.identificacion
+            });
+            swal({
+                title: "Actualizado",
+                text: "Usuario actualizada con éxito.",
+                icon: "success",
+                buttons: false,
+                timer: 2000,
+            });
+            onClose();
+            onRegisterSuccess();
         } catch (error) {
             console.log(error);
+            swal("Error", "Hubo un problema al actualizar el usuario", "error");
         }
     };
+
     return (
         <div>
             <div>
-                <form onSubmit={handleForm}>
+                <form onSubmit={handleSubmit}>
                     <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div>
                                 <Input
                                     type='text'
                                     label='Nombre Usuario'
-                                    name='nombre_usuario'
-                                    value={values.nombre_usuario}
+                                    name='nombre'
+                                    value={values.nombre}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.nombre_usuario && (
+                                {errorMessages.nombre && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.nombre_usuario}
+                                        {errorMessages.nombre}
                                     </div>
                                 )}
                             </div>
@@ -162,49 +177,37 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                 <Input
                                     type='text'
                                     label='Apellido Usuario'
-                                    name='apellido_usuario'
-                                    value={values.apellido_usuario}
+                                    name='apellido'
+                                    value={values.apellido}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.apellido_usuario && (
+                                {errorMessages.apellido && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.apellido_usuario}
+                                        {errorMessages.apellido}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div>
                                 <Input
                                     type='text'
                                     label='Email'
-                                    name='email_usuario'
-                                    value={values.email_usuario}
+                                    name='email'
+                                    value={values.email}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.email_usuario && (
+                                {errorMessages.email && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.email_usuario}
+                                        {errorMessages.email}
                                     </div>
                                 )}
                             </div>
                             <div>
-                                {/* <Select
-                                    label="Selecciona un rol"
-                                    name="rol"
-                                    value={values.rol}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                >
-                                    <SelectItem value="">Seleccione un Rol</SelectItem>
-                                    <SelectItem value="administrador">Administrador</SelectItem>
-                                    <SelectItem value="Encargado">Encargado</SelectItem>
-                                    <SelectItem value="Usuario">Usuario</SelectItem>
-                                </Select> */}
                                 <Input
                                     type='text'
                                     label='Rol'
@@ -221,7 +224,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                 )}
                             </div>
                         </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div>
                                 <Input
                                     type='text'
@@ -242,22 +245,22 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                 <Input
                                     type='number'
                                     label='Ficha'
-                                    name='Id_ficha'
-                                    value={values.Id_ficha}
+                                    name='ficha'
+                                    value={values.ficha}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                     onKeyPress={allowOnlyNumbers}
                                     inputMode="numeric"
                                 />
-                                {errorMessages.Id_ficha && (
+                                {errorMessages.ficha && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.Id_ficha}
+                                        {errorMessages.ficha}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div className='w-full flex flex-col'>
                                 <Input
                                     type='number'

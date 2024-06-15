@@ -109,7 +109,15 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
           const data = {
             codigo: rowData[0],
             nombre: rowData[1],
+            apellido: rowData[2],
+            email: rowData[3],
+            rol: rowData[4],
+            numero: rowData[5],
+            contraseña: rowData[6],
+            ficha: rowData[7],
+            identificacion: rowData[8]
           };
+          console.log(data);
           setSelectedCategory(data);
         };
 
@@ -122,6 +130,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
             <Button
               variant="contained"
               color="primary"
+              onClick={handleEdit}
             >
               <FaPencilAlt />
             </Button>
@@ -243,7 +252,6 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
           }
           console.log(data);
           setSelectedCategory(data);
-          console.log(data);
         };
         return (
           <div className='flex'>

@@ -47,7 +47,7 @@ function App2() {
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
                     <Route path="/elementos/medidas" element={<Medidas user={user}/>} />
-                    <Route path="/usuarios" element={<Usuario  userLogin={user}/>} />
+                    <Route path="/usuarios" element={<Usuarios  userLogin={user}/>} />
                     <Route path="/reportes/usuarios" element={<ReporteU />} />
                     <Route path="/reportes/elementos" element={<ReporteE />} />
                     <Route path="/reportes/bodegas" element={<ReporteB />} />

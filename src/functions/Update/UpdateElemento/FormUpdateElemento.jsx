@@ -3,6 +3,7 @@ import { Input, Button } from "@nextui-org/react";
 import { Select, SelectItem } from "@nextui-org/select";
 import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
+import { FaExclamationCircle } from 'react-icons/fa';
 import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubicacion } from '../../Listar';
 
 export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => {
@@ -18,6 +19,14 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
   const [categorias, setCategorias] = useState([]);
   const [empaques, SetEmpaques] = useState([]);
   const [ubicaciones, SetUbicaciones] = useState([]);
+
+  const [errorMessages, setErrorMessages] = useState({
+    ubicacion: '',
+    tipo: '',
+    medida: '',
+    categoria: '',
+    empaque: ''
+  })
 
   useEffect(() => {
     if (category) {
@@ -56,6 +65,18 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!nombre || /\d/.test(nombre)) {
+      let errorMessage = !nombre ? 'El nombre es requerido' : 'El nombre no debe contener números';
+      setErrorMessages({...errorMessages, nombre: errorMessage });
+      return;
+    }
+
+    if (!tipo) {
+      setErrorMessages({...errorMessages, tipo: 'Debe seleccionar un tipo de elemento' });
+      return;
+    } 
+    
     try {
       await axiosClient.put(`elemento/actualizar/${category.codigo}`, {
         Nombre_elemento: nombre,
@@ -93,6 +114,12 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
               />
+              {errorMessages.nombre && (
+                <div className="flex items-center text-red-500 text-xs mt-1">
+                  <FaExclamationCircle className="mr-2" />
+                  {errorMessages.nombre}
+                </div>
+              )}
             </div>
             <div>
               <select
@@ -107,6 +134,12 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
                   </option>
                 ))}
               </select>
+              {errorMessages.tipo && (
+                <div className="flex items-center text-red-500 text-xs mt-1">
+                  <FaExclamationCircle className="mr-2" />
+                  {errorMessages.tipo}
+                </div>
+              )}
             </div>
           </div>
           <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
