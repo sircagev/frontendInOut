@@ -208,14 +208,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 )}
                             </div>
                             <div>
-                                <Input
-                                    type='text'
-                                    label='Rol'
-                                    name='rol'
-                                    value={values.rol}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
+                                <select id="rol" name="rol" value={values.rol} onChange={handleInputChange} className="w-[310px] h-[58px] rounded-xl pl-3 text-sm ">
+                                    <option value="">Seleccione un Rol</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="Encargado">Encargado</option>
+                                    <option value="Usuario">Usuario</option>
+                                </select>
                                 {errorMessages.rol && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
