@@ -14,7 +14,7 @@ const Reportes = () => {
   };
 
   const buttonImages = {
-    PréstamosActivos: { img: elementosImg, path: '/reportes/elementos' },
+    Préstamos: { img: elementosImg, path: '/reportes/elementos' },
     Usuarios: { img: usuariosImg, path: '/reportes/usuarios' },
     Bodegas: { img: bodegasImg, path: '/reportes/bodegas' },
     Movimientos: { img: movimientosImg, path: '/reportes/movimientos' },
