@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
 import axiosClient from '../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';

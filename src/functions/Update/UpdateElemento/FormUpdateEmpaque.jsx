@@ -29,7 +29,13 @@ export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
       await axiosClient.put(`empaque/actualizar/${category.codigo}`, {
         Nombre_Empaque: nombre,
       });
-      swal("Actualizado", "El Empaque ha sido actualizado con éxito", "success");
+      swal({
+        title: "Actualizado",
+        text: "Empaque actualizado correctamente.",
+        icon: "success",
+        buttons: false,
+        timer: 2000, 
+    });
       onClose();
       onRegisterSuccess();
     } catch (error) {

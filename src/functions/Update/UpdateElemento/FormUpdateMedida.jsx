@@ -29,7 +29,13 @@ export const FormUpdateMedida = ({ onClose, category, onRegisterSuccess }) => {
       await axiosClient.put(`medida/actualizar/${category.codigo}`, {
         Nombre_Medida: nombre,
       });
-      swal("Actualizado", "La Medida ha sido actualizado con éxito", "success");
+      swal({
+        title: "Actualizado",
+        text: "Medida actualizada con éxito.",
+        icon: "success",
+        buttons: false,
+        timer: 2000, 
+    });
       onClose();
       onRegisterSuccess();
     } catch (error) {

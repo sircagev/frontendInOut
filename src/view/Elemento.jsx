@@ -3,10 +3,10 @@ import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarElementos } from "../functions/Listar";
 import { columnsElemntos } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
+import Modal1 from "../components/Modal1";
 import { FormDataElemento } from "../functions/Register/FormDataElemento";
-import { Modalupdatel } from "../components/ModalUpdate";
 import { FormUpdateElemento } from "../functions/Update/UpdateElemento/FormUpdateElemento";
+
 
 
 export const Elemento = () => {
@@ -24,17 +24,18 @@ export const Elemento = () => {
         <div className="w-[95%] flex justify-end">
           <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Elemento"} onClick={() => setIsOpen(true)} />
         </div>
-        <ModalGeneral
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          onClose={() => setIsOpen(false)}
-          form={<FormDataElemento onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
+        <Modal1
           title={"Registrar Elemento"}
+          size={"2xl"}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          form={<FormDataElemento onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
         />
-        <Modalupdatel
+        <Modal1
           title={"Actualizar Elemento"}
+          size={"2xl"}
           isOpen={isOpenUpdate}
-          formUpdate={<FormUpdateElemento onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate}/>}
+          form={<FormUpdateElemento onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate}/>}
           onClose={() => setIsOpenUpdate(false)}
         />
         <TableGeneral
