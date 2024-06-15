@@ -6,6 +6,7 @@ import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-
 const Bodega = () => {
   const [bodegas, setBodegas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredBodegas, setFilteredBodegas] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,9 +17,23 @@ const Bodega = () => {
         console.error("Error al obtener la información de bodegas:", error);
       }
     };
-
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const filteredData = Object.fromEntries(
+      Object.entries(bodegas).map(([bodegaNombre, bodegaData]) => [
+        bodegaNombre,
+        bodegaData.filter(bodega =>
+          Object.values(bodega)
+            .join("")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        ),
+      ])
+    );
+    setFilteredBodegas(filteredData);
+  }, [searchTerm, bodegas]);
 
   const MyDocument = () => (
     <Document>
@@ -33,14 +48,14 @@ const Bodega = () => {
               <Text style={styles.tableHeader}>Cantidad</Text>
               <Text style={styles.tableHeader}>Ubicación</Text>
             </View>
-            {Object.keys(bodegas).map(bodegaNombre => (
-              bodegas[bodegaNombre].map(bodega => (
+            {Object.keys(filteredBodegas).map(bodegaNombre => (
+              filteredBodegas[bodegaNombre].map(bodega => (
                 <View style={styles.tableRow} key={`${bodegaNombre}_${bodega.Id_elemento}`}>
-                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Bodega)}</Text>
-                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Nombre_elemento)}</Text>
-                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Id_elemento.toString())}</Text>
-                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Stock  !== undefined ?bodega.Stock: '0')}</Text>
-                  <Text style={styles.tableCell}>{highlightSearchTerm(bodega.Nombre_ubicacion)}</Text>
+                  <Text style={styles.tableCell}>{bodega.Bodega}</Text>
+                  <Text style={styles.tableCell}>{bodega.Nombre_elemento}</Text>
+                  <Text style={styles.tableCell}>{bodega.Id_elemento.toString()}</Text>
+                  <Text style={styles.tableCell}>{bodega.Stock !== undefined ? bodega.Stock : '0'}</Text>
+                  <Text style={styles.tableCell}>{bodega.Nombre_ubicacion}</Text>
                 </View>
               ))
             ))}
@@ -68,7 +83,7 @@ const Bodega = () => {
   );
 
   const highlightSearchTerm = (text) => {
-    if (!searchTerm) return text;
+    if (!searchTerm || !text || typeof text !== 'string') return text;
     const regex = new RegExp(`(${searchTerm})`, 'gi');
     return text.replace(regex, '<mark>$1</mark>');
   };
@@ -80,12 +95,6 @@ const Bodega = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
-            <button
-              className="flex justify-center items-center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              <BiSearch style={{ fontSize: '1em' }} />
-            </button>
             <input
               type="text"
               className="form-control"
@@ -93,6 +102,12 @@ const Bodega = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <button
+              className="flex justify-center items-center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+            >
+              <BiSearch style={{ fontSize: '1em' }} />
+            </button>
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
@@ -111,17 +126,17 @@ const Bodega = () => {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(bodegas).map(bodegaNombre => (
-            bodegas[bodegaNombre].map(bodega => (
+          {Object.keys(filteredBodegas).flatMap(bodegaNombre =>
+            filteredBodegas[bodegaNombre].map(bodega => (
               <tr key={`${bodegaNombre}_${bodega.Id_elemento}`}>
-                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Bodega) }}></td>
-                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Nombre_elemento) }}></td>
-                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Id_elemento.toString()) }}></td>
-                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Stock  !== undefined ?bodega.Stock: '0') }}></td>
-                <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(bodega.Nombre_ubicacion) }}></td>
+                <td>{bodega.Bodega}</td>
+                <td>{bodega.Nombre_elemento}</td>
+                <td>{bodega.Id_elemento}</td>
+                <td>{bodega.Stock !== undefined ? bodega.Stock : '0'}</td>
+                <td>{bodega.Nombre_ubicacion}</td>
               </tr>
             ))
-          ))}
+          )}
         </tbody>
       </table>
     </div>

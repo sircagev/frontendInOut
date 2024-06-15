@@ -6,63 +6,54 @@ import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-
 const Movimientos = () => {
   const [movimientos, setMovimientos] = useState([]);
   const [filteredMovimientos, setFilteredMovimientos] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
   const [tipoMovimiento, setTipoMovimiento] = useState("");
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
-  const [showPDF, setShowPDF] = useState(false); 
-
-  const listarMovimientos = async () => {
-    try {
-
-      const response = await axiosClient.get('reporte/movimientoshistorial');
-      const dataWithUbicacion = response.data.datos.map(movimiento => ({
-        ...movimiento,
-        Ubicacion: `${movimiento.Nombre_bodega} - ${movimiento.Nombre_ubicacion}`
-      }));
-      setMovimientos(dataWithUbicacion);
-      setFilteredMovimientos(dataWithUbicacion);
-
-    } catch (error) {
-      console.error("Error al obtener la lista de movimientos:", error);
-    }
-  };
 
   useEffect(() => {
+    const listarMovimientos = async () => {
+      try {
+        const response = await axiosClient.get('reporte/movimientoshistorial');
+        const dataWithUbicacion = response.data.datos.map(movimiento => ({
+          ...movimiento,
+          Ubicacion: `${movimiento.Nombre_bodega} - ${movimiento.Nombre_ubicacion}`
+        }));
+        setMovimientos(dataWithUbicacion);
+        setFilteredMovimientos(dataWithUbicacion);
+      } catch (error) {
+        console.error("Error al obtener la lista de movimientos:", error);
+      }
+    };
+
     listarMovimientos();
   }, []);
 
   const handleSearch = () => {
-    let filteredData = movimientos;
-
+    let filteredData = [...movimientos];
+  
     if (tipoMovimiento) {
       filteredData = filteredData.filter(movimiento => movimiento['Tipo de Movimiento'] === tipoMovimiento);
     }
-
-    if (fechaInicio) {
-      const fechaInicioDate = new Date(fechaInicio);
-      filteredData = filteredData.filter(movimiento => new Date(movimiento['Fecha del Prestamo']) >= fechaInicioDate);
+  
+    if (fechaInicio || fechaFin) {
+      filteredData = filteredData.filter(movimiento => {
+        const fechaPrestamo = new Date(movimiento['Fecha del Prestamo']);
+        const fechaInicioValida = fechaInicio ? new Date(fechaInicio) : null;
+        const fechaFinValida = fechaFin ? new Date(fechaFin) : null;
+  
+        return (!fechaInicioValida || fechaPrestamo >= fechaInicioValida) &&
+               (!fechaFinValida || fechaPrestamo <= fechaFinValida);
+      });
     }
-
-    if (fechaFin) {
-      const fechaFinDate = new Date(fechaFin);
-      filteredData = filteredData.filter(movimiento => new Date(movimiento['Fecha del Prestamo']) <= fechaFinDate);
-    }
-
-    if (searchTerm) {
-      filteredData = filteredData.filter(movimiento => 
-        Object.values(movimiento).some(value => 
-          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }
-
-    setFilteredMovimientos(filteredData);
+    filteredData.sort((a, b) => new Date(a['Fecha del Prestamo']) - new Date(b['Fecha del Prestamo']));
+    
+    setFilteredMovimientos([...filteredData]);
   };
-
+  
   const MyDocument = ({ data }) => (
     <Document>
-      <Page size="A2">
+      <Page size="A1">
         <View style={styles.page}>
           <Text style={styles.title}>Reporte de Movimientos</Text>
           <View style={styles.table}>
@@ -101,7 +92,7 @@ const Movimientos = () => {
   );
 
   const handlePrint = () => (
-    <PDFDownloadLink document={<MyDocument data={filteredMovimientos} />} fileName="movimientos.pdf">
+    <PDFDownloadLink document={<MyDocument data={filteredMovimientos} />} fileName="Reporte de movimientos.pdf">
       {({ loading }) => (
         <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
           <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
@@ -155,7 +146,7 @@ const Movimientos = () => {
               onChange={(e) => setFechaFin(e.target.value)}
             />
             <button 
-              className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
+              className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-lg rounded-br-lg font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
               type="button" 
               onClick={handleSearch}
             >

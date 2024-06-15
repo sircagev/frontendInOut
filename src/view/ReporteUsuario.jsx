@@ -5,15 +5,19 @@ import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-
 
 const Usuario = () => {
   const [usuarios, setUsuarios] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRole, setSelectedRole] = useState(''); // Nuevo estado para el rol seleccionado
+
+  useEffect(() => {
+    listarUsuarios();
+  }, []);
 
   const listarUsuarios = async () => {
     try {
-      const response = await axiosClient.get('usuario/listar');
-      if (response.data && Array.isArray(response.data.result)) {
-        setUsuarios(response.data.result);
+      const response = await axiosClient.get('reporte/movimientosusuario');
+      if (response.data && response.data.datos) {
+        setUsuarios(response.data.datos);
       } else {
-        console.error("La respuesta de la solicitud GET no contiene un array en la propiedad 'result':", response.data);
+        console.error("La respuesta de la solicitud GET no contiene los datos esperados:", response.data);
         alert('Error al obtener la lista de usuarios');
       }
     } catch (error) {
@@ -23,21 +27,10 @@ const Usuario = () => {
   };
 
   const buscarUsuarios = () => {
-    let filteredUsers = usuarios;
-    if (searchTerm.trim() !== '') {
-      filteredUsers = usuarios.filter(usuario =>
-        ['nombre_usuario', 'apellido_usuario', 'email_usuario', 'rol', 'numero', 'Id_ficha', 'Estado'].some(key =>
-          usuario[key].toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }
-    return filteredUsers;
+    return usuarios.filter(usuario =>
+      (selectedRole === '' || usuario.Rol === selectedRole)
+    );
   };
-  
-
-  useEffect(() => {
-    listarUsuarios();
-  }, []);
 
   const MyDocument = () => (
     <Document>
@@ -46,23 +39,27 @@ const Usuario = () => {
           <Text style={styles.title}>Reporte de Usuarios</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableHeader}>Nombre</Text>
-              <Text style={styles.tableHeader}>Email</Text>
               <Text style={styles.tableHeader}>Rol</Text>
-              <Text style={styles.tableHeader}>Teléfono</Text>
+              <Text style={styles.tableHeader}>Nombre</Text>
               <Text style={styles.tableHeader}>Id Ficha</Text>
-              <Text style={styles.tableHeader}>Estado</Text>
-              <Text style={styles.tableHeader}>Fecha de registro</Text>
+              <Text style={styles.tableHeader}>Teléfono</Text>
+              <Text style={styles.tableHeader}>Elemento</Text>
+              <Text style={styles.tableHeader}>Cantidad</Text>
+              <Text style={styles.tableHeader}>Fecha de solicitud</Text>
+              <Text style={styles.tableHeader}>Fecha de entrega</Text>
+              <Text style={styles.tableHeader}>Observaciones</Text>
             </View>
-            {buscarUsuarios().map(user => (
-              <View style={styles.tableRow} key={user.id_usuario}>
-                <Text style={styles.tableCell}>{`${user.nombre_usuario} ${user.apellido_usuario}`}</Text>
-                <Text style={styles.tableCell}>{user.email_usuario}</Text>
-                <Text style={styles.tableCell}>{user.rol}</Text>
-                <Text style={styles.tableCell}>{user.numero}</Text>
-                <Text style={styles.tableCell}>{user.Id_ficha}</Text>
-                <Text style={styles.tableCell}>{user.Estado}</Text>
-                <Text style={styles.tableCell}>{formatDate(user.fecha_creacion)}</Text>
+            {buscarUsuarios().map((user, index) => (
+              <View style={styles.tableRow} key={index}>
+                <Text style={styles.tableCell}>{user.Rol}</Text>
+                <Text style={styles.tableCell}>{`${user.Nombre_Usuario}`}</Text>
+                <Text style={styles.tableCell}>{user.ID_Ficha}</Text>
+                <Text style={styles.tableCell}>{user.Numero}</Text>
+                <Text style={styles.tableCell}>{user.Elemento}</Text>
+                <Text style={styles.tableCell}>{user.Cantidad}</Text>
+                <Text style={styles.tableCell}>{formatDate(user.Fecha_de_Solicitud)}</Text>
+                <Text style={styles.tableCell}>{formatDate(user.Fecha_de_Entrega)}</Text>
+                <Text style={styles.tableCell}>{user.Observaciones}</Text>
               </View>
             ))}
           </View>
@@ -71,12 +68,8 @@ const Usuario = () => {
     </Document>
   );
 
-  const handleSearch = () => {
-    setUsuarios(buscarUsuarios());
-  };
-
   const handlePrint = () => (
-    <PDFDownloadLink document={<MyDocument />} fileName="usuarios.pdf">
+    <PDFDownloadLink document={<MyDocument />} fileName="Reporte usuarios.pdf">
       {({ loading }) => (
         <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
           <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
@@ -90,13 +83,6 @@ const Usuario = () => {
     </PDFDownloadLink>
   );
 
-  const highlightSearchTerm = (text) => {
-    if (!searchTerm) return text;
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-  };
-
-  // Formato de fecha día/mes/año
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
@@ -112,16 +98,23 @@ const Usuario = () => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
-            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button" onClick={handleSearch}>
+            <select
+              className="form-control"
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              style={{ borderTopRightRadius: '0', borderBottomRightRadius: '0' }}
+            >
+              <option value="">Todos los roles</option>
+              {Array.from(new Set(usuarios.map(usuario => usuario.Rol))).map((rol, index) => (
+                <option key={index} value={rol}>{rol}</option>
+              ))}
+            </select>
+            <button
+              className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-md rounded-br-md font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+            >
               <BiSearch />
             </button>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Buscar ..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
@@ -132,27 +125,29 @@ const Usuario = () => {
       <table className="table table-striped">
         <thead>
           <tr>
+            <th>Rol</th>
             <th>Nombre</th>
-            <th>Teléfono</th>
             <th>Id Ficha</th>
-            <th>Fecha de Reserva</th>
+            <th>Teléfono</th>
             <th>Elemento</th>
             <th>Cantidad</th>
-            <th>Estado</th>
+            <th>Fecha de solicitud</th>
+            <th>Fecha de entrega</th>
             <th>Observaciones</th>
           </tr>
         </thead>
         <tbody>
-          {buscarUsuarios().map(user => (
-            <tr key={user.id_usuario}>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(`${user.nombre_usuario} ${user.apellido_usuario}`) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.numero.toString()) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Id_ficha.toString()) }}></td>
-              <td style={{ textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(user.fecha_creacion)) }}></td>
-              <td></td>
-              <td></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(user.Estado) }}></td>
-              <td></td>
+          {buscarUsuarios().map((user, index) => (
+            <tr key={index}>
+              <td>{user.Rol}</td>
+              <td>{user.Nombre_Usuario}</td>
+              <td>{user.ID_Ficha}</td>
+              <td>{user.Numero}</td>
+              <td>{user.Elemento}</td>
+              <td>{user.Cantidad}</td>
+              <td>{formatDate(user.Fecha_de_Solicitud)}</td>
+              <td>{formatDate(user.Fecha_de_Entrega)}</td>
+              <td>{user.Observaciones}</td>
             </tr>
           ))}
         </tbody>
@@ -174,7 +169,7 @@ const styles = StyleSheet.create({
   },
   table: {
     display: 'table',
-    width: '100%',
+    width: 'auto',
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#000',
@@ -186,7 +181,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
   },
   tableHeader: {
-    width: '14.2%',
+    width: '11%',
     backgroundColor: '#f2f2f2',
     textAlign: 'center',
     padding: 5,
@@ -194,7 +189,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   tableCell: {
-    width: '14.2%',
+    width: '11%',
     textAlign: 'center',
     padding: 5,
   },
