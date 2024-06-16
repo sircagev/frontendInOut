@@ -3,82 +3,114 @@ import axiosClient from '../components/config/axiosClient';
 import { BiPrinter, BiSearch } from 'react-icons/bi';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
+const PrestamosActivosTable = ({ prestamosActivos, searchTerm }) => {
+  const highlightSearchTerm = (text) => {
+    if (!searchTerm) return text;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  };
+
+  return (
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          <th>Estado</th>
+          <th>Solicitado por</th>
+          <th>Elemento</th>
+          <th>Cantidad</th>
+          <th>Fecha de solicitud</th>
+          <th>Fecha de entrega</th>
+          <th>Autorizado por</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {prestamosActivos.map(({ Estado, "Solicitado por": solicitadoPor, Elemento, cantidad, "Fecha de solicitud": fechaSolicitud, "Fecha de entrega": fechaEntrega, "Autorizado por": autorizadoPor, Observaciones }, index) => (
+          <tr key={index}>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(Estado) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(solicitadoPor) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(Elemento) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(cantidad.toString()) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(new Date(fechaSolicitud).toLocaleDateString()) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(new Date(fechaEntrega).toLocaleDateString()) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(autorizadoPor) }}></td>
+            <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(Observaciones) }}></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+const MyDocument = ({ prestamosActivos }) => (
+  <Document>
+    <Page size="A2">
+      <View style={styles.page}>
+        <Text style={styles.title}>Reporte de Préstamos Activos</Text>
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableHeader}>Estado</Text>
+            <Text style={styles.tableHeader}>Solicitado por</Text>
+            <Text style={styles.tableHeader}>Elemento</Text>
+            <Text style={styles.tableHeader}>Cantidad</Text>
+            <Text style={styles.tableHeader}>Fecha de solicitud</Text>
+            <Text style={styles.tableHeader}>Fecha de entrega</Text>
+            <Text style={styles.tableHeader}>Autorizado por</Text>
+            <Text style={styles.tableHeader}>Observaciones</Text>
+          </View>
+          {prestamosActivos.map((prestamo, index) => (
+            <View style={styles.tableRow} key={index}>
+              <Text style={styles.tableCell}>{prestamo.Estado}</Text>
+              <Text style={styles.tableCell}>{prestamo["Solicitado por"]}</Text>
+              <Text style={styles.tableCell}>{prestamo.Elemento}</Text>
+              <Text style={styles.tableCell}>{prestamo.cantidad}</Text>
+              <Text style={styles.tableCell}>{new Date(prestamo["Fecha de solicitud"]).toLocaleDateString()}</Text>
+              <Text style={styles.tableCell}>{new Date(prestamo["Fecha de entrega"]).toLocaleDateString()}</Text>
+              <Text style={styles.tableCell}>{prestamo["Autorizado por"]}</Text>
+              <Text style={styles.tableCell}>{prestamo.Observaciones}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    </Page>
+  </Document>
+);
+
 const Elemento = () => {
-  const [useElementos, setElementos] = useState([]);
+  const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const ListarElementos = async () => {
+  const ListarPrestamosActivos = async () => {
     try {
-      const response = await axiosClient.get(`elemento/listar`);
-      if (response && response.data && Array.isArray(response.data)) {
-        const elementos = response.data.map(elemento => ({
-          ...elemento,
-          stock: elemento.stock || 0,
-        })).filter((elemento) =>
-          Object.values(elemento).some((value) =>
+      const response = await axiosClient.get(`reporte/movimientosactivos`);
+      if (response && response.data && Array.isArray(response.data.datos)) {
+        const prestamos = response.data.datos.filter((prestamo) =>
+          Object.values(prestamo).some((value) =>
             value.toString().toLowerCase().includes(searchTerm.toLowerCase())
           )
         );
-        setElementos(elementos);
+        setPrestamosActivos(prestamos);
       } else {
         console.error('La respuesta del servidor no contiene los datos esperados:', response);
-        alert('Error al obtener la lista de elementos: respuesta no válida');
+        alert('Error al obtener la lista de préstamos activos: respuesta no válida');
       }
     } catch (error) {
-      console.log('Error al obtener la lista de elementos:', error);
-      alert('Error al obtener la lista de elementos: ' + error.message);
+      console.log('Error al obtener la lista de préstamos activos:', error);
+      alert('Error al obtener la lista de préstamos activos: ' + error.message);
     }
   };
 
   useEffect(() => {
-    ListarElementos();
+    ListarPrestamosActivos();
   }, [searchTerm]);
 
   useEffect(() => {
-    ListarElementos();
+    ListarPrestamosActivos();
   }, []);
-
-  const MyDocument = () => (
-    <Document>
-      <Page size="A2">
-        <View style={styles.page}>
-          <Text style={styles.title}>Reporte de Elementos</Text>
-          <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <Text style={styles.tableHeader}>Código</Text>
-              <Text style={styles.tableHeader}>Nombre</Text>
-              <Text style={styles.tableHeader}>Stock</Text>
-              <Text style={styles.tableHeader}>Tipo</Text>
-              <Text style={styles.tableHeader}>Categoría</Text>
-              <Text style={styles.tableHeader}>Empaque</Text>
-              <Text style={styles.tableHeader}>Medida</Text>
-              <Text style={styles.tableHeader}>Ubicación</Text>
-              <Text style={styles.tableHeader}>Estado</Text>
-              <Text style={styles.tableHeader}>F/ Registro</Text>
-            </View>
-            {useElementos.map(elemento => (
-              <View style={styles.tableRow} key={elemento.Codigo_elemento}>
-                <Text style={styles.tableCell}>{elemento.Codigo_elemento}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_elemento}</Text>
-                <Text style={styles.tableCell}>{elemento.stock !== undefined ? elemento.stock : 0}</Text>
-                <Text style={styles.tableCell}>{elemento.nombre_tipoElemento}</Text>
-                <Text style={styles.tableCell}>{elemento.nombre_categoria}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_empaque}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_Medida}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_ubicacion}</Text>
-                <Text style={styles.tableCell}>{elemento.Estado}</Text>
-                <Text style={styles.tableCell}>{formatDate(elemento.fecha_creacion)}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </Page>
-    </Document>
-  );
 
   const handlePrint = () => {
     return (
-      <PDFDownloadLink document={<MyDocument />} fileName="elementos.pdf">
+      <PDFDownloadLink document={<MyDocument prestamosActivos={prestamosActivos} />} fileName="Reporte de préstamos activos.pdf">
         {({ loading }) =>
           <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
             <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
@@ -93,77 +125,33 @@ const Elemento = () => {
     );
   };
 
-  const highlightSearchTerm = (text) => {
-    if (!searchTerm) return text;
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
-  };
-  
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear().toString().substr(-2);
-    return `${day}/${month}/${year}`;
-  };
-
   return (
     <div className="container">
-      <h1 className="text-center mb-4 mt-4">Reporte de Elementos</h1>
+      <h1 className="text-center mb-4 mt-4">Reporte de Préstamos Activos</h1>
 
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
-            <button className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tl-md rounded-bl-md font-sans text-lg font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-              <BiSearch />
-            </button>
             <input
               type="text"
               className="form-control"
-              placeholder="Buscar ..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <button 
+              className="flex justify-center items-center middle none center bg-[#3D7948] h-[40px] w-[50px] rounded-tr-lg rounded-br-lg font-sans text-lg font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" 
+              type="button"
+            >
+              <BiSearch />
+            </button>
           </div>
         </div>
         <div className="col d-flex align-items-center ml-5">
           {handlePrint()}
         </div>
       </div>
-
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Stock</th>
-            <th>Tipo</th>
-            <th>Categoría</th>
-            <th>Empaque</th>
-            <th>Medida</th>
-            <th>Ubicación</th>
-            <th>Estado</th>
-            <th>F/ Registro</th>
-          </tr>
-        </thead>
-        <tbody>
-          {useElementos.map(elemento => (
-            <tr key={elemento.Codigo_elemento}>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Codigo_elemento.toString()) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_elemento) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.stock !== undefined ? elemento.stock.toString() : '0') }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.nombre_tipoElemento) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.nombre_categoria) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_empaque) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_Medida) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Nombre_ubicacion) }}></td>
-              <td dangerouslySetInnerHTML={{ __html: highlightSearchTerm(elemento.Estado) }}></td>
-              <td style={{ textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: highlightSearchTerm(formatDate(elemento.fecha_creacion)) }}></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <PrestamosActivosTable prestamosActivos={prestamosActivos} searchTerm={searchTerm} />
     </div>
   );
 };

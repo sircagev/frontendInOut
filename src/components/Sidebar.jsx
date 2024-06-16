@@ -57,28 +57,6 @@ export const Sidebar = ({ state, setState }) => {
       icon: AiOutlineFileText,
       label: "Reportes",
       to: "/reportes",
-      subitems: [
-        {
-          icon: ImUsers,
-          label: "Usuarios",
-          to: "/reportes/usuarios",
-        },
-        {
-          icon: FaArrowRightArrowLeft,
-          label: "Movimientos",
-          to: "/reportes/movimientos",
-        },
-        {
-          icon: FaTools,
-          label: "Elementos",
-          to: "/reportes/elementos",
-        },
-        {
-          icon: FaBoxesPacking,
-          label: "Bodegas",
-          to: "/reportes/bodegas",
-        },
-      ]
     },
     {
       icon: FaBoxesPacking,
