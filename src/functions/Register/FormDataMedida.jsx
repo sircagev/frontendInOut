@@ -62,7 +62,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
                     <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
-                            label='Nombre_Medida'
+                            label='Nombre Medida'
                             name='Nombre_Medida'
                             value={values.Nombre_Medida}
                             onChange={handleInputChange}
@@ -79,7 +79,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
                         <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button className='font-bold text-white' color="success" type='submit'>
+                        <Button className='font-bold text-white' color="primary" type='submit'>
                             Registrar
                         </Button>
                     </div>

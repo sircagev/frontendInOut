@@ -196,20 +196,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                     <option value="Encargado">Encargado</option>
                                     <option value="Usuario">Usuario</option>
                                 </select>
-                                {/* <Input
-                                    type='text'
-                                    label='Rol'
-                                    name='rol'
-                                    value={values.rol}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                /> */}
-                                {/* {errorMessages.rol && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.rol}
-                                    </div>
-                                )} */}
                             </div>
                         </div>
                         <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
@@ -221,6 +207,8 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                     value={values.numero}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
+                                    onKeyPress={allowOnlyNumbers}
+                                    inputMode="numeric"
                                 />
                                 {errorMessages.numero && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
@@ -273,7 +261,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                         <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button className='font-bold text-white' color="success" type='submit'>
+                        <Button className='font-bold text-white' color="primary" type='submit'>
                             Registrar
                         </Button>
                     </div>

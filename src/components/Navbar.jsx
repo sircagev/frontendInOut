@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../assets/in.png'
+import logo from '../assets/in.png';
 import { FaBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-
-
+import swal from 'sweetalert';
 
 export const Navbar = ({ setLogIn }) => {
    const [userName, setUserName] = useState('');
@@ -13,14 +12,24 @@ export const Navbar = ({ setLogIn }) => {
    const navigate = useNavigate();
 
    const handleLogout = () => {
-      // Eliminar información del localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('role');
+      swal({
+         title: "¿Estás seguro?",
+         text: "¿Estás seguro de que deseas cerrar la sesión?",
+         icon: "warning",
+         buttons: ["No", "Sí"],
+         dangerMode: true,
+      }).then((willLogout) => {
+         if (willLogout) {
+            // Eliminar información del localStorage
+            localStorage.removeItem('token');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('role');
 
-      // Cambiar el estado de login y redirigir
-      setLogIn(false);
-      navigate('/login');
+            // Cambiar el estado de login y redirigir
+            setLogIn(false);
+            navigate('/login');
+         }
+      });
    };
 
    useEffect(() => {
@@ -38,10 +47,9 @@ export const Navbar = ({ setLogIn }) => {
    }, []);
 
    return (
-     
-      <div className='w-full flex items-center justify-between h-[100px] bg-[#D9DADF text-white'>
+      <div className='w-full flex items-center justify-between h-[100px] bg-[#fff] text-white'>
          <div className='flex items-center gap-4'>
-            <img src={logo} className='w-[80px] h-auto ml-10' alt="" />
+            <img src={logo} className='w-[80px] h-auto ml-10' alt="Logo" />
             <h1 className='text-black font-bold text-lg'>Inventario de bodegas</h1>
          </div>
          <div className='flex items-center gap-4 mr-10'>
@@ -53,8 +61,8 @@ export const Navbar = ({ setLogIn }) => {
                </div>
             </div>
             <FaBell className='cursor-pointer text-black text-[25px]' />
-            <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout}/>
+            <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
          </div>
       </div>
-   )
-}
+   );
+};
