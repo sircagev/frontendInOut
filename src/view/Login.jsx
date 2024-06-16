@@ -26,7 +26,6 @@ function Login({ setLoggedIn }) {
     }
   }, [token]);
 
-  // Función para manejar el inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -34,7 +33,7 @@ function Login({ setLoggedIn }) {
         email_usuario: email,
         contraseña_usuario: password,
       });
-
+  
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
@@ -44,22 +43,36 @@ function Login({ setLoggedIn }) {
         navigate('/home');
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Usuario inactivo. Por favor, contacta al administrador.',
-        });
+      if (error.response) {
+        if (error.response.status === 403) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario inactivo. Por favor, contacta al administrador.',
+          });
+        } else if (error.response.status === 404) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no autenticado. Por favor, verifica tus credenciales.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error. Por favor, inténtalo nuevamente.',
+          });
+        }
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Por favor, ingresa los datos correctamente.',
+          text: 'No se pudo conectar al servidor. Por favor, inténtalo nuevamente.',
         });
       }
     }
   };
-
+  
   // Función para manejar el envío del formulario de olvido de contraseña
   const handleForgotPassword = async (e) => {
     e.preventDefault();
