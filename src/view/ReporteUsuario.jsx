@@ -5,7 +5,7 @@ import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-
 
 const Usuario = () => {
   const [usuarios, setUsuarios] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(''); // Nuevo estado para el rol seleccionado
+  const [selectedRole, setSelectedRole] = useState('');
 
   useEffect(() => {
     listarUsuarios();
@@ -18,11 +18,11 @@ const Usuario = () => {
         setUsuarios(response.data.datos);
       } else {
         console.error("La respuesta de la solicitud GET no contiene los datos esperados:", response.data);
-        alert('Error al obtener la lista de usuarios');
+        alert('Error al obtener inormación de usuarios');
       }
     } catch (error) {
-      console.log('Error al obtener la lista de usuarios:', error);
-      alert('Error al obtener la lista de usuarios');
+      console.log('Error al obtener inormación de usuarios:', error);
+      alert('Error al obtener inormación de usuarios');
     }
   };
 
@@ -36,7 +36,7 @@ const Usuario = () => {
     <Document>
       <Page size="A2">
         <View style={styles.page}>
-          <Text style={styles.title}>Reporte de Usuarios</Text>
+          <Text style={styles.title}>Reporte de Solicitudes por Usuarios</Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <Text style={styles.tableHeader}>Rol</Text>
@@ -69,7 +69,7 @@ const Usuario = () => {
   );
 
   const handlePrint = () => (
-    <PDFDownloadLink document={<MyDocument />} fileName="Reporte usuarios.pdf">
+    <PDFDownloadLink document={<MyDocument />} fileName="Reporte solicitudes.pdf">
       {({ loading }) => (
         <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
           <div className="icon-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px' }}>
@@ -93,9 +93,10 @@ const Usuario = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center mb-4 mt-4">Reporte de Usuarios</h1>
+      <h1 className="text-center text-lg font-bold uppercase mb-4 mt-4">Reporte de Solicitudes por Usuarios</h1>
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className='d-flex justify-content-start'>
+    <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
             <select
@@ -121,6 +122,7 @@ const Usuario = () => {
           {handlePrint()}
         </div>
       </div>
+    </div>
 
       <table className="table table-striped">
         <thead>

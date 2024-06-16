@@ -127,9 +127,10 @@ const Elemento = () => {
 
   return (
     <div className="container">
-      <h1 className="text-center mb-4 mt-4">Reporte de Préstamos Activos</h1>
+      <h1 className="text-center mb-4 mt-4 font-bold uppercase">Reporte de Préstamos Activos</h1>
 
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className='d-flex justify-content-start'>
+    <div className="d-flex justify-content-between align-items-center mb-3">
         <div className="col">
           <div className="input-group flex-grow-1">
             <input
@@ -151,6 +152,7 @@ const Elemento = () => {
           {handlePrint()}
         </div>
       </div>
+    </div>
       <PrestamosActivosTable prestamosActivos={prestamosActivos} searchTerm={searchTerm} />
     </div>
   );
