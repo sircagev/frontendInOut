@@ -82,10 +82,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
             hasError = true;
         }
 
-        if (!values.rol.trim()) {
-            newErrorMessages.rol = 'El campo de rol es requerido.';
-            hasError = true;
-        }
+
 
         if (!values.numero.trim()) {
             newErrorMessages.numero = 'El campo de teléfono es requerido.';
@@ -193,32 +190,26 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                                 )}
                             </div>
                             <div>
-                                {/* <Select
-                                    label="Selecciona un rol"
-                                    name="rol"
-                                    value={values.rol}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                >
-                                    <SelectItem value="">Seleccione un Rol</SelectItem>
-                                    <SelectItem value="administrador">Administrador</SelectItem>
-                                    <SelectItem value="Encargado">Encargado</SelectItem>
-                                    <SelectItem value="Usuario">Usuario</SelectItem>
-                                </Select> */}
-                                <Input
+                                <select id="rol" name="rol" onChange={handleInputChange} className="w-[310px] h-[58px] rounded-xl pl-3 text-sm ">
+                                    <option value="">Seleccione un Rol</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="Encargado">Encargado</option>
+                                    <option value="Usuario">Usuario</option>
+                                </select>
+                                {/* <Input
                                     type='text'
                                     label='Rol'
                                     name='rol'
                                     value={values.rol}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
-                                />
-                                {errorMessages.rol && (
+                                /> */}
+                                {/* {errorMessages.rol && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
                                         {errorMessages.rol}
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         </div>
                         <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
