@@ -11,9 +11,9 @@ import { Medidas } from "./view/Medidas";
 import { Ubicacion } from "./view/Ubicacion";
 import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
-import ReporteU from "./view/ReporteUsuario";
-import ReporteE from "./view/ReporteElemento";
-import ReporteB from "./view/ReporteBodega";
+import ReporteU from "./view/ReporteSolicitudUsuario";
+import ReporteE from "./view/ReportePrestamosActivos";
+import ReporteB from "./view/ReporteStockMin";
 import ReporteM from "./view/ReporteMovimiento";
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
@@ -47,9 +47,9 @@ function App2() {
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
                     <Route path="/elementos/medidas" element={<Medidas user={user}/>} />
                     <Route path="/usuarios" element={<Usuario  userLogin={user}/>} />
-                    <Route path="/reportes/usuarios" element={<ReporteU />} />
-                    <Route path="/reportes/elementos" element={<ReporteE />} />
-                    <Route path="/reportes/bodegas" element={<ReporteB />} />
+                    <Route path="/reportes/solicitudusuario" element={<ReporteU />} />
+                    <Route path="/reportes/prestamosactivos" element={<ReporteE />} />
+                    <Route path="/reportes/stockmin" element={<ReporteB />} />
                     <Route path="/reportes/movimientos" element={<ReporteM />} />
                     <Route path="/bodegas" element={<Bodegas user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
