@@ -7,32 +7,32 @@ import { useNavigate } from "react-router-dom";
 import axiosClient from "../components/config/axiosClient";
 
 export const Navbar = ({ setLogIn }) => {
-  const [userName, setUserName] = useState("");
-  const [role, setRole] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
-  const [prestamosActivos, setPrestamosActivos] = useState([]);
-  const navigate = useNavigate();
+   const [userName, setUserName] = useState("");
+   const [role, setRole] = useState("");
+   const [showModal, setShowModal] = useState(false);
+   const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
+   const [prestamosActivos, setPrestamosActivos] = useState([]);
+   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseStock = await axiosClient.get("/reporte/stockminmodal");
-        setElementosConBajoStock(responseStock.data);
-        const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
-        setPrestamosActivos(responsePrestamos.data);
-      } catch (error) {
-        console.error(
-          "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
-          error
-        );
-      }
-    };
+   useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const responseStock = await axiosClient.get("/reporte/stockminmodal");
+            setElementosConBajoStock(responseStock.data);
+            const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
+            setPrestamosActivos(responsePrestamos.data);
+         } catch (error) {
+            console.error(
+               "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
+               error
+            );
+         }
+      };
 
-    fetchData();
-    const intervalId = setInterval(fetchData, 60); 
-     return () => clearInterval(intervalId); 
-  }, []);
+      fetchData();
+      const intervalId = setInterval(fetchData, 60);
+      return () => clearInterval(intervalId);
+   }, []);
 
    const handleLogout = () => {
       swal({
@@ -55,20 +55,19 @@ export const Navbar = ({ setLogIn }) => {
       });
    };
 
-  const handleViewStockClick = () => {
-    setShowModal(false);
-    navigate("/reportes/stockmin");
-  };
+   const handleViewStockClick = () => {
+      setShowModal(false);
+      navigate("/reportes/stockmin");
+   };
 
-  const handleViewPrestamosClick = () => {
-    setShowModal(false);
-    navigate("/reportes/prestamosactivos");
-  };
+   const handleViewPrestamosClick = () => {
+      setShowModal(false);
+      navigate("/reportes/prestamosactivos");
+   };
 
-      if (storedRole) {
-         setRole(storedRole);
-      }
-   }, []);
+   if (storedRole) {
+      setRole(storedRole);
+   }
 
    return (
       <div className='w-full flex items-center justify-between h-[100px] bg-[#fff] text-white'>
