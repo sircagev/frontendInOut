@@ -66,7 +66,13 @@ export const FormUpdateBodega = ({ onClose, category, onRegisterSuccess }) => {
                 ubicacion: values.ubicacion,
             });
             if (response.status === 200) {
-                swal("Actualizado", "La bodega ha sido actualizada con éxito", "success");
+                swal({
+                    title:"Actualizado",
+                    text: "Bodega actualizada con éxito",
+                    icon: "success",
+                    button: false,
+                    timer: 1500,
+                });
                 onClose();
                 onRegisterSuccess();
             }

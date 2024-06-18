@@ -3,10 +3,11 @@ import { TableGeneral } from '../components/tables/Elemento/TablaGeneral/Table'
 import { ListarEmpaques } from '../functions/Listar'
 import { columnsEmpaques } from '../functions/columnsData'
 import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
 import { FormDataEmpaque } from "../functions/Register/FormDataEmpaque";
+import Modal1 from "../components/Modal1";
 import { Modalupdatel } from "../components/ModalUpdate";
 import { FormUpdateEmpaque } from "../functions/Update/UpdateElemento/FormUpdateEmpaque";
+
 
 
 
@@ -26,17 +27,18 @@ export const Empaques = () => {
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Empaque"} onClick={() => setIsOpen(true)} />
       </div>
-      <ModalGeneral
+      <Modal1
+        title={"Registrar Empaque"}
+        size={"md"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormDataEmpaque onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate}/>}
-        title={"Registrar Empaque"}
+        form={<FormDataEmpaque onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
-      <Modalupdatel
+      <Modal1
         title={"Actualizar Empaque"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateEmpaque onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        form={<FormUpdateEmpaque onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral 
       funcionListar={ListarEmpaques} 

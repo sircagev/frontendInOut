@@ -14,6 +14,7 @@ import Usuario from "./view/Usuario";
 import ReporteU from "./view/ReporteSolicitudUsuario";
 import ReporteE from "./view/ReportePrestamosActivos";
 import ReporteB from "./view/ReporteStockMin";
+import { Usuarios } from './view/Usuarios';
 import ReporteM from "./view/ReporteMovimiento";
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
@@ -46,10 +47,11 @@ function App2() {
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
                     <Route path="/elementos/medidas" element={<Medidas user={user}/>} />
-                    <Route path="/usuarios" element={<Usuario  userLogin={user}/>} />
+                    /*<Route path="/usuarios" element={<Usuario  userLogin={user}/>} />*/
                     <Route path="/reportes/solicitudusuario" element={<ReporteU />} />
                     <Route path="/reportes/prestamosactivos" element={<ReporteE />} />
                     <Route path="/reportes/stockmin" element={<ReporteB />} />
+                    <Route path="/usuarios" element={<Usuarios  userLogin={user}/>} />
                     <Route path="/reportes/movimientos" element={<ReporteM />} />
                     <Route path="/bodegas" element={<Bodegas user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
