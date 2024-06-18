@@ -183,7 +183,7 @@ function Login({ setLoggedIn }) {
     }
   };
 
-  // Función para manejar el envío del formulario de olvido de contraseña
+ /*  // Función para manejar el envío del formulario de olvido de contraseña
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     try {
@@ -290,7 +290,7 @@ function Login({ setLoggedIn }) {
         text: 'No se pudo actualizar la contraseña.',
       });
     }
-  };
+  }; */
 
   return (
     <div className='w-full h-screen relative'>
