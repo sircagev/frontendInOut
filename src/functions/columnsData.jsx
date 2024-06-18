@@ -53,14 +53,6 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "contraseña_usuario",
-    label: "Contraseña",
-    options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false,
-    },
-  },
-  {
     name: "Id_ficha",
     label: "Ficha",
     options: {
@@ -90,7 +82,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
       sort: false,
       customBodyRender: (value, tableMeta, updateValue) => {
         const rowData = tableMeta.rowData;
-        const Active = rowData[9] === "Activo";
+        const Active = rowData[8] === "Activo";
 
         const handleEstado = async () => {
           const CodigoUsuario = rowData[0];
@@ -113,9 +105,8 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
             email: rowData[3],
             rol: rowData[4],
             numero: rowData[5],
-            contraseña: rowData[6],
-            ficha: rowData[7],
-            identificacion: rowData[8]
+            ficha: rowData[6],
+            identificacion: rowData[7]
           };
           console.log(data);
           setSelectedCategory(data);

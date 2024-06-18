@@ -293,7 +293,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
             Cancelar
           </Button>
-          <Button className='font-bold text-white' color="success" type='submit'>
+          <Button className='font-bold text-white' color="primary" type='submit'>
             Registrar
           </Button>
         </div>

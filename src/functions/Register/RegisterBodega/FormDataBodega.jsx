@@ -34,7 +34,7 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
             ubicacion: '',
         };
 
-        if (!values.Nombre_bodega.trim() || /\d/.test(values.Nombre_bodega.trim())) {
+        if (!values.Nombre_bodega.trim()) {
             if (!values.Nombre_bodega.trim()) {
                 newErrorMessages.Nombre_bodega = 'El nombre de la bodega no puede estar vacío.';
             } else {
@@ -117,7 +117,7 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
                     <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button className='font-bold text-white' color="success" type='submit'>
+                    <Button className='font-bold text-white' color="primary" type='submit'>
                         Registrar
                     </Button>
                 </div>

@@ -47,9 +47,11 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
 
     const validateForm = () => {
         let formErrors = {};
-        if (!values.Nombre_ubicacion.trim() || /\d/.test(values.Nombre_ubicacion.trim())) {
-            formErrors.Nombre_ubicacion = 'El nombre no debe estar vacío ni tener números.';
+
+        if (!values.Nombre_ubicacion.trim()) {
+            formErrors.Nombre_ubicacion = 'El nombre no debe estar vacío.';
         }
+
 
         if (!values.fk_bodega || !values.fk_bodega.trim()) {
             formErrors.fk_bodega = 'Debe seleccionar una bodega.';
@@ -131,7 +133,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                         <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button className='font-bold text-white' color="success" type='submit'>
+                        <Button className='font-bold text-white' color="primary" type='submit'>
                             Registrar
                         </Button>
                     </div>
