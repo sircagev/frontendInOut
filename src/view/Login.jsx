@@ -34,7 +34,7 @@ function Login({ setLoggedIn }) {
         email_usuario: email,
         contraseña_usuario: password,
       });
-
+  
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
@@ -44,19 +44,142 @@ function Login({ setLoggedIn }) {
         navigate('/home');
       }
     } catch (error) {
-      if (error.response && error.response.status === 403) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Usuario inactivo. Por favor, contacta al administrador.',
-        });
+      if (error.response) {
+        if (error.response.status === 403) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario inactivo. Por favor, contacta al administrador.',
+          });
+        } else if (error.response.status === 404) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no autenticado. Por favor, verifica tus credenciales.',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error. Por favor, inténtalo nuevamente.',
+          });
+        }
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Por favor, ingresa los datos correctamente.',
+          text: 'No se pudo conectar al servidor. Por favor, inténtalo nuevamente.',
         });
       }
+    }
+  };
+  
+  // Función para manejar el envío del formulario de olvido de contraseña
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosClient.post('/contrasena/recuperar', {
+        email_usuario: email,
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Correo enviado',
+          text: 'Por favor, revisa tu correo electrónico para restablecer tu contraseña.',
+        });
+        setShowForgotPassword(false);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar el correo de recuperación.',
+      });
+    }
+  };
+
+  // Función para manejar el envío del formulario de reset de contraseña
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    
+    // Expresiones regulares para verificar la complejidad de la contraseña
+    const uppercaseRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+    const specialCharRegex = /[!@#$%^&*]/;
+    const lengthRegex = /^.{8,}$/;
+    
+    // Verificar que la contraseña cumpla con todos los criterios
+    if (!uppercaseRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos una letra mayúscula.',
+      });
+      return;
+    }
+    
+    if (!numberRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos un número.',
+      });
+      return;
+    }
+    
+    if (!specialCharRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos un carácter especial.',
+      });
+      return;
+    }
+    
+    if (!lengthRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe tener al menos 8 caracteres.',
+      });
+      return;
+    }
+
+    // Si las contraseñas no coinciden, mostrar mensaje de error
+    if (newPassword !== confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Las contraseñas no coinciden.',
+      });
+      return;
+    }
+
+    try {
+      const response = await axiosClient.put('/contrasena/cambiar', {
+        token,
+        contraseña_usuario: newPassword,
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Contraseña actualizada',
+          text: 'Tu contraseña ha sido actualizada exitosamente.',
+        });
+    
+        setShowResetPassword(false); 
+        setEmail(''); 
+        setPassword(''); 
+        navigate('/login'); // Redirige al usuario al login
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la contraseña.',
+      });
     }
   };
 

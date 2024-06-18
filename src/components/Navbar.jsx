@@ -1,15 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../assets/in.png';
-import { FaBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
+import { FaBell, FaUserCircle, FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axiosClient from "../components/config/axiosClient";
 
 export const Navbar = ({ setLogIn }) => {
-   const [userName, setUserName] = useState('');
-   const [role, setRole] = useState('');
+  const [userName, setUserName] = useState("");
+  const [role, setRole] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
+  const [prestamosActivos, setPrestamosActivos] = useState([]);
+  const navigate = useNavigate();
 
-   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseStock = await axiosClient.get("/reporte/stockminmodal");
+        setElementosConBajoStock(responseStock.data);
+        const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
+        setPrestamosActivos(responsePrestamos.data);
+      } catch (error) {
+        console.error(
+          "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
+          error
+        );
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 60); 
+     return () => clearInterval(intervalId); 
+  }, []);
 
    const handleLogout = () => {
       swal({
@@ -32,14 +55,15 @@ export const Navbar = ({ setLogIn }) => {
       });
    };
 
-   useEffect(() => {
-      // Obtener información del localStorage al montar el componente
-      const storedUserName = localStorage.getItem('userName');
-      const storedRole = localStorage.getItem('role');
+  const handleViewStockClick = () => {
+    setShowModal(false);
+    navigate("/reportes/stockmin");
+  };
 
-      if (storedUserName) {
-         setUserName(storedUserName);
-      }
+  const handleViewPrestamosClick = () => {
+    setShowModal(false);
+    navigate("/reportes/prestamosactivos");
+  };
 
       if (storedRole) {
          setRole(storedRole);
@@ -65,4 +89,5 @@ export const Navbar = ({ setLogIn }) => {
          </div>
       </div>
    );
+
 };
