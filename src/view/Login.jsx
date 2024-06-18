@@ -55,7 +55,7 @@ function Login({ setLoggedIn }) {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Usuario no autenticado. Por favor, verifica tus credenciales.',
+            text: 'Por favor, verifica tus credenciales.',
           });
         } else {
           Swal.fire({
