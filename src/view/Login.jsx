@@ -26,6 +26,7 @@ function Login({ setLoggedIn }) {
     }
   }, [token]);
 
+  // Función para manejar el inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -73,6 +74,115 @@ function Login({ setLoggedIn }) {
     }
   };
   
+  // Función para manejar el envío del formulario de olvido de contraseña
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axiosClient.post('/contrasena/recuperar', {
+        email_usuario: email,
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Correo enviado',
+          text: 'Por favor, revisa tu correo electrónico para restablecer tu contraseña.',
+        });
+        setShowForgotPassword(false);
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo enviar el correo de recuperación.',
+      });
+    }
+  };
+
+  // Función para manejar el envío del formulario de reset de contraseña
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    
+    // Expresiones regulares para verificar la complejidad de la contraseña
+    const uppercaseRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+    const specialCharRegex = /[!@#$%^&*]/;
+    const lengthRegex = /^.{8,}$/;
+    
+    // Verificar que la contraseña cumpla con todos los criterios
+    if (!uppercaseRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos una letra mayúscula.',
+      });
+      return;
+    }
+    
+    if (!numberRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos un número.',
+      });
+      return;
+    }
+    
+    if (!specialCharRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe contener al menos un carácter especial.',
+      });
+      return;
+    }
+    
+    if (!lengthRegex.test(newPassword)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La contraseña debe tener al menos 8 caracteres.',
+      });
+      return;
+    }
+
+    // Si las contraseñas no coinciden, mostrar mensaje de error
+    if (newPassword !== confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Las contraseñas no coinciden.',
+      });
+      return;
+    }
+
+    try {
+      const response = await axiosClient.put('/contrasena/cambiar', {
+        token,
+        contraseña_usuario: newPassword,
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Contraseña actualizada',
+          text: 'Tu contraseña ha sido actualizada exitosamente.',
+        });
+    
+        setShowResetPassword(false); 
+        setEmail(''); 
+        setPassword(''); 
+        navigate('/login'); // Redirige al usuario al login
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la contraseña.',
+      });
+    }
+  };
+
   // Función para manejar el envío del formulario de olvido de contraseña
   const handleForgotPassword = async (e) => {
     e.preventDefault();
