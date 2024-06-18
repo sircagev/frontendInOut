@@ -9,13 +9,12 @@ export const ProtectedRoutes = ({ children, setLoggedIn, setUser }) => {
     const code = localStorage.getItem('codigo')
 
     //Ejecutar funciones
-    useEffect(() => {
-        if (!token) {
-            return <Navigate to="/login" />
-        } else {
-            setUser({ role: role, codigo: code })
-        }
-    }, [])
+
+    if (!token) {
+        return <Navigate to="/login" />
+    } else {
+        setUser({ role: role, codigo: code })
+    }
 
     return (
         <DashboardTemplate setLoggedIn={setLoggedIn}>

@@ -46,8 +46,7 @@ function App2() {
                     <Route path="/elementos" element={<Elemento user={user} />} />
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
-                    <Route path="/elementos/medidas" element={<Medidas user={user}/>} />
-                    /*<Route path="/usuarios" element={<Usuario  userLogin={user}/>} />*/
+                    <Route path="/elementos/medidas" element={<Medidas user={user}/>} />                  
                     <Route path="/reportes/solicitudusuario" element={<ReporteU />} />
                     <Route path="/reportes/prestamosactivos" element={<ReporteE />} />
                     <Route path="/reportes/stockmin" element={<ReporteB />} />
