@@ -146,8 +146,10 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             onClose();
             onRegisterSuccess();
         } catch (error) {
-            console.log(error);
-            swal("Error", "Hubo un problema al actualizar el usuario", "error");
+            const status = error.response.status;
+            const message = error.response.data.message
+            
+            swal("Error", message , "error");
         }
     };
 
