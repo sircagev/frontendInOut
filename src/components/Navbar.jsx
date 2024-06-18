@@ -1,38 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../assets/in.png';
+import { FaBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
-import { FaBell, FaUserCircle, FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import axiosClient from "../components/config/axiosClient";
 
 export const Navbar = ({ setLogIn }) => {
-   const [userName, setUserName] = useState("");
-   const [role, setRole] = useState("");
-   const [showModal, setShowModal] = useState(false);
-   const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
-   const [prestamosActivos, setPrestamosActivos] = useState([]);
+   const [userName, setUserName] = useState('');
+   const [role, setRole] = useState('');
+
    const navigate = useNavigate();
-
-   useEffect(() => {
-      const fetchData = async () => {
-         try {
-            const responseStock = await axiosClient.get("/reporte/stockminmodal");
-            setElementosConBajoStock(responseStock.data);
-            const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
-            setPrestamosActivos(responsePrestamos.data);
-         } catch (error) {
-            console.error(
-               "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
-               error
-            );
-         }
-      };
-
-      fetchData();
-      const intervalId = setInterval(fetchData, 60);
-      return () => clearInterval(intervalId);
-   }, []);
 
    const handleLogout = () => {
       swal({
@@ -55,19 +32,19 @@ export const Navbar = ({ setLogIn }) => {
       });
    };
 
-   const handleViewStockClick = () => {
-      setShowModal(false);
-      navigate("/reportes/stockmin");
-   };
+   useEffect(() => {
+      // Obtener información del localStorage al montar el componente
+      const storedUserName = localStorage.getItem('userName');
+      const storedRole = localStorage.getItem('role');
 
-   const handleViewPrestamosClick = () => {
-      setShowModal(false);
-      navigate("/reportes/prestamosactivos");
-   };
+      if (storedUserName) {
+         setUserName(storedUserName);
+      }
 
-   if (storedRole) {
-      setRole(storedRole);
-   }
+      if (storedRole) {
+         setRole(storedRole);
+      }
+   }, []);
 
    return (
       <div className='w-full flex items-center justify-between h-[100px] bg-[#fff] text-white'>
@@ -88,5 +65,4 @@ export const Navbar = ({ setLogIn }) => {
          </div>
       </div>
    );
-
 };
