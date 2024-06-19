@@ -83,7 +83,7 @@ const Movimientos = () => {
     setShowFilters(true);
     setShowResultsAndPrint(false);
     setTipoMovimiento("");
-    setFechaInicio("2024-01-01");
+    setFechaInicio("");
     setFechaFin("");
     setShowResultsNotification(false);
     window.location.reload();
@@ -147,7 +147,7 @@ const Movimientos = () => {
             : "Ninguna coincidencia"}
         </div>
       </div>
-      <div className="d-flex font-sans w-[180px] h-[40px] text-m uppercase align-items-center mb-3 bg-blue-800 text-white px-1 mt-3 rounded ml-4">
+      <div className="d-flex font-sans cursor-pointer w-[180px] h-[40px] text-m uppercase align-items-center mb-3 bg-blue-800 text-white px-1 mt-3 rounded ml-4" onClick={handleNewSearch}>
         <div
           className="icon-container"
           style={{
@@ -159,7 +159,7 @@ const Movimientos = () => {
         >
           <BiSearch style={{ fontSize: "1.5em" }} />
         </div>
-        <button className="ml-2 text-white" onClick={handleNewSearch}>
+        <button className="ml-2 text-white" >
           Nueva búsqueda
         </button>
       </div>
@@ -226,7 +226,7 @@ const Movimientos = () => {
       document={<MyDocument data={filteredMovimientos} />}
       fileName="Reporte_de_movimientos.pdf"
     >
-      {({ loading }) => (
+      {({}) => (
         <button
           className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold"
           style={{ textDecoration: "none" }}
@@ -251,7 +251,7 @@ const Movimientos = () => {
               flex: 1,
             }}
           >
-            {loading ? "Cargando documento..." : "Descargar Reporte"}
+            {"Descargar Reporte"}
           </div>
         </button>
       )}
@@ -293,8 +293,8 @@ const Movimientos = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredMovimientos.map((movimiento) => (
-            <tr key={movimiento["ID del Prestamo"]}>
+          {filteredMovimientos.map((movimiento, index) => (
+            <tr key={index}>
               <td>{movimiento["Tipo de Movimiento"]}</td>
               <td>{movimiento["Nombre del Elemento"]}</td>
               <td>{movimiento["ID del Prestamo"]}</td>
