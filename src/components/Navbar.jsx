@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/in.png";
-import { FaBell, FaUserCircle, FaSearch } from "react-icons/fa";
+import { FaBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
+import NotificacionesModal from "./NotificacionesModal"; 
 
 export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
@@ -11,88 +13,71 @@ export const Navbar = ({ setLogIn }) => {
   const [showModal, setShowModal] = useState(false);
   const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
   const [prestamosActivos, setPrestamosActivos] = useState([]);
+  const [contadorStockMin, setContadorStockMin] = useState(0);
+  const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
+
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    swal({
+      title: "¿Estás seguro?",
+      text: "¿Estás seguro de que deseas cerrar la sesión?",
+      icon: "warning",
+      buttons: ["No", "Sí"],
+      dangerMode: true,
+    }).then((willLogout) => {
+      if (willLogout) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("role");
+
+        setLogIn(false);
+        navigate("/login");
+      }
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseStock = await axiosClient.get("/reporte/stockminmodal");
-        setElementosConBajoStock(responseStock.data);
+        const stockMinimo = responseStock.data;
+        setElementosConBajoStock(stockMinimo);
+        setContadorStockMin(stockMinimo > 0 ? 1 : 0);
 
-        const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
-        setPrestamosActivos(responsePrestamos.data);
+        const responsePrestamos = await axiosClient.get(
+          "/reporte/prestamosactivosmodal"
+        );
+        const prestamosActivos = responsePrestamos.data;
+        setPrestamosActivos(prestamosActivos);
+        setContadorPrestamosActivos(prestamosActivos > 0 ? 1 : 0);
       } catch (error) {
         console.error(
           "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
           error
         );
       }
+
+      const storedUserName = localStorage.getItem("userName");
+      const storedRole = localStorage.getItem("role");
+
+      if (storedUserName) {
+        setUserName(storedUserName);
+      }
+
+      if (storedRole) {
+        setRole(storedRole);
+      }
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 60); 
+    const intervalId = setInterval(fetchData, 120);
 
-    return () => clearInterval(intervalId); 
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("role");
-    setLogIn(false);
-    navigate("/login");
-  };
-
-  const handleViewStockClick = () => {
-    setShowModal(false);
-    navigate("/reportes/stockmin");
-  };
-
-  const handleViewPrestamosClick = () => {
-    setShowModal(false);
-    navigate("/reportes/prestamosactivos");
-  };
-
-  const modalContent = (
-    <div className="fixed top-9 right-11 z-50">
-      <div
-        className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
-        onClick={() => setShowModal(false)}
-      />
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="flex text-xl text-black font-bold mb-4 justify-center">Notificaciones</h2>
-        <div
-          className="flex items-center mb-2 hover:bg-gray-200 p-2 rounded cursor-pointer"
-          onClick={handleViewStockClick}
-        >
-          <p className="flex-1 text-black pr-5">
-            {elementosConBajoStock} Elementos con bajo Stock
-          </p>
-          <FaSearch className="text-blue-900"/>
-        </div>
-        <div
-          className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
-          onClick={handleViewPrestamosClick}
-        >
-          <p className="flex-1 text-black">
-            {prestamosActivos} Préstamos activos
-          </p>
-          <FaSearch className="text-blue-900"/>
-        </div>
-        <div className="flex justify-center mt-4">
-          <button
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-4"
-            onClick={() => setShowModal(false)}
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    return () => clearInterval(intervalId);
+  }, [setLogIn]);
 
   return (
-    <div className="w-full flex items-center justify-between h-[100px] bg-[#D9DADF] text-white">
+    <div className="w-full flex items-center justify-between h-[100px] bg-[#D9DADF text-white]">
       <div className="flex items-center gap-4">
         <img src={logo} className="w-[80px] h-auto ml-10" alt="logo" />
         <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
@@ -105,16 +90,32 @@ export const Navbar = ({ setLogIn }) => {
             <p className="flex text-xs">{role}</p>
           </div>
         </div>
-        <FaBell
-          className="cursor-pointer text-black text-[25px]"
+        <div
+          className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
-        />
-        <IoMdLogOut
-          className="cursor-pointer text-black text-[30px] font-bold"
+        >
+          {contadorStockMin + contadorPrestamosActivos > 0 && (
+            <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 rounded-full text-white font-bold px-2 py-1 text-xs">
+              {contadorStockMin + contadorPrestamosActivos}
+            </span>
+          )}
+          <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
+        </div>
+
+        <div
+          className="flex flex-col items-center cursor-pointer"
           onClick={handleLogout}
-        />
+        >
+          <IoMdLogOut className=" text-black text-[30px] font-bold" />
+          <p className="text-xs text-black font-bold">Logout</p>
+        </div>
       </div>
-      {showModal && modalContent}
+      <NotificacionesModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        elementosConBajoStock={elementosConBajoStock}
+        prestamosActivos={prestamosActivos}
+      />
     </div>
   );
 };

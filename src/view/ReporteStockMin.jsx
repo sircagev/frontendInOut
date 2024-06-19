@@ -15,19 +15,22 @@ const Bodega = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBodegas, setFilteredBodegas] = useState({});
 
+  const fetchData = async () => {
+    try {
+      const response = await axiosClient.get("/reporte/stockminelementos");
+      setBodegas(response.data);
+    } catch (error) {
+      console.error(
+        "Error al obtener la información de los elementos con bajo Stock:",
+        error
+      );
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosClient.get("/reporte/stockminelementos");
-        setBodegas(response.data);
-      } catch (error) {
-        console.error(
-          "Error al obtener la información de los elementos con bajo Stock:",
-          error
-        );
-      }
-    };
     fetchData();
+    const intervalId = setInterval(fetchData, 2000);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -54,10 +57,10 @@ const Bodega = () => {
           </Text>
           <View style={styles.table}>
             <View style={styles.tableRow}>
-              <Text style={styles.tableHeader}>Bodega</Text>
               <Text style={styles.tableHeader}>Elemento</Text>
               <Text style={styles.tableHeader}>Código</Text>
               <Text style={styles.tableHeader}>Cantidad</Text>
+              <Text style={styles.tableHeader}>Bodega</Text>
               <Text style={styles.tableHeader}>Ubicación</Text>
             </View>
             {Object.keys(filteredBodegas).map((bodegaNombre) =>
@@ -66,7 +69,6 @@ const Bodega = () => {
                   style={styles.tableRow}
                   key={`${bodegaNombre}_${bodega.Id_elemento}`}
                 >
-                  <Text style={styles.tableCell}>{bodega.Bodega}</Text>
                   <Text style={styles.tableCell}>{bodega.Nombre_elemento}</Text>
                   <Text style={styles.tableCell}>
                     {bodega.Id_elemento.toString()}
@@ -74,6 +76,7 @@ const Bodega = () => {
                   <Text style={styles.tableCell}>
                     {bodega.Stock !== undefined ? bodega.Stock : "0"}
                   </Text>
+                  <Text style={styles.tableCell}>{bodega.Bodega}</Text>
                   <Text style={styles.tableCell}>
                     {bodega.Nombre_ubicacion}
                   </Text>
@@ -89,9 +92,9 @@ const Bodega = () => {
   const handlePrint = () => (
     <PDFDownloadLink
       document={<MyDocument />}
-      fileName="Reporte de bodegas.pdf"
+      fileName="Reporte de Mínimo Stock.pdf"
     >
-      {({ loading }) => (
+      {({}) => (
         <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
           <div
             className="icon-container"
@@ -113,7 +116,7 @@ const Bodega = () => {
               flex: 1,
             }}
           >
-            {loading ? "Cargando documento..." : "Descargar Reporte"}
+            {"Descargar Reporte"}
           </div>
         </button>
       )}

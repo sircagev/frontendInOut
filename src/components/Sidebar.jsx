@@ -90,7 +90,7 @@ export const Sidebar = ({ state, setState }) => {
           </div>
         </div>
         {LinksArray.map(({ icon, label, to, subitems, onClick }, index) => (
-          <LiSideBar icon={icon} label={label} to={to} state={state} subitems={subitems} onClick={onClick} llave={index}/>
+          <LiSideBar icon={icon} label={label} to={to} state={state} subitems={subitems} onClick={onClick} key={index}/>
         ))}
       </div>
     </div>

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
 import Swal from 'sweetalert2'; 
 import imgLogin from '../assets/imgLogin.png';
-import logo from '../assets/logoInout.png';
+import logo from '../assets/in.png';
 
 
 function Login({ setLoggedIn }) {
@@ -54,18 +54,18 @@ function Login({ setLoggedIn }) {
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
 
-          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className='h-[50px] w-[auto]' /></h1>
-          <div className='ml-[60px] mt-[60px] h-[200px] w-[300px]'>
+          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className=' h-[70px] w-[auto]'/></h1>
+          <div className='ml-[60px] mt-[40px] h-[200px] w-[300px]'>
 
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
             <p className='text-sm mt-2 text-white font-light text-justify'>
-              InOut es un software que aumenta la eficiencia en la gestión de préstamos, y esto se logra a través de múltiples funciones.
-              Al gestionar préstamos, se pueden automatizar procesos, optimizar recursos, y mejorar la experiencia del cliente.
+              InOut es un software que a través de múltiples funciones, aumenta la eficiencia de la gestión de préstamos.
+              Logrando con esto automatizar procesos, optimizar recursos, y mejorar la experiencia del cliente.
             </p>
           </div>
         </div>
-          <div className='ml-[60px] mt-5'>
+          <div className='ml-[30px] mt-5'>
             <img src={imgLogin} alt="Descripción de la imagen" className='w-[300px] h-[250px]' /> 
           </div>
       </div>
@@ -79,8 +79,8 @@ function Login({ setLoggedIn }) {
         }}
       >
         <div className='w-[80%] mt-7 ml-[10%] mr-[10%]'>
-          <h3 className='text-lg font-bold'>Bienvenido a <span className='text-[#00AC4F]'>IN-OUT</span></h3>
-          <h2 className='mt-1 mb-[60px] text-4xl font-semibold text-black'>Sign In</h2>
+          <h3 className='text-lg font-bold'>Bienvenido a </h3>
+          <h2 className='mt-3 mb-[60px] text-4xl font-bold text-[#00AC4F]'>IN-OUT</h2>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
               <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
@@ -104,7 +104,7 @@ function Login({ setLoggedIn }) {
                 className="w-full mb-2" // Limita el ancho máximo
               />
               <div className=''>
-                <a className='w-full text-[14px] text-[#39A900] flex justify-end mb-[45px]' href="">¿Olvidaste tu contraeña?</a>
+                <a className='w-full text-[14px] text-[#39A900] flex justify-end mb-[45px]' href="">¿Olvidaste tu contraseña?</a>
               </div>
               <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                 Ingresar
