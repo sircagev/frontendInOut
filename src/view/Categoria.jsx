@@ -7,6 +7,7 @@ import { ModalGeneral } from "../components/Modal";
 import { FormData } from "../functions/FormData";
 import { Modalupdatel } from "../components/ModalUpdate";
 import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
+import Modal1 from "../components/Modal1";
 
 export const Categoria = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,17 +24,18 @@ export const Categoria = () => {
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Categoría"} onClick={() => setIsOpen(true)} />
       </div>
-      <ModalGeneral
+      <Modal1
+        title={"Registrar Categoría"}
+        size={"md"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Categoría"}
+        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
-      <Modalupdatel
+      <Modal1
         title={"Actualizar Categoría"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        form={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral
         funcionListar={ListarCategorias}

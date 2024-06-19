@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
 import axiosClient from '../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
@@ -80,7 +79,7 @@ export const FormData = ( {onRegisterSuccess, onClose} ) => {
                         <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button className='font-bold text-white' color="success" type='submit'>
+                        <Button className='font-bold text-white' color="primary" type='submit'>
                             Registrar
                         </Button>
                     </div>

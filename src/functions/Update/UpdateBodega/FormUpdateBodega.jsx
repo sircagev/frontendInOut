@@ -66,7 +66,13 @@ export const FormUpdateBodega = ({ onClose, category, onRegisterSuccess }) => {
                 ubicacion: values.ubicacion,
             });
             if (response.status === 200) {
-                swal("Actualizado", "La bodega ha sido actualizada con éxito", "success");
+                swal({
+                    title:"Actualizado",
+                    text: "Bodega actualizada con éxito",
+                    icon: "success",
+                    button: false,
+                    timer: 1500,
+                });
                 onClose();
                 onRegisterSuccess();
             }
@@ -117,7 +123,7 @@ export const FormUpdateBodega = ({ onClose, category, onRegisterSuccess }) => {
                     <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button className='font-bold text-white' color="success" type='submit'>
+                    <Button className='font-bold text-white' color="primary" type='submit'>
                         Actualizar
                     </Button>
                 </div>

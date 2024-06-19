@@ -1,7 +1,136 @@
 import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
-import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega } from "./Desactivar";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega, DesactivarUsuario } from "./Desactivar";
+
+export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "id_usuario",
+    label: "Código",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "nombre_usuario",
+    label: "Nombre",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "apellido_usuario",
+    label: "Apellido",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "email_usuario",
+    label: "Email",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "rol",
+    label: "Rol",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "numero",
+    label: "Teléfono",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "Id_ficha",
+    label: "Ficha",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "identificacion",
+    label: "ID",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "Estado",
+    label: "Estado",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+    },
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[8] === "Activo";
+
+        const handleEstado = async () => {
+          const CodigoUsuario = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarUsuario(CodigoUsuario, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
+            apellido: rowData[2],
+            email: rowData[3],
+            rol: rowData[4],
+            numero: rowData[5],
+            ficha: rowData[6],
+            identificacion: rowData[7]
+          };
+          console.log(data);
+          setSelectedCategory(data);
+        };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+    },
+  },
+];
 
 export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
@@ -9,7 +138,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Código",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -17,7 +146,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Nombre",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -25,7 +154,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Cantidad",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -33,7 +162,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Fecha",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -41,7 +170,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Tipo",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -49,7 +178,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Medida",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -57,7 +186,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Categoria",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -65,7 +194,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Empaque",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -73,7 +202,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
     label: "Ubicación",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
-      filter: false, 
+      filter: false,
     },
   },
   {
@@ -105,7 +234,7 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
           setIsOpenUpdate(true);
           const data = {
             codigo: rowData[0],
-            nombre: rowData[1], 
+            nombre: rowData[1],
             tipo: rowData[4],
             medida: rowData[5],
             categoria: rowData[6],
@@ -114,7 +243,6 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
           }
           console.log(data);
           setSelectedCategory(data);
-          console.log(data);
         };
         return (
           <div className='flex'>
@@ -131,8 +259,8 @@ export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) =>
             </Button>
           </div>
         );
+      },
     },
-  },
   },
 ];
 
@@ -175,13 +303,13 @@ export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) 
         };
 
         const handleEdit = () => {
-            setIsOpenUpdate(true);
-            const data = {
-              codigo: rowData[0],
-              nombre: rowData[1],
-            };
-            setSelectedCategory(data);
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
           };
+          setSelectedCategory(data);
+        };
 
         return (
           <div>
@@ -246,15 +374,15 @@ export const columnsBodegas = (listar, setIsOpenUpdate, setSelectedCategory) => 
         };
 
         const handleEdit = () => {
-            setIsOpenUpdate(true);
-            const data = {
-              codigo: rowData[0],
-              nombre: rowData[1],
-              ubicacion: rowData[2],
-            };
-            console.log(data);
-            setSelectedCategory(data);
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
+            ubicacion: rowData[2],
           };
+          console.log(data);
+          setSelectedCategory(data);
+        };
 
         return (
           <div>
@@ -514,20 +642,20 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
 ];
 
 export const columnsPrestamos = [
-    {
-        name: "Codigo",
-        label: "Codigo",
-    },
-    {
-        name: "Usuario",
-        label: "Usuario",
-    },
-    {
-        name: "Fecha",
-        label: "Fecha",
-    },
-    {
-        name: 'options', // Nombre de la nueva columna
-        label: 'Opciones',
-    }
+  {
+    name: "Codigo",
+    label: "Codigo",
+  },
+  {
+    name: "Usuario",
+    label: "Usuario",
+  },
+  {
+    name: "Fecha",
+    label: "Fecha",
+  },
+  {
+    name: 'options', // Nombre de la nueva columna
+    label: 'Opciones',
+  }
 ]

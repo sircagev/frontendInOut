@@ -29,7 +29,13 @@ export const FormUpdateMedida = ({ onClose, category, onRegisterSuccess }) => {
       await axiosClient.put(`medida/actualizar/${category.codigo}`, {
         Nombre_Medida: nombre,
       });
-      swal("Actualizado", "La Medida ha sido actualizado con éxito", "success");
+      swal({
+        title: "Actualizado",
+        text: "Medida actualizada con éxito.",
+        icon: "success",
+        buttons: false,
+        timer: 2000, 
+    });
       onClose();
       onRegisterSuccess();
     } catch (error) {
@@ -63,7 +69,7 @@ export const FormUpdateMedida = ({ onClose, category, onRegisterSuccess }) => {
               <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                 Cancelar
               </Button>
-              <Button className='font-bold text-white' color="success" type='submit'>
+              <Button className='font-bold text-white' color="primary" type='submit'>
                 Actualizar
               </Button>
             </div>

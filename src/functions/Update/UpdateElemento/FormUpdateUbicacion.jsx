@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
-import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import axiosClient from '../../../components/config/axiosClient';
 
 export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) => {
   const [bodegas, setBodegas] = useState([]);
@@ -30,7 +30,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
   const BodegasListar = async () => {
     try {
-      const response = await axiosCliente.get('bodega/listar');
+      const response = await axiosClient.get('bodega/listar');
       setBodegas(response.data);
     } catch (error) {
       console.error("Error fetching bodegas:", error);
@@ -48,9 +48,10 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
   const validateForm = () => {
     let formErrors = {};
-    if (!values.nombre.trim() || /\d/.test(values.nombre.trim())) {
-      formErrors.nombre = 'El nombre no debe estar vacío ni tener números.';
-    }
+    if (!values.nombre.trim()) {
+      formErrors.nombre = 'El nombre no debe estar vacío.';
+  }
+  
 
     if (!values.nombreBodega.trim()) {
       formErrors.nombreBodega = 'Debe seleccionar una bodega.';
@@ -69,7 +70,13 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
         Nombre_ubicacion: values.nombre,
         fk_bodega: values.nombreBodega,
       });
-      swal("Actualizado", "La bodega ha sido actualizada con éxito", "success");
+      swal({
+        title: "Actualizado",
+        text: "Ubicación actualizada con éxito.",
+        icon: "success",
+        buttons: false,
+        timer: 2000, 
+      });
       onClose();
       onRegisterSuccess();
     } catch (error) {
@@ -125,7 +132,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
               <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                 Cancelar
               </Button>
-              <Button className='font-bold text-white' color="success" type='submit'>
+              <Button className='font-bold text-white' color="primary" type='submit'>
                 Actualizar
               </Button>
             </div>
@@ -135,8 +142,3 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     </div>
   );
 };
-
-
-
-
-

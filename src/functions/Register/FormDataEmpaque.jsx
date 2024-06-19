@@ -62,7 +62,7 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                     <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
-                            label='Nombre_Empaque'
+                            label='Nombre Empaque'
                             name='Nombre_Empaque'
                             value={values.Nombre_Empaque}
                             onChange={handleInputChange}
@@ -79,7 +79,7 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                         <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button className='font-bold text-white' color="success" type='submit'>
+                        <Button className='font-bold text-white' color="primary" type='submit'>
                             Registrar
                         </Button>
                     </div>

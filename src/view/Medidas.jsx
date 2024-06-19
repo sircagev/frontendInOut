@@ -3,10 +3,11 @@ import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarCategorias, ListarMedidas } from "../functions/Listar";
 import { columnsMedidas } from "../functions/columnsData";
 import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
+import Modal1 from "../components/Modal1";
 import { FormDataMedida } from "../functions/Register/FormDataMedida";
 import { Modalupdatel } from "../components/ModalUpdate";
 import { FormUpdateMedida } from "../functions/Update/UpdateElemento/FormUpdateMedida";
+
 
 export const Medidas = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,17 +24,18 @@ export const Medidas = () => {
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Medida"} onClick={() => setIsOpen(true)} />
       </div>
-      <ModalGeneral
+      <Modal1
+        title={"Registrar Medida"}
+        size={"md"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormDataMedida onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-        title={"Registrar Medida"}
+        form={<FormDataMedida onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
-      <Modalupdatel
+      <Modal1
         title={"Actualizar Medida"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}
-        formUpdate={<FormUpdateMedida onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
+        form={<FormUpdateMedida onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
       />
       <TableGeneral
         funcionListar={ListarMedidas}
