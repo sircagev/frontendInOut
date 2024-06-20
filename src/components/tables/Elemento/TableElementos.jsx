@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, Button } from "@nextui-org/react";
 import { FaSearch } from "react-icons/fa";
 import { ListarTipo, ListarCategorias, Listarubicacion, ListarEmpaques, ListarMedidas } from '../../../functions/Listar';
-import { ModalRegistrar } from '../../modals/Elemento/ModalRegistrar';
-import { ModalActualizarElemento } from '../../modals/Elemento/ModalActualizarElemento';
+
 import swal from 'sweetalert';
 
 export const TableElementos = ({ items, user }) => {

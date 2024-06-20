@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarUsuarios } from "../functions/Listar";
 import { columnsUsuarios } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
+import { ButtonGeneral } from "../components/Buttons/Button";
 import { FormDataUsuario } from "../functions/Register/RegisterUsuario/FormDataUsuario";
 import Modal1 from "../components/Modal1";
 import { FormUpdateUsuario } from "../functions/Update/UpdateUsuario/FormUpdateUsuario";

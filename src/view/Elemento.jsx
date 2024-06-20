@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarElementos } from "../functions/Listar";
 import { columnsElemntos } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
+import { ButtonGeneral } from "../components/Buttons/Button";
 import Modal1 from "../components/Modal1";
-import { FormDataElemento } from "../functions/Register/FormDataElemento";
+import { FormDataElemento } from "../functions/Register/RegisterElemento/FormDataElemento";
 import { FormUpdateElemento } from "../functions/Update/UpdateElemento/FormUpdateElemento";
 
 

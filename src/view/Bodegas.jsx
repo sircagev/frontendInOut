@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { Listarbodegas } from "../functions/Listar";
 import { columnsBodegas } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
+import { ButtonGeneral } from "../components/Buttons/Button";
 import Modal1 from "../components/Modal1";
-import { Modalupdatel } from "../components/ModalUpdate";
 import { FormDataBodega } from "../functions/Register/RegisterBodega/FormDataBodega";
 import { FormUpdateBodega } from "../functions/Update/UpdateBodega/FormUpdateBodega";
 
@@ -31,7 +30,7 @@ const Bodegas = () => {
         onClose={() => setIsOpen(false)}
         form={<FormDataBodega onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
-      <Modalupdatel
+      <Modal1
         title={"Actualizar Bodega"}
         isOpen={isOpenUpdate}
         onClose={() => setIsOpenUpdate(false)}

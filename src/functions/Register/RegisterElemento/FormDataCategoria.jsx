@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import axiosClient from '../../components/config/axiosClient';
-import { Input, Button } from "@nextui-org/react";
+import axiosClient from '../../../components/config/axiosClient';
+import { Input } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { ButtonGeneral } from '../../../components/Buttons/Button';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
+
+
+export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Empaque: "",
+            Nombre_Categoria: "",
         }
     )
 
@@ -26,7 +31,7 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Empaque.trim() || /\d/.test(values.Nombre_Empaque.trim())) {
+        if (!values.Nombre_Categoria.trim() || /\d/.test(values.Nombre_Categoria.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -34,13 +39,13 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
         }
 
         try {
-            const response = await axiosClient.post('empaque/registrar', values);
+            const response = await axiosClient.post('categoria/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Empaque: '' });
+                setValues({ Nombre_Categoria: '' });
                 swal({
                     title: "Registro exitoso",
-                    text: "El empaque se ha registrado correctamente.",
+                    text: "La categoría se ha registrado correctamente.",
                     icon: "success",
                     buttons: false,
                     timer: 2000, 
@@ -62,26 +67,22 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                     <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
-                            label='Nombre Empaque'
-                            name='Nombre_Empaque'
-                            value={values.Nombre_Empaque}
+                            label='Nombre Categoría'
+                            name='Nombre_Categoria'
+                            value={values.Nombre_Categoria}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
                         {errorMessage && (
-                            <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                                <FaExclamationCircle className="mr-1" />
+                            <div className="flex items-center gap-2 text-red-500 text-xs mt-2 ml-3">
+                                <FaExclamationCircle className="" />
                                 {errorMessage}
                             </div>
                         )}
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
-                        <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                            Cancelar
-                        </Button>
-                        <Button className='font-bold text-white' color="primary" type='submit'>
-                            Registrar
-                        </Button>
+                        <ButtonCerrar onClose={onClose}/>    
+                        <ButtonRegistrar/>
                     </div>
                 </form>
             </div>
