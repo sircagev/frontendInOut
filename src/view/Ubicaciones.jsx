@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarUbicacionesYBodegas } from "../functions/Listar";
 import { columnsUbicacion } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
-import { FormDataUbicacion } from "../functions/Register/FormDataUbicacion";
-import { Modalupdatel } from "../components/ModalUpdate";
+import { ButtonGeneral } from "../components/Buttons/Button";
+import { FormDataUbicacion } from "../functions/Register/RegisterElemento/FormDataUbicacion";
 import { FormUpdateUbicacion } from "../functions/Update/UpdateElemento/FormUpdateUbicacion";
 import Modal1 from "../components/Modal1";
 

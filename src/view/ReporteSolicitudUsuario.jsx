@@ -87,7 +87,7 @@ const Usuario = () => {
       document={<MyDocument />}
       fileName="Reporte solicitudes.pdf"
     >
-      {({ loading }) => (
+      {({}) => (
         <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
           <div
             className="icon-container"
@@ -109,7 +109,7 @@ const Usuario = () => {
               flex: 1,
             }}
           >
-            {loading ? "Cargando documento..." : "Descargar Reporte"}
+            {"Descargar Reporte"}
           </div>
         </button>
       )}

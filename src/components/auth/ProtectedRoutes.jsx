@@ -8,8 +8,6 @@ export const ProtectedRoutes = ({ children, setLoggedIn, setUser }) => {
     const role = localStorage.getItem('role');
     const code = localStorage.getItem('codigo')
 
-    //Ejecutar funciones
-
     if (!token) {
         return <Navigate to="/login" />
     } else {

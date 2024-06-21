@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarCategorias, ListarMedidas } from "../functions/Listar";
 import { columnsMedidas } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
+import { ButtonGeneral } from "../components/Buttons/Button";
 import Modal1 from "../components/Modal1";
-import { FormDataMedida } from "../functions/Register/FormDataMedida";
-import { Modalupdatel } from "../components/ModalUpdate";
+import { FormDataMedida } from "../functions/Register/RegisterElemento/FormDataMedida";
 import { FormUpdateMedida } from "../functions/Update/UpdateElemento/FormUpdateMedida";
 
 

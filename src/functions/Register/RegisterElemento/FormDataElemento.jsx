@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import axiosClient from '../../components/config/axiosClient';
-import { Input, Button } from "@nextui-org/react";
+import axiosClient from '../../../components/config/axiosClient';
+import { Input } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
-import * as listarFunciones from '../Listar'; // Importa todas las funciones de listar.js
+import * as listarFunciones from '../../Listar'; // Importa todas las funciones de listar.js
+import { ButtonGeneral } from '../../../components/Buttons/Button';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+
 
 export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
 
@@ -290,12 +294,8 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           </div>
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
-          <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button className='font-bold text-white' color="primary" type='submit'>
-            Registrar
-          </Button>
+          <ButtonCerrar onClose={onClose}/>
+          <ButtonRegistrar/>
         </div>
       </form>
     </div>
