@@ -5,6 +5,8 @@ import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubicacion } from '../../Listar';
+import { ButtonGeneral } from '../../../components/Buttons/Button';
+
 
 export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => {
   const [nombre, setNombre] = useState('')
@@ -204,12 +206,16 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
           </div>
         </div>
         <div className='flex justify-end gap-3 mb-3'>
-          <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button className='font-bold text-white' color="primary" type='submit'>
-            Actualizar
-          </Button>
+          <ButtonGeneral
+            onClick={onClose}
+            color={"danger"}
+            label={"Cerrar"}
+          />
+          <ButtonGeneral
+            type={"type"}
+            color={"primary"}
+            label={"Actualizar"}
+          />
         </div>
       </form>
     </div>

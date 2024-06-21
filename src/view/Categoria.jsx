@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
 import { ListarCategorias } from "../functions/Listar";
 import { columnsCategorias } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Button";
-import { ModalGeneral } from "../components/Modal";
-import { FormData } from "../functions/FormData";
-import { Modalupdatel } from "../components/ModalUpdate";
+import { ButtonGeneral } from "../components/Buttons/Button";
+import { FormDataCategoria } from "../functions/Register/RegisterElemento/FormDataCategoria";
 import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
 import Modal1 from "../components/Modal1";
 
@@ -29,7 +27,7 @@ export const Categoria = () => {
         size={"md"}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        form={<FormData onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
+        form={<FormDataCategoria onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
       />
       <Modal1
         title={"Actualizar Categoría"}
