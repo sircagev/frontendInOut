@@ -8,6 +8,9 @@ import axiosClient from "../components/config/axiosClient";
 import NotificacionesModal from "./NotificacionesModal"; 
 
 export const Navbar = ({ setLogIn }) => {
+
+
+  const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -37,6 +40,10 @@ export const Navbar = ({ setLogIn }) => {
     });
   };
 
+  const toggleSubMenu = () => {
+      setSubMenuVisible(!isSubMenuVisible);
+   };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,6 +96,16 @@ export const Navbar = ({ setLogIn }) => {
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">{role}</p>
           </div>
+{isSubMenuVisible && (
+                   <div className='absolute top-[55px] right-4 bg-white shadow-md rounded-md p-2'>
+                   <button 
+            className='text-black hover:text-blue-500 text-sm font-medium focus:outline-none'
+            onClick={() => console.log('Actualizar perfil')}
+                >
+            Editar perfil
+         </button>
+      </div>
+   )}
         </div>
         <div
           className="relative cursor-pointer"
@@ -100,14 +117,6 @@ export const Navbar = ({ setLogIn }) => {
             </span>
           )}
           <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
-        </div>
-
-        <div
-          className="flex flex-col items-center cursor-pointer"
-          onClick={handleLogout}
-        >
-          <IoMdLogOut className=" text-black text-[30px] font-bold" />
-          <p className="text-xs text-black font-bold">Logout</p>
         </div>
       </div>
       <NotificacionesModal
