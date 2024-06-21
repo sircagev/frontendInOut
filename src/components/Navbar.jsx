@@ -8,8 +8,10 @@ import swal from 'sweetalert';
 export const Navbar = ({ setLogIn }) => {
    const [userName, setUserName] = useState('');
    const [role, setRole] = useState('');
+   const [isSubMenuVisible, setSubMenuVisible] = useState(false);
 
    const navigate = useNavigate();
+ 
 
    const handleLogout = () => {
       swal({
@@ -30,6 +32,10 @@ export const Navbar = ({ setLogIn }) => {
             navigate('/login');
          }
       });
+   };
+
+   const toggleSubMenu = () => {
+      setSubMenuVisible(!isSubMenuVisible);
    };
 
    useEffect(() => {
@@ -53,12 +59,24 @@ export const Navbar = ({ setLogIn }) => {
             <h1 className='text-black font-bold text-lg'>Inventario de bodegas</h1>
          </div>
          <div className='flex items-center gap-4 mr-10'>
-            <div className='text-black flex items-center gap-2'>
-               <FaUserCircle className='text-[38px] cursor-pointer' />
+            <div className='text-black flex items-center gap-2 relative'>
+               <FaUserCircle className='text-[38px] cursor-pointer' onClick={toggleSubMenu} />
                <div className='flex flex-col gap-1 mt-3'>
                   <h1 className='cursor-pointer font-bold text-[16px]'>{userName}</h1>
                   <p className='flex text-xs'>{role}</p>
                </div>
+
+               {isSubMenuVisible && (
+                   <div className='absolute top-[55px] right-4 bg-white shadow-md rounded-md p-2'>
+                   <button 
+            className='text-black hover:text-blue-500 text-sm font-medium focus:outline-none'
+            onClick={() => console.log('Actualizar perfil')}
+                >
+            Editar perfil
+         </button>
+      </div>
+   )}
+               
             </div>
             <FaBell className='cursor-pointer text-black text-[25px]' />
             <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
