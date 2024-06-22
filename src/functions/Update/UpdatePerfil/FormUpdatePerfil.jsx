@@ -220,8 +220,6 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                     </div>
                                 )}
                             </div>
-                        </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div>
                                 <Input
                                     type='text'
@@ -238,7 +236,9 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                     </div>
                                 )}
                             </div>
-
+                        </div>
+                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+            
                             <div>
                                 <Input
                                     type='text'
