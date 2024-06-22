@@ -120,7 +120,12 @@ export const Navbar = ({ setLogIn }) => {
           )}
           <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
         </div>
+        <div>
+
+          <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
+        </div>
       </div>
+      
       <NotificacionesModal
         showModal={showModal}
         setShowModal={setShowModal}
