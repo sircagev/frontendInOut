@@ -3,6 +3,8 @@ import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+
 
 export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
     const [values, setValues] = useState({
@@ -295,9 +297,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                         </div>
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
-                        <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                            Cancelar
-                        </Button>
+                        <ButtonCerrar onClose={onClose}/>
                         <Button className='font-bold text-white' color="success" type='submit'>
                             Actualizar
                         </Button>

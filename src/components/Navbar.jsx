@@ -5,12 +5,11 @@ import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
-import NotificacionesModal from "./NotificacionesModal"; 
+import NotificacionesModal from "./NotificacionesModal";
+import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
+import Modal1 from "../components/Modal1";
 
 export const Navbar = ({ setLogIn }) => {
-
-
-  const [isSubMenuVisible, setSubMenuVisible] = useState(false);
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -18,8 +17,11 @@ export const Navbar = ({ setLogIn }) => {
   const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [contadorStockMin, setContadorStockMin] = useState(0);
   const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
+  const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
   const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     swal({
@@ -41,9 +43,9 @@ export const Navbar = ({ setLogIn }) => {
   };
 
   const toggleSubMenu = () => {
-      setSubMenuVisible(!isSubMenuVisible);
-   };
-  
+    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -90,22 +92,22 @@ export const Navbar = ({ setLogIn }) => {
         <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
-        <div className="text-black flex items-center gap-2">
-          <FaUserCircle className="text-[38px] cursor-pointer" />
+        <div className="text-black flex items-center gap-2 relative">
+          <FaUserCircle
+            className="text-[38px] cursor-pointer"
+            onClick={() => setIsOpen(true)} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+          />
+          <Modal1
+            isOpen={isOpen}
+            size={"4xl"}
+            onClose={()=> setIsOpen(false)}
+            form={<FormUpdatePerfil onClose={() => setIsOpen(false)}/>}
+            title={"Administrar perfil"}
+          />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">{role}</p>
           </div>
-{isSubMenuVisible && (
-                   <div className='absolute top-[55px] right-4 bg-white shadow-md rounded-md p-2'>
-                   <button 
-            className='text-black hover:text-blue-500 text-sm font-medium focus:outline-none'
-            onClick={() => console.log('Actualizar perfil')}
-                >
-            Editar perfil
-         </button>
-      </div>
-   )}
         </div>
         <div
           className="relative cursor-pointer"
