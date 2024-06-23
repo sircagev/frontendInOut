@@ -2,15 +2,17 @@ import React, { useState } from 'react'
 import { Sidebar } from '../components/Sidebar';
 import { Navbar } from '../components/Navbar';
 import { Outlet } from 'react-router-dom';
+import Sidebars from '../components/Sidebars';
+
+
 
 export const DashboardTemplate = ({ setLoggedIn, user }) => {
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <main className={`grid grid-cols-[1fr] ${sidebarOpen ? "tablet:grid-cols-[220px_1fr]" : "tablet:grid-cols-[65px_1fr]"}`}>
+        <main className="flex">
             <section className="hidden tablet:initial bg-gray-100">
-                <Sidebar state={sidebarOpen} setState={() => setSidebarOpen(!sidebarOpen)} />
+                <Sidebars/>
             </section>
             <section className="flex flex-col w-full h-screen">
                 <Navbar setLogIn={setLoggedIn} />

@@ -3,15 +3,15 @@ import MUIDataTable from "mui-datatables";
 
 
 export const TableGeneral = ({ funcionListar, columns, title, updateTable }) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]);  //Almacena los datos de la tabla
   const [rowsPerPage, setRowsPerPage] = useState(4);
 
-  const listar = async () => {
+  const listar = async () => { // Se obtiene los datos de la tabla y actualiza el estado data
     const items = await funcionListar();
     setData(items);
   };
 
-  useEffect(() => {
+  useEffect(() => { // Este hook se utiliza para llamar la función listar cada vez que cambie la
     listar();
   }, [updateTable]);
 

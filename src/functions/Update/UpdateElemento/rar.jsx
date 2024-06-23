@@ -9,7 +9,7 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
 
-export const FormDataEmpaque = ({actualizar, onClose}) => {
+export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -52,7 +52,7 @@ export const FormDataEmpaque = ({actualizar, onClose}) => {
                 });
                 
                 onClose(); 
-                actualizar();
+                onRegisterSuccess();
             }
         } catch (error) {
             console.log(error);
