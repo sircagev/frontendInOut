@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiPrinter, BiSearch } from "react-icons/bi";
+import { BiPrinter, BiSearch, BiInfoCircle } from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -130,7 +130,7 @@ const Usuario = () => {
         Reporte de Solicitudes por Usuarios
       </h1>
 
-      <div className="d-flex justify-content-start">
+      <div className="d-flex justify-content-start relative">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div className="col">
             <div className="input-group flex-grow-1">
@@ -162,6 +162,18 @@ const Usuario = () => {
           </div>
           <div className="col d-flex align-items-center ml-5">
             {handlePrint()}
+          </div>
+
+          <div className="absolute right-6 bg-green-100 rounded h-[50px] w-[320px] border-t-2 border-green-400">
+            <div className="flex items-center">
+              <div className="text-3xl text-green-600 ml-2">
+                <BiInfoCircle />
+              </div>
+              <h2 className="p-2 text-justify mr-2 text-xs">
+                Aqui encontrarás todas las solicitudes de cada ususario, se
+                pueden filtrar por Rol e imprimir.
+              </h2>
+            </div>
           </div>
         </div>
       </div>

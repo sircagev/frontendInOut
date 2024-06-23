@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiPrinter, BiSearch } from "react-icons/bi";
+import {
+  BiPrinter,
+  BiSearch,
+  BiInfoCircle,
+  BiError,
+  BiCommentDetail,
+} from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -136,6 +142,8 @@ const MyDocument = ({ prestamosActivos }) => (
 const Elemento = () => {
   const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const ListarPrestamosActivos = async () => {
     try {
@@ -152,13 +160,16 @@ const Elemento = () => {
           "La respuesta del servidor no contiene los datos esperados:",
           response
         );
-        alert(
-          "Error al obtener la lista de préstamos activos: respuesta no válida"
-        );
+        setPrestamosActivos([]); // Limpiar el estado de préstamos activos
+        setError("No hay préstamos activos para mostrar.");
       }
     } catch (error) {
       console.log("Error al obtener la lista de préstamos activos:", error);
-      alert("Error al obtener la lista de préstamos activos: " + error.message);
+      setError(
+        "Error al obtener la lista de préstamos activos: " + error.message
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -171,13 +182,45 @@ const Elemento = () => {
   }, []);
 
   const handlePrint = () => {
+    if (prestamosActivos.length === 0) {
+      return (
+        <button
+          className="d-flex align-items-center bg-gray-300 w-[200px] h-[40px] rounded font-sans text-xs uppercase text-gray-600 shadow-md cursor-not-allowed"
+          disabled
+        >
+          <div
+            className="icon-container"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "40px",
+            }}
+          >
+            <BiPrinter style={{ fontSize: "1.5em" }} />
+          </div>
+          <div
+            className="text-container"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+            }}
+          >
+            {"Ningun dato para descarga"}
+          </div>
+        </button>
+      );
+    }
+
     return (
       <PDFDownloadLink
         document={<MyDocument prestamosActivos={prestamosActivos} />}
         fileName="Reporte de préstamos activos.pdf"
       >
         {({}) => (
-          <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
+          <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none font-semibold">
             <div
               className="icon-container"
               style={{
@@ -212,7 +255,7 @@ const Elemento = () => {
         Reporte de Préstamos Activos
       </h1>
 
-      <div className="d-flex justify-content-start">
+      <div className="d-flex justify-content-start relative">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div className="col">
             <div className="input-group flex-grow-1">
@@ -235,11 +278,46 @@ const Elemento = () => {
             {handlePrint()}
           </div>
         </div>
+
+        <div className="absolute right-3 bg-green-100 rounded h-[50px] w-[330px] border-t-2 border-green-400">
+          <div className="flex items-center">
+            <div className="text-3xl text-green-600 ml-2">
+              <BiInfoCircle />
+            </div>
+            <h2 className="p-2 text-justify mr-2 text-xs">
+              Listado de todos los préstamos activos, se pueden realizar
+              búsquedas individuales.
+            </h2>
+          </div>
+        </div>
       </div>
-      <PrestamosActivosTable
-        prestamosActivos={prestamosActivos}
-        searchTerm={searchTerm}
-      />
+
+      {prestamosActivos.length > 0 ? (
+        <PrestamosActivosTable
+          prestamosActivos={prestamosActivos}
+          searchTerm={searchTerm}
+        />
+      ) : (
+        <div className="text-center mt-4 pl-10 pr-10">
+          <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+            <BiError className="text-red-400 text-3xl" />
+            <p className="text-red-700">
+              No hay préstamos activos para mostrar
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center p-4">
+            <div className="relative flex flex-col items-center">
+              <BiCommentDetail className="text-black text-[80px]" />
+            </div>
+            <p className="mt-2 text-black text-center w-[340px]">
+              Este mensaje sugiere que no hay criterios asociados con tu
+              búsqueda o que no hay datos en el sistema para ser mostrados
+              actualmente.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -8,36 +8,53 @@ import movimientosImg from "../assets/move.png";
 const Reportes = () => {
   const navigate = useNavigate();
 
-  const buttonStyles = {
-    className:
-      "flex flex-col m-2 items-center justify-center w-full h-full text-lg rounded font-sans text-sm uppercase text-green-800 shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold",
-  };
-
-  const buttonImages = {
-    Préstamos: { img: elementosImg, path: "/reportes/prestamosactivos" },
-    Usuarios: { img: usuariosImg, path: "/reportes/solicitudusuario" },
-    Elementos: { img: bodegasImg, path: "/reportes/stockmin" },
-    Movimientos: { img: movimientosImg, path: "/reportes/movimientos" },
-  };
+  const items = [
+    {
+      title: "Reporte",
+      img: elementosImg,
+      text: "de Préstamos Activos",
+      path: "/reportes/prestamosactivos",
+    },
+    {
+      title: "Reporte",
+      img: bodegasImg,
+      text: " de Elementos con stock mínimo",
+      path: "/reportes/stockmin",
+    },  
+    {
+      title: "Reporte",
+      img: usuariosImg,
+      text: "Solicitudes de Usuarios",
+      path: "/reportes/solicitudusuario",
+    },
+    {
+      title: "Reporte",
+      img: movimientosImg,
+      text: " de Movimientos",
+      path: "/reportes/movimientos",
+    },
+  ];
 
   return (
-    <div className="container p-5 h-screen flex flex-wrap">
-      {Object.keys(buttonImages).map((key) => (
-        <button
-          {...buttonStyles}
-          key={key}
-          onClick={() => navigate(buttonImages[key].path)}
-          style={{ width: "calc(48% - 18px)", height: "calc(48% - 18px)" }}
-        >
-          <img
-            src={buttonImages[key].img}
-            alt={key}
-            className="mb-2"
-            style={{ width: "70%", height: "70%", objectFit: "contain" }}
-          />
-          {key}
-        </button>
-      ))}
+    <div className="container justify-center p-5 h-full flex flex-wrap overflow-hidden">
+      <div className="flex flex-wrap w-full h-full items-center justify-center">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            onClick={() => navigate(item.path)}
+            className="flex flex-col m-2 items-center justify-center w-full h-full rounded font-sans text-sm uppercase text-green-800 shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold cursor-pointer"
+            style={{ width: "calc(40% - 8px)", height: "calc(38% - 8px)" }}
+          >
+            <img
+              src={item.img}
+              alt={item.title}
+              className="w-[100px] rounded-t translate-y-[-25%]"
+            />
+            <h2>{item.title}</h2>
+            <p className="text-center">{item.text}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

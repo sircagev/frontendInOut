@@ -5,7 +5,7 @@ import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
-import NotificacionesModal from "./NotificacionesModal"; 
+import NotificacionesModal from "./modals/Notificaciones"; 
 
 export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
@@ -71,7 +71,7 @@ export const Navbar = ({ setLogIn }) => {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 120);
+    const intervalId = setInterval(fetchData, 1000);
 
     return () => clearInterval(intervalId);
   }, [setLogIn]);
