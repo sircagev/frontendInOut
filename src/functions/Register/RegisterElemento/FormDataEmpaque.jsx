@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import axiosClient from '../../components/config/axiosClient';
+import axiosClient from '../../../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { ButtonGeneral } from '../../../components/Buttons/Button';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
+
+
+export const FormDataEmpaque = ({actualizar, onClose}) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -47,7 +52,7 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                 });
                 
                 onClose(); 
-                onRegisterSuccess();
+                actualizar();
             }
         } catch (error) {
             console.log(error);
@@ -76,12 +81,8 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                         )}
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
-                        <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                            Cancelar
-                        </Button>
-                        <Button className='font-bold text-white' color="primary" type='submit'>
-                            Registrar
-                        </Button>
+                        <ButtonCerrar onClose={onClose}/>
+                        <ButtonRegistrar/>
                     </div>
                 </form>
             </div>

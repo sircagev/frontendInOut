@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import axiosClient from '../../components/config/axiosClient';
+import axiosClient from '../../../components/config/axiosClient';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { ButtonGeneral } from '../../../components/Buttons/Button';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
-    
+
+
+export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
+
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Medida: "",
+            Nombre_Empaque: "",
         }
     )
 
@@ -26,7 +31,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Medida.trim() || /\d/.test(values.Nombre_Medida.trim())) {
+        if (!values.Nombre_Empaque.trim() || /\d/.test(values.Nombre_Empaque.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -34,13 +39,13 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
         }
 
         try {
-            const response = await axiosClient.post('medida/registrar', values);
+            const response = await axiosClient.post('empaque/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Medida: '' });
+                setValues({ Nombre_Empaque: '' });
                 swal({
                     title: "Registro exitoso",
-                    text: "La medida se ha registrado correctamente.",
+                    text: "El empaque se ha registrado correctamente.",
                     icon: "success",
                     buttons: false,
                     timer: 2000, 
@@ -62,9 +67,9 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
                     <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
-                            label='Nombre Medida'
-                            name='Nombre_Medida'
-                            value={values.Nombre_Medida}
+                            label='Nombre Empaque'
+                            name='Nombre_Empaque'
+                            value={values.Nombre_Empaque}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
@@ -76,12 +81,8 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
                         )}
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
-                        <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                            Cancelar
-                        </Button>
-                        <Button className='font-bold text-white' color="primary" type='submit'>
-                            Registrar
-                        </Button>
+                        <ButtonCerrar onClose={onClose}/>
+                        <ButtonRegistrar/>
                     </div>
                 </form>
             </div>

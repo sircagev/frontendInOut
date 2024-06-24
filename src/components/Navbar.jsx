@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
 import NotificacionesModal from "./modals/Notificaciones"; 
+import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
+import Modal1 from "../components/Modal1";
 
 export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
@@ -15,8 +17,11 @@ export const Navbar = ({ setLogIn }) => {
   const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [contadorStockMin, setContadorStockMin] = useState(0);
   const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
+  const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
   const navigate = useNavigate();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     swal({
@@ -35,6 +40,10 @@ export const Navbar = ({ setLogIn }) => {
         navigate("/login");
       }
     });
+  };
+
+  const toggleSubMenu = () => {
+    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
   };
 
   useEffect(() => {
@@ -77,14 +86,24 @@ export const Navbar = ({ setLogIn }) => {
   }, [setLogIn]);
 
   return (
-    <div className="w-full flex items-center justify-between h-[100px] bg-[#D9DADF] text-white">
+    <div className="w-full flex items-center justify-between h-[100px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
         <img src={logo} className="w-[80px] h-auto ml-10" alt="logo" />
         <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
-        <div className="text-black flex items-center gap-2">
-          <FaUserCircle className="text-[38px] cursor-pointer" />
+        <div className="text-black flex items-center gap-2 relative">
+          <FaUserCircle
+            className="text-[38px] cursor-pointer"
+            onClick={() => setIsOpen(true)} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+          />
+          <Modal1
+            isOpen={isOpen}
+            size={"4xl"}
+            onClose={()=> setIsOpen(false)}
+            form={<FormUpdatePerfil onClose={() => setIsOpen(false)}/>}
+            title={"Administrar perfil"}
+          />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">{role}</p>
@@ -101,15 +120,12 @@ export const Navbar = ({ setLogIn }) => {
           )}
           <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
         </div>
+        <div>
 
-        <div
-          className="flex flex-col items-center cursor-pointer"
-          onClick={handleLogout}
-        >
-          <IoMdLogOut className=" text-black text-[30px] font-bold" />
-          <p className="text-xs text-black font-bold">Logout</p>
+          <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>
       </div>
+      
       <NotificacionesModal
         showModal={showModal}
         setShowModal={setShowModal}
