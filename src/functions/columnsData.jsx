@@ -4,18 +4,6 @@ import { Switch, Button } from "@nextui-org/react";
 import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega, DesactivarUsuario } from "./Desactivar";
 import { createColumns } from './CreateColumn';
 
-const defaultOptions = {
-  sort: false,
-  filter: false,
-};
-
-const applyOptionsToColumns = (columns, options) => {
-  return columns.map(column => ({
-    ...column,
-    options: { ...options, ...column.options },
-  }));
-};
-
 const categoriasColumnData = [
   { name: "codigo_Categoria", label: "Código" },
   { name: "Nombre_Categoria", label: "Nombre" },
@@ -92,7 +80,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "nombre_usuario",
     label: "Nombre",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -100,7 +88,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "apellido_usuario",
     label: "Apellido",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false,
       filter: false,
     },
   },
@@ -108,7 +96,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "email_usuario",
     label: "Email",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -116,7 +104,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "rol",
     label: "Rol",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -124,7 +112,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "numero",
     label: "Teléfono",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -132,7 +120,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "Id_ficha",
     label: "Ficha",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -140,7 +128,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "identificacion",
     label: "ID",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false, 
       filter: false,
     },
   },
@@ -148,7 +136,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     name: "Estado",
     label: "Estado",
     options: {
-      sort: false, // Deshabilita el ordenamiento para esta columna
+      sort: false,
     },
   },
   {

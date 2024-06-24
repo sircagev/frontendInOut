@@ -73,6 +73,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
 
     let hasError = false;
     let newErrorMessages = {
+      elemento: '',
       ubicacion: '',
       tipo: '',
       medida: '',
@@ -160,7 +161,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 onChange={handleInputChange}
                 className="w-[310px]"
               />
-              {errorMessages.ubicacion && (
+              {errorMessages.elemento && (
                 <div className="flex items-center text-red-500 text-xs mt-1">
                   <FaExclamationCircle className="mr-2" />
                   {errorMessages.elemento}

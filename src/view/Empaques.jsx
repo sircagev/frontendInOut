@@ -6,6 +6,7 @@ import { ButtonGeneral } from "../components/Buttons/Button";
 import Modal1 from "../components/Modal1";
 import { FormUpdateEmpaque } from "../functions/Update/UpdateElemento/FormUpdateEmpaque";
 import { FormDataEmpaque } from "../functions/Register/RegisterElemento/FormDataEmpaque";
+import  Cards  from "../components/Cards"
 
 export const Empaques = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +18,36 @@ export const Empaques = () => {
     setUpdateTable(!updateTable);
   };
 
+  const list = [
+    {
+      title: "Elementos",
+      img: "/img/categoria.svg",
+      to: "/elementos",
+    },
+    {
+      title: "Categorías",
+      img: "/img/categoria.svg",
+      to: "/elementos/categorias",
+    },
+    {
+      title: "Medidas",
+      img: "/img/categoria.svg",
+      to: "/elementos/medidas",
+    },
+  ];
+
   return (
-    <div className='flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen'>
+    <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
+      <div className="w-[95%] flex gap-2 mt-5">
+        {list.map((item, index) => (
+          <Cards
+            key={index}
+            title={item.title}
+            img={item.img}
+            to={item.to}
+          />
+        ))}
+      </div>
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Empaque"} onClick={() => setIsOpen(true)} />
       </div>
