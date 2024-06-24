@@ -5,7 +5,10 @@ import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubicacion } from '../../Listar';
-import { ButtonGeneral } from '../../../components/Buttons/Button';
+import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
+
+
 
 
 export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => {
@@ -206,16 +209,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
           </div>
         </div>
         <div className='flex justify-end gap-3 mb-3'>
-          <ButtonGeneral
-            onClick={onClose}
-            color={"danger"}
-            label={"Cerrar"}
-          />
-          <ButtonGeneral
-            type={"type"}
-            color={"primary"}
-            label={"Actualizar"}
-          />
+          <ButtonCerrar onClose={onClose}/>
+          <ButtonRegistrar/>
         </div>
       </form>
     </div>

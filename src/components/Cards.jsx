@@ -16,8 +16,8 @@ const Cards = ({ title, img, to }) => {
             src={img}
           />
         </CardBody>
-        <CardFooter className="text-small justify-between">
-          <b>{title}</b>
+        <CardFooter className="text-small justify-between bg-[#212121]">
+          <b className="text-white">{title}</b>
         </CardFooter>
       </Card>
     </Link>
