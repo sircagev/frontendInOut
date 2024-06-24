@@ -27,7 +27,7 @@ const NotificationsModal = ({
           className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
           onClick={() => setShowModal(false)}
         />
-        <div className="bg-white p-4 rounded-lg shadow-lg">
+        <div className="bg-white p-4 rounded-lg shadow-lg ">
           <h2 className="flex text-xl text-black font-bold mb-4 justify-center">
             Notificaciones
             <span

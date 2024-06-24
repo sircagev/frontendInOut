@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Navigate } from 'react-router-dom';
 import { DashboardTemplate } from '../../view/DashboardTemplate';
 
@@ -6,19 +6,23 @@ export const ProtectedRoutes = ({ children, setLoggedIn, setUser }) => {
 
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-    const code = localStorage.getItem('codigo')
+    const code = localStorage.getItem('codigo');
+
+    useEffect(() => {
+        if (token) {
+            setUser({ role: role, codigo: code });
+        }
+    }, [token, role, code, setUser]);
 
     if (!token) {
         return <Navigate to="/login" />
-    } else {
-        setUser({ role: role, codigo: code })
     }
 
     return (
         <DashboardTemplate setLoggedIn={setLoggedIn}>
             {children}
         </DashboardTemplate>
-    )
+    );
 }
 
 export const ProtectedRoutesLogin = ({ children }) => {
@@ -28,6 +32,5 @@ export const ProtectedRoutesLogin = ({ children }) => {
         return <Navigate to="/home" />
     }
 
-    return children
-
+    return children;
 }

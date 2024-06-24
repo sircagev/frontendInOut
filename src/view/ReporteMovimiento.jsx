@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiSearch, BiPrinter } from "react-icons/bi";
+import { BiSearch, BiPrinter, BiInfoCircle, BiError, BiCommentDetail } from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -20,6 +20,7 @@ const Movimientos = () => {
   const [showResultsAndPrint, setShowResultsAndPrint] = useState(false);
   const [searchResultsCount, setSearchResultsCount] = useState(0);
   const [showResultsNotification, setShowResultsNotification] = useState(false);
+  const [showNoResultsMessage, setShowNoResultsMessage] = useState(false); // Estado para mostrar mensaje cuando no hay resultados
 
   useEffect(() => {
     const listarMovimientos = async () => {
@@ -34,6 +35,9 @@ const Movimientos = () => {
         setFilteredMovimientos(filteredData);
         setSearchResultsCount(filteredData.length);
         setShowResultsNotification(true);
+
+        // Mostrar mensaje de resultados vacíos si no hay resultados
+        setShowNoResultsMessage(filteredData.length === 0);
       } catch (error) {
         console.error("Error al obtener la lista de movimientos:", error);
       }
@@ -77,6 +81,7 @@ const Movimientos = () => {
     setSearchResultsCount(filteredData.length);
     setShowFilters(false);
     setShowResultsAndPrint(true);
+    setShowNoResultsMessage(filteredData.length === 0); // Mostrar mensaje de resultados vacíos si no hay resultados
   };
 
   const handleNewSearch = () => {
@@ -86,11 +91,12 @@ const Movimientos = () => {
     setFechaInicio("");
     setFechaFin("");
     setShowResultsNotification(false);
+    setShowNoResultsMessage(false); // Ocultar el mensaje de resultados vacíos al realizar una nueva búsqueda
     window.location.reload();
   };
 
   const FilterAndSearch = () => (
-    <div className="d-flex justify-content-start">
+    <div className="d-flex justify-content-start relative">
       <div className="d-flex justify-content-start align-items-center mb-4">
         <div className="col">
           <div className="input-group flex-grow-1">
@@ -104,7 +110,7 @@ const Movimientos = () => {
               <option value="Egreso">Egreso</option>
               <option value="Prestamo">Préstamo</option>
             </select>
-
+  
             <input
               type="date"
               className="form-control"
@@ -127,12 +133,23 @@ const Movimientos = () => {
           </div>
         </div>
       </div>
+  
+      <div className="absolute right-1 bg-green-100 rounded h-[50px] w-[300px] border-t-2 border-green-400">
+        <div className="flex items-center">
+          <div className="text-3xl text-green-600 ml-2">
+            <BiInfoCircle />
+          </div>
+          <h2 className="p-2 text-justify mr-2 text-xs">
+            Listado de todos los movimientos, se puede filtrar su resultado por tipo y fecha.
+          </h2>
+        </div>
+      </div>
     </div>
   );
 
   const ResultsAndPrint = () => (
     <div className="d-flex justify-content-between align-items-center mb-3">
-      <div className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md">
+      <div className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-bold text-xs uppercase text-white shadow-md">
         <div
           className="text-container"
           style={{
@@ -147,7 +164,10 @@ const Movimientos = () => {
             : "Ninguna coincidencia"}
         </div>
       </div>
-      <div className="d-flex font-sans cursor-pointer w-[180px] h-[40px] text-m uppercase align-items-center mb-3 bg-blue-800 text-white px-1 mt-3 rounded ml-4" onClick={handleNewSearch}>
+      <div
+        className="d-flex font-sans cursor-pointer w-[180px] h-[40px] text-m uppercase align-items-center mb-3 bg-blue-800 text-white px-1 mt-3 rounded ml-4"
+        onClick={handleNewSearch}
+      >
         <div
           className="icon-container"
           style={{
@@ -157,13 +177,13 @@ const Movimientos = () => {
             width: "30px",
           }}
         >
-          <BiSearch style={{ fontSize: "1.5em" }} />
+          <BiSearch style={{ marginLeft: "5px", fontSize: "1.5em" }} />
         </div>
-        <button className="ml-2 text-white" >
+        <button className="mr-2 text-white text-xs font-bold uppercase w-full">
           Nueva búsqueda
         </button>
       </div>
-      <div className="col d-flex align-items-center ml-5">{handlePrint()}</div>
+      <div className="col d-flex align-items-center ml-4">{handlePrint()}</div>
     </div>
   );
 
@@ -230,6 +250,11 @@ const Movimientos = () => {
         <button
           className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold"
           style={{ textDecoration: "none" }}
+          onClick={(e) => {
+            if (searchResultsCount === 0) {
+              e.preventDefault(); // Evita realizar alguna descarga si no hay resultados
+            }
+          }}
         >
           <div
             className="icon-container"
@@ -257,6 +282,7 @@ const Movimientos = () => {
       )}
     </PDFDownloadLink>
   );
+  
 
   // Función para formatear la fecha a día/mes/año
   const formatDate = (dateString) => {
@@ -276,43 +302,69 @@ const Movimientos = () => {
       {showFilters && <FilterAndSearch />}
       {showResultsAndPrint && <ResultsAndPrint />}
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Elemento</th>
-            <th>Código</th>
-            <th>Solicitud</th>
-            <th>Fecha</th>
-            <th>Cantidad</th>
-            <th>Stock</th>
-            <th>Recibe</th>
-            <th>Aprueba</th>
-            <th>Ubicación</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredMovimientos.map((movimiento, index) => (
-            <tr key={index}>
-              <td>{movimiento["Tipo de Movimiento"]}</td>
-              <td>{movimiento["Nombre del Elemento"]}</td>
-              <td>{movimiento["ID del Prestamo"]}</td>
-              <td>{movimiento["Usuario"]}</td>
-              <td>{formatDate(movimiento["Fecha del Prestamo"])}</td>
-              <td>{movimiento["Cantidad"]}</td>
-              <td>{movimiento["Stock"]}</td>
-              <td>{movimiento["Usuario Recibe"]}</td>
-              <td>{movimiento["Usuario Entrega"]}</td>
-              <td>{movimiento["Ubicacion"]}</td>
-              <td>{movimiento["Observaciones"]}</td>
+      {showNoResultsMessage && (
+        <div className="text-center mt-4 pl-10 pr-10">
+          <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+            <BiError className="text-red-400 text-3xl" />
+            <p className="text-red-700">
+              No hay movimientos para mostrar
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center p-4">
+            <div className="relative flex flex-col items-center">
+              <BiCommentDetail className="text-black text-[80px]" />
+            </div>
+            <p className="mt-2 text-black text-center w-[340px]">
+              Este mensaje sugiere que no hay criterios asociados con tu
+              búsqueda o que no hay datos en el sistema para ser mostrados
+              actualmente.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {searchResultsCount > 0 && (
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Elemento</th>
+              <th>Código</th>
+              <th>Solicitud</th>
+              <th>Fecha</th>
+              <th>Cantidad</th>
+              <th>Stock</th>
+              <th>Recibe</th>
+              <th>Aprueba</th>
+              <th>Ubicación</th>
+              <th>Observaciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredMovimientos.map((movimiento, index) => (
+              <tr key={index}>
+                <td>{movimiento["Tipo de Movimiento"]}</td>
+                <td>{movimiento["Nombre del Elemento"]}</td>
+                <td>{movimiento["ID del Prestamo"]}</td>
+                <td>{movimiento["Usuario"]}</td>
+                <td>{formatDate(movimiento["Fecha del Prestamo"])}</td>
+                <td>{movimiento["Cantidad"]}</td>
+                <td>{movimiento["Stock"]}</td>
+                <td>{movimiento["Usuario Recibe"]}</td>
+                <td>{movimiento["Usuario Entrega"]}</td>
+                <td>{movimiento["Ubicacion"]}</td>
+                <td>{movimiento["Observaciones"]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   page: {
