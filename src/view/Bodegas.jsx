@@ -6,6 +6,7 @@ import { ButtonGeneral } from "../components/Buttons/Button";
 import Modal1 from "../components/Modal1";
 import { FormDataBodega } from "../functions/Register/RegisterBodega/FormDataBodega";
 import { FormUpdateBodega } from "../functions/Update/UpdateBodega/FormUpdateBodega";
+import Cards from "../components/Cards";
 
 
 const Bodegas = () => {
@@ -18,8 +19,26 @@ const Bodegas = () => {
     setUpdateTable(!updateTable);
   };
 
+  const list = [
+    {
+      title: "Ubicaciones",
+      img: "img/categoria.svg",
+      to: "/bodegas/ubicacion",
+    },
+  ];
+
   return (
     <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
+      <div className="w-[95%] flex gap-2 mt-5">
+      {list.map((item, index) => (
+        <Cards 
+          key={index} 
+          title={item.title} 
+          img={item.img} 
+          to={item.to} 
+        />
+      ))}
+      </div>
       <div className="w-[95%] flex justify-end">
         <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Bodega"} onClick={() => setIsOpen(true)} />
       </div>
