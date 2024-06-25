@@ -4,6 +4,9 @@ import elementosImg from "../assets/tools.png";
 import usuariosImg from "../assets/team.png";
 import bodegasImg from "../assets/min_stock.png";
 import movimientosImg from "../assets/move.png";
+import elementosInactivosImg from "../assets/student.png";
+import elementosTImg from "../assets/inventory.png";
+import prestamosImg from "../assets/transaction.png";
 
 const Reportes = () => {
   const navigate = useNavigate();
@@ -11,7 +14,7 @@ const Reportes = () => {
   const items = [
     {
       title: "Reporte",
-      img: elementosImg,
+      img: elementosImg,//descardos de Flaticon
       text: "de Préstamos Activos",
       path: "/reportes/prestamosactivos",
     },
@@ -33,6 +36,24 @@ const Reportes = () => {
       text: " de Movimientos",
       path: "/reportes/movimientos",
     },
+    {
+      title: "Reporte",
+      img: elementosInactivosImg,
+      text: " Elementos Desactivados",
+      path: "/reportes/elementosdesactivados",
+    },
+    {
+      title: "Reporte",
+      img: elementosTImg,
+      text: "de Elementos",
+      path: "/reportes/elementos",
+    },
+    {
+      title: "Reporte",
+      img: prestamosImg,
+      text: " de Préstamos",
+      path: "/reportes/prestamos",
+    },
   ];
 
   return (
@@ -43,12 +64,12 @@ const Reportes = () => {
             key={index}
             onClick={() => navigate(item.path)}
             className="flex flex-col m-2 items-center justify-center w-full h-full rounded font-sans text-sm uppercase text-green-800 shadow-md transition-all hover:shadow-lg hover:shadow-blue-400 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold cursor-pointer"
-            style={{ width: "calc(40% - 8px)", height: "calc(38% - 8px)" }}
+            style={{ width: "calc(25% - 8px)", height: "calc(35% - 8px)" }}
           >
             <img
               src={item.img}
               alt={item.title}
-              className="w-[100px] rounded-t translate-y-[-25%]"
+              className="w-[80px] rounded-t translate-y-[-25%]"
             />
             <h2>{item.title}</h2>
             <p className="text-center">{item.text}</p>

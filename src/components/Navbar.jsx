@@ -127,7 +127,7 @@ export const Navbar = ({ setLogIn }) => {
       </div>
       
       <NotificacionesModal
-        showModal={showModal}
+        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0)}
         setShowModal={setShowModal}
         elementosConBajoStock={elementosConBajoStock}
         prestamosActivos={prestamosActivos}

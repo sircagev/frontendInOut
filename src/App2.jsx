@@ -13,6 +13,9 @@ import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
 import ReporteU from "./view/ReporteSolicitudUsuario";
 import ReporteE from "./view/ReportePrestamosActivos";
+import ReporteP from "./view/ReportePrestamos";
+import ReporteED from "./view/ReporteElementosDesactivados";
+import ReporteElementos from "./view/ReporteElementos";
 import ReporteB from "./view/ReporteStockMin";
 import { Usuarios } from './view/Usuarios';
 import ReporteM from "./view/ReporteMovimiento";
@@ -49,6 +52,9 @@ function App2() {
                     <Route path="/elementos/medidas" element={<Medidas user={user}/>} />                  
                     <Route path="/reportes/solicitudusuario" element={<ReporteU />} />
                     <Route path="/reportes/prestamosactivos" element={<ReporteE />} />
+                    <Route path="/reportes/prestamos" element={<ReporteP />} />
+                    <Route path="/reportes/elementos" element={<ReporteElementos />} />
+                    <Route path="/reportes/elementosdesactivados" element={<ReporteED />} />
                     <Route path="/reportes/stockmin" element={<ReporteB />} />
                     <Route path="/usuarios" element={<Usuarios  userLogin={user}/>} />
                     <Route path="/reportes/movimientos" element={<ReporteM />} />
