@@ -10,7 +10,7 @@ export const DashboardTemplate = ({ setLoggedIn, user }) => {
 
 
     return (
-        <main className="flex">
+        <main className="flex h-screen w-full">
             <section className="hidden tablet:initial bg-gray-100">
                 <Sidebars/>
             </section>
@@ -20,6 +20,6 @@ export const DashboardTemplate = ({ setLoggedIn, user }) => {
                     <Outlet user={user}/>
                 </div>
             </section>
-        </main>
+        </main> 
     )
 }
