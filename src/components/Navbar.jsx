@@ -8,6 +8,7 @@ import axiosClient from "../components/config/axiosClient";
 import NotificacionesModal from "./modals/Notificaciones"; 
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
 import Modal1 from "../components/Modal1";
+import { useAuth } from "../context/AuthProvider";
 
 export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
@@ -18,6 +19,8 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorStockMin, setContadorStockMin] = useState(0);
   const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
+
+  const {logout} = useAuth();
 
   const navigate = useNavigate();
 
@@ -35,7 +38,7 @@ export const Navbar = ({ setLogIn }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
         localStorage.removeItem("role");
-
+        logout();
         setLogIn(false);
         navigate("/login");
       }

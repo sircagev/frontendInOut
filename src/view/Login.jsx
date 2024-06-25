@@ -5,8 +5,12 @@ import { Input, Button } from "@nextui-org/react";
 import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/in.png';
+import { useAuth } from '../context/AuthProvider';
 
 function Login({ setLoggedIn }) {
+
+  const { login } = useAuth();
+
   const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token');
@@ -15,10 +19,10 @@ function Login({ setLoggedIn }) {
   const [password, setPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(!!token);
-  
+
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
   useEffect(() => {
     // Si hay un token en la URL, mostramos automáticamente el formulario de reset
     if (token) {
@@ -34,14 +38,18 @@ function Login({ setLoggedIn }) {
         email_usuario: email,
         contraseña_usuario: password,
       });
-  
+
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
         setLoggedIn(true);
-        navigate('/home');
+        login({
+          email_usuario: email,
+          contraseña_usuario: password,
+        });
+        /* navigate('/home'); */
       }
     } catch (error) {
       if (error.response) {
@@ -73,7 +81,7 @@ function Login({ setLoggedIn }) {
       }
     }
   };
-  
+
   // Función para manejar el envío del formulario de olvido de contraseña
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -102,13 +110,13 @@ function Login({ setLoggedIn }) {
   // Función para manejar el envío del formulario de reset de contraseña
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    
+
     // Expresiones regulares para verificar la complejidad de la contraseña
     const uppercaseRegex = /[A-Z]/;
     const numberRegex = /[0-9]/;
     const specialCharRegex = /[!@#$%^&*]/;
     const lengthRegex = /^.{8,}$/;
-    
+
     // Verificar que la contraseña cumpla con todos los criterios
     if (!uppercaseRegex.test(newPassword)) {
       Swal.fire({
@@ -118,7 +126,7 @@ function Login({ setLoggedIn }) {
       });
       return;
     }
-    
+
     if (!numberRegex.test(newPassword)) {
       Swal.fire({
         icon: 'error',
@@ -127,7 +135,7 @@ function Login({ setLoggedIn }) {
       });
       return;
     }
-    
+
     if (!specialCharRegex.test(newPassword)) {
       Swal.fire({
         icon: 'error',
@@ -136,7 +144,7 @@ function Login({ setLoggedIn }) {
       });
       return;
     }
-    
+
     if (!lengthRegex.test(newPassword)) {
       Swal.fire({
         icon: 'error',
@@ -168,10 +176,10 @@ function Login({ setLoggedIn }) {
           title: 'Contraseña actualizada',
           text: 'Tu contraseña ha sido actualizada exitosamente.',
         });
-    
-        setShowResetPassword(false); 
-        setEmail(''); 
-        setPassword(''); 
+
+        setShowResetPassword(false);
+        setEmail('');
+        setPassword('');
         navigate('/login'); // Redirige al usuario al login
       }
     } catch (error) {
@@ -183,120 +191,120 @@ function Login({ setLoggedIn }) {
     }
   };
 
- /*  // Función para manejar el envío del formulario de olvido de contraseña
-  const handleForgotPassword = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosClient.post('/contrasena/recuperar', {
-        email_usuario: email,
-      });
-
-      if (response.status === 200) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Correo enviado',
-          text: 'Por favor, revisa tu correo electrónico para restablecer tu contraseña.',
-        });
-        setShowForgotPassword(false);
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo enviar el correo de recuperación.',
-      });
-    }
-  };
-
-  // Función para manejar el envío del formulario de reset de contraseña
-  const handleResetPassword = async (e) => {
-    e.preventDefault();
-    
-    // Expresiones regulares para verificar la complejidad de la contraseña
-    const uppercaseRegex = /[A-Z]/;
-    const numberRegex = /[0-9]/;
-    const specialCharRegex = /[!@#$%^&*]/;
-    const lengthRegex = /^.{8,}$/;
-    
-    // Verificar que la contraseña cumpla con todos los criterios
-    if (!uppercaseRegex.test(newPassword)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La contraseña debe contener al menos una letra mayúscula.',
-      });
-      return;
-    }
-    
-    if (!numberRegex.test(newPassword)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La contraseña debe contener al menos un número.',
-      });
-      return;
-    }
-    
-    if (!specialCharRegex.test(newPassword)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La contraseña debe contener al menos un carácter especial.',
-      });
-      return;
-    }
-    
-    if (!lengthRegex.test(newPassword)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La contraseña debe tener al menos 8 caracteres.',
-      });
-      return;
-    }
-
-    // Si las contraseñas no coinciden, mostrar mensaje de error
-    if (newPassword !== confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Las contraseñas no coinciden.',
-      });
-      return;
-    }
-
-    try {
-      const response = await axiosClient.put('/contrasena/cambiar', {
-        token,
-        contraseña_usuario: newPassword,
-      });
-
-      if (response.status === 200) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Contraseña actualizada',
-          text: 'Tu contraseña ha sido actualizada exitosamente.',
-        });
-    
-        setShowResetPassword(false); 
-        setEmail(''); 
-        setPassword(''); 
-        navigate('/login'); // Redirige al usuario al login
-      }
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo actualizar la contraseña.',
-      });
-    }
-  }; */
+  /*  // Función para manejar el envío del formulario de olvido de contraseña
+   const handleForgotPassword = async (e) => {
+     e.preventDefault();
+     try {
+       const response = await axiosClient.post('/contrasena/recuperar', {
+         email_usuario: email,
+       });
+ 
+       if (response.status === 200) {
+         Swal.fire({
+           icon: 'success',
+           title: 'Correo enviado',
+           text: 'Por favor, revisa tu correo electrónico para restablecer tu contraseña.',
+         });
+         setShowForgotPassword(false);
+       }
+     } catch (error) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'No se pudo enviar el correo de recuperación.',
+       });
+     }
+   };
+ 
+   // Función para manejar el envío del formulario de reset de contraseña
+   const handleResetPassword = async (e) => {
+     e.preventDefault();
+     
+     // Expresiones regulares para verificar la complejidad de la contraseña
+     const uppercaseRegex = /[A-Z]/;
+     const numberRegex = /[0-9]/;
+     const specialCharRegex = /[!@#$%^&*]/;
+     const lengthRegex = /^.{8,}$/;
+     
+     // Verificar que la contraseña cumpla con todos los criterios
+     if (!uppercaseRegex.test(newPassword)) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'La contraseña debe contener al menos una letra mayúscula.',
+       });
+       return;
+     }
+     
+     if (!numberRegex.test(newPassword)) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'La contraseña debe contener al menos un número.',
+       });
+       return;
+     }
+     
+     if (!specialCharRegex.test(newPassword)) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'La contraseña debe contener al menos un carácter especial.',
+       });
+       return;
+     }
+     
+     if (!lengthRegex.test(newPassword)) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'La contraseña debe tener al menos 8 caracteres.',
+       });
+       return;
+     }
+ 
+     // Si las contraseñas no coinciden, mostrar mensaje de error
+     if (newPassword !== confirmPassword) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'Las contraseñas no coinciden.',
+       });
+       return;
+     }
+ 
+     try {
+       const response = await axiosClient.put('/contrasena/cambiar', {
+         token,
+         contraseña_usuario: newPassword,
+       });
+ 
+       if (response.status === 200) {
+         Swal.fire({
+           icon: 'success',
+           title: 'Contraseña actualizada',
+           text: 'Tu contraseña ha sido actualizada exitosamente.',
+         });
+     
+         setShowResetPassword(false); 
+         setEmail(''); 
+         setPassword(''); 
+         navigate('/login'); // Redirige al usuario al login
+       }
+     } catch (error) {
+       Swal.fire({
+         icon: 'error',
+         title: 'Error',
+         text: 'No se pudo actualizar la contraseña.',
+       });
+     }
+   }; */
 
   return (
     <div className='w-full h-screen relative'>
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
-          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className=' h-[70px] w-[auto]'/></h1>
+          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
           <div className='ml-[60px] mt-[40px] h-[200px] w-[300px]'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
@@ -306,9 +314,9 @@ function Login({ setLoggedIn }) {
             </p>
           </div>
         </div>
-          <div className='ml-[30px] mt-5'>
-            <img src={imgLogin} alt="Descripción de la imagen" className='w-[300px] h-[250px]' /> 
-          </div>
+        <div className='ml-[30px] mt-5'>
+          <img src={imgLogin} alt="Descripción de la imagen" className='w-[300px] h-[250px]' />
+        </div>
       </div>
       <div
         className='w-[500px] h-auto bg-[#fff] rounded-[25px] absolute shadow-xl'
