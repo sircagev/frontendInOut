@@ -22,11 +22,21 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
 import { ListarElementos, ListarUsuarios } from '../functions/Listar';
+import { useAuth } from '../context/AuthProvider';
+import swal from 'sweetalert';
 
-export const Movimientos2 = ({user}) => {
+export const Movimientos2 = () => {
+
+   const { user } = useAuth();
+
    //Sirve para guardar la información que se traiga al listar los datos 
    const [movimientos, setMovimientos] = useState([]);
    const [detallesMovimiento, setDetallesMovimiento] = useState([]);
+   const [quantityDetailUpdate, setQuantityUpdateDetail] = useState(null);
+
+   const handleSetQuantityDetail = (value) => {
+      setQuantityUpdateDetail(value)
+   }
 
    const [nuevosDetalles, setNuevosDetalles] = useState([]);
 
@@ -52,7 +62,7 @@ export const Movimientos2 = ({user}) => {
 
    //Guardar la información que se envia para ejecutar un cambio en el Stock
    const [dataStock, setDataStock] = useState({
-      usuario_solicitud: user.codigo,
+      usuario_solicitud: user.id,
       fk_movimiento: '',
       Estado: null,
       detalles: [{
@@ -68,7 +78,14 @@ export const Movimientos2 = ({user}) => {
 
    // Agrega un nuevo detalle con su elemento asociado
    const agregarNuevoDetalle = () => {
-      setNuevosDetalles([...nuevosDetalles, { Movimiento: '', Elemento: '', Fecha: '', Cantidad: '', Recibe: '', Entrega: '' }]);
+      setNuevosDetalles([...nuevosDetalles, {
+         Movimiento: '',
+         Elemento: '',
+         Fecha: '',
+         Cantidad: '',
+         Recibe: '',
+         Entrega: ''
+      }]);
    };
 
    const eliminarNuevoDetalle = (index) => {
@@ -88,11 +105,9 @@ export const Movimientos2 = ({user}) => {
          if (response.status === 200) {
             handleInfo(codigoMovimiento);
          }
-
       } catch (error) {
          console.log(error)
       }
-
    };
 
    const handleInputChange = (index, fieldName, value) => {
@@ -115,12 +130,8 @@ export const Movimientos2 = ({user}) => {
       setNuevosDetalles(updatedDetalles);
    };
 
-   const handleInputUser = () => {
-
-   }
-
    //Para guardar la informacion del editar o no
-   const [editable, setEditable] = useState(true);
+   const [editable, setEditable] = useState(null);
 
    //Inicializar page
    const [page, setPage] = useState(1);
@@ -145,17 +156,18 @@ export const Movimientos2 = ({user}) => {
          setDetallesMovimiento(response.data.datos ? response.data.datos : []);
          onOpen();
       } catch (error) {
-
+         console.log(error)
       }
    };
 
    const listarMovimientos = async () => {
       try {
          let response;
-         if (codigoMovimiento.trim() !== '') {
+         if (typeof codigoMovimiento === 'string' && codigoMovimiento.trim() !== '') {
             // Realizar una solicitud específica para obtener un movimiento por su código
             response = await axiosClient.get(`movimientos/buscar/${codigoMovimiento}`);
             setMovimientos(response.data.Movimiento ? response.data.Movimiento : []);
+            setPage(1)
          } else {
             // Obtener todos los movimientos si no se proporciona ningún código
             response = await axiosClient.get('movimientos/listar');
@@ -167,8 +179,13 @@ export const Movimientos2 = ({user}) => {
    }
 
    //Cambiar el valor del editable
-   const toggleEditables = () => {
-      setEditable(!editable);
+   const toggleEditables = async (index, codigo) => {
+      if (editable === index) {
+         setEditable(null);
+         await handleInfo(codigo);
+      } else {
+         setEditable(index);
+      }
    }
 
    //Inicializar la informacion de acuerdo a las funciones importadas
@@ -177,7 +194,8 @@ export const Movimientos2 = ({user}) => {
          const itemsElements = await ListarElementos();
          const itemsUsers = await ListarUsuarios();
          setDataElements(itemsElements);
-         setDataUsuarios(itemsUsers.result);
+         setDataUsuarios(itemsUsers);
+         console.log(itemsUsers);
       } catch (error) {
          console.log(error);
       }
@@ -197,11 +215,36 @@ export const Movimientos2 = ({user}) => {
       }
    };
 
+   //Actualizar detalle en especifico
+   const handleUpdateDetail = async (e, idDetail) => {
+      e.preventDefault();
+      try {
+         if (quantityDetailUpdate) {
+            const response = await axiosClient.put(`movimientos/actualizarDetalle/${idDetail}`, {
+               cantidad: quantityDetailUpdate
+            })
+            console.log(response)
+         } else {
+            swal({
+               title: "Cantidad incorrecta",
+               text: "Debes ingresar una cantidad correcta",
+               icon: "warning",
+               buttons: false,
+               timer: 1500,
+            });
+         }
+
+      } catch (error) {
+         console.log(error)
+      }
+   }
+
    //Ejecutar funciones
    useEffect(() => {
       listarMovimientos();
       fectchData();
-   }, [codigoMovimiento])
+      console.log(dataStock)
+   }, [codigoMovimiento, dataStock])
 
    return (
       <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
@@ -230,7 +273,7 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 1,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_recibe: user.codigo,
+                           Usuario_recibe: parseInt(user.id),
                         }]
                      }));
                      console.log(dataStock);
@@ -242,7 +285,7 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 2,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_entrega: user.codigo,
+                           Usuario_entrega: parseInt(user.id),
                         }]
                      }));
                      onOpenStock()
@@ -271,17 +314,17 @@ export const Movimientos2 = ({user}) => {
                                                 <div className='w-[10%] flex justify-center items-centerc text-4xl'> {detalle.Codigo}</div>
                                                 <div className='flex w-[90%] gap-1'>
                                                    <Input
-                                                      isReadOnly={editable}
+                                                      isReadOnly={true}
                                                       isRequired
                                                       key="fecha"
-                                                      type={editable ? "text" : 'date'}
+                                                      type={editable !== index ? "text" : 'date'}
                                                       label="Fecha"
                                                       variant="underlined"
                                                       labelPlacement="outside"
                                                       defaultValue={detalle.Fecha ? detalle.Fecha.split('T')[0] : 'Sin fecha'}
                                                    />
                                                    <Input
-                                                      isReadOnly={editable}
+                                                      isReadOnly={editable !== index}
                                                       isRequired
                                                       key="cantidad"
                                                       type="number"
@@ -289,9 +332,14 @@ export const Movimientos2 = ({user}) => {
                                                       variant="underlined"
                                                       labelPlacement="outside"
                                                       defaultValue={detalle.Cantidad}
+                                                      onChange={(e) => {
+                                                         const qV = e.target.value
+                                                         console.log(e.target.value)
+                                                         handleSetQuantityDetail(qV)
+                                                      }}
                                                    />
                                                    <Input
-                                                      isReadOnly={editable}
+                                                      isReadOnly={true}
                                                       isRequired
                                                       key="recibio"
                                                       type="text"
@@ -301,7 +349,7 @@ export const Movimientos2 = ({user}) => {
                                                       defaultValue={detalle.Recibe}
                                                    />
                                                    <Input
-                                                      isReadOnly={editable}
+                                                      isReadOnly={true}
                                                       isRequired
                                                       key="entrego"
                                                       type="text"
@@ -310,12 +358,15 @@ export const Movimientos2 = ({user}) => {
                                                       labelPlacement="outside"
                                                       defaultValue={detalle.Entrega}
                                                    />
-                                                   <div>
-                                                      <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={toggleEditables} style={{ fontSize: '15px' }}>
-                                                         {editable ? "Editar" : "Cancelar"}
+                                                   <div className='flex gap-1 flex-col'>
+                                                      <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50] text-[15px] w-[100px]'
+                                                         onClick={() => {
+                                                            toggleEditables(index, detalle.Codigo)
+                                                         }} >
+                                                         {editable === index ? "Cancelar" : "Editar"}
                                                       </Button>
-                                                      {editable ? "" : <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => alert('Realizando cambio')} style={{ fontSize: '15px' }}>
-                                                         {editable ? "Editar" : "Realizar Cambios"}
+                                                      {editable === index && <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50] text-[15px] w-[100px]' onClick={(e) => handleUpdateDetail(e, detalle.Codigo,)}>
+                                                         Actualizar
                                                       </Button>}
                                                    </div>
                                                 </div>
@@ -323,107 +374,13 @@ export const Movimientos2 = ({user}) => {
                                           </form>
                                        </div>
                                     ))}
-                                    {nuevosDetalles.map((detalle, index) => (
-                                       <div className='w-full mb-3' key={index}>
-                                          <form action="" className='w-full'>
-                                             {/* Aquí renderizas los campos de entrada para el elemento y los detalles */}
-                                             <div className='flex w-full'>
-                                                <div className='flex w-full gap-1'>
-                                                   <Autocomplete
-                                                      label="Select an element"
-                                                      placeholder="Search an animal"
-                                                      isRequired
-                                                      variant="underlined"
-                                                      selectedKey={detalle.Elemento}
-                                                      onSelectionChange={(value) => handleInputChange(index, 'elemento', value)}
-                                                   >
-                                                      {dataElements.map((element) => (
-                                                         <AutocompleteItem
-                                                            key={element.Codigo_elemento}
-                                                            value={element.Codigo_elemento}
-                                                         >
-                                                            {element.Nombre_elemento}
-                                                         </AutocompleteItem>
-                                                      ))}
-                                                   </Autocomplete>
-                                                   <Input
-                                                      isRequired
-                                                      type="date"
-                                                      label="Fecha"
-                                                      variant="underlined"
-                                                      labelPlacement="outside"
-                                                      onChange={(e) => handleInputChange(index, 'fecha', e.target.value)}
-                                                      value={detalle.Fecha}
-                                                   />
-                                                   <Input
-                                                      isRequired
-                                                      type="number"
-                                                      label="Cantidad"
-                                                      variant="underlined"
-                                                      labelPlacement="outside"
-                                                      onChange={(e) => handleInputChange(index, 'cantidad', e.target.value)}
-                                                      value={detalle.Cantidad}
-                                                   />
-                                                   <Autocomplete
-                                                      label="Select a user"
-                                                      placeholder="Search a user"
-                                                      isRequired
-                                                      variant="underlined"
-                                                      selectedKey={detalle.Recibe}
-                                                      onSelectionChange={(value) => handleInputChange(index, 'recibe', value)}
-                                                   >
-                                                      {dataUsuarios.map((user) => (
-                                                         <AutocompleteItem
-                                                            key={user.id_usuario}
-                                                            value={user.id_usuario}
-                                                         >
-                                                            {user.nombre_usuario}
-                                                         </AutocompleteItem>
-                                                      ))}
-                                                   </Autocomplete>
-                                                   <Autocomplete
-                                                      label="Select a user"
-                                                      placeholder="Search a user"
-                                                      isRequired
-                                                      variant="underlined"
-                                                      selectedKey={detalle.Entrega}
-                                                      onSelectionChange={(value) => handleInputChange(index, 'entrega', value)}
-                                                   >
-                                                      {dataUsuarios.map((user) => (
-                                                         <AutocompleteItem
-                                                            key={user.id_usuario}
-                                                            value={user.id_usuario}
-                                                         >
-                                                            {user.nombre_usuario}
-                                                         </AutocompleteItem>
-                                                      ))}
-                                                   </Autocomplete>
-
-
-                                                   <div>
-                                                      <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={() => {
-                                                         agregarDetalleMovimiento(detalle)
-                                                         eliminarNuevoDetalle(index)
-                                                      }} style={{ fontSize: '15px' }}>
-                                                         Registrar Detalle
-                                                      </Button>
-                                                      <button onClick={() => eliminarNuevoDetalle(index)}>Eliminar</button>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                          </form>
-                                       </div>
-                                    ))}
-                                    <Button color="danger" className='font-semibold bg-black hover:bg-[#BF2A50]' onClick={agregarNuevoDetalle} style={{ fontSize: '15px' }}>
-                                       Añadir Detalle
-                                    </Button>
                                  </div>
                               </div>
                               <div className='w-full mt-5 flex justify-end gap-2 text-white'>
-                                 <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={onClose}>
+                                 <Button className='font-bold bg-[#BF2A50] w-[100px]' color="danger" onPress={onClose}>
                                     Cerrar
                                  </Button>
-                                 <Button style={{ width: '100px' }} className='font-bold text-white' color="success" type='submit'>
+                                 <Button className='font-bold text-white w-[100px]' color="success" type='submit'>
                                     Registrar
                                  </Button>
                               </div>
@@ -442,6 +399,9 @@ export const Movimientos2 = ({user}) => {
                onOpenChange={onOpenChangeStock}
                size='3xl'
                className='my-auto'
+               isDismissable={false}
+               isKeyboardDismissDisabled={false}
+               hideCloseButton={true}
             >
                <ModalContent>
                   {(onCloseStock) => (
@@ -506,7 +466,7 @@ export const Movimientos2 = ({user}) => {
                                  />
                               </div>
                               <div className='flex gap-6 justify-center'>
-                              {
+                                 {
                                     dataStock.fk_movimiento == 2 && (
                                        <Autocomplete
                                           label="Tipo Salida"
@@ -514,31 +474,31 @@ export const Movimientos2 = ({user}) => {
                                           isRequired
                                           variant="underlined"
                                           className='w-[25%] h-[60px]'
-                                          /* onSelectionChange={(value) => {
-                                             const element = value;
-                                             setDataStock(prevDataStock => ({
-                                                ...prevDataStock,
-                                                detalles: [{
-                                                   ...prevDataStock.detalles[0],
-                                                   fk_elemento: element
-                                                }]
-                                             }));
+                                       /* onSelectionChange={(value) => {
+                                          const element = value;
+                                          setDataStock(prevDataStock => ({
+                                             ...prevDataStock,
+                                             detalles: [{
+                                                ...prevDataStock.detalles[0],
+                                                fk_elemento: element
+                                             }]
+                                          }));
 
-                                             console.log(dataStock)
-                                          }} */
+                                          console.log(dataStock)
+                                       }} */
                                        >
-                                             <AutocompleteItem
-                                                key='asignacion'
-                                                value= '1'
-                                             >
-                                                Asignación
-                                             </AutocompleteItem>
-                                             <AutocompleteItem
-                                                key='prestamo'
-                                                value= '2'
-                                             >
-                                                Préstamo
-                                             </AutocompleteItem>
+                                          <AutocompleteItem
+                                             key='asignacion'
+                                             value='1'
+                                          >
+                                             Asignación
+                                          </AutocompleteItem>
+                                          <AutocompleteItem
+                                             key='prestamo'
+                                             value='2'
+                                          >
+                                             Préstamo
+                                          </AutocompleteItem>
                                        </Autocomplete>
                                     )
                                  }
@@ -555,7 +515,7 @@ export const Movimientos2 = ({user}) => {
                                           detalles: [{
                                              ...prevDataStock.detalles[0],
                                              [prevDataStock.fk_movimiento === 2 ? 'Usuario_recibe' : 'Usuario_entrega']: value,
-                                             
+
                                           }]
                                        }));
 
@@ -576,7 +536,24 @@ export const Movimientos2 = ({user}) => {
                            </form>
                         </ModalBody>
                         <ModalFooter>
-                           <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={onCloseStock}>
+                           <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={() => {
+                              setDataStock({
+                                 usuario_solicitud: user.id,
+                                 fk_movimiento: '',
+                                 Estado: null,
+                                 detalles: [{
+                                    fk_elemento: '',
+                                    estado: null,
+                                    fecha_vencimiento: null,
+                                    cantidad: 0,
+                                    Usuario_recibe: '',
+                                    Usuario_entrega: '',
+                                    Observaciones: null
+                                 }]
+                              })
+                              setUsuarioSeleccionado(null)
+                              onCloseStock()
+                           }}>
                               Cerrar
                            </Button>
                            <Button style={{ width: '100px' }} className='font-bold text-white' color="success" type='submit' onClick={AnadirStock}>
