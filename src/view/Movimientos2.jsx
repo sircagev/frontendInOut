@@ -22,8 +22,12 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@nextui-org/react";
 import { ListarElementos, ListarUsuarios } from '../functions/Listar';
+import { useAuth } from '../context/AuthProvider';
 
-export const Movimientos2 = ({user}) => {
+export const Movimientos2 = () => {
+
+   const { user } = useAuth();
+
    //Sirve para guardar la información que se traiga al listar los datos 
    const [movimientos, setMovimientos] = useState([]);
    const [detallesMovimiento, setDetallesMovimiento] = useState([]);
@@ -52,7 +56,7 @@ export const Movimientos2 = ({user}) => {
 
    //Guardar la información que se envia para ejecutar un cambio en el Stock
    const [dataStock, setDataStock] = useState({
-      usuario_solicitud: user.codigo,
+      usuario_solicitud: user.id,
       fk_movimiento: '',
       Estado: null,
       detalles: [{
@@ -177,7 +181,8 @@ export const Movimientos2 = ({user}) => {
          const itemsElements = await ListarElementos();
          const itemsUsers = await ListarUsuarios();
          setDataElements(itemsElements);
-         setDataUsuarios(itemsUsers.result);
+         setDataUsuarios(itemsUsers);
+         console.log(itemsUsers);
       } catch (error) {
          console.log(error);
       }
@@ -201,7 +206,8 @@ export const Movimientos2 = ({user}) => {
    useEffect(() => {
       listarMovimientos();
       fectchData();
-   }, [codigoMovimiento])
+      console.log(dataStock)
+   }, [codigoMovimiento, dataStock])
 
    return (
       <div className='w-full flex flex-col justify-center mt-[70px] items-center gap-5 overflow-auto'>
@@ -230,7 +236,7 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 1,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_recibe: user.codigo,
+                           Usuario_recibe: parseInt(user.id),
                         }]
                      }));
                      console.log(dataStock);
@@ -242,7 +248,7 @@ export const Movimientos2 = ({user}) => {
                         fk_movimiento: 2,
                         detalles: [{
                            ...prevDataStock.detalles[0],
-                           Usuario_entrega: user.codigo,
+                           Usuario_entrega: parseInt(user.id),
                         }]
                      }));
                      onOpenStock()
@@ -442,6 +448,9 @@ export const Movimientos2 = ({user}) => {
                onOpenChange={onOpenChangeStock}
                size='3xl'
                className='my-auto'
+               isDismissable={false}
+               isKeyboardDismissDisabled={false}
+               hideCloseButton={true}
             >
                <ModalContent>
                   {(onCloseStock) => (
@@ -506,7 +515,7 @@ export const Movimientos2 = ({user}) => {
                                  />
                               </div>
                               <div className='flex gap-6 justify-center'>
-                              {
+                                 {
                                     dataStock.fk_movimiento == 2 && (
                                        <Autocomplete
                                           label="Tipo Salida"
@@ -514,31 +523,31 @@ export const Movimientos2 = ({user}) => {
                                           isRequired
                                           variant="underlined"
                                           className='w-[25%] h-[60px]'
-                                          /* onSelectionChange={(value) => {
-                                             const element = value;
-                                             setDataStock(prevDataStock => ({
-                                                ...prevDataStock,
-                                                detalles: [{
-                                                   ...prevDataStock.detalles[0],
-                                                   fk_elemento: element
-                                                }]
-                                             }));
+                                       /* onSelectionChange={(value) => {
+                                          const element = value;
+                                          setDataStock(prevDataStock => ({
+                                             ...prevDataStock,
+                                             detalles: [{
+                                                ...prevDataStock.detalles[0],
+                                                fk_elemento: element
+                                             }]
+                                          }));
 
-                                             console.log(dataStock)
-                                          }} */
+                                          console.log(dataStock)
+                                       }} */
                                        >
-                                             <AutocompleteItem
-                                                key='asignacion'
-                                                value= '1'
-                                             >
-                                                Asignación
-                                             </AutocompleteItem>
-                                             <AutocompleteItem
-                                                key='prestamo'
-                                                value= '2'
-                                             >
-                                                Préstamo
-                                             </AutocompleteItem>
+                                          <AutocompleteItem
+                                             key='asignacion'
+                                             value='1'
+                                          >
+                                             Asignación
+                                          </AutocompleteItem>
+                                          <AutocompleteItem
+                                             key='prestamo'
+                                             value='2'
+                                          >
+                                             Préstamo
+                                          </AutocompleteItem>
                                        </Autocomplete>
                                     )
                                  }
@@ -555,7 +564,7 @@ export const Movimientos2 = ({user}) => {
                                           detalles: [{
                                              ...prevDataStock.detalles[0],
                                              [prevDataStock.fk_movimiento === 2 ? 'Usuario_recibe' : 'Usuario_entrega']: value,
-                                             
+
                                           }]
                                        }));
 
@@ -576,7 +585,24 @@ export const Movimientos2 = ({user}) => {
                            </form>
                         </ModalBody>
                         <ModalFooter>
-                           <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={onCloseStock}>
+                           <Button style={{ width: '100px' }} className='font-bold bg-[#BF2A50]' color="danger" onPress={()=>{
+                              setDataStock({
+                                 usuario_solicitud: user.id,
+                                 fk_movimiento: '',
+                                 Estado: null,
+                                 detalles: [{
+                                    fk_elemento: '',
+                                    estado: null,
+                                    fecha_vencimiento: null,
+                                    cantidad: 0,
+                                    Usuario_recibe: '',
+                                    Usuario_entrega: '',
+                                    Observaciones: null
+                                 }]
+                              })
+                              setUsuarioSeleccionado(null)
+                              onCloseStock()
+                           }}>
                               Cerrar
                            </Button>
                            <Button style={{ width: '100px' }} className='font-bold text-white' color="success" type='submit' onClick={AnadirStock}>
