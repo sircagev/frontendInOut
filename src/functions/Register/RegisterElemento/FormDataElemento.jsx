@@ -22,7 +22,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
     tipo: '',
     medida: '',
     categoria: '',
-    empaque: ''
+    empaque: '',
   });
 
   const [values, setValues] = useState({
@@ -32,17 +32,23 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
     fk_unidadMedida: "",
     fk_categoria: "",
     fk_tipoEmpaque: "",
-    fk_detalleUbicacion: ""
+    fk_detalleUbicacion: "",
+    Vencimiento: null
   });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const formattedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    const formattedValue = name === 'Nombre_elemento' ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
+  
+    // Manejar el cambio en Vencimiento para establecer null si es necesario
+    const newValue = name === 'Vencimiento' && value === '' ? null : formattedValue;
+  
     setValues({
       ...values,
-      [name]: formattedValue,
+      [name]: newValue,
     });
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,6 +126,10 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
     if (hasError) return;
 
     try {
+      const dataToSubmit = {
+        ...values,
+        Vencimiento: values.Vencimiento === '' ? null : values.Vencimiento
+      };
       const response = await axiosClient.post('elemento/registrar', values);
       if (response.status === 200) {
 
@@ -295,8 +305,8 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           </div>
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
-          <ButtonCerrar onClose={onClose}/>
-          <ButtonRegistrar/>
+          <ButtonCerrar onClose={onClose} />
+          <ButtonRegistrar />
         </div>
       </form>
     </div>

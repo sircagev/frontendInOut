@@ -7,7 +7,7 @@ import Modal1 from "../components/Modal1";
 import { FormDataMedida } from "../functions/Register/RegisterElemento/FormDataMedida";
 import { FormUpdateMedida } from "../functions/Update/UpdateElemento/FormUpdateMedida";
 import  Cards  from "../components/Cards"
-import img from "../../public/img/pala.jpg"
+import imagen from "../assets/categoria.svg"
 
 
 export const Medidas = () => {
@@ -23,29 +23,26 @@ export const Medidas = () => {
   const list = [
     {
       title: "Elementos",
-      img: "/img/categoria.svg",
       to: "/elementos",
     },
     {
       title: "Categorías",
-      img: "/img/categoria.svg",
       to: "/elementos/categorias",
     },
     {
       title: "Empaques",
-      img: "/img/categoria.svg",
       to: "/elementos/empaques",
     },
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
-      <div className="w-[95%] flex gap-2 mt-5">
+    <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
+      <div className="w-[95%] flex gap-2">
         {list.map((item, index) => (
           <Cards
             key={index}
             title={item.title}
-            img={item.img}
+            imagen={imagen}
             to={item.to}
           />
         ))}

@@ -8,9 +8,6 @@ import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubic
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-
-
-
 export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => {
   const [nombre, setNombre] = useState('')
   const [tipo, setTipo] = useState('')
@@ -89,7 +86,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
         fk_unidadMedida: medida,
         fk_categoria: categoria,
         fk_tipoEmpaque: empaque,
-        fk_detalleUbicacion: ubicacion
+        fk_detalleUbicacion: ubicacion,
+        Vencimiento: vencimiento
       });
       swal({
         title: "Actualizado",

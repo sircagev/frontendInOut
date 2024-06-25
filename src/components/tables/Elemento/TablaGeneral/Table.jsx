@@ -29,7 +29,7 @@ export const TableGeneral = ({ funcionListar, columns, title, updateTable }) => 
     <div className='w-[95%] h-screen flex flex-col'>
       <div>
         <MUIDataTable
-          className="mb-10"
+          className="mb-10  "
           title={title}
           data={data}
           columns={columns(listar)}

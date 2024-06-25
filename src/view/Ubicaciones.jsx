@@ -7,6 +7,7 @@ import { FormDataUbicacion } from "../functions/Register/RegisterElemento/FormDa
 import { FormUpdateUbicacion } from "../functions/Update/UpdateElemento/FormUpdateUbicacion";
 import Modal1 from "../components/Modal1";
 import Cards from "../components/Cards";
+import imagen from "../assets/categoria.svg"
 
 export const Ubicaciones = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -21,19 +22,18 @@ export const Ubicaciones = () => {
     const list = [
       {
         title: "Bodegas",
-        img: "img/categoria.svg",
         to: "/bodegas",
       },
     ];
   
     return (
-      <div className="flex flex-col justify-center items-center gap-3 mt-12 w-full h-screen">
-        <div className="w-[95%] flex gap-2 mt-5">
+      <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
+        <div className="w-[95%] flex gap-2">
         {list.map((item, index) => (
           <Cards 
             key={index} 
             title={item.title} 
-            img={item.img} 
+            imagen={imagen} 
             to={item.to} 
           />
         ))}
