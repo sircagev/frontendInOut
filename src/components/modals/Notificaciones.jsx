@@ -1,6 +1,5 @@
-import React from "react";
+import { useNavigate } from 'react-router-dom';
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 const NotificationsModal = ({
   showModal,
@@ -21,7 +20,7 @@ const NotificationsModal = ({
   };
 
   return (
-    showModal && (
+    showModal && (elementosConBajoStock > 0 || prestamosActivos > 0) && (
       <div className="absolute top-7 right-8 z-50">
         <div
           className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
@@ -35,30 +34,34 @@ const NotificationsModal = ({
               onClick={() => setShowModal(false)}
             ></span>{" "}
           </h2>
-          <div
-            className="flex items-center mb-2 hover:bg-gray-200 p-2 rounded cursor-pointer"
-            onClick={handleViewStockClick}
-          >
-            <p className="flex-1 text-black pr-5">
-              <span className="text-blue-700 font-bold">
-                {elementosConBajoStock}
-              </span>{" "}
-              Elementos con bajo Stock
-            </p>
-            <FaSearch className="text-blue-900" />
-          </div>
-          <div
-            className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
-            onClick={handleViewPrestamosClick}
-          >
-            <p className="flex-1 text-black">
-              <span className="text-blue-700 font-bold">
-                {prestamosActivos}
-              </span>{" "}
-              Préstamos activos
-            </p>
-            <FaSearch className="text-blue-900" />
-          </div>
+          {elementosConBajoStock > 0 && (
+            <div
+              className="flex items-center mb-2 hover:bg-gray-200 p-2 rounded cursor-pointer"
+              onClick={handleViewStockClick}
+            >
+              <p className="flex-1 text-black pr-5">
+                <span className="text-blue-700 font-bold">
+                  {elementosConBajoStock}
+                </span>{" "}
+                Elementos con bajo Stock
+              </p>
+              <FaSearch className="text-blue-900" />
+            </div>
+          )}
+          {prestamosActivos > 0 && (
+            <div
+              className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
+              onClick={handleViewPrestamosClick}
+            >
+              <p className="flex-1 text-black">
+                <span className="text-blue-700 font-bold">
+                  {prestamosActivos}
+                </span>{" "}
+                Préstamos activos
+              </p>
+              <FaSearch className="text-blue-900" />
+            </div>
+          )}
           <div className="flex justify-center mt-4">
             <button
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-4"
