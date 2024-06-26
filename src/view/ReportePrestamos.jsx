@@ -320,7 +320,7 @@ const Prestamos = () => {
       )}
 
       {searchResultsCount > 0 && (
-        <table className="table table-striped">
+        <table className="table table-bordered table-striped text-center table-responsive thead-dark">
           <thead>
             <tr>
               <th>Ubicación</th>

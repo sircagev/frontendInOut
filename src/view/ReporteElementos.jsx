@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiPrinter, BiSearch, BiInfoCircle } from "react-icons/bi";
+import {
+  BiPrinter,
+  BiSearch,
+  BiInfoCircle,
+  BiError,
+  BiCommentDetail,
+} from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -25,7 +31,7 @@ const Elementos = () => {
         setElementos(response.data.datos);
       } else {
         console.error(
-          "La respuesta de la solicitud GET no contiene los datos esperados:",
+          "La respuesta de la solicitud no contiene los datos esperados:",
           response.data
         );
         alert("Error al obtener información de los elementos");
@@ -39,7 +45,9 @@ const Elementos = () => {
   const buscarElementos = () => {
     return elementos.filter(
       (elemento) =>
-        elemento.Nombre_elemento.toLowerCase().includes(searchTerm.toLowerCase())
+        elemento.Nombre_elemento.toLowerCase().includes(
+          searchTerm.toLowerCase()
+        ) || elemento.Codigo_elemento.toString().includes(searchTerm)
     );
   };
 
@@ -58,56 +66,106 @@ const Elementos = () => {
               <Text style={styles.tableHeader}>En Préstamo</Text>
               <Text style={styles.tableHeader}>Observaciones</Text>
             </View>
-            {buscarElementos().map((elemento, index) => (
-              <View style={styles.tableRow} key={index}>
-                <Text style={styles.tableCell}>{elemento.Codigo_elemento}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_elemento}</Text>
-                <Text style={styles.tableCell}>{elemento.stock}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_Categoria}</Text>
-                <Text style={styles.tableCell}>{elemento.Nombre_ubicacion}</Text>
-                <Text style={styles.tableCell}>{elemento.cantidad_en_prestamo}</Text>
-                <Text style={styles.tableCell}>{elemento.observaciones}</Text>
+            {buscarElementos().length === 0 ? (
+              <View style={styles.emptyTableMessage}>
+                <div className="text-center mt-4 pl-10 pr-10">
+                  <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+                    <BiError className="text-red-400 text-3xl" />
+                    <p className="text-red-700">
+                      No hay elementos activos para mostrar
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col items-center p-4">
+                    <div className="relative flex flex-col items-center">
+                      <BiCommentDetail className="text-black text-[80px]" />
+                    </div>
+                    <p className="mt-2 text-black text-center w-[340px]">
+                      Este mensaje sugiere que no hay criterios asociados con tu
+                      búsqueda o que no hay datos en el sistema para ser
+                      mostrados actualmente.
+                    </p>
+                  </div>
+                </div>
               </View>
-            ))}
+            ) : (
+              buscarElementos().map((elemento, index) => (
+                <View style={styles.tableRow} key={index}>
+                  <Text style={styles.tableCell}>
+                    {elemento.Codigo_elemento}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {elemento.Nombre_elemento}
+                  </Text>
+                  <Text style={styles.tableCell}>{elemento.stock}</Text>
+                  <Text style={styles.tableCell}>
+                    {elemento.Nombre_Categoria}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {elemento.Nombre_ubicacion}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {elemento.cantidad_en_prestamo}
+                  </Text>
+                  <Text style={styles.tableCell}>{elemento.observaciones}</Text>
+                </View>
+              ))
+            )}
           </View>
         </View>
       </Page>
     </Document>
   );
 
-  const handlePrint = () => (
-    <PDFDownloadLink
-      document={<MyDocument />}
-      fileName="Reporte_elementos.pdf"
-    >
-      {({}) => (
-        <button className="d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
-          <div
-            className="icon-container"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "40px",
-            }}
+  const handleDownloadClick = (event) => {
+    if (!buscarElementos().length > 0) {
+      event.preventDefault();
+      alert("No hay elementos para descargar");
+    }
+  };
+
+  const handlePrint = () => {
+    const elementsFound = buscarElementos().length > 0;
+
+    return (
+      <PDFDownloadLink
+        document={<MyDocument />}
+        fileName="Reporte_elementos.pdf"
+        onClick={handleDownloadClick}
+      >
+        {({}) => (
+          <button
+            className={`d-flex align-items-center bg-[#3D7948] w-[200px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all
+               ${!elementsFound && "cursor-not-allowed opacity-50"}`}
+            disabled={!elementsFound}
           >
-            <BiPrinter style={{ fontSize: "1.5em" }} />
-          </div>
-          <div
-            className="text-container"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flex: 1,
-            }}
-          >
-            {"Descargar Reporte"}
-          </div>
-        </button>
-      )}
-    </PDFDownloadLink>
-  );
+            <div
+              className="icon-container"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+              }}
+            >
+              <BiPrinter style={{ fontSize: "1.5em" }} />
+            </div>
+            <div
+              className="text-container"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: 1,
+              }}
+            >
+              {"Descargar Reporte"}
+            </div>
+          </button>
+        )}
+      </PDFDownloadLink>
+    );
+  };
 
   return (
     <div className="container">
@@ -122,7 +180,7 @@ const Elementos = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Buscar por nombre"
+                placeholder="Buscar.. "
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -148,39 +206,62 @@ const Elementos = () => {
                 <BiInfoCircle />
               </div>
               <h2 className="p-2 text-justify mr-2 text-xs">
-                Listado de todos los elementos. Puedes buscar por nombre y descargar el reporte.
+                Listado de todos los elementos. Puedes buscar por nombre y
+                descargar el reporte.
               </h2>
             </div>
           </div>
         </div>
       </div>
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Stock</th>
-            <th>Categoría</th>
-            <th>Ubicación</th>
-            <th>En Préstamo</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {buscarElementos().map((elemento, index) => (
-            <tr key={index}>
-              <td>{elemento.Codigo_elemento}</td>
-              <td>{elemento.Nombre_elemento}</td>
-              <td>{elemento.stock}</td>
-              <td>{elemento.Nombre_Categoria}</td>
-              <td>{elemento.Nombre_ubicacion}</td>
-              <td>{elemento.cantidad_en_prestamo}</td>
-              <td>{elemento.observaciones}</td>
+      {buscarElementos().length > 0 && (
+        <table className="table table-bordered table-striped text-center table-responsive thead-dark">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Stock</th>
+              <th>Categoría</th>
+              <th>Ubicación</th>
+              <th>En Préstamo</th>
+              <th>Observaciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {buscarElementos().map((elemento, index) => (
+              <tr key={index}>
+                <td>{elemento.Codigo_elemento}</td>
+                <td>{elemento.Nombre_elemento}</td>
+                <td>{elemento.stock}</td>
+                <td>{elemento.Nombre_Categoria}</td>
+                <td>{elemento.Nombre_ubicacion}</td>
+                <td>{elemento.cantidad_en_prestamo}</td>
+                <td>{elemento.observaciones}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {buscarElementos().length === 0 && (
+        <div className="text-center mt-4 pl-10 pr-10">
+          <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+            <BiError className="text-red-400 text-3xl" />
+            <p className="text-red-700">No hay elementos para mostrar</p>
+          </div>
+
+          <div className="flex flex-col items-center p-4">
+            <div className="relative flex flex-col items-center">
+              <BiCommentDetail className="text-black text-[80px]" />
+            </div>
+            <p className="mt-2 text-black text-center w-[340px]">
+              Este mensaje sugiere que no hay criterios asociados con tu
+              búsqueda o que no hay datos en el sistema para ser mostrados
+              actualmente.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -221,6 +302,11 @@ const styles = StyleSheet.create({
     width: "14%",
     textAlign: "center",
     padding: 5,
+  },
+  emptyTableMessage: {
+    width: "100%",
+    padding: 20,
+    textAlign: "center",
   },
 });
 

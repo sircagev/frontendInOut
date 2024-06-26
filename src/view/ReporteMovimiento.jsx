@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiSearch, BiPrinter, BiInfoCircle, BiError, BiCommentDetail } from "react-icons/bi";
+import {
+  BiSearch,
+  BiPrinter,
+  BiInfoCircle,
+  BiError,
+  BiCommentDetail,
+} from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -110,7 +116,7 @@ const Movimientos = () => {
               <option value="Egreso">Egreso</option>
               <option value="Prestamo">Préstamo</option>
             </select>
-  
+
             <input
               type="date"
               className="form-control"
@@ -133,14 +139,15 @@ const Movimientos = () => {
           </div>
         </div>
       </div>
-  
+
       <div className="absolute right-1 bg-green-100 rounded h-[50px] w-[300px] border-t-2 border-green-400">
         <div className="flex items-center">
           <div className="text-3xl text-green-600 ml-2">
             <BiInfoCircle />
           </div>
           <h2 className="p-2 text-justify mr-2 text-xs">
-            Listado de todos los movimientos, se puede filtrar su resultado por tipo y fecha.
+            Listado de todos los movimientos, se puede filtrar su resultado por
+            tipo y fecha.
           </h2>
         </div>
       </div>
@@ -282,7 +289,6 @@ const Movimientos = () => {
       )}
     </PDFDownloadLink>
   );
-  
 
   // Función para formatear la fecha a día/mes/año
   const formatDate = (dateString) => {
@@ -306,9 +312,7 @@ const Movimientos = () => {
         <div className="text-center mt-4 pl-10 pr-10">
           <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
             <BiError className="text-red-400 text-3xl" />
-            <p className="text-red-700">
-              No hay movimientos para mostrar
-            </p>
+            <p className="text-red-700">No hay movimientos para mostrar</p>
           </div>
 
           <div className="flex flex-col items-center p-4">
@@ -325,7 +329,7 @@ const Movimientos = () => {
       )}
 
       {searchResultsCount > 0 && (
-        <table className="table table-striped">
+        <table className="table table-bordered table-striped text-center table-responsive thead-dark">
           <thead>
             <tr>
               <th>Tipo</th>
@@ -363,8 +367,6 @@ const Movimientos = () => {
     </div>
   );
 };
-
-
 
 const styles = StyleSheet.create({
   page: {
