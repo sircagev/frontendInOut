@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiPrinter, BiSearch, BiInfoCircle } from "react-icons/bi";
+import { BiPrinter, BiSearch, BiInfoCircle, BiError, BiCommentDetail } from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -15,10 +15,15 @@ const Usuario = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true); 
 
   useEffect(() => {
     listarUsuarios();
   }, []);
+
+  useEffect(() => {
+    setIsButtonDisabled(buscarUsuarios().length === 0);
+  }, [usuarios, searchTerm, startDate, endDate]);
 
   const listarUsuarios = async () => {
     try {
@@ -41,12 +46,9 @@ const Usuario = () => {
   const buscarUsuarios = () => {
     return usuarios.filter((usuario) => {
       const searchTextMatch =
-        usuario.Rol.toLowerCase().includes(searchTerm.toLowerCase()) ||
         usuario.Nombre_Usuario.toLowerCase().includes(searchTerm.toLowerCase()) ||
         usuario.ID_Usuario.toString().includes(searchTerm) ||
-        usuario.Numero.toString().includes(searchTerm) ||
-        usuario.ID_Ficha.toString().includes(searchTerm) ||
-        usuario.Elemento.toLowerCase().includes(searchTerm.toLowerCase());
+        usuario.ID_Ficha.toString().includes(searchTerm);
 
       const startDateMatch = startDate ? new Date(usuario.Fecha_de_Solicitud) >= new Date(startDate) : true;
       const endDateMatch = endDate ? new Date(usuario.Fecha_de_Entrega) <= new Date(endDate) : true;
@@ -101,9 +103,10 @@ const Usuario = () => {
     <PDFDownloadLink
       document={<MyDocument />}
       fileName="Reporte solicitudes.pdf"
+      disabled={isButtonDisabled} 
     >
       {({}) => (
-        <button className="d-flex align-items-center bg-[#3D7948] w-[130px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none font-semibold">
+        <button className={`d-flex align-items-center bg-[#3D7948] w-[130px] h-[40px] rounded font-sans text-xs uppercase text-white shadow-md transition-all ${isButtonDisabled ? 'opacity-50 pointer-events-none' : 'hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none'}`}>
           <div
             className="icon-container"
             style={{
@@ -201,42 +204,64 @@ const Usuario = () => {
           </div>
         </div>
       </div>
-
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Rol</th>
-            <th>Nombre</th>
-            <th>Identificación</th>
-            <th>Teléfono</th>
-            <th>Id Ficha</th>
-            <th>Elemento</th>
-            <th>Cantidad</th>
-            <th>Fecha de solicitud</th>
-            <th>Fecha de entrega</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {buscarUsuarios().map((user, index) => (
-            <tr key={index}>
-              <td>{user.Rol}</td>
-              <td>{user.Nombre_Usuario}</td>
-              <td>{user.ID_Usuario}</td>
-              <td>{user.Numero}</td>
-              <td>{user.ID_Ficha}</td>
-              <td>{user.Elemento}</td>
-              <td>{user.Cantidad}</td>
-              <td>{formatDate(user.Fecha_de_Solicitud)}</td>
-              <td>{formatDate(user.Fecha_de_Entrega)}</td>
-              <td>{user.Observaciones}</td>
+  
+      {buscarUsuarios().length > 0 && (
+        <table className="table table-bordered table-striped text-center table-responsive">
+          <thead>
+            <tr>
+              <th>Rol</th>
+              <th>Nombre</th>
+              <th>Identificación</th>
+              <th>Teléfono</th>
+              <th>Id Ficha</th>
+              <th>Elemento</th>
+              <th>Cantidad</th>
+              <th>Fecha de solicitud</th>
+              <th>Fecha de entrega</th>
+              <th>Observaciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+          </thead>
+          <tbody>
+            {buscarUsuarios().map((user, index) => (
+              <tr key={index}>
+                <td>{user.Rol}</td>
+                <td>{user.Nombre_Usuario}</td>
+                <td>{user.ID_Usuario}</td>
+                <td>{user.Numero}</td>
+                <td>{user.ID_Ficha}</td>
+                <td>{user.Elemento}</td>
+                <td>{user.Cantidad}</td>
+                <td>{formatDate(user.Fecha_de_Solicitud)}</td>
+                <td>{formatDate(user.Fecha_de_Entrega)}</td>
+                <td>{user.Observaciones}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {buscarUsuarios().length === 0 && (
+           <div className="text-center mt-4 pl-10 pr-10">
+           <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+             <BiError className="text-red-400 text-3xl" />
+             <p className="text-red-700">No hay movimientos para mostrar</p>
+           </div>
+           <div className="flex flex-col items-center p-4">
+             <div className="relative flex flex-col items-center">
+               <BiCommentDetail className="text-black text-[80px]" />
+             </div>
+             <p className="mt-2 text-black text-center w-[340px]">
+               Este mensaje sugiere que no hay criterios asociados con tu
+               búsqueda o que no hay datos en el sistema para ser mostrados
+               actualmente.
+             </p>
+           </div>
+         </div>
+       )}
+ 
+     </div>
+   );
+ }; 
 
 const styles = StyleSheet.create({
   page: {

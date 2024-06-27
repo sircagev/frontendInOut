@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import { BiPrinter, BiSearch, BiInfoCircle, BiError, BiCommentDetail } from "react-icons/bi";
+import {
+  BiPrinter,
+  BiSearch,
+  BiInfoCircle,
+  BiError,
+  BiCommentDetail,
+} from "react-icons/bi";
 import {
   PDFDownloadLink,
   Document,
@@ -9,13 +15,12 @@ import {
   View,
   StyleSheet,
 } from "@react-pdf/renderer";
-import Swal from "sweetalert2";
 
-const Bodega = () => {
+const Stockmin = () => {
   const [bodegas, setBodegas] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredBodegas, setFilteredBodegas] = useState({});
-  const [hasData, setHasData] = useState(false); // Estado para verificar si hay datos
+  const [hasData, setHasData] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -40,27 +45,18 @@ const Bodega = () => {
     const filteredData = Object.fromEntries(
       Object.entries(bodegas).map(([bodegaNombre, bodegaData]) => [
         bodegaNombre,
-        bodegaData.filter((bodega) =>
-          Object.values(bodega)
-            .join("")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        ),
+        Array.isArray(bodegaData)
+          ? bodegaData.filter((bodega) =>
+              Object.values(bodega)
+                .join("")
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
+          : [],
       ])
     );
     setFilteredBodegas(filteredData);
   }, [searchTerm, bodegas]);
-
-  useEffect(() => {
-    setHasData(Object.keys(bodegas).length > 0); // Actualizo estado de hasData
-    if (Object.keys(bodegas).length === 0 && bodegas.constructor === Object) {
-      Swal.fire({
-        icon: "info",
-        title: "Ningún elemento con Stock mínimo",
-        text: "No se encontraron datos para mostrar.",
-      });
-    }
-  }, [bodegas]);
 
   const MyDocument = () => (
     <Document>
@@ -105,11 +101,10 @@ const Bodega = () => {
 
   const handlePrint = () => {
     if (!hasData) {
-      // Si no hay datos, devuelvo un botón deshabilitado
       return (
         <button
           className="d-flex align-items-center bg-gray-300 w-[200px] h-[40px] rounded font-sans text-xs uppercase text-gray-600 shadow-md cursor-not-allowed"
-          onClick={(e) => e.preventDefault()} // Prevenir cualquier acción en el botón
+          onClick={(e) => e.preventDefault()}
           disabled
         >
           <div
@@ -172,11 +167,30 @@ const Bodega = () => {
     );
   };
 
-  const highlightSearchTerm = (text) => {
-    if (!searchTerm || !text || typeof text !== "string") return text;
-    const regex = new RegExp(`(${searchTerm})`, "gi");
-    return text.replace(regex, "<mark>$1</mark>");
-  };
+  const noDataMessage = (
+    <div className="text-center mt-4 pl-10 pr-10">
+      <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
+        <BiError className="text-red-400 text-3xl" />
+        <p className="text-red-700">
+          No hay elementos con stock mínimo para mostrar
+        </p>
+      </div>
+
+      <div className="flex flex-col items-center p-4">
+        <div className="relative flex flex-col items-center">
+          <BiCommentDetail className="text-black text-[80px]" />
+        </div>
+        <p className="mt-2 text-black text-center w-[340px]">
+          Este mensaje sugiere que no hay criterios asociados con tu búsqueda o
+          que no hay datos en el sistema para ser mostrados actualmente.
+        </p>
+      </div>
+    </div>
+  );
+
+  const isDataEmpty = !Object.keys(filteredBodegas).some(
+    (key) => filteredBodegas[key].length > 0
+  );
 
   return (
     <div className="container">
@@ -221,28 +235,10 @@ const Bodega = () => {
         </div>
       </div>
 
-      {Object.keys(bodegas).length === 0 ? (
-         <div className="text-center mt-4 pl-10 pr-10">
-         <div className="flex items-center p-4 space-x-4 bg-red-100 border-b h-12 border-red-400 rounded">
-           <BiError className="text-red-400 text-3xl" />
-           <p className="text-red-700">
-             No hay préstamos activos para mostrar
-           </p>
-         </div>
-
-         <div className="flex flex-col items-center p-4">
-           <div className="relative flex flex-col items-center">
-             <BiCommentDetail className="text-black text-[80px]" />
-           </div>
-           <p className="mt-2 text-black text-center w-[340px]">
-             Este mensaje sugiere que no hay criterios asociados con tu
-             búsqueda o que no hay datos en el sistema para ser mostrados
-             actualmente.
-           </p>
-         </div>
-       </div>
+      {isDataEmpty ? (
+        noDataMessage
       ) : (
-        <table className="table table-striped">
+        <table className="table table-bordered table-striped text-center table-responsive thead-dark">
           <thead>
             <tr>
               <th>Elemento</th>
@@ -257,7 +253,7 @@ const Bodega = () => {
               filteredBodegas[bodegaNombre].map((bodega) => (
                 <tr key={`${bodegaNombre}_${bodega.Id_elemento}`}>
                   <td>{bodega.Nombre_elemento}</td>
-                  <td>{bodega.Id_elemento}</td>
+                  <td>{bodega.Id_elemento.toString()}</td>
                   <td>{bodega.Stock !== undefined ? bodega.Stock : "0"}</td>
                   <td>{bodega.Bodega}</td>
                   <td>{bodega.Nombre_ubicacion}</td>
@@ -307,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Bodega;
+export default Stockmin;
