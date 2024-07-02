@@ -32,8 +32,8 @@ const ReporteSolicitudes = ({ solicitudes }) => {
       filteredData = filteredData.filter((row) => {
         const idMatches = row.user_id.toString().includes(searchTerm.toString());
         const rolMatches = row.role_name.toLowerCase().includes(searchTerm.toLowerCase());
-        const rowFechaSolicitud = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowFechaSolicitud >= startDate) && (!endDate || rowFechaSolicitud <= endDate);
+        const rowDate = convertDateFormat(row.created_at);
+        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
         return (idMatches || rolMatches) && dateMatches;
       });
     }

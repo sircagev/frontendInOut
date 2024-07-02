@@ -32,8 +32,8 @@ const ReporteActivos = ({ prestamosa }) => {
       filteredData = filteredData.filter((row) => {
         const elementMatches = row.element_name.toLowerCase().includes(searchTerm.toLowerCase());
         const userMatches = row.user_application.toLowerCase().includes(searchTerm.toLowerCase());
-        const rowFechaSolicitud = convertDateFormat(row.fecha_solicitud);
-        const dateMatches = (!startDate || rowFechaSolicitud >= startDate) && (!endDate || rowFechaSolicitud <= endDate);
+        const rowDate = convertDateFormat(row.created_at);
+        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
         return (elementMatches || userMatches) && dateMatches;
       });
     }

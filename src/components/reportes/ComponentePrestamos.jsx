@@ -33,8 +33,8 @@ const ReportePrestamos = ({ prestamos }) => {
         const elementMatches = row.element_name.toLowerCase().includes(searchTerm.toLowerCase());
         const statusMatches = row.loan_status.toLowerCase().includes(searchTerm.toLowerCase());
         const codeMatches = row.element_id.toString() === searchTerm.toString();
-        const rowFechaSolicitud = convertDateFormat(row.Fecha_solicitud);
-        const dateMatches = (!startDate || rowFechaSolicitud >= startDate) && (!endDate || rowFechaSolicitud <= endDate);
+        const rowDate = convertDateFormat(row.created_at);
+        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
         return (elementMatches || codeMatches || statusMatches) && dateMatches;
       });
     }

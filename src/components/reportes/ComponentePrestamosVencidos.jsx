@@ -32,8 +32,8 @@ const ReporteVencidos = ({ prestamosv }) => {
       filteredData = filteredData.filter((row) => {
         const idMatches = row.identification.toString().includes(searchTerm.toString());
         const userMatches = row.user_application.toLowerCase().includes(searchTerm.toLowerCase());
-        const rowFechaSolicitud = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowFechaSolicitud >= startDate) && (!endDate || rowFechaSolicitud <= endDate);
+        const rowDate = convertDateFormat(row.created_at);
+        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
         return (idMatches || userMatches) && dateMatches;
       });
     }
