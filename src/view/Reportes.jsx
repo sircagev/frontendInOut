@@ -7,6 +7,8 @@ import movimientosImg from "../assets/move.png";
 import elementosInactivosImg from "../assets/student.png";
 import elementosTImg from "../assets/inventory.png";
 import prestamosImg from "../assets/transaction.png";
+import vencidosImg from "../assets/due-date.png";
+import elementosexpiradosImg from "../assets/expiration-date.png";//descargas FlatIcon
 
 const Reportes = () => {
   const navigate = useNavigate();
@@ -14,21 +16,27 @@ const Reportes = () => {
   const items = [
     {
       title: "Reporte",
-      img: elementosImg,//descardos de Flaticon
-      text: "de Préstamos Activos",
-      path: "/reportes/prestamosactivos",
+      img: prestamosImg,
+      text: "de Préstamos",
+      path: "/reportes/prestamos",
+    },
+    {
+      title: "Reporte",
+      img: elementosTImg,
+      text: "de Elementos",
+      path: "/reportes/elementos",
     },
     {
       title: "Reporte",
       img: bodegasImg,
-      text: " de Elementos con stock mínimo",
+      text: "Elementos bajo stock",
       path: "/reportes/stockmin",
     },  
     {
       title: "Reporte",
       img: usuariosImg,
-      text: "Solicitudes de Usuarios",
-      path: "/reportes/solicitudusuario",
+      text: "Solicitudes",
+      path: "/reportes/solicitud",
     },
     {
       title: "Reporte",
@@ -44,20 +52,26 @@ const Reportes = () => {
     },
     {
       title: "Reporte",
-      img: elementosTImg,
-      text: "de Elementos",
-      path: "/reportes/elementos",
+      img: elementosImg,
+      text: "de Préstamos Activos",
+      path: "/reportes/prestamosactivos",
     },
     {
       title: "Reporte",
-      img: prestamosImg,
-      text: " de Préstamos",
-      path: "/reportes/prestamos",
+      img: vencidosImg,
+      text: "Préstamos Vencidos",
+      path: "/reportes/prestamosvencidos",
+    }, 
+    {
+      title: "Reporte",
+      img: elementosexpiradosImg,
+      text: "Elementos Expirados",
+      path: "/reportes/elementosexpirados",
     },
   ];
 
   return (
-    <div className="container justify-center p-5 h-full flex flex-wrap overflow-hidden">
+    <div className="container justify-center p-5 h-full flex flex-wrap overflow-hidden animate-slide-in-right">
       <div className="flex flex-wrap w-full h-full items-center justify-center">
         {items.map((item, index) => (
           <div

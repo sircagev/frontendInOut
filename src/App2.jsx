@@ -11,19 +11,21 @@ import { Medidas } from "./view/Medidas";
 import { Ubicacion } from "./view/Ubicacion";
 import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
-import ReporteU from "./view/ReporteSolicitudUsuario";
-import ReporteE from "./view/ReportePrestamosActivos";
-import ReporteP from "./view/ReportePrestamos";
+import Reporte from "./view/Reportes";
+import ReporteE from "./view/ReporteElementos";
 import ReporteED from "./view/ReporteElementosDesactivados";
-import ReporteElementos from "./view/ReporteElementos";
-import ReporteB from "./view/ReporteStockMin";
-import { Usuarios } from './view/Usuarios';
+import ReporteEX from "./view/ReporteElementosExpirados";
 import ReporteM from "./view/ReporteMovimiento";
+import ReporteMS from "./view/ReporteMinStock";
+import ReporteP from "./view/ReportePrestamos";
+import ReportePA from "./view/ReportePrestamosActivos";
+import ReporteS from "./view/ReporteSolicitud";
+import ReporteV from "./view/ReportePrestamosVencidos";
+import { Usuarios } from './view/Usuarios';
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
 import Bodegas from "./view/Bodegas";
-import Reporte from "./view/Reportes";
 import Home from "./view/Home";
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
 import { PageNotFound } from './view/PageNotFound';
@@ -53,16 +55,18 @@ function App2() {
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
                     <Route path="/elementos/medidas" element={<Medidas user={user} />} />
-                    <Route path="/reportes/solicitudusuario" element={<ReporteU />} />
-                    <Route path="/reportes/prestamosactivos" element={<ReporteE />} />
-                    <Route path="/reportes/prestamos" element={<ReporteP />} />
-                    <Route path="/reportes/elementos" element={<ReporteElementos />} />
+                    <Route path="/reportes" element={<Reporte />} />
+                    <Route path="/reportes/elementos" element={<ReporteE />} />
                     <Route path="/reportes/elementosdesactivados" element={<ReporteED />} />
-                    {/* <Route path="/reportes/stockmin" element={<ReporteB />} /> */}
+                    <Route path="/reportes/elementosexpirados" element={<ReporteEX />} />
+                    <Route path="/reportes/movimientos" element={<ReporteM />} />
+                    <Route path="/reportes/stockmin" element={<ReporteMS />} /> 
+                    <Route path="/reportes/prestamos" element={<ReporteP />} />
+                    <Route path="/reportes/prestamosactivos" element={<ReportePA />} />
+                    <Route path="/reportes/solicitud" element={<ReporteS />} />
+                    <Route path="/reportes/prestamosvencidos" element={<ReporteV />} />
                     <Route path="/usuarios" element={<Usuarios userLogin={user} />} />
-                    {/* <Route path="/reportes/movimientos" element={<ReporteM />} /> */}
                     {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
-                    {/* <Route path="/reportes" element={<Reporte />} /> */}
                     {/* <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} /> */}
                     {/* <Route path="/movimientos" element={<Movimientos2 user={user} />} /> */}
                     <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />
@@ -121,7 +125,7 @@ function App2() {
                     path={'/reportes/stockmin'}
                     element={
                         <ProtectedRoute
-                            component={ReporteB}
+                            component={ReporteMS}
                             layout={DashboardTemplate}
                             allowedRoles={['administrador', 'Encargado']}
                         />

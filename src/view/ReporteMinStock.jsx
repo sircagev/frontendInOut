@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import ElementosDesactivados from '../components/reportes/ComponenteElementosDesactivados';
+import ReporteStockMin from '../components/reportes/ComponenteStockMin';
 
-const ElementosDesactivadosContainer = () => {
-  const [elementosd, setPrestamos] = useState({});
+const ReporteStockMinContainer = () => {
+  const [stockmin, setElementos] = useState({});
 
   const fetchData = async () => {
     try {
-      const response = await axiosClient.get("/reporte/elementosdesactivados");
-      setPrestamos(response.data);
+      const response = await axiosClient.get("/reporte/stockmin");
+      setElementos(response.data);
     } catch (error) {
       console.error(
         "Error al obtener la información:",
@@ -25,9 +25,9 @@ const ElementosDesactivadosContainer = () => {
 
   return (
     <div>
-      <ElementosDesactivados elementosd={elementosd} />
+      <ReporteStockMin stockmin={stockmin} />
     </div>
   );
 };
 
-export default ElementosDesactivadosContainer;
+export default ReporteStockMinContainer;
