@@ -46,14 +46,14 @@ const ReportePrestamos = ({ prestamos }) => {
     () => [
       { Header: "Estado", accessor: "loan_status" },
       { Header: "Código", accessor: "element_id" },
-      { Header: "Nombre", accessor: "element_name" },
+      { Header: "Elemento", accessor: "element_name" },
       { Header: "Cantidad", accessor: "quantity" },
-      { Header: "Usuario Solicitante", accessor: "user_application" },
-      { Header: "Usuario Receptor", accessor: "user_receiving" },
+      { Header: "Usuario Solicita", accessor: "user_application" },
+      { Header: "Usuario Recibe", accessor: "user_receiving" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
       { Header: "Fecha Vencimiento", accessor: "estimated_return" },
       { Header: "Fecha Devolución", accessor: "actual_return" },
-      { Header: "Usuario que Devuelve", accessor: "user_returning" },
+      { Header: "Usuario Devuelve", accessor: "user_returning" },
       { Header: "Observaciones", accessor: "remarks" },
     ],
     []
@@ -64,16 +64,16 @@ const ReportePrestamos = ({ prestamos }) => {
     const worksheet = workbook.addWorksheet("Report");
   
     worksheet.columns = [
-      { header: "Estado", key: "loan_status", width: 20 },
-      { header: "Código", key: "element_id", width: 20 },
-      { header: "Nombre", key: "element_name", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 20 },
-      { header: "Usuario Solicitante", key: "user_application", width: 20 },
-      { header: "Usuario Receptor", key: "user_receiving", width: 20 },
-      { header: "Fecha de Solicitud", key: "created_at", width: 20 },
-      { header: "Fecha Vencimiento", key: "estimated_return", width: 20 },
-      { header: "Fecha Devolución", key: "actual_return", width: 20 },
-      { header: "Usuario que Devuelve", key: "user_returning", width: 20 },
+      { header: "Estado", key: "loan_status", width: 15 },
+      { header: "Código", key: "element_id", width: 8 },
+      { header: "Elemento", key: "element_name", width: 20 },
+      { header: "Cantidad", key: "quantity", width: 10 },
+      { header: "Usuario Solicita", key: "user_application", width: 20 },
+      { header: "Usuario Recibe", key: "user_receiving", width: 20 },
+      { header: "Fecha de Solicitud", key: "created_at", width: 15 },
+      { header: "Fecha Vencimiento", key: "estimated_return", width: 15 },
+      { header: "Fecha Devolución", key: "actual_return", width: 15 },
+      { header: "Usuario Devuelve", key: "user_returning", width: 20 },
       { header: "Observaciones", key: "remarks", width: 20 },
     ];
   

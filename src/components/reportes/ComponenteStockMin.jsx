@@ -61,16 +61,16 @@ const ReporteStockMin = ({ stockmin }) => {
     const worksheet = workbook.addWorksheet("Report");
   
     worksheet.columns = [
-      { header: "Bodega", key: "warehouse", width: 20 },
-      { header: "Ubicación", key: "wlocation", width: 20 },
-      { header: "Código", key: "element_id", width: 20 },
-      { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Tipo", key: "element_type", width: 20 },
-      { header: "Medida", key: "Measurement_unit", width: 20 },
-      { header: "Categoría", key: "category", width: 20 },
-      { header: "Stock", key: "stock", width: 20 },
+      { header: "Bodega", key: "warehouse", width: 15 },
+      { header: "Ubicación", key: "wlocation", width: 15 },
+      { header: "Código", key: "element_id", width: 8 },
+      { header: "Elemento", key: "element_name", width: 15 },
+      { header: "Tipo", key: "element_type", width: 15 },
+      { header: "Medida", key: "Measurement_unit", width: 15 },
+      { header: "Categoría", key: "category", width: 15 },
+      { header: "Stock", key: "stock", width: 5 },
       { header: "Cantidad en Préstamo", key: "LoanElementsCount", width: 20 },
-      { header: "Lote", key: "batch_serial", width: 20 }
+      { header: "Lote", key: "batch_serial", width: 5 }
     
     ];
   

@@ -62,15 +62,15 @@ const ReporteElementos = ({ elementos }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Código", key: "element_id", width: 20 },
+      { header: "Código", key: "element_id", width: 8 },
       { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Stock", key: "stock", width: 20 },
+      { header: "Stock", key: "stock", width: 5 },
       { header: "En Préstamo", key: "quantity", width: 20 },
-      { header: "Total", key: "total", width: 20 },
+      { header: "Total", key: "total", width: 5 },
       { header: "Fecha Creación", key: "created_at", width: 20 },
-      { header: "Categoría", key: "category", width: 20 },
-      { header: "Bodega", key: "warehouse", width: 20 },
-      { header: "Ubicación", key: "wlocation", width: 20 }
+      { header: "Categoría", key: "category", width: 15 },
+      { header: "Bodega", key: "warehouse", width: 15 },
+      { header: "Ubicación", key: "wlocation", width: 15 }
     ];
 
     data.forEach((row) => {

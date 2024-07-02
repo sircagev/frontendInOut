@@ -50,7 +50,7 @@ const ReporteExpirados = ({ elementex }) => {
         { Header: "Tipo", accessor: "element_type" },
         { Header: "Medida", accessor: "measurement_unit" },
         { Header: "Lote", accessor: "batch_serial" },
-        { Header: "Fecha de Vencimiento", accessor: "expiration_date" },
+        { Header: "Fecha Expiración", accessor: "expiration_date" },
         { Header: "Bodega", accessor: "warehouse" },
         { Header: "Ubicación", accessor: "wlocation" }
       ],
@@ -65,13 +65,13 @@ const ReporteExpirados = ({ elementex }) => {
       { header: "Elemento", key: "element_name", width: 20 },
       { header: "Código", key: "element_id", width: 8 },
       { header: "Stock", key: "stock", width: 10 },
-      { header: "Categoría", key: "category", width: 20 },
+      { header: "Categoría", key: "category", width: 15 },
       { header: "Tipo", key: "element_type", width: 20 },
-      { header: "Medida", key: "measurement_unit", width: 20 },
+      { header: "Medida", key: "measurement_unit", width: 15 },
       { header: "Lote", key: "batch_serial", width: 10 },
-      { header: "Fecha Vencimiento", key: "expiration_date", width: 15 },
-      { header: "Bodega", key: "warehouse", width: 20 },
-      { header: "Ubicación", key: "wlocation", width: 20 }
+      { header: "Fecha Expiración", key: "expiration_date", width: 15 },
+      { header: "Bodega", key: "warehouse", width: 15 },
+      { header: "Ubicación", key: "wlocation", width: 15 }
     ]
     ;
   
@@ -81,7 +81,7 @@ const ReporteExpirados = ({ elementex }) => {
    
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-    saveAs(blob, "reporte_elementos_desactivados.xlsx");
+    saveAs(blob, "Reporte elementos expirados.xlsx");
   };
 
   const handleInputChange = (e) => {

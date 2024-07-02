@@ -46,12 +46,12 @@ const ReporteVencidos = ({ prestamosv }) => {
       { Header: "Usuario Solicitante", accessor: "user_application" },
       { Header: "Identificación", accessor: "identification" },
       { Header: "Teléfono", accessor: "phone" },
-      { Header: "Nombre del Elemento", accessor: "element_name" },
-      { Header: "ID del Elemento", accessor: "element_id" },
+      { Header: "Elemento", accessor: "element_name" },
+      { Header: "Código", accessor: "element_id" },
       { Header: "Cantidad", accessor: "quantity" },
       { Header: "Observaciones", accessor: "remarks" },
-      { Header: "Fecha de Creación", accessor: "created_at" },
-      { Header: "Fecha Estimada de Devolución", accessor: "estimated_return" },
+      { Header: "Fecha Solicitud", accessor: "created_at" },
+      { Header: "Fecha Estimada Devolución", accessor: "estimated_return" },
     ],
     []
   );
@@ -62,14 +62,14 @@ const ReporteVencidos = ({ prestamosv }) => {
   
     worksheet.columns = [
       { header: "Usuario Solicitante", key: "user_application", width: 20 },
-      { header: "Identificación", key: "identification", width: 20 },
-      { header: "Teléfono", key: "phone", width: 20 },
-      { header: "Nombre del Elemento", key: "element_name", width: 20 },
-      { header: "ID del Elemento", key: "element_id", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 20 },
+      { header: "Identificación", key: "identification", width: 15 },
+      { header: "Teléfono", key: "phone", width: 15 },
+      { header: "Elemento", key: "element_name", width: 15 },
+      { header: "Código", key: "element_id", width: 8 },
+      { header: "Cantidad", key: "quantity", width: 10 },
       { header: "Observaciones", key: "remarks", width: 20 },
-      { header: "Fecha de Creación", key: "created_at", width: 20 },
-      { header: "Fecha Estimada de Devolución", key: "estimated_return", width: 20 },
+      { header: "Fecha Solicitud", key: "created_at", width: 15 },
+      { header: "Fecha Estimada Devolución", key: "estimated_return", width: 20 },
     ];
   
     data.forEach((row) => {

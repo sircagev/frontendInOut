@@ -61,10 +61,10 @@ const ReporteSolicitudes = ({ solicitudes }) => {
     const worksheet = workbook.addWorksheet("Report");
   
     worksheet.columns = [
-      { header: "Rol", key: "role_name", width: 20 },
+      { header: "Rol", key: "role_name", width: 15 },
       { header: "Usuario Solicitante", key: "user_applicant", width: 20 },
       { header: "Identificación", key: "user_id", width: 20 },
-      { header: "ID Ficha", key: "course_id", width: 20 },
+      { header: "ID Ficha", key: "course_id", width: 10 },
       { header: "Elemento", key: "element_name", width: 20 },
       { header: "Código Elemento", key: "element_id", width: 20 },
       { header: "Fecha de Solicitud", key: "created_at", width: 20 },

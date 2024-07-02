@@ -64,9 +64,9 @@ const ReporteActivos = ({ prestamosa }) => {
   
     worksheet.columns = [
 
-      { header: "Código", key: "element_id", width: 20 },
-      { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 20 },
+      { header: "Código", key: "element_id", width: 8 },
+      { header: "Elemento", key: "element_name", width: 10 },
+      { header: "Cantidad", key: "quantity", width: 10 },
       { header: "Usuario Solicitante", key: "user_application", width: 20 },
       { header: "Usuario Receptor", key: "user_receiving", width: 20 },
       { header: "Estado Préstamo", key: "loan_status", width: 20 },

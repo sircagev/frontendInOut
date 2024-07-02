@@ -45,13 +45,16 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
   const columns = useMemo(
     () => [
 
-      { Header: "Código del Elemento", accessor: "element_id" },
-      { Header: "Nombre", accessor: "element_name" },
+      { Header: "Código", accessor: "element_id" },
+      { Header: "Elemento", accessor: "element_name" },
       { Header: "Stock", accessor: "stock" },
       { Header: "Fecha de Desactivación", accessor: "update_at" },
+      { Header: "Categoría", accessor: "category" },
+      { Header: "Tipo", accessor: "element_type" },
+      { Header: "Lote", accessor: "batch_serial" },
+      { Header: "Medida", accessor: "measurement_unit" },
       { Header: "Bodega", accessor: "warehouse" },
       { Header: "Ubicación", accessor: "wlocation" },
-      { Header: "Categoría", accessor: "category" },
     ],
     []
   );
@@ -62,13 +65,16 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
   
     worksheet.columns = [
 
-      { header: "Código del Elemento", key: "element_id", width: 20 },
-      { header: "Nombre", key: "element_name", width: 20 },
-      { header: "Stock", key: "stock", width: 20 },
+      { header: "Código", key: "element_id", width: 8 },
+      { header: "Elemento", key: "element_name", width: 20 },
+      { header: "Stock", key: "stock", width: 8 },
       { header: "Fecha de Desactivación", key: "update_at", width: 20 },
-      { header: "Bodega", key: "warehouse", width: 20 },
-      { header: "Ubicación", key: "wlocation", width: 20 },
-      { header: "Categoría", key: "category", width: 20 }
+      { header: "Categoría", key: "category", width: 15 },
+      { header: "Tipo", key: "element_type", width: 15 },
+      { header: "Lote", key: "batch_serial", width: 5 },
+      { header: "Medida", key: "measurement_unit", width: 10 },
+      { header: "Bodega", key: "warehouse", width: 15 },
+      { header: "Ubicación", key: "wlocation", width: 15 },
     ];
   
     data.forEach((row) => {

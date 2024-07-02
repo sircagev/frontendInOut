@@ -32,9 +32,12 @@ const ReporteMovimientos = ({ movimientos }) => {
       filteredData = filteredData.filter((row) => {
         const elementMatches = row.element_name.toLowerCase().includes(searchTerm.toLowerCase());
         const typeMatches = row.movement_type.toLowerCase().includes(searchTerm.toLowerCase());
-        const rowFechaPrestamo = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowFechaPrestamo >= startDate) && (!endDate || rowFechaPrestamo <= endDate);
-        return (elementMatches || typeMatches) && dateMatches;
+        const codeMatches = row.movement_id.toString() === searchTerm.toString();
+        const serialMatches = row.batch_serial.toString() === searchTerm.toString();
+        const idElementMatches = row.element_id.toString() === searchTerm.toString();
+        const rowDate = convertDateFormat(row.created_at);
+        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
+        return (elementMatches || typeMatches || codeMatches || serialMatches || idElementMatches) && dateMatches;
       });
     }
 
@@ -43,16 +46,15 @@ const ReporteMovimientos = ({ movimientos }) => {
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "movement_id" },
+      { Header: "Código", accessor: "movement_id" },
       { Header: "Tipo", accessor: "movement_type" },
-      { Header: "Usuario Solicitante", accessor: "user_application" },
-      { Header: "Identificación", accessor: "identification" },
-      { Header: "Fecha Solicitud", accessor: "created_at" },
       { Header: "Elemento", accessor: "element_name" },
-      { Header: "Código", accessor: "element_id" },
       { Header: "Cantidad", accessor: "quantity" },
-      { Header: "Usuario Devolución", accessor: "user_returning" },
-      { Header: "Fecha Devolución", accessor: "actual_return" },
+      { Header: "Lote", accessor: "batch_serial" },
+      { Header: "Código Elemento", accessor: "element_id" },
+      { Header: "Autoriza", accessor: "user_manager" },
+      { Header: "Usuario ", accessor: "user_action" },
+      { Header: "Fecha", accessor: "created_at" },
       { Header: "Observaciones", accessor: "remarks" },
     ],
     []
@@ -63,16 +65,15 @@ const ReporteMovimientos = ({ movimientos }) => {
     const worksheet = workbook.addWorksheet("Report");
   
     worksheet.columns = [
-      { header: "ID", key: "movement_id", width: 20 },
-      { header: "Tipo", key: "movement_type", width: 20 },,
-      { header: "Usuario Solicitante", key: "user_application", width: 20 },
-      { header: "Identificación", key: "identification", width: 20 },
-      { header: "Fecha Solicitud", key: "created_at", width: 20 },
-      { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Código", key: "element_id", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 20 },
-      { header: "Usuario Devolución", key: "user_returning", width: 20 },
-      { header: "Fecha Devolución", key: "actual_return", width: 20 },
+      { header: "Código", key: "movement_id", width: 8 },
+      { header: "Tipo", key: "movement_type", width: 8 },
+      { header: "Elemento", key: "element_name", width: 15 },
+      { header: "Cantidad", key: "quantity", width: 10 },
+      { header: "Lote", key: "batch_serial", width: 5 },
+      { header: "Código Elemento", key: "element_id", width: 16 },
+      { header: "Autoriza", key: "user_manager", width: 20 },
+      { header: "Usuario ", key: "user_action", width: 20 },
+      { header: "Fecha", key: "created_at", width: 15 },
       { header: "Observaciones", key: "remarks", width: 20 },
     ];
   
@@ -155,7 +156,7 @@ const ReporteMovimientos = ({ movimientos }) => {
               className="border rounded p-1"
             />
             <div className={`fixed mt-[50px] ml-2 text-xs transition-opacity duration-100 ${searchTerm ? 'opacity-100' : 'opacity-0'}`}>
-              <span className="bg-gray-200">Búsqueda por Tipo, Elemento</span>
+              <span className="bg-gray-200">Búsqueda por Tipo, Elemento, Código, Lote</span>
             </div>
           </div>
           <div className="flex items-center ml-2">
