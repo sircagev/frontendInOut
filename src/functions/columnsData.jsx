@@ -69,7 +69,7 @@ export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =
 
 export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) => [
   {
-    name: "id_usuario",
+    name: "user_id",
     label: "Código",
     options: {
       sort: false, // Deshabilita el ordenamiento para esta columna
@@ -77,7 +77,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "nombre_usuario",
+    name: "name",
     label: "Nombre",
     options: {
       sort: false, 
@@ -85,7 +85,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "apellido_usuario",
+    name: "lastname",
     label: "Apellido",
     options: {
       sort: false,
@@ -93,7 +93,15 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "email_usuario",
+    name: "phono",
+    label: "Telefono",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "email",
     label: "Email",
     options: {
       sort: false, 
@@ -101,31 +109,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "rol",
-    label: "Rol",
-    options: {
-      sort: false, 
-      filter: false,
-    },
-  },
-  {
-    name: "numero",
-    label: "Teléfono",
-    options: {
-      sort: false, 
-      filter: false,
-    },
-  },
-  {
-    name: "Id_ficha",
-    label: "Ficha",
-    options: {
-      sort: false, 
-      filter: false,
-    },
-  },
-  {
-    name: "identificacion",
+    name: "identification",
     label: "ID",
     options: {
       sort: false, 
@@ -133,7 +117,31 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "Estado",
+    name: "role_id",
+    label: "Rol",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "position_id",
+    label: "Cargo",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "course_id",
+    label: "Ficha",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "status",
     label: "Estado",
     options: {
       sort: false,
