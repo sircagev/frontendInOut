@@ -11,9 +11,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
         nombre: '',
         apellido: '',
         email: '',
-        rol: '',
         numero: '',
-        contraseña: '',
         ficha: '',
         identificacion: ''
     });
@@ -22,9 +20,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
         nombre: '',
         apellido: '',
         email: '',
-        rol: '',
         numero: '',
-        contraseña: '',
         ficha: '',
         identificacion: ''
     });
@@ -35,9 +31,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                 nombre: category.nombre,
                 apellido: category.apellido,
                 email: category.email,
-                rol: category.rol,
                 numero: category.numero,
-                contraseña: category.contraseña,
                 ficha: category.ficha,
                 identificacion: category.identificacion,
             });
@@ -65,9 +59,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
             nombre: '',
             apellido: '',
             email: '',
-            rol: '',
             numero: '',
-            contraseña: '',
             ficha: '',
             identificacion: ''
         };
@@ -112,24 +104,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
             newErrorMessages.identificacion = 'El campo de identificación es requerido.';
             hasError = true;
         }
-        if (!contraseña.trim()) {
-            newErrorMessages.contraseña = 'La contraseña es requerida.';
-            hasError = true;
-        } else if (contraseña.length < 8) {
-            newErrorMessages.contraseña = 'La contraseña debe tener al menos 8 caracteres.';
-            hasError = true;
-        } else if (!/[A-Z]/.test(contraseña)) {
-            newErrorMessages.contraseña = 'La contraseña debe contener al menos una letra mayúscula.';
-            hasError = true;
-        } else if (!/\d/.test(contraseña)) {
-            newErrorMessages.contraseña = 'La contraseña debe contener al menos un número.';
-            hasError = true;
-        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(contraseña)) {
-            newErrorMessages.contraseña = 'La contraseña debe contener al menos un caracter especial.';
-            hasError = true;
-        }
-        
-
+      
         setErrorMessages(newErrorMessages);
         return !hasError;
     };
@@ -143,9 +118,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                 nombre_usuario: values.nombre,
                 apellido_usuario: values.apellido,
                 email_usuario: values.email,
-                rol: values.rol,
                 numero: values.numero,
-                contraseña_usuario: values.contraseña,
                 Id_ficha: values.ficha,
                 identificacion: values.identificacion
             });
@@ -238,20 +211,21 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                             </div>
                         </div>
                         <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-            
-                            <div>
+                        <div className='w-full flex flex-col'>
                                 <Input
-                                    type='text'
-                                    label='Contraseña'
-                                    name='contraseña_usuario'
-                                    value={values.contraseña_usuario}
+                                    type='number'
+                                    label='Identifiación'
+                                    name='identificacion'
+                                    value={values.identificacion}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
+                                    onKeyPress={allowOnlyNumbers}
+                                    inputMode="numeric"
                                 />
-                                {errorMessages.contraseña_usuario && (
+                                {errorMessages.identificacion && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.contraseña_usuario}
+                                        {errorMessages.identificacion}
                                     </div>
                                 )}
                             </div>
@@ -271,26 +245,6 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
                                         {errorMessages.ficha}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div className='w-full flex flex-col'>
-                                <Input
-                                    type='number'
-                                    label='Identifiación'
-                                    name='identificacion'
-                                    value={values.identificacion}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.identificacion && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.identificacion}
                                     </div>
                                 )}
                             </div>
