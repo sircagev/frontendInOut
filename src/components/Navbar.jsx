@@ -54,6 +54,7 @@ export const Navbar = ({ setLogIn }) => {
       try {
         const responseStock = await axiosClient.get("/reporte/stockminmodal");
         const stockMinimo = responseStock.data;
+        console.log("Elementos con bajo stock:", stockMinimo);
         setElementosConBajoStock(stockMinimo);
         setContadorStockMin(stockMinimo > 0 ? 1 : 0);
 
@@ -61,6 +62,7 @@ export const Navbar = ({ setLogIn }) => {
           "/reporte/prestamosactivosmodal"
         );
         const prestamosActivos = responsePrestamos.data;
+        console.log("Prestamos activos:", prestamosActivos);
         setPrestamosActivos(prestamosActivos);
         setContadorPrestamosActivos(prestamosActivos > 0 ? 1 : 0);
       } catch (error) {

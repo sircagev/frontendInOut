@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import ElementosDesactivados from '../components/reportes/ComponenteElementosDesactivados';
+import ReportesVencidos from '../components/reportes/ComponentePrestamosVencidos';
 
-const ElementosDesactivadosContainer = () => {
-  const [elementosd, setPrestamos] = useState({});
+const ReporteVencidosContainer = () => {
+  const [prestamosv, setPrestamos] = useState({});
 
   const fetchData = async () => {
     try {
-      const response = await axiosClient.get("/reporte/elementosdesactivados");
+      const response = await axiosClient.get("/reporte/prestamosvencidos");
       setPrestamos(response.data);
     } catch (error) {
       console.error(
@@ -25,9 +25,9 @@ const ElementosDesactivadosContainer = () => {
 
   return (
     <div>
-      <ElementosDesactivados elementosd={elementosd} />
+      <ReportesVencidos prestamosv={prestamosv} />
     </div>
   );
 };
 
-export default ElementosDesactivadosContainer;
+export default ReporteVencidosContainer;

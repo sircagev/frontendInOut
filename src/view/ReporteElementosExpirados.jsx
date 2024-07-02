@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axiosClient from "../components/config/axiosClient";
-import ElementosDesactivados from '../components/reportes/ComponenteElementosDesactivados';
+import ReporteElementosEX from '../components/reportes/ComponenteElementosExpirados';
 
-const ElementosDesactivadosContainer = () => {
-  const [elementosd, setPrestamos] = useState({});
+const ReporteExpiradosContainer = () => {
+  const [elementex, setElementos] = useState({});
 
   const fetchData = async () => {
     try {
-      const response = await axiosClient.get("/reporte/elementosdesactivados");
-      setPrestamos(response.data);
+      const response = await axiosClient.get("/reporte/elementosexpirados");
+      setElementos(response.data);
     } catch (error) {
       console.error(
         "Error al obtener la información:",
@@ -25,9 +25,9 @@ const ElementosDesactivadosContainer = () => {
 
   return (
     <div>
-      <ElementosDesactivados elementosd={elementosd} />
+      <ReporteElementosEX elementex={elementex} />
     </div>
   );
 };
 
-export default ElementosDesactivadosContainer;
+export default ReporteExpiradosContainer;
