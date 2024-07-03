@@ -9,10 +9,11 @@ const columnsElements = [
     { name: 'Meidida', uid: 'measurementUnit_id' },
     { name: 'Empaque', uid: 'packageType_id' },
     { name: 'Creación', uid: 'fecha_creación' },
-    { name: 'Estado', uid: 'status' }
+    { name: 'Estado', uid: 'status' },
+    { name: 'Acciones', uid: 'actionElement' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "stock", "category_id"];
+const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "stock", "category_id", "actionElement"];
 
 const statusOptions = [
     { name: "Activo", uid: "activo" },

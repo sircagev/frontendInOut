@@ -7,7 +7,6 @@ import {
     TableRow,
     TableCell,
     Input,
-    Button,
     DropdownTrigger,
     Dropdown,
     DropdownMenu,
@@ -15,13 +14,14 @@ import {
     Chip,
     User,
     Pagination,
-    Tooltip
+    Button
 } from "@nextui-org/react";
 import { capitalize } from "../utils/columnsData";
 import { EditIcon } from "./icons/EditIcon";
 import { EyeIcon } from "./icons/EyeIcon";
 import { ChevronDownIcon } from "./icons/ChevronDownIcon";
 import { SearchIcon } from "./icons/SearchIcon";
+import Modal1 from "./Modal1";
 
 const NextUITable = ({
     columns,
@@ -137,12 +137,18 @@ const NextUITable = ({
                 );
             case "actions":
                 return (
-                    <Actions></Actions>
+                    <Actions codigo={item.codigo}></Actions>
                 );
             case "codigo":
                 return (
                     <div className="flex flex-col w-full">
                         <p className="text-bold text-sm capitalize text-center">{cellValue}</p>
+                    </div>
+                )
+            case "actionElement":
+                return (
+                    <div className="flex flex-col w-full">
+                        <Actions item={item} />
                     </div>
                 )
             default:

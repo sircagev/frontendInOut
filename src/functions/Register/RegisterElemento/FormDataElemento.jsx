@@ -11,7 +11,7 @@ import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
 export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
 
-  const [UseTipo, SetTipo] = useState([]);
+const [UseTipo, SetTipo] = useState([]);
   const [UseCategorias, setCategorias] = useState([]);
   const [UseUbicacion, SetUbicacion] = useState([]);
   const [UseEmpaques, SetEmpaques] = useState([]);
@@ -158,7 +158,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
   };
 
   return (
-    <div>
+/*     <div>
       <form onSubmit={handleForm}>
         <div className='flex flex-col justify-center items-center gap-3 mb-4'>
           <div className='w-auto flex gap-3 mb-2'>
@@ -309,7 +309,8 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           <ButtonRegistrar />
         </div>
       </form>
-    </div>
+    </div> */
+    <h1>Hola</h1>
   )
 }
 
