@@ -14,10 +14,16 @@ export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
   const [prestamosActivos, setPrestamosActivos] = useState([]);
-  const [contadorStockMin, setContadorStockMin] = useState(0);
+  const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
+  const [prestamosVencidos, setPrestamosVencidos] = useState([]);
+  const [solicitudes, setSolicitudes] = useState([]);
+  const [elementosExpirados, setElementosExpirados] = useState([]);
   const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
+  const [contadorStockMin, setContadorStockMin] = useState(0);
+  const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
+  const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
+  const [contadorElementosExpirados, setContadorElementosxpirados] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
   const {logout} = useAuth();
@@ -57,15 +63,29 @@ export const Navbar = ({ setLogIn }) => {
         setElementosConBajoStock(stockMinimo);
         setContadorStockMin(stockMinimo > 0 ? 1 : 0);
 
-        const responsePrestamos = await axiosClient.get(
-          "/reporte/prestamosactivosmodal"
-        );
+        const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
         const prestamosActivos = responsePrestamos.data;
         setPrestamosActivos(prestamosActivos);
         setContadorPrestamosActivos(prestamosActivos > 0 ? 1 : 0);
+
+        const responseLoansDue = await axiosClient.get("/reporte/prestamosvencidosmodal");
+        const loansDue = responseLoansDue.data;
+        setPrestamosVencidos(loansDue);
+        setContadorPrestamosVencidos(loansDue > 0 ? 1 : 0);
+
+        const responseApplications = await axiosClient.get("/reporte/solicitudesmodal");
+        const applications = responseApplications.data;
+        setSolicitudes(applications);
+        setContadorSolicitudes(applications > 0 ? 1 : 0);
+
+        const responseExpired = await axiosClient.get("/reporte/elementosexpiradosmodal");
+        const expired = responseExpired.data;
+        setElementosExpirados(expired);
+        setContadorElementosxpirados(expired > 0 ? 1 : 0);
+
       } catch (error) {
         console.error(
-          "Error al obtener la información de los elementos con bajo Stock o préstamos activos:",
+          "Error al obtener información de los contadores para el modal:",
           error
         );
       }
@@ -122,9 +142,9 @@ export const Navbar = ({ setLogIn }) => {
           className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
         >
-          {contadorStockMin + contadorPrestamosActivos > 0 && (
+          {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados> 0 && (
             <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 rounded-full text-white font-bold px-2 py-1 text-xs">
-              {contadorStockMin + contadorPrestamosActivos}
+              {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados}
             </span>
           )}
           <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
@@ -136,10 +156,13 @@ export const Navbar = ({ setLogIn }) => {
       </div>
       
       <NotificacionesModal
-        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0)}
+        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados> 0)}
         setShowModal={setShowModal}
         elementosConBajoStock={elementosConBajoStock}
         prestamosActivos={prestamosActivos}
+        prestamosVencidos={prestamosVencidos}
+        solicitudes={solicitudes}
+        elementosExpirados={elementosExpirados}
       />
     </div>
   );
