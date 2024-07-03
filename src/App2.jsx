@@ -51,10 +51,10 @@ function App2() {
                 </ProtectedRoutesLogin>} />
                 <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
                     <Route path="/home" element={<Home user={user} />} />
-                    {/*<Route path="/elementos" element={<Elemento user={user} />} />
+                    <Route path="/elementos" element={<Elemento user={user} />} />
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
-                    <Route path="/elementos/medidas" element={<Medidas user={user} />} />*/}
+                    <Route path="/elementos/medidas" element={<Medidas user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
                     <Route path="/reportes/elementos" element={<ReporteE />} />
                     <Route path="/reportes/elementosdesactivados" element={<ReporteED />} />
@@ -77,7 +77,7 @@ function App2() {
                         <ProtectedRoute
                             component={Movimientos2}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
@@ -87,7 +87,7 @@ function App2() {
                         <ProtectedRoute
                             component={Bodegas}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
@@ -97,7 +97,7 @@ function App2() {
                         <ProtectedRoute
                             component={Ubicaciones}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
@@ -107,7 +107,7 @@ function App2() {
                         <ProtectedRoute
                             component={Reporte}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
@@ -117,7 +117,7 @@ function App2() {
                         <ProtectedRoute
                             component={ReporteM}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
@@ -127,7 +127,7 @@ function App2() {
                         <ProtectedRoute
                             component={ReporteMS}
                             layout={DashboardTemplate}
-                            allowedRoles={['administrador', 'Encargado']}
+                            allowedRoles={['1', '2']}
                         />
                     }
                 />
