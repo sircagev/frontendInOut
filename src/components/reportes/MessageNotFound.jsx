@@ -3,7 +3,7 @@ import { BiInfoCircle, BiCommentDetail } from 'react-icons/bi';
 
 const MessageNotFound = () => {
   return (
-    <div className="flex justify-center items-center h-full mt-3">
+    <div className="flex justify-center items-center h-full mt-2">
       <div className="text-center max-w-md">
         <div className="flex items-center justify-center p-4 space-x-4 bg-green-100 border border-green-300 rounded-t-lg">
           <BiInfoCircle className="text-green-800 text-3xl" />

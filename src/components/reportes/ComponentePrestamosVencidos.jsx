@@ -30,8 +30,8 @@ const ReporteVencidos = ({ prestamosv }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const idMatches = row.identification.toString().includes(searchTerm.toString());
-        const userMatches = row.user_application.toLowerCase().includes(searchTerm.toLowerCase());
+        const idMatches = row.identification?.toString() === searchTerm.toString();
+        const userMatches = row.user_application?.toLowerCase().includes(searchTerm.toLowerCase());
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
         return (idMatches || userMatches) && dateMatches;
@@ -116,11 +116,9 @@ const ReporteVencidos = ({ prestamosv }) => {
 
   return (
     <div className="m-2">
-      <h2 className="flex justify-center items-center uppercase font-bold mt-2">
-        Reporte Préstamos Vencidos
-      </h2>
-      {showFilters && (
-        <div className="flex p-2 border bg-gray-300 mt-1">
+    {showFilters && (
+      <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1">
+        <div className="flex items-center">
           <div className="flex items-center ml-2">
             <label className="mr-2">Desde:</label>
             <input
@@ -145,38 +143,78 @@ const ReporteVencidos = ({ prestamosv }) => {
               placeholder="Buscar.."
               value={searchTerm}
               onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
               ref={searchInputRef}
               className="border rounded p-1"
             />
-            <div className={`fixed mt-[50px] ml-2 text-xs transition-opacity duration-100 ${searchTerm ? 'opacity-100' : 'opacity-0'}`}>
-              <span className="bg-gray-200">Búsqueda por Usuario, Identificación</span>
+            <div
+              className={`fixed mt-[50px] ml-2 text-xs transition-opacity duration-100 ${
+                searchTerm ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <span className="bg-gray-200 z-20">
+                Búsqueda por Usuario, Identificación
+              </span>
             </div>
           </div>
           <div className="flex items-center ml-2">
             <div className="text-2xl cursor-pointer rounded-lg bg-gray-400 p-1 hover:bg-gray-500 transition-colors duration-300">
-                <BiSearch className="ml-1 text-gray-700" onClick={handleSearch} />
+              <BiSearch
+                className="ml-1 text-gray-700"
+                onClick={handleSearch}
+              />
             </div>
           </div>
         </div>
+        <h2 className="uppercase font-semibold mr-4">
+          Reporte de Préstamos Vencidos
+        </h2>
+      </div>
       )}
       {searchPerformed && data.length > 0 && (
-        <div className="flex justify-center items-center p-2 border bg-gray-300 mt-1">
-          <div className="p-1 uppercase text-m bg-gray-200">
-          <span> resultados encontrados <span className="text-blue-600 bg-gray-200 pr-1">{data.length}</span></span>
+        <div
+          className="flex justify-center items-center p-2 rounded-xl border bg-gray-300 mt-1"
+          style={{
+            background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
+          }}
+        >
+          <div className="p-1 uppercase rounded text-m bg-gray-200">
+            <span>
+              {" "}
+              resultados encontrados{" "}
+              <span className="text-blue-600 bg-gray-200 pr-1">
+                {data.length}
+              </span>
+            </span>
           </div>
-          <button onClick={handleNewSearch} className="btn btn-primary ml-3 p-1 uppercase text-m">
+          <button
+            onClick={handleNewSearch}
+            className="bg-blue-500 hover:bg-blue-700 text-white border font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+          >
             Nueva Búsqueda
           </button>
-          <button onClick={handleDownload} className="btn btn-secondary ml-3 p-1 uppercase text-m">
+          <button
+            onClick={handleDownload}
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+          >
             Descargar
           </button>
         </div>
       )}
-      {searchPerformed && data.length === 0 && (
+       {searchPerformed && data.length === 0 && (
         <div className="flex justify-center items-center flex-col p-2">
-          <div className="flex justify-center w-full items-center flex-col p-2 border bg-gray-300 mt-1">
-            <button onClick={handleNewSearch} className="btn btn-primary p-1 uppercase text-sm">
+          <div
+            className="flex justify-center rounded-xl w-full items-center flex-col p-2 border bg-gray-300 mt-1"
+            style={{
+              background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
+            }}
+          >
+            <button
+              onClick={handleNewSearch}
+              className="bg-blue-500 hover:bg-blue-700 text-white border font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+            >
               Nueva Búsqueda
             </button>
           </div>
@@ -187,12 +225,19 @@ const ReporteVencidos = ({ prestamosv }) => {
         <table
           {...getTableProps()}
           className="table table-bordered table-striped text-center mt-2"
+          style={{
+            borderRadius: "15px",
+            overflow: "hidden",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          }}
         >
-          <thead>
+          <thead className="bg-gray-800">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                  <th {...column.getHeaderProps()}>
+                    {column.render("Header")}
+                  </th>
                 ))}
               </tr>
             ))}
@@ -210,7 +255,9 @@ const ReporteVencidos = ({ prestamosv }) => {
             })}
           </tbody>
         </table>
-      ) : !searchPerformed && <MessageNotFound />}
+      ) : (
+        !searchPerformed && <MessageNotFound />
+      )}
     </div>
   );
 };
