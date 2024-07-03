@@ -31,7 +31,8 @@ const NextUITable = ({
     statusOptions,
     statusColorMap,
     searchKeys,
-    actions: Actions
+    actions: Actions,
+    statusOrType
 }) => {
 
     const [filterValue, setFilterValue] = React.useState("");
@@ -75,7 +76,7 @@ const NextUITable = ({
         }
         if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
             filteredRows = filteredRows.filter((item) =>
-                Array.from(statusFilter).includes(item.tipo)
+                Array.from(statusFilter).includes(item[statusOrType])
             );
         }
 

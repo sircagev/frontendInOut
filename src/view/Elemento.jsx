@@ -52,6 +52,7 @@ export const Elemento = () => {
         searchKeys={searchKeys}
         buttons={Buttons}
         actions={Actions}
+        statusOrType={'status'}
       />
     </div>
   )
