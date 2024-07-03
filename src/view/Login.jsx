@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosClient from '../components/config/axiosClient';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
@@ -6,11 +6,10 @@ import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/in.png';
 import { useAuth } from '../context/AuthProvider';
+import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; // Asegúrate de importar correctamente el componente
 
 function Login({ setLoggedIn }) {
-
   const { login } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token');
@@ -30,7 +29,6 @@ function Login({ setLoggedIn }) {
     }
   }, [token]);
 
-  // Función para manejar el inicio de sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -42,6 +40,7 @@ function Login({ setLoggedIn }) {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
+        localStorage.setItem('email', response.data.email); // Asegúrate de obtener y guardar el email
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
         setLoggedIn(true);
@@ -49,7 +48,6 @@ function Login({ setLoggedIn }) {
           email: email,
           password: password,
         });
-        /* navigate('/home'); */
       }
     } catch (error) {
       if (error.response) {
@@ -82,7 +80,6 @@ function Login({ setLoggedIn }) {
     }
   };
 
-  // Función para manejar el envío del formulario de olvido de contraseña
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     try {
@@ -107,7 +104,6 @@ function Login({ setLoggedIn }) {
     }
   };
 
-  // Función para manejar el envío del formulario de reset de contraseña
   const handleResetPassword = async (e) => {
     e.preventDefault();
 
@@ -309,7 +305,20 @@ function Login({ setLoggedIn }) {
         </div>
       </div>
       <div className='w-full h-[50%] bg-[#fff]'>
+        <FormUpdatePerfil
+          onClose={handleCloseModal}
+          category={{
+            name: localStorage.getItem('userName'),
+            email: localStorage.getItem('email'),
+            lastname: '', // Asegúrate de obtener el apellido si está disponible
+            phone: '', // Asegúrate de obtener el teléfono si está disponible
+            identification: '', // Asegúrate de obtener la identificación si está disponible
+            course_id: '', // Asegúrate de obtener el ID de ficha si está disponible
+          }}
+          onRegisterSuccess={handleRegisterSuccess}
+        />
       </div>
+      
     </div>
   );
 }

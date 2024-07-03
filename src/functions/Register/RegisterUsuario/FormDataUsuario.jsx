@@ -1,42 +1,84 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
 import axiosClient from '../../../components/config/axiosClient';
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-
 export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
+    const [values, setValues] = useState({
+        user_id: "",
+        name: "",
+        lastname: "",
+        phone: "",
+        email: "",
+        identification: "",
+        role_id: "",
+        position_id: "",
+        course_id: ""
+    });
+    // Ejemplo de array para los roles
+const roles = [
+    { value: 1, label: 'Administrador' },
+    { value: 2, label: 'Encargado' },
+    { value: 3, label: 'Usuario' }
+];
 
-    const [values, setValues] = useState(
-        {
-            nombre_usuario: "",
-            apellido_usuario: "",
-            email_usuario: "",
-            rol: "",
-            numero: "",
-            Id_ficha: "",
-            identificacion: ""
-        }
-    )
+// Ejemplo de array para los cargos
+const positions = [
+    { value: 1, label: 'Aprendiz' },
+    { value: 2, label: 'Instructor' },
+    { value: 3, label: 'Operario' },
+    { value: 4, label: 'Coordinador' }
+];
+
 
     const [errorMessages, setErrorMessages] = useState({
-        nombre_usuario: '',
-        apellido_usuario: '',
-        email_usuario: '',
-        rol: '',
-        numero: '',
-        Id_ficha: '',
-        identificacion: ''
+        user_id: '',
+        name: '',
+        lastname: '',
+        phone: '',
+        email: '',
+        identification: '',
+        role_id: '',
+        position_id: '',
+        course_id: ''
     });
+    
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+    
+        let newValue = value;
+    
+        // Limitar la longitud máxima para lastname, phone, email, identification, role_id, position_id, course_id
+        const maxLength = {
+            lastname: 15,
+            phone: 11,
+            email: 50, // Puedes ajustar este valor según tus requerimientos
+            identification: 11,
+            role_id: 15,
+            position_id: 15,
+            course_id: 10
+        };
+    
+        if (maxLength[name] && value.length > maxLength[name]) {
+            newValue = value.slice(0, maxLength[name]); // Limitar a maxLength caracteres
+        }
+    
+        // Convertir role_id y position_id a números si es necesario
+        if (name === 'role_id' || name === 'position_id' || name === 'course_id') {
+            newValue = parseInt(newValue, 10);
+        }
+    
         setValues({
             ...values,
-            [name]: value,
+            [name]: newValue,
         });
     };
-
+    
+    
+    
+    
     const allowOnlyNumbers = (event) => {
         const isValidKey = /^\d$/.test(event.key);
         if (!isValidKey) {
@@ -49,74 +91,84 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
 
         let hasError = false;
         let newErrorMessages = {
-            nombre_usuario: '',
-            apellido_usuario: '',
-            email_usuario: '',
-            rol: '',
-            numero: '',
-            Id_ficha: '',
-            identificacion: ''
+            user_id: '',
+            name: '',
+            lastname: '',
+            phone: '',
+            email: '',
+            identification: '',
+            role_id: '',
+            position_id: '',
+            course_id: ''
         };
 
-        if (!values.nombre_usuario.trim()) {
-            newErrorMessages.nombre_usuario = 'El nombre de usuario es requerido.';
-            hasError = true;
-        } else if (/\d/.test(values.nombre_usuario)) {
-            newErrorMessages.nombre_usuario = 'El nombre de usuario no puede contener números.';
+        if (!values.user_id.trim()) {
+            newErrorMessages.user_id = 'El campo de ID es requerido.';
             hasError = true;
         }
 
-        if (!values.apellido_usuario.trim()) {
-            newErrorMessages.apellido_usuario = 'El apellido de usuario es requerido.';
+        if (!values.name.trim()) {
+            newErrorMessages.name = 'El nombre de usuario es requerido.';
             hasError = true;
-        } else if (/\d/.test(values.apellido_usuario)) {
-            newErrorMessages.apellido_usuario = 'El apellido de usuario no puede contener números.';
-            hasError = true;
-        }
-
-        if (!values.email_usuario.trim()) {
-            newErrorMessages.email_usuario = 'El correo electrónico es requerido.';
-            hasError = true;
-        } else if (!/^\S+@\S+\.\S+$/.test(values.email_usuario)) {
-            newErrorMessages.email_usuario = 'El correo electrónico no es válido.';
+        } else if (/\d/.test(values.name)) {
+            newErrorMessages.name = 'El nombre de usuario no puede contener números.';
             hasError = true;
         }
 
-
-
-        if (!values.numero.trim()) {
-            newErrorMessages.numero = 'El campo de teléfono es requerido.';
+        if (!values.lastname.trim()) {
+            newErrorMessages.lastname = 'El apellido de usuario es requerido.';
+            hasError = true;
+        } else if (/\d/.test(values.lastname)) {
+            newErrorMessages.lastname = 'El apellido de usuario no puede contener números.';
             hasError = true;
         }
 
-        if (!values.Id_ficha.trim()) {
-            newErrorMessages.Id_ficha = 'El campo de ficha es requerido.';
+        if (!values.phone.trim()) {
+            newErrorMessages.phone = 'El campo de teléfono es requerido.';
             hasError = true;
         }
 
-        if (!values.identificacion.trim()) {
-            newErrorMessages.identificacion = 'El campo de identificación es requerido.';
+        if (!values.email.trim()) {
+            newErrorMessages.email = 'El correo electrónico es requerido.';
+            hasError = true;
+        } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
+            newErrorMessages.email = 'El correo electrónico no es válido.';
             hasError = true;
         }
 
+        if (!values.identification.trim()) {
+            newErrorMessages.identification = 'El campo de identificación es requerido.';
+            hasError = true;
+        }
 
+        if (!values.role_id.toString().trim()) {
+            newErrorMessages.role_id = 'El campo de Rol es requerido.';
+            hasError = true;
+        }
+        
 
+        if (!values.position_id.toString().trim()) {
+            newErrorMessages.position_id = 'El campo de Cargo es requerido.';
+            hasError = true;
+        }
+        
         setErrorMessages(newErrorMessages);
 
-        if (hasError) return
+        if (hasError) return;
 
         try {
             const response = await axiosClient.post('usuario/registrar', values);
             if (response.status === 200) {
-
                 setValues({
-                    nombre_usuario: '',
-                    apellido_usuario: '',
-                    email_usuario: '',
-                    rol: '',
-                    numero: '',
-                    Id_ficha: '',
-                    identificacion: ''
+                    user_id: '',
+                    name: '',
+                    lastname: '',
+                    phone: '',
+                    email: '',
+                    identification: '',
+                    role_id: '',
+                    position_id: '',
+                    course_id: ''
                 });
                 swal({
                     title: "Registro exitoso",
@@ -133,140 +185,194 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
             console.log(error);
         }
     };
+
     return (
         <div>
-            <div>
-                <form onSubmit={handleForm}>
-                    <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Nombre Usuario'
-                                    name='nombre_usuario'
-                                    value={values.nombre_usuario}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.nombre_usuario && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.nombre_usuario}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Apellido Usuario'
-                                    name='apellido_usuario'
-                                    value={values.apellido_usuario}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.apellido_usuario && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.apellido_usuario}
-                                    </div>
-                                )}
-                            </div>
+            <form onSubmit={handleForm}>
+                <div className='flex flex-col justify-center items-center gap-3 mb-4'>
+                    <div className='w-auto flex gap-3 mb-2'>
+                        <div>
+                            <Input
+                                type='number'
+                                label='Id Usuario'
+                                name='user_id'
+                                value={values.user_id}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.user_id && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.user_id}
+                                </div>
+                            )}
                         </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Email'
-                                    name='email_usuario'
-                                    value={values.email_usuario}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.email_usuario && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.email_usuario}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <select id="rol" name="rol" onChange={handleInputChange} className="w-[310px] h-[58px] rounded-xl pl-3 text-sm ">
-                                    <option value="">Seleccione un Rol</option>
-                                    <option value="administrador">Administrador</option>
-                                    <option value="Encargado">Encargado</option>
-                                    <option value="Usuario">Usuario</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Teléfono'
-                                    name='numero'
-                                    value={values.numero}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.numero && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.numero}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    type='number'
-                                    label='Ficha'
-                                    name='Id_ficha'
-                                    value={values.Id_ficha}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.Id_ficha && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.Id_ficha}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div class="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div className='w-full flex flex-col'>
-                                <Input
-                                    type='number'
-                                    label='Identifiación'
-                                    name='identificacion'
-                                    value={values.identificacion}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.identificacion && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.identificacion}
-                                    </div>
-                                )}
-                            </div>
+                        <div>
+                            <Input
+                                type='text'
+                                label='Nombre Usuario'
+                                name='name'
+                                value={values.name}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                                maxLength={15}
+                            />
+                            {errorMessages.name && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.name}
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className='flex justify-end gap-3 mb-3'>
-                        <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
-                            Cancelar
-                        </Button>
-                        <Button className='font-bold text-white' color="primary" type='submit'>
-                            Registrar
-                        </Button>
+
+                    <div className='w-auto flex gap-3 mb-2'>
+                        <div>
+                            <Input
+                                type='text'
+                                label='Apellido Usuario'
+                                name='lastname'
+                                value={values.lastname}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.lastname && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.lastname}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                type='number'
+                                label='Telefono'
+                                name='phone'
+                                value={values.phone}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.phone && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.phone}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </form>
-            </div>
+
+                    <div className='w-auto flex gap-3 mb-2'>
+                        <div>
+                            <Input
+                                type='text'
+                                label='Email'
+                                name='email'
+                                value={values.email}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.email && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.email}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                type='number'
+                                label='Identificacion'
+                                name='identification'
+                                value={values.identification}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                                onKeyPress={allowOnlyNumbers}
+                                inputMode="numeric"
+                            />
+                            {errorMessages.identification && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.identification}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className='w-auto flex gap-3 mb-2'>
+    
+                       
+                    <div>
+                    <Select
+                            label='Cargo'
+                            name='position_id'
+                            value={values.position_id}
+                            onChange={handleInputChange}
+                            className="w-[310px]"
+                    >
+                    {positions.map((position) => (
+                     <SelectItem key={position.value} value={position.value}>{position.label}</SelectItem>
+                        ))}
+                        </Select>
+
+                            {errorMessages.position_id && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.position_id}
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            
+                        <Select
+                        label='Rol'
+                        name='role_id'
+                        value={values.role_id}
+                        onChange={handleInputChange}
+                        className="w-[310px]"
+                    >
+                        {roles.map((role) => (
+                     <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+                     ))}
+                    </Select>
+
+                    {errorMessages.role_id && (
+                        <div className="flex items-center text-red-500 text-xs mt-1">
+                            <FaExclamationCircle className="mr-2" />
+                            {errorMessages.role_id}
+                        </div>
+                    )}
+
+                        </div>
+                    </div>
+
+                    <div className='w-auto flex gap-3 mb-2'>
+                    <div className='w-auto flex gap-3 mb-2'>
+              <div>
+                  <Input
+                      type='number'
+                      label='Id ficha'
+                      name='course_id'
+                      value={values.course_id}
+                      onChange={handleInputChange}
+                      className="w-[310px]"
+                      onKeyPress={allowOnlyNumbers}
+                      inputMode="numeric"
+                  />
+              </div>
         </div>
-    )
-}
+
+                    </div>
+                </div>
+                <div className='flex justify-end gap-3 mb-3'>
+                    <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
+                        Cancelar
+                    </Button>
+                    <Button className='font-bold text-white' color="primary" type='submit'>
+                        Registrar
+                    </Button>
+                </div>
+            </form>
+        </div>
+    );
+};

@@ -5,35 +5,34 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
-
 export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
     const [values, setValues] = useState({
-        nombre: '',
-        apellido: '',
+        name: '',
+        lastname: '',
+        phone: '',
         email: '',
-        numero: '',
-        ficha: '',
-        identificacion: ''
+        identification: '',
+        course_id: ''
     });
 
     const [errorMessages, setErrorMessages] = useState({
-        nombre: '',
-        apellido: '',
+        name: '',
+        lastname: '',
+        phone: '',
         email: '',
-        numero: '',
-        ficha: '',
-        identificacion: ''
+        identification: '',
+        course_id: ''
     });
 
     useEffect(() => {
         if (category) {
             setValues({
-                nombre: category.nombre,
-                apellido: category.apellido,
+                name: category.name,
+                lastname: category.lastname,
+                phone: category.phone,
                 email: category.email,
-                numero: category.numero,
-                ficha: category.ficha,
-                identificacion: category.identificacion,
+                identification: category.identification,
+                course_id: category.course_id,
             });
         }
     }, [category]);
@@ -56,29 +55,33 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
     const validateForm = () => {
         let hasError = false;
         let newErrorMessages = {
-            nombre: '',
-            apellido: '',
+            name: '',
+            lastname: '',
+            phone: '',
             email: '',
-            numero: '',
-            ficha: '',
-            identificacion: ''
+            identification: '',
+            course_id: ''
         };
 
         const strValues = Object.fromEntries(
             Object.entries(values).map(([key, value]) => [key, String(value)])
         );
 
-        if (!strValues.nombre.trim() || /\d/.test(strValues.nombre)) {
-            newErrorMessages.nombre = !strValues.nombre.trim()
+        if (!strValues.name.trim() || /\d/.test(strValues.name)) {
+            newErrorMessages.name = !strValues.name.trim()
                 ? 'El nombre del usuario no puede estar vacío.'
                 : 'El nombre del usuario no puede contener números.';
             hasError = true;
         }
 
-        if (!strValues.apellido.trim() || /\d/.test(strValues.apellido)) {
-            newErrorMessages.apellido = !strValues.apellido.trim()
+        if (!strValues.lastname.trim() || /\d/.test(strValues.lastname)) {
+            newErrorMessages.lastname = !strValues.lastname.trim()
                 ? 'El apellido del usuario no puede estar vacío.'
                 : 'El apellido del usuario no puede contener números.';
+            hasError = true;
+        }
+        if (!strValues.phone.trim()) {
+            newErrorMessages.phone = 'El campo de teléfono es requerido.';
             hasError = true;
         }
 
@@ -90,21 +93,18 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
             hasError = true;
         }
 
-        if (!strValues.numero.trim()) {
-            newErrorMessages.numero = 'El campo de teléfono es requerido.';
+       
+
+        if (!strValues.identification.trim()) {
+            newErrorMessages.identification = 'El campo de Identificación es requerido.';
             hasError = true;
         }
 
-        if (!strValues.ficha.trim()) {
-            newErrorMessages.ficha = 'El campo de ficha es requerido.';
+        if (!strValues.course_id.trim()) {
+            newErrorMessages.course_id = 'El campo de Id-Ficha es requerido.';
             hasError = true;
         }
 
-        if (!strValues.identificacion.trim()) {
-            newErrorMessages.identificacion = 'El campo de identificación es requerido.';
-            hasError = true;
-        }
-      
         setErrorMessages(newErrorMessages);
         return !hasError;
     };
@@ -112,152 +112,152 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (!validateForm()) return;
-
+    
         try {
-            await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
-                nombre_usuario: values.nombre,
-                apellido_usuario: values.apellido,
-                email_usuario: values.email,
-                numero: values.numero,
-                Id_ficha: values.ficha,
-                identificacion: values.identificacion
+            const response = await axiosClient.put(`/perfil/${category.codigo}`, {
+                name: values.name,
+                lastname: values.lastname,
+                phone: values.phone,
+                email: values.email,
+                identification: values.identification,
+                course_id: values.course_id
             });
+    
             swal({
                 title: "Actualizado",
-                text: "Usuario actualizada con éxito.",
+                text: "Perfil actualizado con éxito.",
                 icon: "success",
                 buttons: false,
                 timer: 2000,
             });
-            onClose();
-            onRegisterSuccess();
+    
+            onClose(); // Cierra el modal o formulario después de la actualización
+            onRegisterSuccess(); // Actualiza cualquier estado necesario en tu componente principal
         } catch (error) {
-            console.log(error);
+            console.error('Error al actualizar el perfil:', error);
             swal("Error", "Hubo un problema al actualizar el usuario", "error");
         }
     };
+    
 
     return (
         <div>
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Nombre Usuario'
-                                    name='nombre'
-                                    value={values.nombre}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.nombre && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.nombre}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Apellido Usuario'
-                                    name='apellido'
-                                    value={values.apellido}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.apellido && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.apellido}
-                                    </div>
-                                )}
-                            </div>
+            <form onSubmit={handleSubmit}>
+                <div className='flex flex-col justify-center items-center gap-3 mb-4'>
+                    <div className="w-auto flex gap-3 mb-2">
+                        <div>
+                            <Input
+                                type='text'
+                                label='Nombre Usuario'
+                                name='name'
+                                value={values.name}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.name && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.name}
+                                </div>
+                            )}
                         </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Email'
-                                    name='email'
-                                    value={values.email}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.email && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.email}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    type='text'
-                                    label='Teléfono'
-                                    name='numero'
-                                    value={values.numero}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                />
-                                {errorMessages.numero && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.numero}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                        <div className='w-full flex flex-col'>
-                                <Input
-                                    type='number'
-                                    label='Identifiación'
-                                    name='identificacion'
-                                    value={values.identificacion}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.identificacion && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.identificacion}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div>
-                                <Input
-                                    type='number'
-                                    label='Ficha'
-                                    name='ficha'
-                                    value={values.ficha}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.ficha && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.ficha}
-                                    </div>
-                                )}
-                            </div>
+                        <div>
+                            <Input
+                                type='text'
+                                label='Apellido Usuario'
+                                name='lastname'
+                                value={values.lastname}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.lastname && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.lastname}
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className='flex justify-end gap-3 mb-3'>
-                        <ButtonCerrar onClose={onClose}/>
-                        <Button className='font-bold text-white' color="success" type='submit'>
-                            Actualizar
-                        </Button>
+                    <div className="w-auto flex gap-3 mb-2">
+                        <div>
+                            <Input
+                                type='text'
+                                label='Email'
+                                name='email'
+                                value={values.email}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.email && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.email}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                type='text'
+                                label='Teléfono'
+                                name='phone'
+                                value={values.phone}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.phone && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.phone}
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </form>
-            </div>
+                    <div className="w-auto flex gap-3 mb-2">
+                        <div>
+                            <Input
+                                type='number'
+                                label='Identifiación'
+                                name='identification'
+                                value={values.identification}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                                onKeyPress={allowOnlyNumbers}
+                                inputMode="numeric"
+                            />
+                            {errorMessages.identification && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.identification}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                type='number'
+                                label='Ficha'
+                                name='course_id'
+                                value={values.course_id}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                                onKeyPress={allowOnlyNumbers}
+                                inputMode="numeric"
+                            />
+                            {errorMessages.course_id && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.course_id}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className='flex justify-end gap-3 mb-3'>
+                    <ButtonCerrar onClose={onClose}/>
+                    <Button className='font-bold text-white' color="success" type='submit'>
+                        Actualizar
+                    </Button>
+                </div>
+            </form>
         </div>
-    )
-}
+    );
+};

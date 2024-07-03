@@ -77,7 +77,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "name",
+    name: "user_name",
     label: "Nombre",
     options: {
       sort: false, 
@@ -93,7 +93,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "phono",
+    name: "phone",
     label: "Telefono",
     options: {
       sort: false, 
@@ -117,7 +117,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "role_id",
+    name: "role_name",
     label: "Rol",
     options: {
       sort: false, 
@@ -125,7 +125,7 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
     },
   },
   {
-    name: "position_id",
+    name: "position_name",
     label: "Cargo",
     options: {
       sort: false, 
