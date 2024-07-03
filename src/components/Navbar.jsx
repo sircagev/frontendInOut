@@ -119,14 +119,17 @@ export const Navbar = ({ setLogIn }) => {
           <FaUserCircle
             className="text-[38px] cursor-pointer"
             onClick={() => setIsOpen(true)} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+
           />
-          <Modal1
-            isOpen={isOpen}
-            size={"4xl"}
-            onClose={()=> setIsOpen(false)}
-            form={<FormUpdatePerfil onClose={() => setIsOpen(false)}/>}
-            title={"Administrar perfil"}
-          />
+ 
+      <Modal1
+        isOpen={isOpen}
+        size={"4xl"}
+        onClose={() => setIsOpen(false)}
+        form={<FormUpdatePerfil onClose={() => setIsOpen(false)} />}
+        title={"Administrar perfil"}
+      />
+      
 
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
@@ -136,7 +139,7 @@ export const Navbar = ({ setLogIn }) => {
               {role && role === "3" && "usuario"}
             </p>
           </div>
-          
+
         </div>
         <div
           className="relative cursor-pointer"
@@ -164,6 +167,8 @@ export const Navbar = ({ setLogIn }) => {
         solicitudes={solicitudes}
         elementosExpirados={elementosExpirados}
       />
+
+      
     </div>
   );
 };

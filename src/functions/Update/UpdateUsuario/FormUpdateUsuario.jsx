@@ -60,6 +60,10 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        let hasError = validateForm(); // Validar el formulario antes de enviar
+
+        if (hasError) return;
+
         try {
             await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
                 nombre_usuario: values.nombre,
@@ -71,13 +75,15 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                 Id_ficha: values.ficha,
                 identificacion: values.identificacion
             });
+
             swal({
                 title: "Actualizado",
-                text: "Usuario actualizada con éxito.",
+                text: "Usuario actualizado con éxito.",
                 icon: "success",
                 buttons: false,
                 timer: 2000,
             });
+
             onClose();
             onRegisterSuccess();
         } catch (error) {
@@ -86,6 +92,62 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             
             swal("Error", message , "error");
         }
+    };
+
+    const validateForm = () => {
+        let hasError = false;
+        let newErrorMessages = {
+            nombre: '',
+            apellido: '',
+            email: '',
+            rol: '',
+            numero: '',
+            contraseña: '',
+            ficha: '',
+            identificacion: ''
+        };
+
+        if (!values.nombre.trim()) {
+            newErrorMessages.nombre = 'El nombre es requerido.';
+            hasError = true;
+        }
+
+        if (!values.apellido.trim()) {
+            newErrorMessages.apellido = 'El apellido es requerido.';
+            hasError = true;
+        }
+
+        if (!values.email.trim()) {
+            newErrorMessages.email = 'El correo electrónico es requerido.';
+            hasError = true;
+        } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
+            newErrorMessages.email = 'El correo electrónico no es válido.';
+            hasError = true;
+        }
+
+        if (!values.rol.trim()) {
+            newErrorMessages.rol = 'El rol es requerido.';
+            hasError = true;
+        }
+
+        if (!values.numero.trim()) {
+            newErrorMessages.numero = 'El número de teléfono es requerido.';
+            hasError = true;
+        }
+
+        if (!values.ficha.trim()) {
+            newErrorMessages.ficha = 'El número de ficha es requerido.';
+            hasError = true;
+        }
+
+        if (!values.identificacion.trim()) {
+            newErrorMessages.identificacion = 'La identificación es requerida.';
+            hasError = true;
+        }
+
+        setErrorMessages(newErrorMessages);
+
+        return hasError;
     };
 
     return (
@@ -103,6 +165,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
+                                {errorMessages.nombre && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.nombre}
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <Input
@@ -113,6 +181,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
+                                {errorMessages.apellido && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.apellido}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
@@ -125,14 +199,26 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
+                                {errorMessages.email && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.email}
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <select id="rol" name="rol" value={values.rol} onChange={handleInputChange} className="w-[310px] h-[58px] rounded-xl pl-3 text-sm ">
                                     <option value="">Seleccione un Rol</option>
                                     <option value="administrador">Administrador</option>
                                     <option value="Encargado">Encargado</option>
-                                    <option value="Usuario">Usuario</option>
+                                    <option value="aprendiz">Aprendiz</option>
                                 </select>
+                                {errorMessages.rol && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.rol}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
@@ -145,6 +231,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
+                                {errorMessages.numero && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.numero}
+                                    </div>
+                                )}
                             </div>
                             <div>
                                 <Input
@@ -157,13 +249,19 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onKeyPress={allowOnlyNumbers}
                                     inputMode="numeric"
                                 />
+                                {errorMessages.ficha && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.ficha}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
                             <div className='w-full flex flex-col'>
                                 <Input
                                     type='number'
-                                    label='Identifiación'
+                                    label='Identificación'
                                     name='identificacion'
                                     value={values.identificacion}
                                     onChange={handleInputChange}
@@ -171,6 +269,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     onKeyPress={allowOnlyNumbers}
                                     inputMode="numeric"
                                 />
+                                {errorMessages.identificacion && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.identificacion}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -185,5 +289,5 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
