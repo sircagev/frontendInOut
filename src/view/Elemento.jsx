@@ -42,10 +42,16 @@ export const Elemento = () => {
   }
 
   const Actions = ({item}) => {
+    const [isOpenUpdate, setIsOpenupdate] = useState(false);
     return (
       <div>
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => { console.log(item) }}>bs</Button>
-        <Modal1 />
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>bs</Button>
+        <Modal1 
+          title={"Actualizar Elemento"}
+          size={"md"}
+          isOpen={isOpenUpdate}
+          onClose={() => setIsOpenupdate(false)}
+        />
       </div >
     )
   }
