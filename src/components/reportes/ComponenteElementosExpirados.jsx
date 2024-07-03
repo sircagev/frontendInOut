@@ -37,7 +37,7 @@ const ReporteExpirados = ({ elementex }) => {
         const idMatches = row.element_id?.toString() === searchTerm.toString();
         const serialMatches =
           row.batch_serial?.toString() === searchTerm.toString();
-        const rowDate = convertDateFormat(row.xpiration_date);
+        const rowDate = convertDateFormat(row.expiration_date);
         const dateMatches =
           (!startDate || rowDate >= startDate) &&
           (!endDate || rowDate <= endDate);
