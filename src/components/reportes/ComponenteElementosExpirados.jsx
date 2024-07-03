@@ -4,6 +4,7 @@ import MessageNotFound from "./MessageNotFound";
 import { BiSearch } from "react-icons/bi";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import logoImg from "../../assets/R.jpg";
 
 const convertDateFormat = (dateStr) => {
   if (!dateStr) return null;
@@ -49,8 +50,8 @@ const ReporteExpirados = ({ elementex }) => {
 
   const columns = useMemo(
     () => [
-      { Header: "Código", accessor: "element_id" },
       { Header: "Elemento", accessor: "element_name" },
+      { Header: "Código", accessor: "element_id" },
       { Header: "Stock", accessor: "stock" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Tipo", accessor: "element_type" },
@@ -68,8 +69,8 @@ const ReporteExpirados = ({ elementex }) => {
     const worksheet = workbook.addWorksheet("Reporte");
 
     worksheet.columns = [
+      { header: "Código", key: "element_id", width: 12 },
       { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Código", key: "element_id", width: 8 },
       { header: "Stock", key: "stock", width: 10 },
       { header: "Categoría", key: "category", width: 15 },
       { header: "Tipo", key: "element_type", width: 20 },
@@ -80,9 +81,62 @@ const ReporteExpirados = ({ elementex }) => {
       { header: "Ubicación", key: "wlocation", width: 15 },
     ];
 
-    data.forEach((row) => {
-      worksheet.addRow(row);
-    });
+  const response = await fetch(logoImg);
+  const logo = await response.arrayBuffer();
+  const imageId = workbook.addImage({
+    buffer: logo,
+    extension: 'png',
+  });
+  worksheet.addImage(imageId, 'A1:A2'); 
+
+  worksheet.mergeCells('B2:H2');
+  worksheet.getCell('B2').value = 'Reporte de Elementos Expirados';
+  worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
+  worksheet.getCell('B2').font = { size: 16, bold: true };
+
+  worksheet.mergeCells('B1:H1');
+  worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
+  worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
+  worksheet.getCell('B1').font = { size: 17, bold: true };
+
+  worksheet.mergeCells('I1:J1');
+  worksheet.getCell('I1').value = 'ADSO-2644590';
+  worksheet.getCell('I1').alignment = { vertical: 'middle', horizontal: 'center' };
+ 
+  const headers = [
+    "Código",
+    "Elemento",
+    "Stock",
+    "Categoría",
+    "Tipo",
+    "Medida",
+    "Lote",
+    "Fecha Expiración",
+    "Bodega",
+    "Ubicación"
+  ];
+  worksheet.addRow(headers);
+
+   headers.forEach((header, index) => {
+    const cell = worksheet.getRow(4).getCell(index + 1);
+    cell.font = {size: 12, bold: true };
+    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+  });
+
+  data.forEach((row) => {
+    worksheet.addRow([
+      row.element_id,
+      row.element_name,
+      row.stock,
+      row.category,
+      row.element_type,
+      row.measurement_unit,
+      row.batch_serial,
+      row.expiration_date,
+      row.warehouse,
+      row.wlocation,
+    ]);
+  });
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
@@ -128,7 +182,8 @@ const ReporteExpirados = ({ elementex }) => {
   return (
     <div className="m-2">
       {showFilters && (
-        <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1">
+        <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1" 
+        style={{background: 'linear-gradient(to right, #f0f0f0 70%, #cccccc 100%)',}}>
           <div className="flex items-center">
             <div className="flex items-center ml-2">
               <label className="mr-2">Desde:</label>
@@ -187,9 +242,7 @@ const ReporteExpirados = ({ elementex }) => {
       {searchPerformed && data.length > 0 && (
         <div
           className="flex justify-center items-center p-2 rounded-xl border bg-gray-300 mt-1"
-          style={{
-            background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
-          }}
+          style={{background: 'linear-gradient(to right, #f0f0f0 20%, #cccccc 50%, #f0f0f0 80%)',}}
         >
           <div className="p-1 uppercase rounded text-m bg-gray-200">
             <span>
@@ -217,7 +270,7 @@ const ReporteExpirados = ({ elementex }) => {
       {searchPerformed && data.length === 0 && (
         <div className="flex justify-center items-center flex-col p-2">
           <div
-            className="flex justify-center rounded-xl w-full items-center flex-col p-2 border bg-gray-300 mt-1"
+            className="flex justify-center rounded-xl w-full items-center flex-col p-2 bg-gray-300 mt-1"
             style={{
               background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
             }}

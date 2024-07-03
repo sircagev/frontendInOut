@@ -4,6 +4,7 @@ import MessageNotFound from "./MessageNotFound";
 import { BiSearch } from "react-icons/bi";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import logoImg from "../../assets/R.jpg";
 
 const convertDateFormat = (dateStr) => {
   if (!dateStr) return null; 
@@ -76,8 +77,59 @@ const ReporteActivos = ({ prestamosa }) => {
     
     ];
   
+    const response = await fetch(logoImg);
+    const logo = await response.arrayBuffer();
+    const imageId = workbook.addImage({
+      buffer: logo,
+      extension: 'png',
+    });
+    worksheet.addImage(imageId, 'A1:A2'); 
+  
+    worksheet.mergeCells('B2:G2');
+    worksheet.getCell('B2').value = 'Reporte de Préstamos Activos';
+    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.getCell('B2').font = { size: 16, bold: true };
+  
+    worksheet.mergeCells('B1:G1');
+    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
+    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
+    worksheet.getCell('B1').font = { size: 17, bold: true };
+  
+    worksheet.mergeCells('H1:I1');
+    worksheet.getCell('H1').value = 'ADSO-2644590';
+    worksheet.getCell('H1').alignment = { vertical: 'middle', horizontal: 'center' };
+   
+    const headers = [
+"Código",
+"Elemento",
+"Cantidad",
+"Usuario Solicitante",
+"Usuario Receptor",
+"Estado Préstamo",
+"Fecha de Solicitud",
+"Vencimiento Préstamo",
+"Observaciones",
+    ];
+    worksheet.addRow(headers);
+  
+     headers.forEach((header, index) => {
+      const cell = worksheet.getRow(4).getCell(index + 1);
+      cell.font = {size: 12, bold: true };
+      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+    });
+  
     data.forEach((row) => {
-      worksheet.addRow(row);
+      worksheet.addRow([
+        row.element_id,
+        row.element_name,
+        row.quantity,
+        row.user_application,
+        row.user_receiving,
+        row.loan_status,
+        row.created_at,
+        row.estimated_return,
+        row.remarks,
+      ]);
     });
    
     const buffer = await workbook.xlsx.writeBuffer();
@@ -122,7 +174,8 @@ const ReporteActivos = ({ prestamosa }) => {
   return (
     <div className="m-2">
     {showFilters && (
-      <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1">
+      <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1"
+      style={{background: 'linear-gradient(to right, #f0f0f0 70%, #cccccc 100%)',}}>
         <div className="flex items-center">
           <div className="flex items-center ml-2">
             <label className="mr-2">Desde:</label>
@@ -174,16 +227,14 @@ const ReporteActivos = ({ prestamosa }) => {
           </div>
         </div>
         <h2 className="uppercase font-semibold mr-4">
-          Reporte de Elementos Activos
+          Reporte de Préstamos Activos
         </h2>
       </div>
       )}
       {searchPerformed && data.length > 0 && (
         <div
           className="flex justify-center items-center p-2 rounded-xl border bg-gray-300 mt-1"
-          style={{
-            background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
-          }}
+          style={{background: 'linear-gradient(to right, #f0f0f0 20%, #cccccc 50%, #f0f0f0 80%)',}}
         >
           <div className="p-1 uppercase rounded text-m bg-gray-200">
             <span>
@@ -211,7 +262,7 @@ const ReporteActivos = ({ prestamosa }) => {
        {searchPerformed && data.length === 0 && (
         <div className="flex justify-center items-center flex-col p-2">
           <div
-            className="flex justify-center rounded-xl w-full items-center flex-col p-2 border bg-gray-300 mt-1"
+            className="flex justify-center rounded-xl w-full items-center flex-col p-2 bg-gray-300 mt-1"
             style={{
               background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
             }}
