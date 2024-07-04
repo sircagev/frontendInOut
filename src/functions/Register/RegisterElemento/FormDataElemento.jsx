@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import axiosClient from '../../../components/config/axiosClient';
 import { Input } from "@nextui-org/react";
 import swal from 'sweetalert';
@@ -8,12 +8,9 @@ import { ButtonGeneral } from '../../../components/Buttons/Button';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
-
 export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
-
   const [UseTipo, SetTipo] = useState([]);
   const [UseCategorias, setCategorias] = useState([]);
-  const [UseUbicacion, SetUbicacion] = useState([]);
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
 
@@ -26,44 +23,35 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
   });
 
   const [values, setValues] = useState({
-    Nombre_elemento: "",
-    fk_tipoElemento: "",
-    stock: 0,
-    fk_unidadMedida: "",
-    fk_categoria: "",
-    fk_tipoEmpaque: "",
-    fk_detalleUbicacion: "",
-    Vencimiento: null
+    name: "",
+    elementType_id: "",
+    measurementUnit_id: "",
+    category_id: "",
+    packageType_id: ""
   });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const formattedValue = name === 'Nombre_elemento' ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
-  
-    // Manejar el cambio en Vencimiento para establecer null si es necesario
-    const newValue = name === 'Vencimiento' && value === '' ? null : formattedValue;
-  
+    const formattedValue = name === 'name' ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
+
     setValues({
       ...values,
-      [name]: newValue,
+      [name]: formattedValue,
     });
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Utiliza las funciones de listar para obtener los datos necesarios
-        const [tipoData, categoriasData, ubicacionData, empaquesData, medidasData] = await Promise.all([
+        const [tipoData, categoriasData, empaquesData, medidasData] = await Promise.all([
           listarFunciones.ListarTipo(),
           listarFunciones.ListarCategorias(),
-          listarFunciones.ListarUbicacionesYBodegas(), // Esta función fue modificada para incluir el nombre de la bodega
           listarFunciones.ListarEmpaques(),
           listarFunciones.ListarMedidas()
         ]);
         SetTipo(tipoData);
         setCategorias(categoriasData);
-        SetUbicacion(ubicacionData);
         SetEmpaques(empaquesData);
         SetMedidas(medidasData);
       } catch (error) {
@@ -87,8 +75,8 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
       empaque: ''
     };
 
-    if (!values.Nombre_elemento.trim() || /\d/.test(values.Nombre_elemento)) {
-      if (!values.Nombre_elemento.trim()) {
+    if (!values.name.trim() || /\d/.test(values.name)) {
+      if (!values.name.trim()) {
         newErrorMessages.elemento = 'El nombre del elemento no puede estar vacío.';
       } else {
         newErrorMessages.elemento = 'El nombre de la ubicación no puede contener números.';
@@ -96,28 +84,23 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
       hasError = true;
     }
 
-    if (!values.fk_tipoElemento) {
+    if (!values.elementType_id) {
       newErrorMessages.tipo = 'Debe seleccionar un tipo de elemento.';
       hasError = true;
     }
 
-    if (!values.fk_unidadMedida) {
+    if (!values.measurementUnit_id) {
       newErrorMessages.medida = 'Debe seleccionar una unidad de medida.';
       hasError = true;
     }
 
-    if (!values.fk_categoria) {
+    if (!values.category_id) {
       newErrorMessages.categoria = 'Debe seleccionar una categoría.';
       hasError = true;
     }
 
-    if (!values.fk_tipoEmpaque) {
+    if (!values.packageType_id) {
       newErrorMessages.empaque = 'Debe seleccionar un tipo de empaque.';
-      hasError = true;
-    }
-
-    if (!values.fk_detalleUbicacion) {
-      newErrorMessages.ubicacion = 'Debe seleccionar una ubicación.';
       hasError = true;
     }
 
@@ -126,20 +109,14 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
     if (hasError) return;
 
     try {
-      const dataToSubmit = {
-        ...values,
-        Vencimiento: values.Vencimiento === '' ? null : values.Vencimiento
-      };
       const response = await axiosClient.post('elemento/registrar', values);
       if (response.status === 200) {
-
         setValues({
-          Nombre_elemento: "",
-          fk_tipoElemento: "",
-          fk_unidadMedida: "",
-          fk_categoria: "",
-          fk_tipoEmpaque: "",
-          fk_detalleUbicacion: ""
+          name: "",
+          elementType_id: "",
+          measurementUnit_id: "",
+          category_id: "",
+          packageType_id: ""
         });
         swal({
           title: "Registro exitoso",
@@ -166,8 +143,8 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
               <Input
                 type='text'
                 label='Nombre Elemento'
-                name='Nombre_elemento'
-                value={values.Nombre_elemento}
+                name='name'
+                value={values.name}
                 onChange={handleInputChange}
                 className="w-[310px]"
               />
@@ -180,7 +157,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
             </div>
             <div>
               <select
-                name="fk_tipoElemento"
+                name="elementType_id"
                 required
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 pr-5 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
@@ -188,10 +165,10 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 <option selected disabled>Seleccione un tipo de elemento</option>
                 {UseTipo.map(tipo => (
                   <option
-                    value={tipo.codigo_Tipo}
-                    key={tipo.fk_tipoElemento}
+                    value={tipo.elementType_id}
+                    key={tipo.name}
                   >
-                    {tipo.nombre_tipoElemento}
+                    {tipo.name}
                   </option>
                 ))}
               </select>
@@ -206,7 +183,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           <div className='w-auto flex gap-3 mb-2'>
             <div>
               <select
-                name="fk_unidadMedida"
+                name="measurementUnit_id"
                 required
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
@@ -214,10 +191,10 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 <option selected disabled>Seleccione un tipo de medida</option>
                 {UseMedidas.map(medida => (
                   <option
-                    value={medida.codigo_medida}
-                    key={medida.fk_unidadMedida}
+                    value={medida.measurementUnit_id}
+                    key={medida.name}
                   >
-                    {medida.Nombre_Medida}
+                    {medida.name}
                   </option>
                 ))}
               </select>
@@ -230,7 +207,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
             </div>
             <div>
               <select
-                name='fk_categoria'
+                name='category_id'
                 required
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
@@ -238,10 +215,10 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 <option disabled selected>Seleccione una categoría</option>
                 {UseCategorias.map(categoria => (
                   <option
-                    value={categoria.codigo_Categoria}
-                    key={categoria.fk_categoria}
+                    value={categoria.category_id}
+                    key={categoria.name}
                   >
-                    {categoria.Nombre_Categoria}
+                    {categoria.name}
                   </option>
                 ))}
               </select>
@@ -256,7 +233,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
           <div className='w-auto flex gap-3 mb-2'>
             <div>
               <select
-                name='fk_tipoEmpaque'
+                name='packageType_id'
                 required
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
@@ -264,10 +241,10 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 <option disabled selected>Seleccione un empaque</option>
                 {UseEmpaques.map(empaque => (
                   <option
-                    value={empaque.codigo_Empaque}
-                    key={empaque.fk_tipoEmpaque}
+                    value={empaque.packageType_id}
+                    key={empaque.name}
                   >
-                    {empaque.Nombre_Empaque}
+                    {empaque.name}
                   </option>
                 ))}
               </select>
@@ -275,30 +252,6 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
                 <div className="flex items-center text-red-500 text-xs mt-1">
                   <FaExclamationCircle className="mr-2" />
                   {errorMessages.empaque}
-                </div>
-              )}
-            </div>
-            <div>
-              <select
-                name='fk_detalleUbicacion'
-                required
-                onChange={handleInputChange}
-                className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-              >
-                <option disabled selected>Seleccione una Ubicación</option>
-                {UseUbicacion.map(ubicacion => (
-                  <option
-                    value={ubicacion.codigo_Detalle}
-                    key={ubicacion.fk_detalleUbicacion}
-                  >
-                    {ubicacion.Nombre_ubicacion}
-                  </option>
-                ))}
-              </select>
-              {errorMessages.ubicacion && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.ubicacion}
                 </div>
               )}
             </div>
@@ -310,6 +263,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
         </div>
       </form>
     </div>
-  )
+  );
 }
+
 

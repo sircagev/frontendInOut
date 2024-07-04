@@ -1,8 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import NextUITable from "../components/NextUITable"
 import { Button } from '@nextui-org/react'
 import { columnsElements, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/ElementsData'
 import axiosClient from '../components/config/axiosClient'
+import Modal1 from "../components/Modal1";
+import { FormDataElemento } from "../functions/Register/RegisterElemento/FormDataElemento";
+import { FormUpdateElemento } from "../functions/Update/UpdateElemento/FormUpdateElemento";
 
 export const Elemento = () => {
 
@@ -10,33 +13,48 @@ export const Elemento = () => {
 
   const ListarElementos = async () => {
     try {
-        const response = await axiosClient.get('elemento/listar');
-        setData(response.data)
-        console.log(response.data)
+      const response = await axiosClient.get('elemento/listar');
+      setData(response.data)
+      console.log(response.data)
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
 
   useEffect(() => {
     ListarElementos()
-  }, [])  
+  }, [])
 
 
   const Buttons = () => {
+    const [isOpen, setIsOpen] = useState(false);
     return (
       <div>
-        <Button variant="primary">Agregar</Button>
+        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
+        <Modal1
+          title={"Registrar Elemento"}
+          size={"2xl"}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          form={<FormDataElemento />}
+        />
       </div>
     )
   }
 
-  const Actions = () => {
+  const Actions = ({item}) => {
+    const [isOpenUpdate, setIsOpenupdate] = useState(false);
     return (
       <div>
-        <Button variant="primary">Actualizar</Button>
-        <Button variant="secondary">Borrar</Button>
-      </div>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>bs</Button>
+        <Modal1 
+          title={"Actualizar Elemento"}
+          size={"2xl"}
+          isOpen={isOpenUpdate}
+          onClose={() => setIsOpenupdate(false)}
+          form={<FormUpdateElemento onClose={()=> setIsOpenupdate(false)} category={item} Listar={ListarElementos} />}
+        />
+      </div >
     )
   }
 
@@ -51,10 +69,9 @@ export const Elemento = () => {
         statusOptions={statusOptions}
         searchKeys={searchKeys}
         buttons={Buttons}
-        actions={Actions}
         statusOrType={'status'}
+        actions={Actions}
       />
     </div>
   )
 }
-

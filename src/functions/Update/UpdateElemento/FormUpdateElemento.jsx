@@ -8,22 +8,19 @@ import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubic
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => {
+export const FormUpdateElemento = ({ onClose, category, Listar }) => {
   const [nombre, setNombre] = useState('')
   const [tipo, setTipo] = useState('')
   const [medida, setMedida] = useState('')
   const [categoria, setCategoria] = useState('')
   const [empaque, setEmpaque] = useState('')
-  const [ubicacion, setUbicacion] = useState('')
 
   const [tipos, setTipos] = useState([]);
   const [medidas, setMedidas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [empaques, SetEmpaques] = useState([]);
-  const [ubicaciones, SetUbicaciones] = useState([]);
 
   const [errorMessages, setErrorMessages] = useState({
-    ubicacion: '',
     tipo: '',
     medida: '',
     categoria: '',
@@ -32,31 +29,28 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
 
   useEffect(() => {
     if (category) {
-      setNombre(category.nombre)
-      setTipo(category.tipo)
-      setMedida(category.medida)
-      setCategoria(category.categoria)
-      setEmpaque(category.empaque)
-      setUbicacion(category.ubicacion)
+      setNombre(category.name)
+      setTipo(category.elementType_id)
+      setMedida(category.measurementUnit_id )
+      setCategoria(category.category_id )
+      setEmpaque(category.packageType_id)
     }
   }, [category]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [tiposData, MedidasData, CategoriasData, EmpaquesData, UbicacionesData] = await Promise.all([
+        const [tiposData, MedidasData, CategoriasData, EmpaquesData] = await Promise.all([
           ListarTipo(),
           ListarMedidas(),
           ListarCategorias(),
-          ListarEmpaques(),
-          Listarubicacion()
+          ListarEmpaques()
         ]);
 
         setTipos(tiposData);
         setMedidas(MedidasData);
         setCategorias(CategoriasData);
         SetEmpaques(EmpaquesData);
-        SetUbicaciones(UbicacionesData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -81,13 +75,11 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
     
     try {
       await axiosClient.put(`elemento/actualizar/${category.codigo}`, {
-        Nombre_elemento: nombre,
-        fk_tipoElemento: tipo,
-        fk_unidadMedida: medida,
-        fk_categoria: categoria,
-        fk_tipoEmpaque: empaque,
-        fk_detalleUbicacion: ubicacion,
-        Vencimiento: vencimiento
+        name: nombre,
+        id_type: tipo,
+        id_unit : medida,
+        id_category: categoria,
+        id_package: empaque
       });
       swal({
         title: "Actualizado",
@@ -97,7 +89,7 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
         timer: 2000,
       });
       onClose();
-      onRegisterSuccess();
+      Listar(); // Actualiza la lista de elementos
     } catch (error) {
       console.log(error)
       swal("Error", "Hubo un problema al actualizar el elemento", "error");
@@ -132,8 +124,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
               >
                 <option value="" disabled>Seleccione un Tipo</option>
                 {tipos.map((tipo) => (
-                  <option key={tipo.codigo_Tipo} value={tipo.nombre_tipoElemento}>
-                    {tipo.nombre_tipoElemento}
+                  <option key={tipo.elementType_id} value={tipo.name}>
+                    {tipo.name}
                   </option>
                 ))}
               </select>
@@ -154,8 +146,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
               >
                 <option value="" disabled>Seleccione una medida</option>
                 {medidas.map((medida) => (
-                  <option key={medida.codigo_medida} value={medida.Nombre_Medida}>
-                    {medida.Nombre_Medida}
+                  <option key={medida.measurementUnit_id } value={medida.name}>
+                    {medida.name}
                   </option>
                 ))}
               </select>
@@ -168,8 +160,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
               >
                 <option value="" disabled>Seleccione una categoría</option>
                 {categorias.map((categoria) => (
-                  <option key={categoria.codigo_Categoria} value={categoria.Nombre_Categoria}>
-                    {categoria.Nombre_Categoria}
+                  <option key={categoria.category_id} value={categoria.name}>
+                    {categoria.name}
                   </option>
                 ))}
               </select>
@@ -184,22 +176,8 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
               >
                 <option value="" disabled>Seleccione un Emapaque</option>
                 {empaques.map((empaque) => (
-                  <option key={empaque.codigo_Empaque} value={empaque.Nombre_Empaque}>
-                    {empaque.Nombre_Empaque}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <select
-                className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-                value={ubicacion}
-                onChange={(e) => setUbicacion(e.target.value)}
-              >
-                <option value="" disabled>Seleccione una ubicación</option>
-                {ubicaciones.map((ubicacion) => (
-                  <option key={ubicacion.codigo_Detalle} value={ubicacion.Nombre_ubicacion}>
-                    {ubicacion.Nombre_ubicacion}
+                  <option key={empaque.packageType_id} value={empaque.name}>
+                    {empaque.name}
                   </option>
                 ))}
               </select>
@@ -214,4 +192,3 @@ export const FormUpdateElemento = ({ onClose, category, onRegisterSuccess }) => 
     </div>
   );
 };
-
