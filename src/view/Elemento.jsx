@@ -25,7 +25,6 @@ export const Elemento = () => {
     ListarElementos()
   }, [])
 
-
   const Buttons = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (

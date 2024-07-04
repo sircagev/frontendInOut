@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios';
 import axiosClient from '../components/config/axiosClient';
 
@@ -36,54 +36,55 @@ export const ListarTipo = async () => {
     } catch (error) {
         console.log(error);
     }
-  }
+}
 
 export const ListarCategorias = async () => {
     try {
-        
+
         const response = await axiosClient.get('categoria/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
-  }
+}
 
- export const Listarubicacion = async () => {
+export const Listarubicacion = async () => {
     try {
         const response = await axiosClient.get('ubicacion/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
-  }
+}
 
- export const ListarEmpaques = async () => {
+export const ListarEmpaques = async () => {
     try {
-     const response = await axiosClient.get('empaque/listar')
-      return response.data
+        const response = await axiosClient.get('empaque/listar')
+        return response.data
     } catch (error) {
         console.log(error);
     }
-  }
-  export const ListarMedidas = async () => {
+}
+
+export const ListarMedidas = async () => {
     try {
-     const response = await axiosClient.get('medida/listar')
-      return response.data
+        const response = await axiosClient.get('medida/listar')
+        return response.data
     } catch (error) {
         console.log(error);
     }
-  } 
+}
 
-  export const Listarbodegas = async () => {
+export const Listarbodegas = async () => {
     try {
         const response = await axiosClient.get('bodega/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
-  }
+}
 
-  export const ListarUbicacionesYBodegas = async () => {
+export const ListarUbicacionesYBodegas = async () => {
     try {
         const [ubicaciones, bodegas] = await Promise.all([
             Listarubicacion(),
@@ -114,7 +115,7 @@ export const capitalize = (str) => {
 export const convertirAMinusculas = (texto) => {
     return texto.toLowerCase();
 
-  }
+}
 
 export const convertirAMayusculas = (texto) => {
     return texto.toUpperCase();
@@ -187,6 +188,17 @@ export const ListarMovimientosCancelados = async () => {
             }
         });
         return newData
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const MovementList = async () => {
+    try {
+        const response = await axiosClient.get('movimientos/list', {
+            withCredentials: true
+        })
+        return response.data
     } catch (error) {
         console.log(error);
     }
