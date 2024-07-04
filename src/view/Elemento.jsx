@@ -32,7 +32,7 @@ export const Elemento = () => {
         const [isOpen, setIsOpen] = useState(false);
         return (
             <div>
-                <Button variant="primary" size={"sm"} className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
+                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
                 <Modal1
                     title={"Registrar Elemento"}
                     size={"2xl"}

@@ -32,7 +32,7 @@ export const Empaques = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div>
-        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
           title={"Registrar Elemento"}
           size={"sm"}
@@ -77,7 +77,7 @@ export const Empaques = () => {
   }
 
   return (
-    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
       <NextUITable
         columns={columnsPackage}
         rows={data}

@@ -31,7 +31,7 @@ export const Medidas = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div>
-        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
           title={"Registrar Medida"}
           size={"sm"}
@@ -77,7 +77,7 @@ export const Medidas = () => {
 
 
   return (
-    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
       <NextUITable
         columns={columnsUnit}
         rows={data}
