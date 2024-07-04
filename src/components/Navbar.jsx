@@ -23,7 +23,7 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorStockMin, setContadorStockMin] = useState(0);
   const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
-  const [contadorElementosExpirados, setContadorElementosxpirados] = useState(0);
+  const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
   const {logout} = useAuth();
@@ -81,7 +81,7 @@ export const Navbar = ({ setLogIn }) => {
         const responseExpired = await axiosClient.get("/reporte/elementosexpiradosmodal");
         const expired = responseExpired.data;
         setElementosExpirados(expired);
-        setContadorElementosxpirados(expired > 0 ? 1 : 0);
+        setContadorElementosExpirados(expired > 0 ? 1 : 0);
 
       } catch (error) {
         console.error(

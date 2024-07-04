@@ -51,10 +51,10 @@ function App2() {
                 </ProtectedRoutesLogin>} />
                 <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
                     <Route path="/home" element={<Home user={user} />} />
-                    {/*<Route path="/elementos" element={<Elemento user={user} />} />
+                    <Route path="/elementos" element={<Elemento user={user} />} />
                     <Route path="/elementos/categorias" element={<Categoria user={user} />} />
                     <Route path="/elementos/empaques" element={<Empaques user={user} />} />
-                    <Route path="/elementos/medidas" element={<Medidas user={user} />} />*/}
+                    <Route path="/elementos/medidas" element={<Medidas user={user} />} />
                     <Route path="/reportes" element={<Reporte />} />
                     <Route path="/reportes/elementos" element={<ReporteE />} />
                     <Route path="/reportes/elementosdesactivados" element={<ReporteED />} />
@@ -68,8 +68,8 @@ function App2() {
                     {/*<Route path="/usuarios" element={<Usuarios userLogin={user} />} />*/}
                     {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
                     {/* <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} /> */}
-                    {/* <Route path="/movimientos" element={<Movimientos2 user={user} />} /> 
-                    <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
+                    <Route path="/movimientos" element={<Movimientos2 user={user} />} /> 
+                    <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />
                 </Route>
                 <Route
                     path={'/movimientos'}
