@@ -195,7 +195,7 @@ const NextUITable = ({
                     />
                     <div className="flex gap-3">
                         <Dropdown classNames={{
-                            content: 'border border-green-200 bg-transparent'
+                            content: 'border border-green-200'
                         }}>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button
@@ -203,7 +203,6 @@ const NextUITable = ({
                                     size="sm"
                                     variant="bordered"
                                     color="success"
-                                /* style={{backgroundColor: 'red'}} */
                                 >
                                     Status
                                 </Button>
@@ -297,8 +296,10 @@ const NextUITable = ({
                 </span>
 
 
-                <div className="hidden sm:flex w-[50%] justify-end gap-2">
+                <div className="flex w-[70%] justify-end gap-5">
                     <Pagination
+                        disableCursorAnimation={false}
+                        disableAnimation={false}
                         isCompact
                         showControls
                         /* classNames={{
@@ -311,10 +312,10 @@ const NextUITable = ({
                         variant="light"
                         onChange={setPage}
                         classNames={{
-                            wrapper: "gap-0 overflow-visible h-8 rounded border-divider",
-                            item: "w-8 h-8 text-small rounded-none bg-transparent active:bg-gray-500 active:rounded-full",
+                            wrapper: "gap-0 overflow-visible h-8 rounded-full bg-gray-800 text-white",
+                            item: "w-8 h-8 text-small text-white bg-gray-800",
                             cursor:
-                                "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold ",
+                                "bg-red-500 shadow-lg dark:from-default-300 dark:to-default-100 text-white font-bold ",
                         }}
                     />
                 </div>

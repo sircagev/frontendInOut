@@ -23,6 +23,9 @@ import {
 //Funciones propias
 import { MovementList } from '../functions/Listar'
 
+//Formularios
+import { RegisterMovement } from '../components/forms/Movements/RegisterMovement';
+
 export const Movimientos3 = () => {
 
     const { user } = useAuth();
@@ -33,7 +36,6 @@ export const Movimientos3 = () => {
         try {
             const response = await MovementList();
             setData(response.data)
-            console.log(response.data)
         } catch (error) {
             console.log(error);
         }
@@ -60,6 +62,7 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
+                    form={<RegisterMovement />}
                 />
                 < Button
                     /* className="bg-foreground text-background" */
@@ -68,7 +71,7 @@ export const Movimientos3 = () => {
                     color="danger"
                     variant="shadow"
                     className="text-white font-bold"
-                    onClick={()=>setIsOpen2(true)}
+                    onClick={() => setIsOpen2(true)}
                 >
                     Outgoing
                 </Button >
@@ -83,22 +86,20 @@ export const Movimientos3 = () => {
     }
 
     const Actions = ({ codigo }) => {
+        const [isOpen3, setIsOpen3] = useState(false)
         return (
             <div className="relative flex items-center gap-2">
 
                 <Tooltip content="Details">
                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                        <Button color='primary' variant="ligth" className="text-lg" onClick={() => { console.log(codigo) }} isIconOnly> <EyeIcon /></Button>
-                        <Modal1></Modal1>
+                        <Button color='primary' variant="ligth" className="text-lg" onClick={() => { setIsOpen3(true) }} isIconOnly> <EyeIcon color="#007BFF" /></Button>
+                        <Modal1
+                            title={"El modal de info"}
+                            size={'xl'}
+                            isOpen={isOpen3}
+                            onClose={() => setIsOpen3(false)} />
                     </span>
                 </Tooltip>
-                {user.role_id === 1 && (
-                    <Tooltip content="Edit">
-                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                            {<EditIcon />}
-                        </span>
-                    </Tooltip>
-                )}
                 <Tooltip color="danger" content="Delete user">
                     <span className="text-lg text-danger cursor-pointer active:opacity-50">
                         {/* <DeleteIcon /> */}
