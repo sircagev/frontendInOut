@@ -111,7 +111,7 @@ const NextUITable = ({
                     <User
                         /* avatarProps={{ radius: "lg", src: user.avatar }} */
                         description={item.correo}
-                        name={cellValue + ' ' + item.apellido}
+                        name={cellValue}
                     >
                         {item.correo}
                     </User>
@@ -137,7 +137,7 @@ const NextUITable = ({
                 );
             case "actions":
                 return (
-                    <Actions codigo={item.codigo}></Actions>
+                    <Actions codigo={item}></Actions>
                 );
             case "codigo":
                 return (
@@ -329,7 +329,7 @@ const NextUITable = ({
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             classNames={{
-                wrapper: "h-[350px] overflow-y-auto overflow-x-hidden hidden-scrollbar",
+                wrapper: "h-[400px] min-w-[450px] overflow-y-auto overflow-x-hidden hidden-scrollbar",
                 th: "bg-gray-800 text-white",
                 td: "group-data-[first=true]:first:before:rounded-none group-data-[first=true]:last:before:rounded-none group-data-[middle=true]:before:rounded-none group-data-[last=true]:first:before:rounded-none group-data-[last=true]:last:before:rounded-none",
                 tr: "shadow-none"
