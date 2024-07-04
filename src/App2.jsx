@@ -71,6 +71,7 @@ function App2() {
                     <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} />
                     {/* <Route path="/movimientos" element={<Movimientos2 user={user} />} /> 
                     <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
+
                 </Route>
                 <Route
                     path={'/movimientos'}
