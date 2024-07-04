@@ -1,65 +1,96 @@
 import React, { useState, useEffect } from "react";
-import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { ListarUbicacionesYBodegas } from "../functions/Listar";
-import { columnsUbicacion } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Buttons/Button";
+import axiosClient from '../components/config/axiosClient'
+import NextUITable from "../components/NextUITable"
+import { Button } from '@nextui-org/react'
+import { columnslocation, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/locationsData'
 import { FormDataUbicacion } from "../functions/Register/RegisterElemento/FormDataUbicacion";
 import { FormUpdateUbicacion } from "../functions/Update/UpdateElemento/FormUpdateUbicacion";
 import Modal1 from "../components/Modal1";
-import Cards from "../components/Cards";
-import imagen from "../assets/categoria.svg"
+import { DesactivarUbicacion } from "../functions/Desactivar";
+
 
 export const Ubicaciones = () => {
+
+  const [data, setData] = useState([])
+
+  const ListarUbicaciones = async () => {
+    try {
+      const response = await axiosClient.get('ubicacion/listar');
+      setData(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    ListarUbicaciones()
+  }, [])
+
+
+  const Buttons = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [isOpenUpdate, setIsOpenUpdate] = useState(false);
-    const [updateTable, setUpdateTable] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState(null); 
-  
-    const handleTableUpdate = () => {
-      setUpdateTable(!updateTable);
-    };
-    
-    const list = [
-      {
-        title: "Bodegas",
-        to: "/bodegas",
-      },
-    ];
-  
+
     return (
-      <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
-        <div className="w-[95%] flex gap-2">
-        {list.map((item, index) => (
-          <Cards 
-            key={index} 
-            title={item.title} 
-            imagen={imagen} 
-            to={item.to} 
-          />
-        ))}
-        </div>
-        <div className="w-[95%] flex justify-end">
-          <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Ubicación"} onClick={() => setIsOpen(true)} />
-        </div>
+      <div>
+        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
-        title={"Registrar Ubicación"}
-        size={"md"}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        form={<FormDataUbicacion onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />} 
-      />
-        <Modal1
-         title={"Actualizar Ubicación"}
-         isOpen={isOpenUpdate}
-         onClose={() => setIsOpenUpdate(false)}
-         form={<FormUpdateUbicacion onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCatego
-        />
-        <TableGeneral
-         funcionListar={ListarUbicacionesYBodegas}
-         columns={(listar) => columnsUbicacion(listar, setIsOpenUpdate, setSelectedCategory)}
-         title={"Lista de Ubicaciones"}
-         updateTable={updateTable}
+          title={"Registrar Ubicación"}
+          size={"sm"}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          form={<FormDataUbicacion onClose={() => setIsOpen(false)} listar={ListarUbicaciones} />}
         />
       </div>
-    );
-  };
+    )
+  }
+
+  const Actions = ({ item }) => {
+    const [isOpenUpdate, setIsOpenupdate] = useState(false);
+
+    const handleDesactivar = async (codigoElemento, estadoActual) => {
+      const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+      await DesactivarUbicacion(codigoElemento, nuevoEstado);
+      ListarUbicaciones();
+    };
+    
+    return (
+      <div className="flex gap-2">
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
+        <Modal1
+          title={"Actualizar Ubicación"}
+          size={"sm"}
+          isOpen={isOpenUpdate}
+          onClose={() => setIsOpenupdate(false)}
+          form={<FormUpdateUbicacion onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarUbicaciones} />}
+        />
+        <Button
+          color={item.status === 'activo' ? 'danger' : 'success'}
+          variant="bordered"
+          size="sm"
+          className="w-[15px]"
+          onClick={() => handleDesactivar(item.codigo, item.status)}
+        >
+          {item.status === 'activo' ? 'Desactivar' : 'Activar'}
+        </Button>
+      </div >
+    )
+  }
+
+
+  return (
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+      <NextUITable
+        columns={columnslocation}
+        rows={data}
+        initialColumns={INITIAL_VISIBLE_COLUMNS}
+        statusColorMap={statusColorMap}
+        statusOptions={statusOptions}
+        searchKeys={searchKeys}
+        buttons={Buttons}
+        statusOrType={'status'}
+        actions={Actions}
+      />
+    </div>
+  )
+};

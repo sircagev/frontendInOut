@@ -1,23 +1,17 @@
-import React, {useEffect} from 'react'
-import axios from 'axios';
 import axiosClient from '../components/config/axiosClient';
-
 
 export const DesactivarElemento = async (codigoElemento, nuevoEstado) => {
     try {
-        // Realiza la solicitud para desactivar/activar el empaque
         await axiosClient.put(`elemento/desactivar/${codigoElemento}`, { estado: nuevoEstado });
-
     } catch (error) {
         console.error("Error al desactivar el elemento:", error);
     }
 };
 
+
 export const DesactivarCategorias = async (codigoCategoria, nuevoEstado) => {
     try {
-        // Realiza la solicitud para desactivar/activar la categoría
         await axiosClient.put(`categoria/desactivar/${codigoCategoria}`, { estado: nuevoEstado });
-
     } catch (error) {
         console.error("Error al desactivar la categoría:", error);
     }
