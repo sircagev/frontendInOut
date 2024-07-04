@@ -7,14 +7,14 @@ import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
-export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) => {
+export const FormUpdateCategoria = ({ onClose, category, Listar }) => {
 
   const [nombre, setNombre] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (category) {
-      setNombre(category.nombre);
+      setNombre(category.name)
     }
   }, [category]);
 
@@ -29,7 +29,7 @@ export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) =>
     }
     try {
       await axiosClient.put(`categoria/actualizar/${category.codigo}`, {
-        Nombre_Categoria: nombre,
+        name: nombre,
       });
       swal({
         title: "Actualizado",
@@ -39,7 +39,7 @@ export const FormUpdateCategoria = ({ onClose, category, onRegisterSuccess }) =>
         timer: 2000, 
     });
       onClose();
-      onRegisterSuccess();
+      Listar();
     } catch (error) {
       console.log(error)
       swal("Error", "Hubo un problema al actualizar la categoría", "error");

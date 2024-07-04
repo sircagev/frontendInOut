@@ -9,13 +9,13 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
 
-export const FormDataEmpaque = ({actualizar, onClose}) => {
+export const FormDataEmpaque = ({listar, onClose}) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Empaque: "",
+            name: "",
         }
     )
 
@@ -31,7 +31,7 @@ export const FormDataEmpaque = ({actualizar, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Empaque.trim() || /\d/.test(values.Nombre_Empaque.trim())) {
+        if (!values.name.trim() || /\d/.test(values.name.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -42,7 +42,7 @@ export const FormDataEmpaque = ({actualizar, onClose}) => {
             const response = await axiosClient.post('empaque/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Empaque: '' });
+                setValues({ name: '' });
                 swal({
                     title: "Registro exitoso",
                     text: "El empaque se ha registrado correctamente.",
@@ -52,7 +52,7 @@ export const FormDataEmpaque = ({actualizar, onClose}) => {
                 });
                 
                 onClose(); 
-                actualizar();
+                listar();
             }
         } catch (error) {
             console.log(error);
@@ -64,12 +64,12 @@ export const FormDataEmpaque = ({actualizar, onClose}) => {
             <div>
                 <form onSubmit={handleForm}>
                     <div className='flex justify-center items-center'></div>
-                    <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+                    <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
                             label='Nombre Empaque'
-                            name='Nombre_Empaque'
-                            value={values.Nombre_Empaque}
+                            name='name'
+                            value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />

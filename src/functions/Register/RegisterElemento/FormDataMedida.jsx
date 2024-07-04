@@ -8,13 +8,13 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
 
-export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
+export const FormDataMedida = ({listar, onClose}) => {
     
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Medida: "",
+            name: "",
         }
     )
 
@@ -30,7 +30,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Medida.trim() || /\d/.test(values.Nombre_Medida.trim())) {
+        if (!values.name.trim() || /\d/.test(values.name.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -41,7 +41,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
             const response = await axiosClient.post('medida/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Medida: '' });
+                setValues({ name: '' });
                 swal({
                     title: "Registro exitoso",
                     text: "La medida se ha registrado correctamente.",
@@ -51,7 +51,7 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
                 });
                 
                 onClose(); 
-                onRegisterSuccess();
+                listar();
             }
         } catch (error) {
             console.log(error);
@@ -63,12 +63,12 @@ export const FormDataMedida = ({onRegisterSuccess, onClose}) => {
             <div>
                 <form onSubmit={handleForm}>
                     <div className='flex justify-center items-center'></div>
-                    <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+                    <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
                             label='Nombre Medida'
-                            name='Nombre_Medida'
-                            value={values.Nombre_Medida}
+                            name='name'
+                            value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />

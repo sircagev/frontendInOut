@@ -36,7 +36,7 @@ export const Elemento = () => {
           size={"2xl"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          form={<FormDataElemento />}
+          form={<FormDataElemento onClose={()=> setIsOpen(false)} listar={ListarElementos}/>}
         />
       </div>
     )
@@ -46,7 +46,7 @@ export const Elemento = () => {
     const [isOpenUpdate, setIsOpenupdate] = useState(false);
     return (
       <div>
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>bs</Button>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
         <Modal1 
           title={"Actualizar Elemento"}
           size={"2xl"}

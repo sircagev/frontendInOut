@@ -4,14 +4,14 @@ import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
+export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
   
   const [nombre, setNombre] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (category) {
-      setNombre(category.nombre);
+      setNombre(category.name);
     }
   }, [category]);
 
@@ -27,7 +27,7 @@ export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
 
     try {
       await axiosClient.put(`empaque/actualizar/${category.codigo}`, {
-        Nombre_Empaque: nombre,
+        name: nombre,
       });
       swal({
         title: "Actualizado",
@@ -37,7 +37,7 @@ export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
         timer: 2000, 
     });
       onClose();
-      onRegisterSuccess();
+      Listar();
     } catch (error) {
       console.log(error)
       swal("Error", "Hubo un problema el empaque", "error");
@@ -53,7 +53,7 @@ export const FormUpdateEmpaque = ({ onClose, category, onRegisterSuccess }) => {
             <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
               <Input
                 type='text'
-                label='Nombre Categoría'
+                label='Nombre Empaque'
                 className="w-[100%]"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
