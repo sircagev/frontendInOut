@@ -7,7 +7,7 @@ const ProtectedRoute = ({ component: Component, allowedRoles, layout: Layout }) 
     const { user } = useAuth();
 
     return (
-        allowedRoles.includes(user ? user.role : null) ? (
+        allowedRoles.includes(user ? user.role_id : null) ? (
             <Layout>
                 <Component></Component>
             </Layout>
