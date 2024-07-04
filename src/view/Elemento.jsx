@@ -5,6 +5,7 @@ import { columnsElements, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap
 import axiosClient from '../components/config/axiosClient'
 import Modal1 from "../components/Modal1";
 import { FormDataElemento } from "../functions/Register/RegisterElemento/FormDataElemento";
+import { FormUpdateElemento } from "../functions/Update/UpdateElemento/FormUpdateElemento";
 
 export const Elemento = () => {
 
@@ -32,7 +33,7 @@ export const Elemento = () => {
         <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
           title={"Registrar Elemento"}
-          size={"md"}
+          size={"2xl"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           form={<FormDataElemento />}
@@ -48,9 +49,10 @@ export const Elemento = () => {
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>bs</Button>
         <Modal1 
           title={"Actualizar Elemento"}
-          size={"md"}
+          size={"2xl"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenupdate(false)}
+          form={<FormUpdateElemento onClose={()=> setIsOpenupdate(false)} category={item} Listar={ListarElementos} />}
         />
       </div >
     )
@@ -73,4 +75,3 @@ export const Elemento = () => {
     </div>
   )
 }
-
