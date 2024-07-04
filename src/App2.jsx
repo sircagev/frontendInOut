@@ -33,6 +33,7 @@ import { Prestamos } from './view/Prestamos'
 import ProtectedRoute from './components/auth/ProtectedRoutes2';
 import DashboardTemplate from './view/layouts/DashboardTemplate';
 import NotCredentials from './view/auth/NotCredentials';
+import { Movimientos3 } from './view/Movimientos3';
 
 function App2() {
 
@@ -75,9 +76,9 @@ function App2() {
                     path={'/movimientos'}
                     element={
                         <ProtectedRoute
-                            component={Movimientos2}
+                            component={Movimientos3}
                             layout={DashboardTemplate}
-                            allowedRoles={['1', '2']}
+                            allowedRoles={[1, 2]}
                         />
                     }
                 />

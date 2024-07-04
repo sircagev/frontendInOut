@@ -304,7 +304,7 @@ function Login({ setLoggedIn }) {
           )}
         </div>
       </div>
-      <div className='w-full h-[50%] bg-[#fff]'>
+      {/* <div className='w-full h-[50%] bg-[#fff]'>
         <FormUpdatePerfil
           onClose={handleCloseModal}
           category={{
@@ -317,7 +317,7 @@ function Login({ setLoggedIn }) {
           }}
           onRegisterSuccess={handleRegisterSuccess}
         />
-      </div>
+      </div> */}
       
     </div>
   );
