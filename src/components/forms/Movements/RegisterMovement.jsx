@@ -10,16 +10,19 @@ import { EyeIcon } from '../../icons/EyeIcon';
 import { ListarUsuarios } from '../../../functions/Listar';
 import { ListarElementos } from '../../../functions/Listar';
 import { Listarbodegas } from '../../../functions/Listar';
+import { ListarUbicacionesYBodegas } from '../../../functions/Listar';
 import { useEffect } from 'react';
 
 export const RegisterMovement = () => {
 
     const { user } = useAuth();
     const [checkUser, setCheckUser] = useState(false);
+    const [warehouse, setWarehouse] = useState(null);
 
     const [dataUsers, setDataUsers] = useState([]);
     const [dataElements, setDataElements] = useState([]);
-    const [dataWarehouses, setDataWarehouses] = useState([])
+    const [dataWarehouses, setDataWarehouses] = useState([]);
+    const [dataLocations, setDataLocations] = useState([]);
 
     const objectRegister = {
         user_application: null,
@@ -27,10 +30,15 @@ export const RegisterMovement = () => {
             element_id: '',
             expiration: null,
             quantity: 0,
-            warehouseLocation_id: '',
+            warehouseLocation_id: null,
             remarks: null
         }]
     }
+
+    const filteredItems = React.useMemo(() => {
+        console.log(dataLocations)
+        return dataLocations.filter(item => item.id_warehouse == warehouse);
+    }, [dataLocations, warehouse]);
 
     //Guardar la información que se envia para un nuevo registro
     const [newRegister, setNewRegister] = useState(objectRegister);
@@ -40,11 +48,14 @@ export const RegisterMovement = () => {
             const users = await ListarUsuarios();
             const elements = await ListarElementos();
             const warehouses = await Listarbodegas();
-            
+            const locations = await ListarUbicacionesYBodegas();
+
             setDataUsers(users)
             setDataElements(elements);
             setDataWarehouses(warehouses);
-            console.log(warehouses)
+            setDataLocations(locations);
+            console.log(warehouses);
+            console.log(locations)
         } catch (error) {
             console.log(error);
         }
@@ -152,6 +163,56 @@ export const RegisterMovement = () => {
                     }
                 }}
             />
+            <Autocomplete
+                aria-label='autocomplete-warehouese'
+                label="Seleccionar la bodega"
+                placeholder="Busca una bodega"
+                isRequired
+                className='w-[75%] h-[60px]'
+                onSelectionChange={(value) => {
+                    const item = value;
+                    setWarehouse(value)
+                }}
+            >
+                {dataWarehouses.map((item) => (
+                    <AutocompleteItem
+                        key={item.warehouse_id}
+                        value={item.warehouse_id}
+                    >
+                        {item.name}
+                    </AutocompleteItem>
+                ))}
+            </Autocomplete>
+
+            <Autocomplete
+                aria-label='autocomplete-warehouese'
+                label="Seleccionar la bodega"
+                placeholder="Busca una bodega"
+                isRequired
+                className='w-[75%] h-[60px]'
+                onSelectionChange={(value) => {
+                    const item = value;
+                    setNewRegister(...prevData => ({
+                        ...prevData,
+                        details: [{
+                            ...prevData.details[0],
+                            warehouseLocation_id: parseInt(item)
+                        }]
+                    }))
+                }}
+            >
+                {filteredItems.map((item) => (
+                    <AutocompleteItem
+                        key={item.codigo}
+                        value={item.codigo}
+                    >
+                        {item.name}
+                    </AutocompleteItem>
+                ))}
+            </Autocomplete>
+            {
+
+            }
         </div>
     )
 }
