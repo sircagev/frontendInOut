@@ -68,9 +68,10 @@ function App2() {
                     <Route path="/reportes/prestamosvencidos" element={<ReporteV />} />
                     {/*<Route path="/usuarios" element={<Usuarios userLogin={user} />} />*/}
                     {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
-                    {/* <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} /> */}
-                    <Route path="/movimientos" element={<Movimientos2 user={user} />} /> 
-                    <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />
+                    <Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} />
+                    {/* <Route path="/movimientos" element={<Movimientos2 user={user} />} /> 
+                    <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
+
                 </Route>
                 <Route
                     path={'/movimientos'}

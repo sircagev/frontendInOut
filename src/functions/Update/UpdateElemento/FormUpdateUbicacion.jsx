@@ -6,14 +6,12 @@ import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-
-
 export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) => {
   const [bodegas, setBodegas] = useState([]);
-  const [values, setValues] = useState({
-    nombre: '',
-    nombreBodega: '',
-  });
+
+  const [nombre, setNombre] = useState('')
+  const [nombreBodega, setNombreBodega] = useState('')
+
   const [errors, setErrors] = useState({
     nombre: '',
     nombreBodega: '',
@@ -21,10 +19,8 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
   useEffect(() => {
     if (category) {
-      setValues({
-        nombre: category.nombre,
-        nombreBodega: category.nombreBodega,
-      });
+      setNombre(category.name)
+      setNombreBodega(category.warehouse_id)
     }
   }, [category]);
 
@@ -42,22 +38,13 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     }
   };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-  };
-
   const validateForm = () => {
     let formErrors = {};
-    if (!values.nombre.trim()) {
+    if (!nombre.trim()) {
       formErrors.nombre = 'El nombre no debe estar vacío.';
-  }
+    }
   
-
-    if (!values.nombreBodega.trim()) {
+    if (!nombreBodega) {
       formErrors.nombreBodega = 'Debe seleccionar una bodega.';
     }
 
@@ -71,8 +58,8 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
     try {
       await axiosClient.put(`ubicacion/actualizar/${category.codigo}`, {
-        Nombre_ubicacion: values.nombre,
-        fk_bodega: values.nombreBodega,
+        name: nombre,
+        id_warehouse: nombreBodega,
       });
       swal({
         title: "Actualizado",
@@ -99,10 +86,9 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
               <Input
                 type='text'
                 label='Nombre Ubicación'
-                name='nombre'
                 className="w-[100%]"
-                value={values.nombre}
-                onChange={handleInputChange}
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
               />
               {errors.nombre && (
                 <div className="flex items-center text-red-500 text-xs mt-1 ml-3">
@@ -111,17 +97,16 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
                 </div>
               )}
             </div>
-            <div className="relative mb-2 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+            <div className="relative mb-2 justify-center items-center h-[75px]" data-twe-input-wrapper-init>
               <select
                 className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-                name='nombreBodega'
-                value={values.nombreBodega}
-                onChange={handleInputChange}
+                value={nombreBodega}
+                onChange={(e) => setNombreBodega(e.target.value)}
               >
                 <option value="" disabled>Seleccione una bodega</option>
                 {bodegas.map((bodega) => (
-                  <option key={bodega.codigo_Bodega} value={bodega.Nombre_bodega}>
-                    {bodega.Nombre_bodega}
+                  <option key={bodega.warehouse_id} value={bodega.warehouse_id}>
+                    {bodega.name}
                   </option>
                 ))}
               </select>

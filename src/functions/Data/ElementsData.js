@@ -13,7 +13,7 @@ const columnsElements = [
     { name: 'Acciones', uid: 'actionElement' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "stock", "category_id", "actionElement"];
+const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "stock", "status", "category_id", "actionElement"];
 
 const statusOptions = [
     { name: "Activo", uid: "activo" },

@@ -8,11 +8,11 @@ import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
-export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
+export const FormDataUbicacion = ({ listar, onClose }) => {
     const [bodegas, setBodegas] = useState([]);
     const [values, setValues] = useState({
-        Nombre_ubicacion: "",
-        fk_bodega: ""
+        name: "",
+        warehouse_id: ""
     });
     const [errors, setErrors] = useState({
         Nombre_ubicacion: "",
@@ -44,19 +44,19 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
     const handleSelectChange = (selected) => {
         setValues({
             ...values,
-            fk_bodega: selected.value,
+            warehouse_id: selected.value,
         });
     };
 
     const validateForm = () => {
         let formErrors = {};
 
-        if (!values.Nombre_ubicacion.trim()) {
+        if (!values.name.trim()) {
             formErrors.Nombre_ubicacion = 'El nombre no debe estar vacío.';
         }
 
 
-        if (!values.fk_bodega || !values.fk_bodega.trim()) {
+        if (!values.warehouse_id || !values.warehouse_id.trim()) {
             formErrors.fk_bodega = 'Debe seleccionar una bodega.';
         }
 
@@ -71,7 +71,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
         try {
             const response = await axiosClient.post('ubicacion/registrar', values);
             if (response.status === 200) {
-                setValues({ Nombre_ubicacion: '', fk_bodega: '' });
+                setValues({ name: '', warehouse_id: '' });
                 swal({
                     title: "Registro exitoso",
                     text: "La ubicación se ha registrado correctamente.",
@@ -80,7 +80,7 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                     timer: 2000,
                 });
                 onClose();
-                onRegisterSuccess();
+                listar();
             }
         } catch (error) {
             console.log(error);
@@ -96,8 +96,8 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                         <Input
                             type='text'
                             label='Ubicación'
-                            name='Nombre_ubicacion'
-                            value={values.Nombre_ubicacion}
+                            name='name'
+                            value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
@@ -111,8 +111,8 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                     <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Select
                             label="Seleccione una bodega"
-                            name='fk_bodega'
-                            value={values.fk_bodega}
+                            name='warehouse_id'
+                            value={values.warehouse_id}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         >
@@ -120,8 +120,8 @@ export const FormDataUbicacion = ({ onRegisterSuccess, onClose }) => {
                                 Seleccione una bodega
                             </SelectItem>
                             {bodegas.map((bodega) => (
-                                <SelectItem key={bodega.codigo_Bodega} value={bodega.Nombre_bodega}>
-                                    {bodega.Nombre_bodega}
+                                <SelectItem key={bodega.warehouse_id} value={bodega.name}>
+                                    {bodega.name}
                                 </SelectItem>
                             ))}
                         </Select>
