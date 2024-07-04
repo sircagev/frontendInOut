@@ -23,9 +23,9 @@ const ReporteStockMin = ({ stockmin }) => {
     }
 
     let flattenedData = [];
-    for (const bodega in stockmin) {
-      if (stockmin.hasOwnProperty(bodega)) {
-        flattenedData = flattenedData.concat(stockmin[bodega]);
+    for (const warehouse in stockmin) {
+      if (stockmin.hasOwnProperty(warehouse)) {
+        flattenedData = flattenedData.concat(stockmin[warehouse]);
       }
     }
 
@@ -51,7 +51,7 @@ const ReporteStockMin = ({ stockmin }) => {
       { Header: "Tipo", accessor: "element_type" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Medida", accessor: "Measurement_unit" },
-      { Header: "Bodega", accessor: "warehouse" },
+      { Header: "warehouse", accessor: "warehouse" },
       { Header: "Ubicación", accessor: "wlocation" },
     ],
     []
@@ -70,7 +70,7 @@ const ReporteStockMin = ({ stockmin }) => {
       { header: "Tipo", key: "element_type", width: 15 },
       { header: "Categoría", key: "category", width: 15 },
       { header: "Medida", key: "Measurement_unit", width: 15 },
-      { header: "Bodega", key: "warehouse", width: 15 },
+      { header: "warehouse", key: "warehouse", width: 15 },
       { header: "Ubicación", key: "wlocation", width: 15 },
     
     ];
@@ -106,7 +106,7 @@ const ReporteStockMin = ({ stockmin }) => {
 "Tipo",
 "Categoría",
 "Medida",
-"Bodega",
+"warehouse",
 "Ubicación"
     ];
     worksheet.addRow(headers);
