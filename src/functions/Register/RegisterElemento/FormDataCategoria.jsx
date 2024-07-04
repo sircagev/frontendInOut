@@ -9,13 +9,13 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
 
-export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
+export const FormDataCategoria = ( {listar, onClose} ) => {
 
     const [errorMessage, setErrorMessage] = useState('');
 
     const [values, setValues] = useState(
         {
-            Nombre_Categoria: "",
+            name: "",
         }
     )
 
@@ -31,7 +31,7 @@ export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.Nombre_Categoria.trim() || /\d/.test(values.Nombre_Categoria.trim())) {
+        if (!values.name.trim() || /\d/.test(values.name.trim())) {
             setErrorMessage('No debe estar vacío ni tener números.');
             return; 
         } else {
@@ -42,7 +42,7 @@ export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
             const response = await axiosClient.post('categoria/registrar', values);
             if (response.status === 200) {
                 
-                setValues({ Nombre_Categoria: '' });
+                setValues({ name: '' });
                 swal({
                     title: "Registro exitoso",
                     text: "La categoría se ha registrado correctamente.",
@@ -52,7 +52,7 @@ export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
                 });
                 
                 onClose(); 
-                onRegisterSuccess();
+                listar();
             }
         } catch (error) {
             console.log(error);
@@ -64,12 +64,12 @@ export const FormDataCategoria = ( {onRegisterSuccess, onClose} ) => {
             <div>
                 <form onSubmit={handleForm}>
                     <div className='flex justify-center items-center'></div>
-                    <div class="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+                    <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
                         <Input
                             type='text'
                             label='Nombre Categoría'
-                            name='Nombre_Categoria'
-                            value={values.Nombre_Categoria}
+                            name='name'
+                            value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />

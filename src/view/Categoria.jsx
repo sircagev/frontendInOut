@@ -1,73 +1,80 @@
 import React, { useState, useEffect } from "react";
+import axiosClient from '../components/config/axiosClient'
+import NextUITable from "../components/NextUITable"
+import { Button } from '@nextui-org/react'
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { ListarCategorias } from "../functions/Listar";
-import { columnsCategorias } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Buttons/Button";
+import { columnsCategory, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/CategoryData'
 import { FormDataCategoria } from "../functions/Register/RegisterElemento/FormDataCategoria";
 import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
 import Modal1 from "../components/Modal1";
-import  Cards  from "../components/Cards"
-import imagen from "../assets/categoria.svg"
+
+
 
 export const Categoria = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpenUpdate, setIsOpenUpdate] = useState(false);
-  const [updateTable, setUpdateTable] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleTableUpdate = () => {
-    setUpdateTable(!updateTable);
-  };
+  const [data, setData] = useState([])
 
-  const list = [
-    {
-      title: "Elementos",
-      to: "/elementos",
-    },
-    {
-      title: "Empaques",
-      to: "/elementos/empaques",
-    },
-    {
-      title: "Medidas",
-      to: "/elementos/medidas",
-    },
-  ];
+  const ListarCategorias = async () => {
+    try {
+      const response = await axiosClient.get('categoria/listar');
+      setData(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    ListarCategorias()
+  }, [])
+
+
+  const Buttons = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <div>
+        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
+        <Modal1
+          title={"Registrar Categoría"}
+          size={"sm"}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          form={<FormDataCategoria onClose={() => setIsOpen(false)} listar={ListarCategorias} />}
+        />
+      </div>
+    )
+  }
+
+  const Actions = ({ item }) => {
+    const [isOpenUpdate, setIsOpenupdate] = useState(false);
+    return (
+      <div>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
+        <Modal1
+          title={"Actualizar Categoría"}
+          size={"sm"}
+          isOpen={isOpenUpdate}
+          onClose={() => setIsOpenupdate(false)}
+          form={<FormUpdateCategoria onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarCategorias}/>}
+        />
+      </div >
+    )
+  }
+
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
-      <div className="w-[95%] flex gap-2">
-      {list.map((item, index) => (
-          <Cards 
-            key={index} 
-            title={item.title} 
-            imagen={imagen}
-            to={item.to} 
-          />
-        ))}
-      </div>
-      <div className="w-[95%] flex justify-end">
-        <ButtonGeneral className='w-[500px]' color={"primary"} label={"Registrar Categoría"} onClick={() => setIsOpen(true)} />
-      </div>
-      <Modal1
-        title={"Registrar Categoría"}
-        size={"md"}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        form={<FormDataCategoria onClose={() => setIsOpen(false)} onRegisterSuccess={handleTableUpdate} />}
-      />
-      <Modal1
-        title={"Actualizar Categoría"}
-        isOpen={isOpenUpdate}
-        onClose={() => setIsOpenUpdate(false)}
-        form={<FormUpdateCategoria onClose={() => setIsOpenUpdate(false)} category={selectedCategory} onRegisterSuccess={handleTableUpdate} />} // Pasar la categoría seleccionada en selectedCategory
-      />
-      <TableGeneral
-        funcionListar={ListarCategorias}
-        columns={(listar) => columnsCategorias(listar, setIsOpenUpdate, setSelectedCategory)}
-        title={"Listar de Categorías"}
-        updateTable={updateTable}
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+      <NextUITable
+        columns={columnsCategory}
+        rows={data}
+        initialColumns={INITIAL_VISIBLE_COLUMNS}
+        statusColorMap={statusColorMap}
+        statusOptions={statusOptions}
+        searchKeys={searchKeys}
+        buttons={Buttons}
+        statusOrType={'status'}
+        actions={Actions}
       />
     </div>
-  );
+  )
 };

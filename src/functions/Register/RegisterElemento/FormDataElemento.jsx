@@ -8,7 +8,7 @@ import { ButtonGeneral } from '../../../components/Buttons/Button';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
-export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
+export const FormDataElemento = ({ listar, onClose }) => {
   const [UseTipo, SetTipo] = useState([]);
   const [UseCategorias, setCategorias] = useState([]);
   const [UseEmpaques, SetEmpaques] = useState([]);
@@ -127,7 +127,7 @@ export const FormDataElemento = ({ onRegisterSuccess, onClose }) => {
         });
 
         onClose();
-        onRegisterSuccess();
+        listar();
       }
     } catch (error) {
       console.log(error);
