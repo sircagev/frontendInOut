@@ -158,11 +158,11 @@ export const FormDataElemento = ({ listar, onClose }) => {
             <div>
               <select
                 name="elementType_id"
-                required
+                requiredvalue
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 pr-5 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option selected disabled>Seleccione un tipo de elemento</option>
+                <option value="" selected disabled>Seleccione un tipo de elemento</option>
                 {UseTipo.map(tipo => (
                   <option
                     value={tipo.elementType_id}

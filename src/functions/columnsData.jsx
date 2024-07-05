@@ -3,6 +3,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { Switch, Button } from "@nextui-org/react";
 import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega, DesactivarUsuario } from "./Desactivar";
 import { createColumns } from './CreateColumn';
+import { faComputerMouse } from '@fortawesome/free-solid-svg-icons';
 
 const categoriasColumnData = [
   { name: "codigo_Categoria", label: "Código" },
@@ -172,13 +173,14 @@ export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) =>
           setIsOpenUpdate(true);
           const data = {
             codigo: rowData[0],
-            nombre: rowData[1],
-            apellido: rowData[2],
-            email: rowData[3],
-            rol: rowData[4],
-            numero: rowData[5],
-            ficha: rowData[6],
-            identificacion: rowData[7]
+            user_name: rowData[1],
+            lastname: rowData[2],
+            phone: rowData[3],
+            email: rowData[4],
+            identification: rowData[5],
+            role_name: rowData[6],
+            positions: rowData[7],
+            course_id: rowData[8],
           };
           console.log(data);
           setSelectedCategory(data);
