@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
-import { useTable } from "react-table";
+import { useTable, usePagination } from "react-table";
 import MessageNotFound from "./MessageNotFound";
 import { BiSearch } from "react-icons/bi";
 import ExcelJS from "exceljs";
@@ -18,6 +18,7 @@ const ReporteVencidos = ({ prestamosv }) => {
   const [endDate, setEndDate] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
+  const originalData = useMemo(() => prestamosv?.datos || [], [prestamosv]);
 
   const searchInputRef = useRef(null);
 
@@ -31,7 +32,7 @@ const ReporteVencidos = ({ prestamosv }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const idMatches = row.identification?.toString() === searchTerm.toString();
+        const idMatches = row.identification?.toString().includes(searchTerm.toString());
         const userMatches = row.user_application?.toLowerCase().includes(searchTerm.toLowerCase());
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
@@ -133,6 +134,37 @@ const ReporteVencidos = ({ prestamosv }) => {
     saveAs(blob, "Reporte préstamos vencidos.xlsx");
   };
 
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    nextPage,
+    previousPage,
+    canPreviousPage,
+    canNextPage,
+    pageCount,
+    gotoPage,
+    state: { pageIndex },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: currentPage, pageSize: 10 },
+      autoResetPage: false, 
+    },
+    usePagination
+  );
+
+  const pages = Array.from({ length: pageCount }, (_, i) => i);
+
+  useEffect(() => {
+    setCurrentPage(pageIndex); 
+  }, [pageIndex]);
+
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -144,8 +176,6 @@ const ReporteVencidos = ({ prestamosv }) => {
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   const handleSearch = () => {
     setSearchPerformed(true);
@@ -167,148 +197,250 @@ const ReporteVencidos = ({ prestamosv }) => {
   };
 
   return (
-    <div className="m-2">
-    {showFilters && (
-      <div className="flex justify-between items-center p-2 border rounded-xl bg-gray-300 mt-1"
-      style={{background: 'linear-gradient(to right, #f0f0f0 70%, #cccccc 100%)',}}>
-        <div className="flex items-center">
-          <div className="flex items-center ml-2">
-            <label className="mr-2">Desde:</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              className="border rounded p-1"
-            />
-          </div>
-          <div className="flex items-center ml-4">
-            <label className="mr-2">Hasta:</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              className="border rounded p-1"
-            />
-          </div>
-          <div className="flex items-center ml-2">
-            <input
-              type="text"
-              placeholder="Buscar.."
-              value={searchTerm}
-              onChange={handleInputChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSearch();
-              }}
-              ref={searchInputRef}
-              className="border rounded p-1"
-            />
-            <div
-              className={`fixed mt-[50px] ml-2 text-xs transition-opacity duration-100 ${
-                searchTerm ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <span className="bg-gray-200 z-20">
-                Búsqueda por Usuario, Identificación
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center ml-2">
-            <div className="text-2xl cursor-pointer rounded-lg bg-gray-400 p-1 hover:bg-gray-500 transition-colors duration-300">
-              <BiSearch
-                className="ml-1 text-gray-700"
-                onClick={handleSearch}
-              />
-            </div>
-          </div>
-        </div>
-        <h2 className="uppercase font-semibold mr-4">
-          Reporte de Préstamos Vencidos
-        </h2>
+    <div className="pl-4 pr-4">
+      <div className="p-1 text-gray-400 rounded text-s">
+        <span>
+          {" "}
+          Total items{" "}
+          <span className="text-blue-400 pr-1">{originalData.length}</span>
+        </span>
       </div>
-      )}
-      {searchPerformed && data.length > 0 && (
-        <div
-          className="flex justify-center items-center p-2 rounded-xl border bg-gray-300 mt-1"
-          style={{background: 'linear-gradient(to right, #f0f0f0 20%, #cccccc 50%, #f0f0f0 80%)',}}
-        >
-          <div className="p-1 uppercase rounded text-m bg-gray-200">
-            <span>
-              {" "}
-              resultados encontrados{" "}
-              <span className="text-blue-600 bg-gray-200 pr-1">
-                {data.length}
-              </span>
-            </span>
-          </div>
-          <button
-            onClick={handleNewSearch}
-            className="bg-blue-500 hover:bg-blue-700 text-white border font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
-          >
-            Nueva Búsqueda
-          </button>
-          <button
-            onClick={handleDownload}
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
-          >
-            Descargar
-          </button>
-        </div>
-      )}
-       {searchPerformed && data.length === 0 && (
-        <div className="flex justify-center items-center flex-col p-2">
+      <div className="w-auto">
+        {showFilters && (
           <div
-            className="flex justify-center rounded-xl w-full items-center flex-col p-2 bg-gray-300 mt-1"
+            className="flex justify-between items-center p-2 border h-10 rounded-lg bg-foreground"
             style={{
-              background: "linear-gradient(to left, #f1f1f1, #bbbbbb)",
+              background:
+                "linear-gradient(to right, #1a202c 70%, #cccccc 100%)",
             }}
           >
+            <div className="flex items-center">
+              <div className="flex items-center ml-2">
+                <div className="flex items-center ml-2 relative">
+                  <div className="relative w-full">
+                    <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
+                      <BiSearch className="text-gray-300 text-xl" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Search.."
+                      value={searchTerm}
+                      onChange={handleInputChange}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSearch();
+                      }}
+                      ref={searchInputRef}
+                      className="border rounded pl-8 pr-2 py-1 w-full"
+                    />
+                  </div>
+                  <div
+                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
+                      searchTerm ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <span className="z-20 rounded text-black">
+                      Búsqueda por Usuario, Identificación
+                    </span>
+                  </div>
+                </div>
+                <label className="ml-4 mr-2 text-white">Desde:</label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  className="border rounded p-1"
+                />
+              </div>
+              <div className="flex items-center ml-4">
+                <label className="mr-2 text-white">Hasta:</label>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  className="border rounded p-1"
+                />
+              </div>
+              <div className="flex items-center ml-4 rounded-lg cursor-pointer">
+                <div
+                  onClick={handleSearch}
+                  className="text-blue-500 hover:text-white py-2 px-2 rounded uppercase transition duration-300"
+                  style={{
+                    boxShadow: "inset 0 0 0 2px ",
+                  }}
+                >
+                  <BiSearch className="ml-1 text-lg" />
+                </div>
+              </div>
+            </div>
+            <h2 className="uppercase font-semibold mr-4 text-white">
+              Reporte Préstamos Vencidos
+            </h2>
+          </div>
+        )}
+        {searchPerformed && data.length > 0 && (
+          <div className="flex justify-center h-10 bg-foreground items-center p-2 rounded-xl border">
+            <div className="p-1 uppercase rounded text-s bg-gray-200">
+              <span>
+                {" "}
+                resultados encontrados{" "}
+                <span className="text-blue-600 bg-gray-200 pr-1">
+                  {data.length}
+                </span>
+              </span>
+            </div>
             <button
               onClick={handleNewSearch}
-              className="bg-blue-500 hover:bg-blue-700 text-white border font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+              className="hover:bg-blue-600 hover:text-white text-blue-500 font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
             >
               Nueva Búsqueda
             </button>
+
+            <button
+              onClick={handleDownload}
+              className="hover:bg-green-600 hover:text-white text-green-500 font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
+            >
+              Descargar
+            </button>
           </div>
-          <MessageNotFound />
-        </div>
-      )}
-      {data.length > 0 ? (
-        <table
-          {...getTableProps()}
-          className="table table-bordered table-striped text-center mt-2"
-          style={{
-            borderRadius: "15px",
-            overflow: "hidden",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <thead className="bg-gray-800">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render("Header")}
-                  </th>
+        )}
+        {searchPerformed && data.length === 0 && (
+          <div className="flex justify-center items-center flex-col p-1">
+            <div className="flex justify-center rounded-xl w-full items-center flex-col p-1 bg-foreground">
+              <button
+                onClick={handleNewSearch}
+                className="hover:bg-blue-600 hover:text-white text-blue-500 font-bold py-2 px-4 rounded ml-3 uppercase text-xs transition duration-300"
+                style={{
+                  boxShadow: "inset 0 0 0 2px ",
+                }}
+              >
+                Nueva Búsqueda
+              </button>
+            </div>
+            <MessageNotFound />
+          </div>
+        )}
+        {data.length > 0 ? (
+          <div>
+            <table
+              {...getTableProps()}
+              className="table table-bordered table-striped text-center mt-2"
+              style={{
+                borderRadius: "15px",
+                overflow: "hidden",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <thead className="bg-gray-800">
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th {...column.getHeaderProps()}>
+                        {column.render("Header")}
+                      </th>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      ) : (
-        !searchPerformed && <MessageNotFound />
-      )}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {page.map((row, index) => {
+                  prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <div className="flex justify-end mt-3">
+              <div className="flex items-center">
+                <span className="mr-2 text-gray-400">
+                  Página {currentPage + 1} de {pageCount}
+                </span>
+              </div>
+              <li
+                role="button"
+                tabIndex="0"
+                aria-label="previous page button"
+                onClick={previousPage}
+                className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
+                  !canPreviousPage
+                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                    : "bg-foreground hover:bg-gray-700 text-white"
+                }`}
+                disabled={!canPreviousPage}
+              >
+                <svg
+                  className="w-4 h-4 stroke-current"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.5 19l-7-7 7-7"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  ></path>
+                </svg>
+              </li>
+              {pages.map((page) => (
+                <li
+                  key={page}
+                  role="button"
+                  tabIndex="0"
+                  onClick={() => gotoPage(page)}
+                  className={`flex items-center justify-center w-8 h-8 text-xs ${
+                    currentPage === page
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "bg-foreground hover:bg-gray-700 text-white"
+                  }`}
+                >
+                  {page + 1}
+                </li>
+              ))}
+              <li
+                role="button"
+                tabIndex="0"
+                aria-label="next page button"
+                onClick={nextPage}
+                className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
+                  !canNextPage
+                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                    : "bg-foreground hover:bg-gray-700 text-white"
+                }`}
+                disabled={!canNextPage}
+              >
+                <svg
+                  className="w-4 h-4 stroke-current rotate-180"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15.5 19l-7-7 7-7"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                  ></path>
+                </svg>
+              </li>
+            </div>
+          </div>
+        ) : (
+          !searchPerformed && <MessageNotFound />
+        )}
+      </div>
     </div>
   );
 };
