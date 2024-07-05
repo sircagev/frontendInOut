@@ -159,10 +159,11 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name="elementType_id"
                 required
+                value={values.elementType_id} // Usar value para controlado
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 pr-5 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option selected disabled>Seleccione un tipo de elemento</option>
+                <option value="" disabled>Seleccione un tipo de elemento</option>
                 {UseTipo.map(tipo => (
                   <option
                     value={tipo.elementType_id}
@@ -185,10 +186,11 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name="measurementUnit_id"
                 required
+                value={values.measurementUnit_id} // Usar value para controlado
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option selected disabled>Seleccione un tipo de medida</option>
+                <option value="" disabled>Seleccione un tipo de medida</option>
                 {UseMedidas.map(medida => (
                   <option
                     value={medida.measurementUnit_id}
@@ -209,10 +211,11 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name='category_id'
                 required
+                value={values.category_id} // Usar value para controlado
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option disabled selected>Seleccione una categoría</option>
+                <option value="" disabled>Seleccione una categoría</option>
                 {UseCategorias.map(categoria => (
                   <option
                     value={categoria.category_id}
@@ -235,10 +238,11 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name='packageType_id'
                 required
+                value={values.packageType_id} // Usar value para controlado
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option disabled selected>Seleccione un empaque</option>
+                <option value="" disabled>Seleccione un empaque</option>
                 {UseEmpaques.map(empaque => (
                   <option
                     value={empaque.packageType_id}
