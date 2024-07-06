@@ -111,7 +111,7 @@ const NextUITable = ({
                     <User
                         /* avatarProps={{ radius: "lg", src: user.avatar }} */
                         description={item.correo}
-                        name={cellValue}
+                        name={capitalize(cellValue)}
                     >
                         {item.correo}
                     </User>
