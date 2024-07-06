@@ -32,7 +32,11 @@ export const ListarUsuarios = async () => {
 export const ListarTipo = async () => {
     try {
         const response = await axiosClient.get('tipo/listar')
-        return response.data
+        if (response.status === 200) {
+            return response.data
+        } else if (response.status === 204) {
+            return response.data
+        }
     } catch (error) {
         console.log(error);
     }
