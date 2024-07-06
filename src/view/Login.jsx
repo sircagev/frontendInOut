@@ -8,8 +8,8 @@ import logo from '../assets/in.png';
 import { useAuth } from '../context/AuthProvider';
 import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; // Asegúrate de importar correctamente el componente
 
-function Login({ setLoggedIn }) {
-  const { login } = useAuth();
+function Login() {
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token');
@@ -37,17 +37,24 @@ function Login({ setLoggedIn }) {
         password: password,
       });
 
+      console.log(response)
+
+      await login({
+        email: email,
+        password: password,
+      });
+
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
         localStorage.setItem('email', response.data.email); // Asegúrate de obtener y guardar el email
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
-        setLoggedIn(true);
-        login({
-          email: email,
-          password: password,
-        });
+
+
+
+        console.log(user)
+        navigate('/usuarios')
       }
     } catch (error) {
       if (error.response) {
@@ -71,6 +78,7 @@ function Login({ setLoggedIn }) {
           });
         }
       } else {
+        console.log(error)
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -318,7 +326,7 @@ function Login({ setLoggedIn }) {
           onRegisterSuccess={handleRegisterSuccess}
         />
       </div> */}
-      
+
     </div>
   );
 }

@@ -2,28 +2,28 @@ import React from 'react';
 
 const columnsUsers = [
     { name: 'Código', uid: 'codigo', sortable: true },
-    { name: 'Nombre', uid: 'user_name', sortable: true },
-    { name: 'Apellido', uid: 'lastname' },
+    { name: 'Usuario', uid: 'nombre', sortable: true },
+    /* { name: 'Apellido', uid: 'lastname' }, */
     { name: 'Telefono', uid: 'phone' },
-    { name: 'Email', uid: 'email' },
+    /* { name: 'Email', uid: 'correo' }, */
     { name: 'Identificación', uid: 'identification' },
     { name: 'Id Ficha', uid: 'course_id' },
-    { name: 'Rol', uid: 'role_name' },
-    { name: 'Cargo', uid: 'position_name' },
+    { name: 'Rol', uid: 'role' },
+    /* { name: 'Cargo', uid: 'position_name' }, */
     { name: 'Estado', uid: 'status' },
-    { name: 'Acciones', uid: 'actionUser' }
+    { name: 'Acciones', uid: 'actions' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "user_name", "lastname", "phone", "email", "identification", "course_id", "role_name", "position_name", "status", "actionUser"];
+const INITIAL_VISIBLE_COLUMNS = ["codigo", "nombre", "role", "phone", "identification", "role", "status", "actions"];
 
 const statusOptions = [
-    { name: "Activo", uid: "1" },
-    { name: "Inactivo", uid: "0" }
+    { name: "Activo", uid: "Activo" },
+    { name: "Inactivo", uid: "Inactivo" }
 ]
 
 const statusColorMap = {
-    "activo": 'success',
-    "inactivo": 'warning'
+    "Activo": 'success',
+    "Inactivo": 'warning'
 }
 
 const searchKeys = ['codigo', 'user_name', 'identification']

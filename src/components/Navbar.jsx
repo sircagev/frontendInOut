@@ -45,7 +45,6 @@ export const Navbar = ({ setLogIn }) => {
         localStorage.removeItem("userName");
         localStorage.removeItem("role");
         logout();
-        setLogIn(false);
         navigate("/login");
       }
     });

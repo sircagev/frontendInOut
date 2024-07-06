@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { ListarUsuarios } from "../functions/Listar";
-import { columnsUsuarios } from "../functions/columnsData";
-import { ButtonGeneral } from "../components/Buttons/Button";
 import { FormDataUsuario } from "../functions/Register/RegisterUsuario/FormDataUsuario";
 import Modal1 from "../components/Modal1";
 import { FormUpdateUsuario } from "../functions/Update/UpdateUsuario/FormUpdateUsuario";
@@ -46,7 +42,7 @@ export const Usuarios = () => {
     )
   }
 
-  const Actions = ({ item }) => {
+  const Actions = ({ codigo }) => {
     const [isOpenUpdate, setIsOpenupdate] = useState(false);
 
     const handleDesactivar = async (CodigoUsuario, estadoActual) => {
@@ -60,30 +56,29 @@ export const Usuarios = () => {
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
         <Modal1
           title={"Actualizar Usuario"}
-          size={"sm"}
+          size={"2xl"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenupdate(false)}
-          form={<FormUpdateUsuario onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarCategorias} />}
+          form={<FormUpdateUsuario onClose={() => setIsOpenupdate(false)} category={codigo} Listar={ListarCategorias} />}
         />
         <Button
-          color={item.status === '1' ? 'danger' : 'success'}
+          color={codigo.status === 'Activo' ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
-          onClick={() => handleDesactivar(item.codigo, item.status)}
+          onClick={() => handleDesactivar(codigo.codigo, codigo.status)}
         >
-          {item.status === '1' ? 'Desactivar' : 'Activar'}
+          {codigo.status === 'Activo' ? 'Desactivar' : 'Activar'}
         </Button>
       </div >
     )
   }
 
-
   return (
     <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
       <NextUITable
-      columns={columnsUsers}
-      rows={data}
+        columns={columnsUsers}
+        rows={data}
         statusOptions={statusOptions}
         statusColorMap={statusColorMap}
         initialColumns={INITIAL_VISIBLE_COLUMNS}
