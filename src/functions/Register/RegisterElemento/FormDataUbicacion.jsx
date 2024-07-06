@@ -108,7 +108,7 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
                             </div>
                         )}
                     </div>
-                    <div className="relative mb-4 justify-center items-center h-[65px]" data-twe-input-wrapper-init>
+                    <div className="relative mb-4 justify-center items-center" data-twe-input-wrapper-init>
                         <Select
                             label="Seleccione una bodega"
                             name='warehouse_id'

@@ -3,7 +3,7 @@ import axiosClient from '../components/config/axiosClient'
 import NextUITable from "../components/NextUITable"
 import { Button } from '@nextui-org/react'
 import { TableGeneral } from "../components/tables/Elemento/TablaGeneral/Table";
-import { columnsCategory, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/CategoryData'
+import { columnsCategory, INITIAL_VISIBLE_COLUMNS, statusColorMap, statusOptions, searchKeys } from '../functions/Data/CategoryData'
 import { FormDataCategoria } from "../functions/Register/RegisterElemento/FormDataCategoria";
 import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
 import Modal1 from "../components/Modal1";
@@ -83,6 +83,7 @@ export const Categoria = () => {
         columns={columnsCategory}
         rows={data}
         initialColumns={INITIAL_VISIBLE_COLUMNS}
+        statusOptions={statusOptions}
         statusColorMap={statusColorMap}
         searchKeys={searchKeys}
         buttons={Buttons}

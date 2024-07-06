@@ -33,13 +33,13 @@ export const Ubicaciones = () => {
 
     return (
       <div>
-        <Button variant="primary" onClick={() => setIsOpen(true)}>Agregar</Button>
+        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
           title={"Registrar Ubicación"}
           size={"sm"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          form={<FormDataUbicacion onClose={() => setIsOpen(false)} listar={ListarUbicaciones} />}
+          form={<FormDataUbicacion onClose={()=> setIsOpen(false)} listar={ListarUbicaciones} />}
         />
       </div>
     )
