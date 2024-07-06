@@ -32,14 +32,38 @@ const ReporteMovimientos = ({ movimientos }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const elementMatches = row.element_name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const typeMatches = row.movement_type?.toLowerCase().includes(searchTerm.toLowerCase());
-        const codeMatches = row.movement_id?.toString() === searchTerm.toString();
-        const serialMatches = row.batch_serial?.toString() === searchTerm.toString(); 
-        const idElementMatches = row.element_id?.toString() === searchTerm.toString();
+        const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const typeMatches = row.movement_type
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const userMatches = row.user_action
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const managerMatches = row.user_manager
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const codeMatches =
+          row.movement_id?.toString() === searchTerm.toString();
+        const serialMatches =
+          row.batch_serial?.toString() === searchTerm.toString();
+        const idElementMatches =
+          row.element_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
-        return (elementMatches || typeMatches || codeMatches || serialMatches || idElementMatches) && dateMatches;
+        const dateMatches =
+          (!startDate || rowDate >= startDate) &&
+          (!endDate || rowDate <= endDate);
+        return (
+          (elementMatches ||
+            typeMatches ||
+            userMatches ||
+            managerMatches ||
+            codeMatches ||
+            serialMatches ||
+            idElementMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -65,7 +89,7 @@ const ReporteMovimientos = ({ movimientos }) => {
   const handleDownload = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
-  
+
     worksheet.columns = [
       { header: "Código", key: "movement_id", width: 8 },
       { header: "Tipo", key: "movement_type", width: 8 },
@@ -78,49 +102,58 @@ const ReporteMovimientos = ({ movimientos }) => {
       { header: "Fecha", key: "created_at", width: 15 },
       { header: "Observaciones", key: "remarks", width: 20 },
     ];
-  
+
     const response = await fetch(logoImg);
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:H2');
-    worksheet.getCell('B2').value = 'Reporte de Movimientos';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:H1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('I1:J1');
-    worksheet.getCell('I1').value = 'ADSO-2644590';
-    worksheet.getCell('I1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:H2");
+    worksheet.getCell("B2").value = "Reporte de Movimientos";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:H1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("I1:J1");
+    worksheet.getCell("I1").value = "ADSO-2644590";
+    worksheet.getCell("I1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-"Código",
-"Tipo",
-"Elemento",
-"Cantidad",
-"Lote",
-"Código Elemento",
-"Autoriza",
-"Usuario",
-"Fecha",
-"Observaciones",
+      "Código",
+      "Tipo",
+      "Elemento",
+      "Cantidad",
+      "Lote",
+      "Código Elemento",
+      "Autoriza",
+      "Usuario",
+      "Fecha",
+      "Observaciones",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
         row.movement_id,
@@ -135,9 +168,11 @@ const ReporteMovimientos = ({ movimientos }) => {
         row.remarks,
       ]);
     });
-   
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     saveAs(blob, "Reporte movimientos.xlsx");
   };
 
@@ -184,7 +219,7 @@ const ReporteMovimientos = ({ movimientos }) => {
     setEndDate(e.target.value);
   };
 
-   const handleSearch = () => {
+  const handleSearch = () => {
     setSearchPerformed(true);
     setShowFilters(false);
   };
@@ -239,15 +274,6 @@ const ReporteMovimientos = ({ movimientos }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento, Lote, Tipo
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -354,7 +380,7 @@ const ReporteMovimientos = ({ movimientos }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (

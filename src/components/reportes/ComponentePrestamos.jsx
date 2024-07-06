@@ -32,12 +32,32 @@ const ReportePrestamos = ({ prestamos }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const elementMatches = row.element_name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const statusMatches = row.loan_status?.toLowerCase().includes(searchTerm.toLowerCase());
-        const codeMatches = row.element_id?.toString() === searchTerm.toString();
+        const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const statusMatches = row.loan_status
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const applicationMatches = row.user_application
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const receivingMatches = row.user_receiving
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const codeMatches =
+          row.element_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
-        return (elementMatches || codeMatches || statusMatches) && dateMatches;
+        const dateMatches =
+          (!startDate || rowDate >= startDate) &&
+          (!endDate || rowDate <= endDate);
+        return (
+          (elementMatches ||
+            codeMatches ||
+            applicationMatches ||
+            receivingMatches ||
+            statusMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -64,7 +84,7 @@ const ReportePrestamos = ({ prestamos }) => {
   const handleDownload = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
-  
+
     worksheet.columns = [
       { header: "Estado", key: "loan_status", width: 15 },
       { header: "Código", key: "element_id", width: 8 },
@@ -78,50 +98,59 @@ const ReportePrestamos = ({ prestamos }) => {
       { header: "Usuario Devuelve", key: "user_returning", width: 20 },
       { header: "Observaciones", key: "remarks", width: 20 },
     ];
-  
+
     const response = await fetch(logoImg);
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:I2');
-    worksheet.getCell('B2').value = 'Reporte de Préstamos';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:I1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('J1:K1');
-    worksheet.getCell('J1').value = 'ADSO-2644590';
-    worksheet.getCell('J1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:I2");
+    worksheet.getCell("B2").value = "Reporte de Préstamos";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:I1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("J1:K1");
+    worksheet.getCell("J1").value = "ADSO-2644590";
+    worksheet.getCell("J1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-"Estado",
-"Código",
-"Elemento",
-"Cantidad",
-"Usuario Solicita",
-"Usuario Recibe",
-"Fecha de Solicitud",
-"Fecha Vencimiento",
-"Fecha Devolución",
-"Usuario Devuelve",
-"Observaciones",
+      "Estado",
+      "Código",
+      "Elemento",
+      "Cantidad",
+      "Usuario Solicita",
+      "Usuario Recibe",
+      "Fecha de Solicitud",
+      "Fecha Vencimiento",
+      "Fecha Devolución",
+      "Usuario Devuelve",
+      "Observaciones",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
         row.loan_status,
@@ -137,13 +166,15 @@ const ReportePrestamos = ({ prestamos }) => {
         row.remarks,
       ]);
     });
-   
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     saveAs(blob, "Reporte de prestamos.xlsx");
   };
 
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     getTableProps,
@@ -241,15 +272,6 @@ const ReportePrestamos = ({ prestamos }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -356,7 +378,7 @@ const ReportePrestamos = ({ prestamos }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (

@@ -35,13 +35,25 @@ const ReporteElementos = ({ elementos }) => {
         const elementMatches = row.element_name
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
+        const categoryMatches = row.category
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const warehouseMatches = row.warehouse
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
         const codeMatches =
           row.element_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches =
           (!startDate || (rowDate && rowDate >= startDate)) &&
           (!endDate || (rowDate && rowDate <= endDate));
-        return (elementMatches || codeMatches) && dateMatches;
+        return (
+          (elementMatches ||
+            codeMatches ||
+            categoryMatches ||
+            warehouseMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -59,6 +71,7 @@ const ReporteElementos = ({ elementos }) => {
       { Header: "Categoría", accessor: "category" },
       { Header: "Bodega", accessor: "warehouse" },
       { Header: "Ubicación", accessor: "wlocation" },
+      { Header: "Cant", accessor: "cant" },
     ],
     []
   );
@@ -77,6 +90,7 @@ const ReporteElementos = ({ elementos }) => {
       { header: "Categoría", key: "category", width: 15 },
       { header: "Bodega", key: "warehouse", width: 15 },
       { header: "Ubicación", key: "wlocation", width: 15 },
+      { header: "Cantidad", key: "cant", width: 10 },
     ];
 
     const response = await fetch(logoImg);
@@ -120,6 +134,7 @@ const ReporteElementos = ({ elementos }) => {
       "Categoría",
       "Bodega",
       "Ubicación",
+      "Cantidad",
     ];
     worksheet.addRow(headers);
 
@@ -140,6 +155,7 @@ const ReporteElementos = ({ elementos }) => {
         row.category,
         row.warehouse,
         row.wlocation,
+        row.cant,
       ]);
     });
 
@@ -150,7 +166,7 @@ const ReporteElementos = ({ elementos }) => {
     saveAs(blob, "Reporte de elementos.xlsx");
   };
 
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     getTableProps,
@@ -252,15 +268,6 @@ const ReporteElementos = ({ elementos }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -367,7 +374,7 @@ const ReporteElementos = ({ elementos }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (

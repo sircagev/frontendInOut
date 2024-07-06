@@ -18,7 +18,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
   const [endDate, setEndDate] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
-  const originalData = useMemo(() => solicitudes?.datos || [], [solicitudes]); 
+  const originalData = useMemo(() => solicitudes?.datos || [], [solicitudes]);
 
   const searchInputRef = useRef(null);
 
@@ -33,11 +33,32 @@ const ReporteSolicitudes = ({ solicitudes }) => {
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
         const idMatches = row.user_id?.toString() === searchTerm.toString();
-        const courseMatches = row.course_id?.toString() === searchTerm.toString();
-        const rolMatches = row.role_name?.toLowerCase().includes(searchTerm.toLowerCase());
+        const courseMatches =
+          row.course_id?.toString() === searchTerm.toString();
+        const codeMatches =
+          row.element_id?.toString() === searchTerm.toString();
+        const userMatches = row.user_applicant
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const rolMatches = row.role_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
         const rowDate = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
-        return (idMatches || rolMatches || courseMatches) && dateMatches;
+        const dateMatches =
+          (!startDate || rowDate >= startDate) &&
+          (!endDate || rowDate <= endDate);
+        return (
+          (idMatches ||
+            rolMatches ||
+            courseMatches ||
+            codeMatches ||
+            userMatches ||
+            elementMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -62,7 +83,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
   const handleDownload = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
-  
+
     worksheet.columns = [
       { header: "Rol", key: "role_name", width: 15 },
       { header: "Usuario Solicitante", key: "user_applicant", width: 20 },
@@ -74,48 +95,57 @@ const ReporteSolicitudes = ({ solicitudes }) => {
       { header: "Fecha de Devolución", key: "actual_return", width: 20 },
       { header: "Usuario que Recibe", key: "user_receiving", width: 20 },
     ];
-  
+
     const response = await fetch(logoImg);
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:G2');
-    worksheet.getCell('B2').value = 'Reporte de Solicitudes';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:G1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('H1:I1');
-    worksheet.getCell('H1').value = 'ADSO-2644590';
-    worksheet.getCell('H1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:G2");
+    worksheet.getCell("B2").value = "Reporte de Solicitudes";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:G1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("H1:I1");
+    worksheet.getCell("H1").value = "ADSO-2644590";
+    worksheet.getCell("H1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-"Rol",
-"Usuario Solicitante",
-"Identificación",
-"ID Ficha",
-"Elemento",
-"Código Elemento",
-"Fecha de Solicitud",
-"Fecha de Devolución",
-"Usuario que Recibe",
+      "Rol",
+      "Usuario Solicitante",
+      "Identificación",
+      "ID Ficha",
+      "Elemento",
+      "Código Elemento",
+      "Fecha de Solicitud",
+      "Fecha de Devolución",
+      "Usuario que Recibe",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
         row.role_name,
@@ -129,9 +159,11 @@ const ReporteSolicitudes = ({ solicitudes }) => {
         row.user_receiving,
       ]);
     });
-   
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     saveAs(blob, "Reporte solicitudes.xlsx");
   };
 
@@ -155,7 +187,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
       columns,
       data,
       initialState: { pageIndex: currentPage, pageSize: 10 },
-      autoResetPage: false, 
+      autoResetPage: false,
     },
     usePagination
   );
@@ -163,7 +195,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
   const pages = Array.from({ length: pageCount }, (_, i) => i);
 
   useEffect(() => {
-    setCurrentPage(pageIndex); 
+    setCurrentPage(pageIndex);
   }, [pageIndex]);
 
   const handleInputChange = (e) => {
@@ -233,15 +265,6 @@ const ReporteSolicitudes = ({ solicitudes }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Rol, Identificación, Id Ficha
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -348,7 +371,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (
