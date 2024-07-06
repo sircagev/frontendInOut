@@ -44,6 +44,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
         if (category) {
 
             let dataName = category.nombre.split(" ");
+            const name = dataName
 
             setValues({
                 user_name: category.nombre || '',

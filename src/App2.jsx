@@ -45,9 +45,9 @@ function App2() {
                 <Route index element={<Navigate to="/login" />} />
                 <Route path={'/NOT-CREDENTIALS'} element={<NotCredentials />} />
                 <Route path='/*' element={<PageNotFound />} />
-                <Route path="/login" element={<ProtectedRoutesLogin>
+                {/* <Route path="/login" element={<ProtectedRoutesLogin>
                     <Login setLoggedIn={setLoggedIn} />
-                </ProtectedRoutesLogin>} />
+                </ProtectedRoutesLogin>} /> */}
                 <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
                     {/* <Route path="/elementos/categorias" element={<Categoria user={user} />} /> */}
                     {/* <Route path="/elementos/empaques" element={<Empaques user={user} />} /> */}
@@ -66,6 +66,10 @@ function App2() {
                     {/* <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
 
                 </Route>
+                <Route
+                    path='/login'
+                    element={<Login />}
+                />
                 <Route
                     path='/home'
                     element={
