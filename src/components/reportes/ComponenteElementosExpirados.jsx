@@ -78,6 +78,7 @@ const ReporteExpirados = ({ elementex }) => {
       { Header: "Fecha Expiración", accessor: "expiration_date" },
       { Header: "Bodega", accessor: "warehouse" },
       { Header: "Ubicación", accessor: "wlocation" },
+      { Header: "Cant", accessor: "quantity" },
     ],
     []
   );
@@ -97,6 +98,7 @@ const ReporteExpirados = ({ elementex }) => {
       { header: "Fecha Expiración", key: "expiration_date", width: 15 },
       { header: "Bodega", key: "warehouse", width: 15 },
       { header: "Ubicación", key: "wlocation", width: 15 },
+      { header: "Cantidad", key: "quantity", width: 10 },
     ];
 
     const response = await fetch(logoImg);
@@ -107,7 +109,7 @@ const ReporteExpirados = ({ elementex }) => {
     });
     worksheet.addImage(imageId, "A1:A2");
 
-    worksheet.mergeCells("B2:H2");
+    worksheet.mergeCells("B2:I2");
     worksheet.getCell("B2").value = "Reporte de Elementos Expirados";
     worksheet.getCell("B2").alignment = {
       vertical: "middle",
@@ -115,7 +117,7 @@ const ReporteExpirados = ({ elementex }) => {
     };
     worksheet.getCell("B2").font = { size: 16, bold: true };
 
-    worksheet.mergeCells("B1:H1");
+    worksheet.mergeCells("B1:I1");
     worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
     worksheet.getCell("B1").alignment = {
       vertical: "middle",
@@ -123,9 +125,9 @@ const ReporteExpirados = ({ elementex }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("I1:J1");
-    worksheet.getCell("I1").value = "ADSO-2644590";
-    worksheet.getCell("I1").alignment = {
+    worksheet.mergeCells("J1:K1");
+    worksheet.getCell("J1").value = "ADSO-2644590";
+    worksheet.getCell("J1").alignment = {
       vertical: "middle",
       horizontal: "center",
     };
@@ -141,6 +143,7 @@ const ReporteExpirados = ({ elementex }) => {
       "Fecha Expiración",
       "Bodega",
       "Ubicación",
+      "Cantidad",
     ];
     worksheet.addRow(headers);
 
@@ -162,6 +165,7 @@ const ReporteExpirados = ({ elementex }) => {
         row.expiration_date,
         row.warehouse,
         row.wlocation,
+        row.quantity,
       ]);
     });
 
@@ -192,7 +196,7 @@ const ReporteExpirados = ({ elementex }) => {
       columns,
       data,
       initialState: { pageIndex: currentPage, pageSize: 10 },
-      autoResetPage: false, 
+      autoResetPage: false,
     },
     usePagination
   );
@@ -200,7 +204,7 @@ const ReporteExpirados = ({ elementex }) => {
   const pages = Array.from({ length: pageCount }, (_, i) => i);
 
   useEffect(() => {
-    setCurrentPage(pageIndex); 
+    setCurrentPage(pageIndex);
   }, [pageIndex]);
 
   const handleInputChange = (e) => {
@@ -270,15 +274,6 @@ const ReporteExpirados = ({ elementex }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -385,7 +380,7 @@ const ReporteExpirados = ({ elementex }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (

@@ -35,10 +35,26 @@ const ReporteStockMin = ({ stockmin }) => {
         const idMatches = row.element_id?.toString() === searchTerm.toString();
         const loteMatches =
           row.batch_serial?.toString() === searchTerm.toString();
+        const categoryMatches = row.category
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const warehouseMatches = row.warehouse
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const typeMatches = row.element_type
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
         const elementMatches = row.element_name
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
-        return elementMatches || idMatches || loteMatches;
+        return (
+          elementMatches ||
+          idMatches ||
+          loteMatches ||
+          warehouseMatches ||
+          typeMatches ||
+          categoryMatches
+        );
       });
     }
 
@@ -54,9 +70,10 @@ const ReporteStockMin = ({ stockmin }) => {
       { Header: "Lote", accessor: "batch_serial" },
       { Header: "Tipo", accessor: "element_type" },
       { Header: "Categoría", accessor: "category" },
-      { Header: "Medida", accessor: "Measurement_unit" },
-      { Header: "warehouse", accessor: "warehouse" },
+      { Header: "Medida", accessor: "measurement" },
+      { Header: "Bodega", accessor: "warehouse" },
       { Header: "Ubicación", accessor: "wlocation" },
+      { Header: "Cant", accessor: "quantity" },
     ],
     []
   );
@@ -73,9 +90,10 @@ const ReporteStockMin = ({ stockmin }) => {
       { header: "Lote", key: "batch_serial", width: 8 },
       { header: "Tipo", key: "element_type", width: 15 },
       { header: "Categoría", key: "category", width: 15 },
-      { header: "Medida", key: "Measurement_unit", width: 15 },
+      { header: "Medida", key: "measurement", width: 15 },
       { header: "warehouse", key: "warehouse", width: 15 },
       { header: "Ubicación", key: "wlocation", width: 15 },
+      { header: "Cant", key: "quantity", width: 15 },
     ];
 
     const response = await fetch(logoImg);
@@ -86,7 +104,7 @@ const ReporteStockMin = ({ stockmin }) => {
     });
     worksheet.addImage(imageId, "A1:A2");
 
-    worksheet.mergeCells("B2:H2");
+    worksheet.mergeCells("B2:I2");
     worksheet.getCell("B2").value = "Reporte de Elementos con Bajo Stock";
     worksheet.getCell("B2").alignment = {
       vertical: "middle",
@@ -94,7 +112,7 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B2").font = { size: 16, bold: true };
 
-    worksheet.mergeCells("B1:H1");
+    worksheet.mergeCells("B1:I1");
     worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
     worksheet.getCell("B1").alignment = {
       vertical: "middle",
@@ -102,9 +120,9 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("I1:J1");
-    worksheet.getCell("I1").value = "ADSO-2644590";
-    worksheet.getCell("I1").alignment = {
+    worksheet.mergeCells("J1:K1");
+    worksheet.getCell("J1").value = "ADSO-2644590";
+    worksheet.getCell("J1").alignment = {
       vertical: "middle",
       horizontal: "center",
     };
@@ -120,6 +138,7 @@ const ReporteStockMin = ({ stockmin }) => {
       "Medida",
       "warehouse",
       "Ubicación",
+      "Cantidad",
     ];
     worksheet.addRow(headers);
 
@@ -138,9 +157,10 @@ const ReporteStockMin = ({ stockmin }) => {
         row.batch_serial,
         row.element_type,
         row.category,
-        row.Measurement_unit,
+        row.measurement,
         row.warehouse,
         row.wlocation,
+        row.quantity,
       ]);
     });
 
@@ -215,15 +235,15 @@ const ReporteStockMin = ({ stockmin }) => {
       <div className="w-auto">
         {showFilters && (
           <div
-          className="flex justify-between items-center p-2 border h-10 rounded-lg bg-foreground"
-          style={{
+            className="flex justify-between items-center p-2 border h-10 rounded-lg bg-foreground"
+            style={{
               background:
                 "linear-gradient(to right, #1a202c 70%, #cccccc 100%)",
             }}
           >
             <div className="flex items-center">
               <div className="flex items-center ml-2">
-              <div className="flex items-center ml-2 relative">
+                <div className="flex items-center ml-2 relative">
                   <div className="relative w-full">
                     <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
                       <BiSearch className="text-gray-300 text-xl" />
@@ -239,15 +259,6 @@ const ReporteStockMin = ({ stockmin }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento
-                    </span>
                   </div>
                 </div>
               </div>
@@ -338,16 +349,29 @@ const ReporteStockMin = ({ stockmin }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                      ))}
-                    </tr>
-                  );
+                  if (
+                    row.cells.some(
+                      (cell) =>
+                        cell.value !== null &&
+                        cell.value !== undefined &&
+                        cell.value !== ""
+                    )
+                  ) {
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  } else {
+                    return null;
+                  }
                 })}
               </tbody>
             </table>

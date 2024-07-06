@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { BiSearch, BiX } from "react-icons/bi";
 
 const NotificationsModal = ({
   showModal,
@@ -38,14 +38,19 @@ const NotificationsModal = ({
   };
 
   return (
-    showModal && (elementosConBajoStock > 0 || prestamosActivos > 0 || prestamosVencidos > 0 || solicitudes > 0 || elementosExpirados > 0) && (
+    showModal &&
+    (elementosConBajoStock > 0 ||
+      prestamosActivos > 0 ||
+      prestamosVencidos > 0 ||
+      solicitudes > 0 ||
+      elementosExpirados > 0) && (
       <div className="absolute top-7 right-[70px] z-50 animate-cascade-slide-down">
         <div
           className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
           onClick={() => setShowModal(false)}
         />
         <div className="bg-white p-3 rounded-lg shadow-lg ">
-          <h2 className="flex text-xl text-black font-bold mb-1 justify-center">
+          <h2 className="flex text-xl text-black font-bold mb-2 justify-center">
             Notificaciones
             <span
               className="ml-2 cursor-pointer"
@@ -54,7 +59,10 @@ const NotificationsModal = ({
           </h2>
           {elementosConBajoStock > 0 && (
             <div
-              className="flex items-center mb-2 hover:bg-gray-200 p-2 rounded cursor-pointer"
+              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={handleViewStockClick}
             >
               <p className="flex-1 text-black pr-5">
@@ -63,12 +71,15 @@ const NotificationsModal = ({
                 </span>{" "}
                 Elementos con bajo Stock
               </p>
-              <FaSearch className="text-blue-900" />
+              <BiSearch className="text-blue-900" />
             </div>
           )}
           {prestamosActivos > 0 && (
             <div
-              className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
+              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={handleViewPrestamosClick}
             >
               <p className="flex-1 text-black">
@@ -77,12 +88,15 @@ const NotificationsModal = ({
                 </span>{" "}
                 Préstamos activos
               </p>
-              <FaSearch className="text-blue-900" />
+              <BiSearch className="text-blue-900" />
             </div>
           )}
           {prestamosVencidos > 0 && (
             <div
-              className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
+              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={handleViewVencidosClick}
             >
               <p className="flex-1 text-black">
@@ -91,26 +105,30 @@ const NotificationsModal = ({
                 </span>{" "}
                 Préstamos vencidos
               </p>
-              <FaSearch className="text-blue-900" />
+              <BiSearch className="text-blue-900" />
             </div>
           )}
           {solicitudes > 0 && (
             <div
-              className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
+              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={handleViewSolicitudesClick}
             >
               <p className="flex-1 text-black">
-                <span className="text-blue-700 font-bold">
-                  {solicitudes}
-                </span>{" "}
+                <span className="text-blue-700 font-bold">{solicitudes}</span>{" "}
                 Solicitudes
               </p>
-              <FaSearch className="text-blue-900" />
+              <BiSearch className="text-blue-900" />
             </div>
           )}
           {elementosExpirados > 0 && (
             <div
-              className="flex items-center hover:bg-gray-200 p-2 rounded cursor-pointer"
+              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={handleViewExpiradosClick}
             >
               <p className="flex-1 text-black">
@@ -119,15 +137,18 @@ const NotificationsModal = ({
                 </span>{" "}
                 Elementos expirados
               </p>
-              <FaSearch className="text-blue-900" />
+              <BiSearch className="text-blue-900" />
             </div>
           )}
-            <div className="absolute top-0 right-3 justify-center mt-2">
+          <div className="absolute top-1 right-4 justify-center mt-2">
             <button
-              className="bg-gray-300 hover:bg-gray-400 shadow-xl text-gray-800 font-extrabold px-3 py-2 rounded-full"
+              className="bg-red-400 hover:text-red-500 shadow-xl font-extrabold px-2 py-2 rounded-full"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
               onClick={() => setShowModal(false)}
             >
-              X
+              <BiX />
             </button>
           </div>
         </div>

@@ -35,13 +35,25 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
         const elementMatches = row.element_name
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
+        const typeMatches = row.element_type?.toLowerCase();
+        const categoryMatches = row.category
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const warehouseMatches = row.warehouse?.toLowerCase();
         const codeMatches =
           row.element_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.update_at);
         const dateMatches =
           (!startDate || (rowDate && rowDate >= startDate)) &&
           (!endDate || (rowDate && rowDate <= endDate));
-        return (elementMatches || codeMatches) && dateMatches;
+        return (
+          (elementMatches ||
+            typeMatches ||
+            codeMatches ||
+            categoryMatches ||
+            warehouseMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -85,44 +97,53 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:H2');
-    worksheet.getCell('B2').value = 'Reporte de Elementos Desactivados';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:H1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('I1:J1');
-    worksheet.getCell('I1').value = 'ADSO-2644590';
-    worksheet.getCell('I1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:H2");
+    worksheet.getCell("B2").value = "Reporte de Elementos Desactivados";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:H1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("I1:J1");
+    worksheet.getCell("I1").value = "ADSO-2644590";
+    worksheet.getCell("I1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-  "Código",
-"Elemento",
-"Stock",
-"Categoría",
-"Tipo",
-"Lote",
-"Medida",
-"Bodega",
-"Ubicación",
-"Desactivación",
+      "Código",
+      "Elemento",
+      "Stock",
+      "Categoría",
+      "Tipo",
+      "Lote",
+      "Medida",
+      "Bodega",
+      "Ubicación",
+      "Desactivación",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
         row.element_id,
@@ -248,15 +269,6 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
                   </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Código, Elemento
-                    </span>
-                  </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
                 <input
@@ -362,7 +374,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (
