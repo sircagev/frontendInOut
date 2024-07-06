@@ -4,7 +4,6 @@ import { Input } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import * as listarFunciones from '../../Listar'; // Importa todas las funciones de listar.js
-import { ButtonGeneral } from '../../../components/Buttons/Button';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
@@ -14,14 +13,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
 
-  const [errorMessages, setErrorMessages] = useState({
-    ubicacion: '',
-    tipo: '',
-    medida: '',
-    categoria: '',
-    empaque: '',
-  });
-
   const [values, setValues] = useState({
     name: "",
     elementType_id: "",
@@ -30,20 +21,9 @@ export const FormDataElemento = ({ listar, onClose }) => {
     packageType_id: ""
   });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    const formattedValue = name === 'name' ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
-
-    setValues({
-      ...values,
-      [name]: formattedValue,
-    });
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Utiliza las funciones de listar para obtener los datos necesarios
         const [tipoData, categoriasData, empaquesData, medidasData] = await Promise.all([
           listarFunciones.ListarTipo(),
           listarFunciones.ListarCategorias(),
@@ -55,58 +35,28 @@ export const FormDataElemento = ({ listar, onClose }) => {
         SetEmpaques(empaquesData);
         SetMedidas(medidasData);
       } catch (error) {
-        setErrorMessages(prevErrors => ({ ...prevErrors, ubicacion: 'Error al cargar los datos. Inténtelo de nuevo.' }));
+        setErrorMessages(prevErrors => ({
+          ...prevErrors,
+          ubicacion: 'Error al cargar los datos. Inténtelo de nuevo.'
+        }));
         console.log(error);
       }
     };
     fetchData();
   }, []);
 
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    const formattedValue = name === 'name' ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
+
+    setValues({
+      ...values,
+      [name]: formattedValue,
+    });
+  };
+
   const handleForm = async (event) => {
     event.preventDefault();
-
-    let hasError = false;
-    let newErrorMessages = {
-      elemento: '',
-      ubicacion: '',
-      tipo: '',
-      medida: '',
-      categoria: '',
-      empaque: ''
-    };
-
-    if (!values.name.trim() || /\d/.test(values.name)) {
-      if (!values.name.trim()) {
-        newErrorMessages.elemento = 'El nombre del elemento no puede estar vacío.';
-      } else {
-        newErrorMessages.elemento = 'El nombre de la ubicación no puede contener números.';
-      }
-      hasError = true;
-    }
-
-    if (!values.elementType_id) {
-      newErrorMessages.tipo = 'Debe seleccionar un tipo de elemento.';
-      hasError = true;
-    }
-
-    if (!values.measurementUnit_id) {
-      newErrorMessages.medida = 'Debe seleccionar una unidad de medida.';
-      hasError = true;
-    }
-
-    if (!values.category_id) {
-      newErrorMessages.categoria = 'Debe seleccionar una categoría.';
-      hasError = true;
-    }
-
-    if (!values.packageType_id) {
-      newErrorMessages.empaque = 'Debe seleccionar un tipo de empaque.';
-      hasError = true;
-    }
-
-    setErrorMessages(newErrorMessages);
-
-    if (hasError) return;
 
     try {
       const response = await axiosClient.post('elemento/registrar', values);
@@ -148,36 +98,29 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 onChange={handleInputChange}
                 className="w-[310px]"
               />
-              {errorMessages.elemento && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.elemento}
-                </div>
-              )}
             </div>
             <div>
-              <select
+              {<select
                 name="elementType_id"
-                requiredvalue
+                required
+                value={values.elementType_id}
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 pr-5 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option value="" selected disabled>Seleccione un tipo de elemento</option>
-                {UseTipo.map(tipo => (
-                  <option
-                    value={tipo.elementType_id}
-                    key={tipo.name}
-                  >
-                    {tipo.name}
-                  </option>
-                ))}
-              </select>
-              {errorMessages.tipo && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.tipo}
-                </div>
-              )}
+                <option value="" disabled>Seleccione un tipo de elemento</option>
+                {UseTipo.length > 0 ? (
+                  UseTipo.map(tipo => (
+                    <option
+                      value={tipo.elementType_id}
+                      key={tipo.name}
+                    >
+                      {tipo.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No hay tipos disponibles</option>
+                )}
+              </select>}
             </div>
           </div>
           <div className='w-auto flex gap-3 mb-2'>
@@ -185,49 +128,47 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name="measurementUnit_id"
                 required
+                value={values.measurementUnit_id}
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option selected disabled>Seleccione un tipo de medida</option>
-                {UseMedidas.map(medida => (
-                  <option
-                    value={medida.measurementUnit_id}
-                    key={medida.name}
-                  >
-                    {medida.name}
-                  </option>
-                ))}
+                <option value="" disabled>Seleccione un tipo de medida</option>
+                {UseMedidas.length > 0 ? (
+                  UseMedidas.map(medida => (
+                    <option
+                      value={medida.measurementUnit_id}
+                      key={medida.name}
+                    >
+                      {medida.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No hay tipos de medida disponibles</option>
+                )}
               </select>
-              {errorMessages.medida && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.medida}
-                </div>
-              )}
             </div>
             <div>
               <select
                 name='category_id'
                 required
+                value={values.category_id}
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option disabled selected>Seleccione una categoría</option>
-                {UseCategorias.map(categoria => (
-                  <option
-                    value={categoria.category_id}
-                    key={categoria.name}
-                  >
-                    {categoria.name}
-                  </option>
-                ))}
+                <option value="" disabled>Seleccione una categoría</option>
+                {UseCategorias.length > 0 ? (
+                  UseCategorias.map(categoria => (
+                    <option
+                      value={categoria.category_id}
+                      key={categoria.name}
+                    >
+                      {categoria.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No hay categorías disponibles</option>
+                )}
               </select>
-              {errorMessages.categoria && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.categoria}
-                </div>
-              )}
             </div>
           </div>
           <div className='w-auto flex gap-3 mb-2'>
@@ -235,25 +176,24 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <select
                 name='packageType_id'
                 required
+                value={values.packageType_id}
                 onChange={handleInputChange}
                 className="bg-[#F4F4F5] border border-gray-300 w-[310px] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
               >
-                <option disabled selected>Seleccione un empaque</option>
-                {UseEmpaques.map(empaque => (
-                  <option
-                    value={empaque.packageType_id}
-                    key={empaque.name}
-                  >
-                    {empaque.name}
-                  </option>
-                ))}
+                <option value="" disabled>Seleccione un empaque</option>
+                {UseEmpaques.length > 0 ? (
+                  UseEmpaques.map(empaque => (
+                    <option
+                      value={empaque.packageType_id}
+                      key={empaque.name}
+                    >
+                      {empaque.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No hay empaques disponibles</option>
+                )}
               </select>
-              {errorMessages.empaque && (
-                <div className="flex items-center text-red-500 text-xs mt-1">
-                  <FaExclamationCircle className="mr-2" />
-                  {errorMessages.empaque}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -264,6 +204,9 @@ export const FormDataElemento = ({ listar, onClose }) => {
       </form>
     </div>
   );
-}
+};
+
+export default FormDataElemento;
+
 
 

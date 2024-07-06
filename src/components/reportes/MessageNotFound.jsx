@@ -5,9 +5,9 @@ const MessageNotFound = () => {
   return (
     <div className="flex justify-center items-center h-full mt-2">
       <div className="text-center max-w-md">
-        <div className="flex items-center justify-center p-4 space-x-4 bg-green-100 border border-green-300 rounded-t-lg">
+        <div className="flex items-center justify-center p-4 space-x-4 bg-gray-300 border border-green-300 rounded-t-lg">
           <BiInfoCircle className="text-green-800 text-3xl" />
-          <p className="text-green-800 font-bold">
+          <p className="text-green-900 font-bold">
             No hay datos para mostrar
           </p>
         </div>
