@@ -28,25 +28,28 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     });
 
     const roles = [
-        { value: 1, label: 'Administrador' },
-        { value: 2, label: 'Encargado' },
-        { value: 3, label: 'Usuario' }
+        { value: 1, label: 'administrador' },
+        { value: 2, label: 'encargado' },
+        { value: 3, label: 'general' }
     ];
     
     const positions = [
-        { value: 1, label: 'Aprendiz' },
-        { value: 2, label: 'Instructor' },
-        { value: 3, label: 'Operario' },
-        { value: 4, label: 'Coordinador' }
+        { value: 1, label: 'aprendiz' },
+        { value: 2, label: 'instructor' },
+        { value: 3, label: 'operario' },
+        { value: 4, label: 'coordinador' }
     ];
 
     useEffect(() => {
         if (category) {
+
+            let dataName = category.nombre.split(" ");
+
             setValues({
-                user_name: category.user_name || '',
+                user_name: category.nombre || '',
                 lastname: category.lastname || '',
                 phone: category.phone || '',
-                email: category.email || '',
+                email: category.correo || '',
                 identification: category.identification || '',
                 role_name: category.role_name || '', // Cambiado de role_id a role_name
                 position_id: category.position_id || '',
@@ -161,6 +164,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
 
         return hasError;
     };
+
 
     return (
         <div>
