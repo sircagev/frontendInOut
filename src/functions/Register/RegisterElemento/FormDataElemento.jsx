@@ -21,6 +21,8 @@ export const FormDataElemento = ({ listar, onClose }) => {
     packageType_id: ""
   });
 
+  const [errorMessages, setErrorMessages] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,10 +32,10 @@ export const FormDataElemento = ({ listar, onClose }) => {
           listarFunciones.ListarEmpaques(),
           listarFunciones.ListarMedidas()
         ]);
-        SetTipo(tipoData);
-        setCategorias(categoriasData);
-        SetEmpaques(empaquesData);
-        SetMedidas(medidasData);
+        SetTipo(tipoData || []);
+        setCategorias(categoriasData || []);
+        SetEmpaques(empaquesData || []);
+        SetMedidas(medidasData || []);
       } catch (error) {
         setErrorMessages(prevErrors => ({
           ...prevErrors,
@@ -100,7 +102,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
               />
             </div>
             <div>
-              {<select
+              <select
                 name="elementType_id"
                 required
                 value={values.elementType_id}
@@ -120,7 +122,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 ) : (
                   <option disabled>No hay tipos disponibles</option>
                 )}
-              </select>}
+              </select>
             </div>
           </div>
           <div className='w-auto flex gap-3 mb-2'>
@@ -207,6 +209,4 @@ export const FormDataElemento = ({ listar, onClose }) => {
 };
 
 export default FormDataElemento;
-
-
 
