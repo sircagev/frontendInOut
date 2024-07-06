@@ -10,7 +10,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     const [dataPositions, setDataPositions] = useState([]);
 
     const [values, setValues] = useState({
-        user_name: '',
+        name: '',
         lastname: '',
         phone: '',
         email: '',
@@ -21,7 +21,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     });
 
     const [errorMessages, setErrorMessages] = useState({
-        user_name: '',
+        name: '',
         lastname: '',
         phone: '',
         email: '',
@@ -144,7 +144,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
         };
 
         if (!values.name.trim()) {
-            newErrorMessages.user_name = 'El nombre es requerido.';
+            newErrorMessages.name = 'El nombre es requerido.';
             hasError = true;
         }
 
@@ -197,15 +197,15 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 <Input
                                     type='text'
                                     label='Nombre Usuario'
-                                    name='user_name'
+                                    name='name'
                                     value={values.name}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.user_name && (
+                                {errorMessages.name && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.user_name}
+                                        {errorMessages.name}
                                     </div>
                                 )}
                             </div>
