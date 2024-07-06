@@ -1,43 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 
 export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     const [values, setValues] = useState({
-        nombre: '',
-        apellido: '',
+        user_name: '',
+        lastname: '',
+        phone: '',
         email: '',
-        rol: '',
-        numero: '',
-        contraseña: '',
-        ficha: '',
-        identificacion: ''
+        identification: '',
+        role_name: '', // Cambiado de role_id a role_name
+        position_id: '',
+        course_id: ''
     });
 
     const [errorMessages, setErrorMessages] = useState({
-        nombre: '',
-        apellido: '',
+        user_name: '',
+        lastname: '',
+        phone: '',
         email: '',
-        rol: '',
-        numero: '',
-        contraseña: '',
-        ficha: '',
-        identificacion: ''
+        identification: '',
+        role_name: '',
+        position_id: '',
+        course_id: ''
     });
+
+    const roles = [
+        { value: 1, label: 'Administrador' },
+        { value: 2, label: 'Encargado' },
+        { value: 3, label: 'Usuario' }
+    ];
+    
+    const positions = [
+        { value: 1, label: 'Aprendiz' },
+        { value: 2, label: 'Instructor' },
+        { value: 3, label: 'Operario' },
+        { value: 4, label: 'Coordinador' }
+    ];
 
     useEffect(() => {
         if (category) {
             setValues({
-                nombre: category.nombre,
-                apellido: category.apellido,
-                email: category.email,
-                rol: category.rol,
-                numero: category.numero,
-                contraseña: category.contraseña,
-                ficha: category.ficha,
-                identificacion: category.identificacion,
+                user_name: category.user_name || '',
+                lastname: category.lastname || '',
+                phone: category.phone || '',
+                email: category.email || '',
+                identification: category.identification || '',
+                role_name: category.role_name || '', // Cambiado de role_id a role_name
+                position_id: category.position_id || '',
+                course_id: category.course_id || '',
             });
         }
     }, [category]);
@@ -60,20 +73,20 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        let hasError = validateForm(); // Validar el formulario antes de enviar
+        let hasError = validateForm();
 
         if (hasError) return;
 
         try {
             await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
-                nombre_usuario: values.nombre,
-                apellido_usuario: values.apellido,
-                email_usuario: values.email,
-                rol: values.rol,
-                numero: values.numero,
-                contraseña_usuario: values.contraseña,
-                Id_ficha: values.ficha,
-                identificacion: values.identificacion
+                user_name: values.user_name,
+                lastname: values.lastname,
+                phone: values.phone,
+                email: values.email,
+                identification: values.identification,
+                role_name: values.role_name, // Cambiado de role_id a role_name
+                position_id: values.position_id,
+                course_id: values.course_id
             });
 
             swal({
@@ -88,32 +101,36 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             onRegisterSuccess();
         } catch (error) {
             const status = error.response.status;
-            const message = error.response.data.message
-            
-            swal("Error", message , "error");
+            const message = error.response.data.message;
+            swal("Error", message, "error");
         }
     };
 
     const validateForm = () => {
         let hasError = false;
         let newErrorMessages = {
-            nombre: '',
-            apellido: '',
+            user_name: '',
+            lastname: '',
+            phone: '',
             email: '',
-            rol: '',
-            numero: '',
-            contraseña: '',
-            ficha: '',
-            identificacion: ''
+            identification: '',
+            role_name: '',
+            position_id: '',
+            course_id: ''
         };
 
-        if (!values.nombre.trim()) {
-            newErrorMessages.nombre = 'El nombre es requerido.';
+        if (!values.user_name.trim()) {
+            newErrorMessages.user_name = 'El nombre es requerido.';
             hasError = true;
         }
 
-        if (!values.apellido.trim()) {
-            newErrorMessages.apellido = 'El apellido es requerido.';
+        if (!values.lastname.trim()) {
+            newErrorMessages.lastname = 'El apellido es requerido.';
+            hasError = true;
+        }
+
+        if (!values.phone.trim()) {
+            newErrorMessages.phone = 'El número de Teléfono es requerido.';
             hasError = true;
         }
 
@@ -125,23 +142,18 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             hasError = true;
         }
 
-        if (!values.rol.trim()) {
-            newErrorMessages.rol = 'El rol es requerido.';
+        if (!values.identification.trim()) {
+            newErrorMessages.identification = 'El número de Identificación es requerido.';
             hasError = true;
         }
 
-        if (!values.numero.trim()) {
-            newErrorMessages.numero = 'El número de teléfono es requerido.';
+        if (!values.role_name.trim()) { // Cambiado de role_id a role_name
+            newErrorMessages.role_name = 'El Rol es requerido.';
             hasError = true;
         }
 
-        if (!values.ficha.trim()) {
-            newErrorMessages.ficha = 'El número de ficha es requerido.';
-            hasError = true;
-        }
-
-        if (!values.identificacion.trim()) {
-            newErrorMessages.identificacion = 'La identificación es requerida.';
+        if (!values.position_id.trim()) {
+            newErrorMessages.position_id = 'El cargo es requerido.';
             hasError = true;
         }
 
@@ -155,20 +167,20 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             <div>
                 <form onSubmit={handleSubmit}>
                     <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2">
                             <div>
                                 <Input
                                     type='text'
                                     label='Nombre Usuario'
-                                    name='nombre'
-                                    value={values.nombre}
+                                    name='user_name'
+                                    value={values.user_name}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.nombre && (
+                                {errorMessages.user_name && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.nombre}
+                                        {errorMessages.user_name}
                                     </div>
                                 )}
                             </div>
@@ -176,20 +188,20 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 <Input
                                     type='text'
                                     label='Apellido Usuario'
-                                    name='apellido'
-                                    value={values.apellido}
+                                    name='lastname'
+                                    value={values.lastname}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.apellido && (
+                                {errorMessages.lastname && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.apellido}
+                                        {errorMessages.lastname}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
+                        <div className="w-auto flex gap-3 mb-2">
                             <div>
                                 <Input
                                     type='text'
@@ -207,72 +219,92 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 )}
                             </div>
                             <div>
-                                <select id="rol" name="rol" value={values.rol} onChange={handleInputChange} className="w-[310px] h-[58px] rounded-xl pl-3 text-sm ">
-                                    <option value="">Seleccione un Rol</option>
-                                    <option value="administrador">Administrador</option>
-                                    <option value="Encargado">Encargado</option>
-                                    <option value="aprendiz">Aprendiz</option>
-                                </select>
-                                {errorMessages.rol && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.rol}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div>
                                 <Input
                                     type='text'
                                     label='Teléfono'
-                                    name='numero'
-                                    value={values.numero}
+                                    name='phone'
+                                    value={values.phone}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
-                                {errorMessages.numero && (
+                                {errorMessages.phone && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.numero}
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    type='number'
-                                    label='Ficha'
-                                    name='ficha'
-                                    value={values.ficha}
-                                    onChange={handleInputChange}
-                                    className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
-                                />
-                                {errorMessages.ficha && (
-                                    <div className="flex items-center text-red-500 text-xs mt-1">
-                                        <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.ficha}
+                                        {errorMessages.phone}
                                     </div>
                                 )}
                             </div>
                         </div>
-                        <div className="w-auto flex gap-3 mb-2" data-twe-input-wrapper-init>
-                            <div className='w-full flex flex-col'>
+                        <div className="w-auto flex gap-3 mb-2">
+                            <div>
                                 <Input
-                                    type='number'
+                                    type='text'
                                     label='Identificación'
-                                    name='identificacion'
-                                    value={values.identificacion}
+                                    name='identification'
+                                    value={values.identification}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
-                                    onKeyPress={allowOnlyNumbers}
-                                    inputMode="numeric"
                                 />
-                                {errorMessages.identificacion && (
+                                {errorMessages.identification && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.identificacion}
+                                        {errorMessages.identification}
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <Select
+                                    label='Cargo'
+                                    name='position_id'
+                                    value={values.position_id}
+                                    onChange={handleInputChange}
+                                    className="w-[310px]"
+                                >
+                                    {positions.map((position) => (
+                                        <SelectItem key={position.value} value={position.value}>{position.label}</SelectItem>
+                                    ))}
+                                </Select>
+                                {errorMessages.position_id && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.position_id}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="w-auto flex gap-3 mb-2">
+                            <div>
+                                <Input
+                                    type='text'
+                                    label='Id Ficha'
+                                    name='course_id'
+                                    value={values.course_id}
+                                    onChange={handleInputChange}
+                                    className="w-[310px]"
+                                />
+                                {errorMessages.course_id && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.course_id}
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <Select
+                                    label='Rol'
+                                    name='role_name' // Cambiado de role_id a role_name
+                                    value={values.role_name}
+                                    onChange={handleInputChange}
+                                    className="w-[310px]"
+                                >
+                                    {roles.map((role) => (
+                                        <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+                                    ))}
+                                </Select>
+                                {errorMessages.role_name && (
+                                    <div className="flex items-center text-red-500 text-xs mt-1">
+                                        <FaExclamationCircle className="mr-2" />
+                                        {errorMessages.role_name}
                                     </div>
                                 )}
                             </div>
