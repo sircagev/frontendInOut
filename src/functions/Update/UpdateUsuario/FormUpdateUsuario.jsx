@@ -5,13 +5,17 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 
 export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
+
+    const [dataRoles, setDataRoles] = useState([]);
+    const [dataPositions, setDataPositions] = useState([]);
+
     const [values, setValues] = useState({
         user_name: '',
         lastname: '',
         phone: '',
         email: '',
         identification: '',
-        role_name: '', // Cambiado de role_id a role_name
+        role_id: '', // Cambiado de role_id a role_name
         position_id: '',
         course_id: ''
     });
@@ -22,42 +26,58 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
         phone: '',
         email: '',
         identification: '',
-        role_name: '',
+        role_id: '',
         position_id: '',
         course_id: ''
     });
 
-    const roles = [
-        { value: 1, label: 'administrador' },
-        { value: 2, label: 'encargado' },
-        { value: 3, label: 'general' }
-    ];
-    
-    const positions = [
-        { value: 1, label: 'aprendiz' },
-        { value: 2, label: 'instructor' },
-        { value: 3, label: 'operario' },
-        { value: 4, label: 'coordinador' }
-    ];
+    const listData = async () => {
+        try {
+            const roles = await axiosClient.get('roles/list');
+            const positions = await axiosClient.get('positions/list');
+
+            console.log(roles);
+
+            setDataRoles(roles.data.data);
+            setDataPositions(positions.data.data);
+
+        } catch (error) {
+            swal({
+                title: "Error",
+                text: "sdfjks.",
+                icon: "warning",
+                buttons: false,
+                timer: 2000,
+            });
+        }
+    }
 
     useEffect(() => {
+
+        listData();
+
         if (category) {
 
             let dataName = category.nombre.split(" ");
-            const name = dataName
+            const name = dataName[0]
+            const lastname = dataName[1]
 
             setValues({
-                user_name: category.nombre || '',
-                lastname: category.lastname || '',
+                name: name || '',
+                lastname: lastname || '',
                 phone: category.phone || '',
                 email: category.correo || '',
                 identification: category.identification || '',
-                role_name: category.role_name || '', // Cambiado de role_id a role_name
+                role_id: category.role_id || '', // Cambiado de role_id a role_name
                 position_id: category.position_id || '',
                 course_id: category.course_id || '',
             });
         }
     }, [category]);
+
+    useEffect(() => {
+        console.log(values)
+    })
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -83,12 +103,12 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
 
         try {
             await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
-                user_name: values.user_name,
+                name: values.name,
                 lastname: values.lastname,
                 phone: values.phone,
                 email: values.email,
                 identification: values.identification,
-                role_name: values.role_name, // Cambiado de role_id a role_name
+                role_id: values.role_id, // Cambiado de role_id a role_name
                 position_id: values.position_id,
                 course_id: values.course_id
             });
@@ -113,17 +133,17 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
     const validateForm = () => {
         let hasError = false;
         let newErrorMessages = {
-            user_name: '',
+            name: '',
             lastname: '',
             phone: '',
             email: '',
             identification: '',
-            role_name: '',
+            role_id: '',
             position_id: '',
             course_id: ''
         };
 
-        if (!values.user_name.trim()) {
+        if (!values.name.trim()) {
             newErrorMessages.user_name = 'El nombre es requerido.';
             hasError = true;
         }
@@ -151,8 +171,8 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             hasError = true;
         }
 
-        if (!values.role_name.trim()) { // Cambiado de role_id a role_name
-            newErrorMessages.role_name = 'El Rol es requerido.';
+        if (!values.role_id.trim()) { // Cambiado de role_id a role_name
+            newErrorMessages.role_id = 'El Rol es requerido.';
             hasError = true;
         }
 
@@ -178,7 +198,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                     type='text'
                                     label='Nombre Usuario'
                                     name='user_name'
-                                    value={values.user_name}
+                                    value={values.name}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 />
@@ -258,17 +278,30 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 )}
                             </div>
                             <div>
-                                <Select
+                                <select
+                                    className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                                    value={values.position_id}
+                                    name='position_id'
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="" disabled>Seleccione un cargo</option>
+                                    {dataPositions.map((position) => (
+                                        <option key={position.position_id} value={position.position_id}>
+                                            {position.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {/* <Select
                                     label='Cargo'
                                     name='position_id'
                                     value={values.position_id}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 >
-                                    {positions.map((position) => (
-                                        <SelectItem key={position.value} value={position.value}>{position.label}</SelectItem>
+                                    {dataPositions.map((position) => (
+                                        <SelectItem key={position.position_id} value={position.position_id}>{position.name}</SelectItem>
                                     ))}
-                                </Select>
+                                </Select> */}
                                 {errorMessages.position_id && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
@@ -295,21 +328,34 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                                 )}
                             </div>
                             <div>
-                                <Select
+                                <select
+                                    className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                                    value={values.role_id}
+                                    name='role_id'
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="" disabled>Seleccione un rol</option>
+                                    {dataRoles.map((role) => (
+                                        <option key={role.role_id} value={role.role_id}>
+                                            {role.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                {/* <Select
                                     label='Rol'
                                     name='role_name' // Cambiado de role_id a role_name
                                     value={values.role_name}
                                     onChange={handleInputChange}
                                     className="w-[310px]"
                                 >
-                                    {roles.map((role) => (
-                                        <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+                                    {dataRoles.map((role) => (
+                                        <SelectItem key={role.role_id} value={role.role_id}>{role.name}</SelectItem>
                                     ))}
-                                </Select>
-                                {errorMessages.role_name && (
+                                </Select> */}
+                                {errorMessages.role_id && (
                                     <div className="flex items-center text-red-500 text-xs mt-1">
                                         <FaExclamationCircle className="mr-2" />
-                                        {errorMessages.role_name}
+                                        {errorMessages.role_id}
                                     </div>
                                 )}
                             </div>
