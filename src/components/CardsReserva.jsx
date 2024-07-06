@@ -21,9 +21,9 @@ const CardsReserva = ({ title }) => {
         </CardBody>
         <CardFooter className="text-small justify-between inline-block gap-2 bg-[#212121]">
           <b className="text-white">{title}</b>
-          <ButtonGeneral
-            label={"Reservar"}
-          />
+            {/* <ButtonGeneral
+              label={"Reservar"}
+            /> */}
         </CardFooter>
       </Card>
     </Link>

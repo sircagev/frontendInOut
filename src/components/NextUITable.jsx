@@ -120,7 +120,7 @@ const NextUITable = ({
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-sm capitalize">{cellValue}</p>
-                        <p className="text-bold text-sm capitalize text-default-400">{item.team}</p>
+                        <p className="text-bold text-sm capitalize text-default-400">{item.position}</p>
                     </div>
                 );
             case "tipo":

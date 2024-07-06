@@ -7,7 +7,7 @@ import { saveAs } from "file-saver";
 import logoImg from "../../assets/R.jpg";
 
 const convertDateFormat = (dateStr) => {
-  if (!dateStr) return null; 
+  if (!dateStr) return null;
   const [day, month, year] = dateStr.split("/");
   return `${year}-${month}-${day}`;
 };
@@ -19,7 +19,6 @@ const ReporteActivos = ({ prestamosa }) => {
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
   const originalData = useMemo(() => prestamosa?.datos || [], [prestamosa]);
-
 
   const searchInputRef = useRef(null);
 
@@ -33,11 +32,25 @@ const ReporteActivos = ({ prestamosa }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const elementMatches = row.element_name?.toLowerCase().includes(searchTerm.toLowerCase());
-        const userMatches = row.user_application?.toLowerCase().includes(searchTerm.toLowerCase());
+        const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const userMatches = row.user_application
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const codeMatches =
+          row.element_id?.toString() === searchTerm.toString();
+        const receivingMatches = row.user_receiving
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
         const rowDate = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
-        return (elementMatches || userMatches) && dateMatches;
+        const dateMatches =
+          (!startDate || rowDate >= startDate) &&
+          (!endDate || rowDate <= endDate);
+        return (
+          (elementMatches || userMatches || codeMatches || receivingMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -46,7 +59,7 @@ const ReporteActivos = ({ prestamosa }) => {
 
   const columns = useMemo(
     () => [
-
+      { Header: "ID", accessor: "movement_id" },
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Código", accessor: "element_id" },
       { Header: "Cantidad", accessor: "quantity" },
@@ -56,7 +69,6 @@ const ReporteActivos = ({ prestamosa }) => {
       { Header: "Fecha de Solicitud", accessor: "created_at" },
       { Header: "Vencimiento Préstamo", accessor: "estimated_return" },
       { Header: "Observaciones", accessor: "remarks" },
-    
     ],
     []
   );
@@ -64,11 +76,11 @@ const ReporteActivos = ({ prestamosa }) => {
   const handleDownload = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
-  
-    worksheet.columns = [
 
+    worksheet.columns = [
+      { header: "ID", key: "movement_id", width: 8 },
+      { header: "Elemento", key: "element_name", width: 15 },
       { header: "Código", key: "element_id", width: 8 },
-      { header: "Elemento", key: "element_name", width: 10 },
       { header: "Cantidad", key: "quantity", width: 10 },
       { header: "Usuario Solicitante", key: "user_application", width: 20 },
       { header: "Usuario Receptor", key: "user_receiving", width: 20 },
@@ -76,54 +88,64 @@ const ReporteActivos = ({ prestamosa }) => {
       { header: "Fecha de Solicitud", key: "created_at", width: 20 },
       { header: "Vencimiento Préstamo", key: "estimated_return", width: 20 },
       { header: "Observaciones", key: "remarks", width: 20 },
-    
     ];
-  
+
     const response = await fetch(logoImg);
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:G2');
-    worksheet.getCell('B2').value = 'Reporte de Préstamos Activos';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:G1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('H1:I1');
-    worksheet.getCell('H1').value = 'ADSO-2644590';
-    worksheet.getCell('H1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:H2");
+    worksheet.getCell("B2").value = "Reporte de Préstamos Activos";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:H1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("I1:J1");
+    worksheet.getCell("I1").value = "ADSO-2644590";
+    worksheet.getCell("I1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-"Código",
-"Elemento",
-"Cantidad",
-"Usuario Solicitante",
-"Usuario Receptor",
-"Estado Préstamo",
-"Fecha de Solicitud",
-"Vencimiento Préstamo",
-"Observaciones",
+      "ID",
+      "Elemento",
+      "Código",
+      "Cantidad",
+      "Usuario Solicitante",
+      "Usuario Receptor",
+      "Estado Préstamo",
+      "Fecha de Solicitud",
+      "Vencimiento Préstamo",
+      "Observaciones",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
-        row.element_id,
+        row.movement_id,
         row.element_name,
+        row.element_id,
         row.quantity,
         row.user_application,
         row.user_receiving,
@@ -133,9 +155,11 @@ const ReporteActivos = ({ prestamosa }) => {
         row.remarks,
       ]);
     });
-   
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     saveAs(blob, "Reporte préstamos activos.xlsx");
   };
 
@@ -173,18 +197,18 @@ const ReporteActivos = ({ prestamosa }) => {
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
-  
+
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
-  
+
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
 
   const handleSearch = () => {
     setSearchPerformed(true);
-    setShowFilters(false); 
+    setShowFilters(false);
   };
 
   const handleNewSearch = () => {
@@ -192,7 +216,7 @@ const ReporteActivos = ({ prestamosa }) => {
     setStartDate("");
     setEndDate("");
     setSearchPerformed(false);
-    setShowFilters(true); 
+    setShowFilters(true);
   };
 
   const handleKeyDown = (e) => {
@@ -237,15 +261,6 @@ const ReporteActivos = ({ prestamosa }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Elemento, Usuario
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -352,7 +367,7 @@ const ReporteActivos = ({ prestamosa }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (

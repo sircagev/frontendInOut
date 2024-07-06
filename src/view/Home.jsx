@@ -14,7 +14,7 @@ const Home = () => {
     <div className="flex flex-col">
       <h1 className="mt-8 text-xl text-center font-semibold">Elementos</h1>
       <div className='w-[95%] h-screen ml-[2.5%] mr-[2.5%]'>
-      {list.map((item, index) => (
+        {list.map((item, index) => (
           <CardsReserva
             key={index}
             title={item.title}

@@ -7,7 +7,7 @@ import { saveAs } from "file-saver";
 import logoImg from "../../assets/R.jpg";
 
 const convertDateFormat = (dateStr) => {
-   if (!dateStr) return null; 
+  if (!dateStr) return null;
   const [day, month, year] = dateStr.split("/");
   return `${year}-${month}-${day}`;
 };
@@ -32,11 +32,25 @@ const ReporteVencidos = ({ prestamosv }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const idMatches = row.identification?.toString().includes(searchTerm.toString());
-        const userMatches = row.user_application?.toLowerCase().includes(searchTerm.toLowerCase());
+        const idMatches = row.identification
+          ?.toString()
+          .includes(searchTerm.toString());
+        const userMatches = row.user_application
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const codeMatches =
+          row.element_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
-        const dateMatches = (!startDate || rowDate >= startDate) && (!endDate || rowDate <= endDate);
-        return (idMatches || userMatches) && dateMatches;
+        const dateMatches =
+          (!startDate || rowDate >= startDate) &&
+          (!endDate || rowDate <= endDate);
+        return (
+          (idMatches || userMatches || elementMatches || codeMatches) &&
+          dateMatches
+        );
       });
     }
 
@@ -61,7 +75,7 @@ const ReporteVencidos = ({ prestamosv }) => {
   const handleDownload = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
-  
+
     worksheet.columns = [
       { header: "Usuario", key: "user_application", width: 20 },
       { header: "Identificación", key: "identification", width: 15 },
@@ -73,48 +87,57 @@ const ReporteVencidos = ({ prestamosv }) => {
       { header: "Fecha Solicitud", key: "created_at", width: 15 },
       { header: "Fecha Vencimiento", key: "estimated_return", width: 20 },
     ];
-  
+
     const response = await fetch(logoImg);
     const logo = await response.arrayBuffer();
     const imageId = workbook.addImage({
       buffer: logo,
-      extension: 'png',
+      extension: "png",
     });
-    worksheet.addImage(imageId, 'A1:A2'); 
-  
-    worksheet.mergeCells('B2:G2');
-    worksheet.getCell('B2').value = 'Reporte de Préstamos Vencidos';
-    worksheet.getCell('B2').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B2').font = { size: 16, bold: true };
-  
-    worksheet.mergeCells('B1:G1');
-    worksheet.getCell('B1').value = 'INVENTARIO ELEMENTOS INOUT';
-    worksheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center' };
-    worksheet.getCell('B1').font = { size: 17, bold: true };
-  
-    worksheet.mergeCells('H1:I1');
-    worksheet.getCell('H1').value = 'ADSO-2644590';
-    worksheet.getCell('H1').alignment = { vertical: 'middle', horizontal: 'center' };
-   
+    worksheet.addImage(imageId, "A1:A2");
+
+    worksheet.mergeCells("B2:G2");
+    worksheet.getCell("B2").value = "Reporte de Préstamos Vencidos";
+    worksheet.getCell("B2").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B2").font = { size: 16, bold: true };
+
+    worksheet.mergeCells("B1:G1");
+    worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
+    worksheet.getCell("B1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+    worksheet.getCell("B1").font = { size: 17, bold: true };
+
+    worksheet.mergeCells("H1:I1");
+    worksheet.getCell("H1").value = "ADSO-2644590";
+    worksheet.getCell("H1").alignment = {
+      vertical: "middle",
+      horizontal: "center",
+    };
+
     const headers = [
-"Usuario",
-"Identificación",
-"Teléfono",
-"Elemento",
-"Código",
-"Cantidad",
-"Observaciones",
-"Fecha Solicitud",
-"Fecha Vencimiento",
+      "Usuario",
+      "Identificación",
+      "Teléfono",
+      "Elemento",
+      "Código",
+      "Cantidad",
+      "Observaciones",
+      "Fecha Solicitud",
+      "Fecha Vencimiento",
     ];
     worksheet.addRow(headers);
-  
-     headers.forEach((header, index) => {
+
+    headers.forEach((header, index) => {
       const cell = worksheet.getRow(4).getCell(index + 1);
-      cell.font = {size: 12, bold: true };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.font = { size: 12, bold: true };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
     });
-  
+
     data.forEach((row) => {
       worksheet.addRow([
         row.user_application,
@@ -128,9 +151,11 @@ const ReporteVencidos = ({ prestamosv }) => {
         row.estimated_return,
       ]);
     });
-   
+
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     saveAs(blob, "Reporte préstamos vencidos.xlsx");
   };
 
@@ -154,7 +179,7 @@ const ReporteVencidos = ({ prestamosv }) => {
       columns,
       data,
       initialState: { pageIndex: currentPage, pageSize: 10 },
-      autoResetPage: false, 
+      autoResetPage: false,
     },
     usePagination
   );
@@ -162,24 +187,24 @@ const ReporteVencidos = ({ prestamosv }) => {
   const pages = Array.from({ length: pageCount }, (_, i) => i);
 
   useEffect(() => {
-    setCurrentPage(pageIndex); 
+    setCurrentPage(pageIndex);
   }, [pageIndex]);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
-  
+
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
   };
-  
+
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
 
   const handleSearch = () => {
     setSearchPerformed(true);
-    setShowFilters(false); 
+    setShowFilters(false);
   };
 
   const handleNewSearch = () => {
@@ -187,7 +212,7 @@ const ReporteVencidos = ({ prestamosv }) => {
     setStartDate("");
     setEndDate("");
     setSearchPerformed(false);
-    setShowFilters(true); 
+    setShowFilters(true);
   };
 
   const handleKeyDown = (e) => {
@@ -232,15 +257,6 @@ const ReporteVencidos = ({ prestamosv }) => {
                       ref={searchInputRef}
                       className="border rounded pl-8 pr-2 py-1 w-full"
                     />
-                  </div>
-                  <div
-                    className={`fixed mt-[48px] ml-2 text-xs transition-opacity duration-100 ${
-                      searchTerm ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <span className="z-20 rounded text-black">
-                      Búsqueda por Usuario, Identificación
-                    </span>
                   </div>
                 </div>
                 <label className="ml-4 mr-2 text-white">Desde:</label>
@@ -347,7 +363,7 @@ const ReporteVencidos = ({ prestamosv }) => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...getTableBodyProps()}>
+              <tbody {...getTableBodyProps()} className="text-sm">
                 {page.map((row, index) => {
                   prepareRow(row);
                   return (
