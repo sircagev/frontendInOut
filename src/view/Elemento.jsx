@@ -35,7 +35,7 @@ export const Elemento = () => {
                 <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
                 <Modal1
                     title={"Registrar Elemento"}
-                    size={"2xl"}
+                    size={"md"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     form={<FormDataElemento onClose={() => setIsOpen(false)} listar={ListarElementos} />}
@@ -58,7 +58,7 @@ export const Elemento = () => {
                 <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
                 <Modal1
                     title={"Actualizar Elemento"}
-                    size={"2xl"}
+                    size={"md"}
                     isOpen={isOpenUpdate}
                     onClose={() => setIsOpenupdate(false)}
                     form={<FormUpdateElemento onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarElementos} />}

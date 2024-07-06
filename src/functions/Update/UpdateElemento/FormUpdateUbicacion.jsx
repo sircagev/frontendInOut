@@ -7,8 +7,8 @@ import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) => {
-  const [bodegas, setBodegas] = useState([]);
 
+  const [bodegas, setBodegas] = useState([]);
   const [nombre, setNombre] = useState('')
   const [nombreBodega, setNombreBodega] = useState('')
 
@@ -16,17 +16,6 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     nombre: '',
     nombreBodega: '',
   });
-
-  useEffect(() => {
-    if (category) {
-      setNombre(category.name)
-      setNombreBodega(category.warehouse_id)
-    }
-  }, [category]);
-
-  useEffect(() => {
-    BodegasListar();
-  }, []);
 
   const BodegasListar = async () => {
     try {
@@ -37,6 +26,14 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
       swal("Error", "Hubo un problema al cargar las bodegas", "error");
     }
   };
+
+  useEffect(() => {
+    if (category) {
+      setNombre(category.name)
+      setNombreBodega(category.warehouse_id)
+    }
+    BodegasListar();
+  }, [category]);
 
   const validateForm = () => {
     let formErrors = {};
