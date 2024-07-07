@@ -86,7 +86,7 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             [name]: value,
         });
     };
-
+    
     const allowOnlyNumbers = (event) => {
         const isValidKey = /^\d$/.test(event.key);
         if (!isValidKey) {
@@ -96,11 +96,11 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         let hasError = validateForm();
-
+    
         if (hasError) return;
-
+    
         try {
             await axiosClient.put(`usuario/actualizar/${category.codigo}`, {
                 name: values.name,
@@ -108,11 +108,11 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                 phone: values.phone,
                 email: values.email,
                 identification: values.identification,
-                role_id: values.role_id, // Cambiado de role_id a role_name
+                role_id: values.role_id,
                 position_id: values.position_id,
                 course_id: values.course_id
             });
-
+    
             swal({
                 title: "Actualizado",
                 text: "Usuario actualizado con éxito.",
@@ -120,16 +120,16 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
                 buttons: false,
                 timer: 2000,
             });
-
+    
             onClose();
             onRegisterSuccess();
         } catch (error) {
             const status = error.response.status;
-            const message = error.response.data.message;
+            const message = error.response.data.message || 'Hubo un error al actualizar el usuario.';
             swal("Error", message, "error");
         }
     };
-
+    
     const validateForm = () => {
         let hasError = false;
         let newErrorMessages = {
@@ -142,22 +142,22 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             position_id: '',
             course_id: ''
         };
-
+    
         if (!values.name.trim()) {
             newErrorMessages.name = 'El nombre es requerido.';
             hasError = true;
         }
-
+    
         if (!values.lastname.trim()) {
             newErrorMessages.lastname = 'El apellido es requerido.';
             hasError = true;
         }
-
+    
         if (!values.phone.trim()) {
             newErrorMessages.phone = 'El número de Teléfono es requerido.';
             hasError = true;
         }
-
+    
         if (!values.email.trim()) {
             newErrorMessages.email = 'El correo electrónico es requerido.';
             hasError = true;
@@ -165,26 +165,36 @@ export const FormUpdateUsuario = ({ onClose, category, onRegisterSuccess }) => {
             newErrorMessages.email = 'El correo electrónico no es válido.';
             hasError = true;
         }
-
+    
         if (!values.identification.trim()) {
             newErrorMessages.identification = 'El número de Identificación es requerido.';
             hasError = true;
         }
-
-        if (!values.role_id.trim()) { // Cambiado de role_id a role_name
+    
+        if (!values.role_id) {
             newErrorMessages.role_id = 'El Rol es requerido.';
             hasError = true;
         }
-
-        if (!values.position_id.trim()) {
+    
+        if (!values.position_id) {
             newErrorMessages.position_id = 'El cargo es requerido.';
             hasError = true;
         }
-
+    
+        // Validar course_id basado en position_id
+        if (values.position_id === 2 || values.position_id === 3 || values.position_id === 4) {
+            // Posiciones donde course_id no debe ser ingresado
+            if (values.course_id.trim()) {
+                newErrorMessages.course_id = 'El campo Id de Ficha no debe ser ingresado para este cargo.';
+                hasError = true;
+            }
+        }
+    
         setErrorMessages(newErrorMessages);
-
+    
         return hasError;
     };
+    
 
 
     return (

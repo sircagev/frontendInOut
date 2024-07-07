@@ -14,7 +14,7 @@ const columnsUsers = [
     { name: 'Acciones', uid: 'actions' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "nombre", "role", "phone", "identification", "role", "status", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["codigo", "nombre", "role", "phone", "identification", "course_id", "role", "status", "actions"];
 
 const statusOptions = [
     { name: "Activo", uid: "Activo" },
@@ -26,7 +26,7 @@ const statusColorMap = {
     "Inactivo": 'warning'
 }
 
-const searchKeys = ['codigo', 'user_name', 'identification']
+const searchKeys = ['codigo', 'nombre', 'identification']
 
 
 export { columnsUsers, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys };

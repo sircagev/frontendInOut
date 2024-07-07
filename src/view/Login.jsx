@@ -58,7 +58,7 @@ function Login() {
       }
     } catch (error) {
       if (error.response) {
-        if (error.response.status === 403) {
+        if (error.response.status === 401) {
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -92,7 +92,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axiosClient.post('/contrasena/recuperar', {
-        email_usuario: email,
+        email: email,
       });
 
       if (response.status === 200) {
@@ -171,7 +171,7 @@ function Login() {
     try {
       const response = await axiosClient.put('/contrasena/cambiar', {
         token,
-        contraseña_usuario: newPassword,
+        password: newPassword,
       });
 
       if (response.status === 200) {
