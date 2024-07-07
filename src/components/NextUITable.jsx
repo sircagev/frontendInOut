@@ -125,15 +125,22 @@ const NextUITable = ({
                 );
             case "tipo":
                 return (
-                    <Chip className="capitalize" color={statusColorMap[item.tipo]} size="sm" variant="flat">
-                        {cellValue}
-                    </Chip>
+                    <div className="flex justify-center items-center w-full">
+                        <Chip className="capitalize" classNames={{
+                            content: "w-[60px]"
+                        }} color={statusColorMap[item.tipo]} size="sm" variant="flat">
+                            {cellValue}
+                        </Chip>
+                    </div>
                 );
             case "status":
                 return (
+
                     <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
                         {cellValue}
                     </Chip>
+
+
                 );
             case "actions":
                 return (
@@ -354,7 +361,7 @@ const NextUITable = ({
                 {(column) => (
                     <TableColumn
                         key={column.uid}
-                        align={column.uid === "actions" ? "center" : "start"}
+                        align={column.uid === "actions" ? "center" : column.uid === "tipo" ? "center" : "start"}
                         width={column.uid === "codigo" ? '2opx' : ''}
                         allowsSorting={column.sortable}
                     >

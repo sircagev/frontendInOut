@@ -12,13 +12,13 @@ const columnsMovements = [
 const INITIAL_VISIBLE_COLUMNS = ["codigo", "nombre", "tipo", "actions"];
 
 const statusOptions = [
-    { name: 'Ingresos', uid: "incoming" },
-    { name: "Salidas", uid: "outgoing" }
+    { name: 'Ingresos', uid: "ingreso" },
+    { name: "Salidas", uid: "salida" }
 ]
 
 const statusColorMap = {
-    "incoming": 'success',
-    "outgoing": 'warning'
+    "ingreso": 'success',
+    "salida": 'warning'
 }
 
 const searchKeys = ['nombre', 'codigo', 'identificacion']
