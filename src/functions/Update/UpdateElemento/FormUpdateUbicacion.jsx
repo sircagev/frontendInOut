@@ -6,11 +6,10 @@ import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) => {
-
+export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   const [bodegas, setBodegas] = useState([]);
-  const [nombre, setNombre] = useState('')
-  const [nombreBodega, setNombreBodega] = useState('')
+  const [nombre, setNombre] = useState('');
+  const [bodega, setNombreBodega] = useState('');
 
   const [errors, setErrors] = useState({
     nombre: '',
@@ -29,8 +28,8 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
 
   useEffect(() => {
     if (category) {
-      setNombre(category.name)
-      setNombreBodega(category.warehouse_id)
+      setNombre(category.name);
+      setNombreBodega(category.warehouse_id);
     }
     BodegasListar();
   }, [category]);
@@ -40,11 +39,9 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     if (!nombre.trim()) {
       formErrors.nombre = 'El nombre no debe estar vacío.';
     }
-  
     if (!nombreBodega) {
       formErrors.nombreBodega = 'Debe seleccionar una bodega.';
     }
-
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
@@ -56,7 +53,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
     try {
       await axiosClient.put(`ubicacion/actualizar/${category.codigo}`, {
         name: nombre,
-        id_warehouse: nombreBodega,
+        warehouse_id: bodega, 
       });
       swal({
         title: "Actualizado",
@@ -66,7 +63,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
         timer: 2000, 
       });
       onClose();
-      onRegisterSuccess();
+      Listar();
     } catch (error) {
       console.log(error);
       swal("Error", "Hubo un problema al actualizar la ubicación", "error");
@@ -97,7 +94,7 @@ export const FormUpdateUbicacion = ({ onClose, category, onRegisterSuccess }) =>
             <div className="relative mb-2 justify-center items-center h-[75px]" data-twe-input-wrapper-init>
               <select
                 className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
-                value={nombreBodega}
+                value={bodega}
                 onChange={(e) => setNombreBodega(e.target.value)}
               >
                 <option value="" disabled>Seleccione una bodega</option>

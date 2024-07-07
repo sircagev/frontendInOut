@@ -17,7 +17,6 @@ export const Ubicaciones = () => {
     try {
       const response = await axiosClient.get('ubicacion/listar');
       setData(response.data)
-      console.log(response.data)
     } catch (error) {
       console.log(error);
     }
