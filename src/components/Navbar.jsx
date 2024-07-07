@@ -5,7 +5,7 @@ import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
-import NotificacionesModal from "./modals/Notificaciones"; 
+import NotificacionesModal from "./modals/Notificaciones";
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
 import Modal1 from "../components/Modal1";
 import { useAuth } from "../context/AuthProvider";
@@ -26,7 +26,7 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
-  const {logout} = useAuth();
+  const { logout } = useAuth();
 
   const navigate = useNavigate();
 
@@ -118,18 +118,14 @@ export const Navbar = ({ setLogIn }) => {
           <FaUserCircle
             className="text-[38px] cursor-pointer"
             onClick={() => setIsOpen(true)} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
-
           />
- 
-      <Modal1
-        isOpen={isOpen}
-        size={"4xl"}
-        onClose={() => setIsOpen(false)}
-        form={<FormUpdatePerfil onClose={() => setIsOpen(false)} />}
-        title={"Administrar perfil"}
-      />
-      
-
+          <Modal1
+            isOpen={isOpen}
+            size={"4xl"}
+            onClose={() => setIsOpen(false)}
+            form={<FormUpdatePerfil onClose={() => setIsOpen(false)} />}
+            title={"Administrar perfil"}
+          />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">
@@ -144,7 +140,7 @@ export const Navbar = ({ setLogIn }) => {
           className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
         >
-          {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados> 0 && (
+          {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados > 0 && (
             <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 rounded-full text-white font-bold px-2 py-1 text-xs">
               {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados}
             </span>
@@ -156,9 +152,9 @@ export const Navbar = ({ setLogIn }) => {
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>
       </div>
-      
+
       <NotificacionesModal
-        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados> 0)}
+        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados > 0)}
         setShowModal={setShowModal}
         elementosConBajoStock={elementosConBajoStock}
         prestamosActivos={prestamosActivos}
@@ -166,8 +162,6 @@ export const Navbar = ({ setLogIn }) => {
         solicitudes={solicitudes}
         elementosExpirados={elementosExpirados}
       />
-
-      
     </div>
   );
 };

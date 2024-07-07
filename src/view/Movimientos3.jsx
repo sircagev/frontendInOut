@@ -25,6 +25,7 @@ import { MovementList } from '../functions/Listar'
 
 //Formularios
 import { RegisterMovement } from '../components/forms/Movements/RegisterMovement';
+import { RegisterMovmentOutgoing } from '../components/forms/Movements/RegisterMovmentOutgoing';
 
 export const Movimientos3 = () => {
 
@@ -55,14 +56,14 @@ export const Movimientos3 = () => {
                     className="text-white font-bold"
                     onClick={() => setIsOpen(true)}
                 >
-                    Incoming
+                    Ingreso
                 </Button >
                 <Modal1
                     title={"Registrar Ingreso"}
                     size={"2xl"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    form={<RegisterMovement />}
+                    form={<RegisterMovement onClose={() => setIsOpen(false)} />}
                 />
                 < Button
                     /* className="bg-foreground text-background" */
@@ -73,13 +74,14 @@ export const Movimientos3 = () => {
                     className="text-white font-bold"
                     onClick={() => setIsOpen2(true)}
                 >
-                    Outgoing
+                    Salida
                 </Button >
                 <Modal1
                     title={"Registrar Salida"}
                     size={"2xl"}
                     isOpen={isOpen2}
                     onClose={() => setIsOpen2(false)}
+                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} />}
                 />
             </>
         )
@@ -114,7 +116,7 @@ export const Movimientos3 = () => {
     }, []);
 
     return (
-        <div className="w-auto h-[100%] m-auto flex">
+        <div className="w-auto h-[100%] m-auto flex pt-[15px]">
             <NextUITable
                 columns={columnsMovements}
                 rows={data}

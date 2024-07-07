@@ -1,69 +1,45 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from "react";
+import { capitalize } from "../../../utils/columnsData";
+import swal from "sweetalert";
+import axiosClient from "../../config/axiosClient";
 import {
     Autocomplete,
     AutocompleteItem,
     Checkbox,
     Input,
-    Button
+    Button,
+    Textarea
 } from '@nextui-org/react';
-import { EyeIcon } from '../../icons/EyeIcon';
-import { ListarUsuarios } from '../../../functions/Listar';
-import { ListarElementos } from '../../../functions/Listar';
-import { Listarbodegas } from '../../../functions/Listar';
-import { ListarUbicacionesYBodegas } from '../../../functions/Listar';
-import { capitalize } from '../../../utils/columnsData';
-import swal from 'sweetalert';
-import axiosClient from '../../config/axiosClient';
+import { ListarUsuarios } from "../../../functions/Listar";
+import { ListarElementos } from "../../../functions/Listar";
 
-export const RegisterMovement = ({ onClose }) => {
+
+export const RegisterMovmentOutgoing = ({ onClose }) => {
 
     const [checkUser, setCheckUser] = useState(false);
-    const [warehouse, setWarehouse] = useState(null);
 
-    const [dataUsers, setDataUsers] = useState([]);
-    const [dataElements, setDataElements] = useState([]);
-    const [dataWarehouses, setDataWarehouses] = useState([]);
-    const [dataLocations, setDataLocations] = useState([]);
-
-    const objectRegister = {
+    const objectOutgoing = {
         user_application: null,
         details: [{
-            element_id: '',
-            expiration: null,
-            quantity: 0,
-            warehouseLocation_id: null,
+            element_id: null,
+            quantity: null,
             remarks: null
         }]
     }
 
-    //Guardar la información que se envia para un nuevo registro
-    const [newRegister, setNewRegister] = useState(objectRegister);
+    const [outgoingData, setOutgoing] = useState(objectOutgoing);
 
-    const filteredItems = useMemo(() => {
-        return dataLocations.filter(item => item.id_warehouse == warehouse);
-    }, [dataLocations, warehouse]);
-
-    const isConsumable = useMemo(() => {
-        const codigo = newRegister.details[0].element_id ? newRegister.details[0].element_id : null
-        const itemEncontrado = dataElements.find(item => item.codigo === codigo);
-        if (itemEncontrado && itemEncontrado.id_type === 1) {
-            console.log('esconsumible')
-            return true
-        }
-        console.log('No consumible')
-        return false
-    }, [newRegister])
+    const [dataUsers, setDataUsers] = useState([]);
+    const [dataElements, setDataElements] = useState([]);
 
     const list = async () => {
         try {
             const users = await ListarUsuarios();
             const elements = await ListarElementos();
-            const warehouses = await Listarbodegas();
-            const locations = await ListarUbicacionesYBodegas();
+
             setDataUsers(users)
             setDataElements(elements);
-            setDataWarehouses(warehouses);
-            setDataLocations(locations);
+
         } catch (error) {
             console.log(error);
         }
@@ -72,7 +48,7 @@ export const RegisterMovement = ({ onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const register = await axiosClient.post('movimientos/register-incoming', newRegister);
+            const register = await axiosClient.post('movimientos/register-outgoing', outgoingData);
 
             console.log(register)
 
@@ -88,14 +64,14 @@ export const RegisterMovement = ({ onClose }) => {
 
             onClose();
         } catch (error) {
-            /* console.log(error)
+            console.log(error)
             swal({
                 title: "Error",
                 text: error.response.data.message,
                 icon: `warning`,
                 buttons: true,
                 timer: 2000,
-            });*/
+            });
         }
     }
 
@@ -104,19 +80,22 @@ export const RegisterMovement = ({ onClose }) => {
     }, [])
 
     useEffect(() => {
-        console.log(newRegister)
-    }, [newRegister])
+        console.log(outgoingData)
+    }, [outgoingData])
 
     return (
         <div>
-            <form action="" >
+            <form action="">
                 <Checkbox
-                    icon={<EyeIcon />}
+
                     isSelected={checkUser}
                     onChange={() => {
                         setCheckUser(!checkUser)
                         if (!checkUser) {
-                            setNewRegister(objectRegister)
+                            setOutgoing(precData => ({
+                                ...precData,
+                                user_application: parseInt(value)
+                            }));
                         }
                     }}
                     color='success'>
@@ -131,7 +110,7 @@ export const RegisterMovement = ({ onClose }) => {
                         className='w-[75%] h-[60px]'
                         onSelectionChange={(value) => {
                             const element = value;
-                            setNewRegister(precData => ({
+                            setOutgoing(precData => ({
                                 ...precData,
                                 user_application: parseInt(value)
                             }));
@@ -155,7 +134,7 @@ export const RegisterMovement = ({ onClose }) => {
                     className='w-[75%] h-[60px]'
                     onSelectionChange={(value) => {
                         const item = value;
-                        setNewRegister(prevData => ({
+                        setOutgoing(prevData => ({
                             ...prevData,
                             details: [{
                                 ...prevData.details[0],
@@ -185,7 +164,7 @@ export const RegisterMovement = ({ onClose }) => {
                     onChange={(e) => {
                         const nuevaCantidad = parseInt(e.target.value);
                         if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
-                            setNewRegister(precData => ({
+                            setOutgoing(precData => ({
                                 ...precData,
                                 details: [{
                                     ...precData.details[0],
@@ -198,77 +177,25 @@ export const RegisterMovement = ({ onClose }) => {
                         }
                     }}
                 />
-
-                {isConsumable && <Input
+                <Textarea
                     isRequired
-                    type="date"
-                    label="Fecha de expiración"
+                    type="text"
+                    label="Observaciones"
+                    placeholder=''
                     variant=""
                     labelPlacement="outside"
                     className='w-[20%]'
                     min={0}
                     onChange={(e) => {
-                        const value = e.target.value;
-                        if (value) { // Verificar si el nuevo valor es un número
-                            setNewRegister(precData => ({
-                                ...precData,
-                                details: [{
-                                    ...precData.details[0],
-                                    expiration: value
-                                }]
-                            }));
-                        }
-                    }}
-                />}
-
-                <Autocomplete
-                    aria-label='autocomplete-warehouese'
-                    label="Seleccionar la bodega"
-                    placeholder="Busca una bodega"
-                    isRequired
-                    className='w-[75%] h-[60px]'
-                    onSelectionChange={(value) => {
-                        const item = value;
-                        setWarehouse(item)
-                    }}
-                >
-                    {dataWarehouses.map((item) => (
-                        <AutocompleteItem
-                            key={item.warehouse_id}
-                            value={item.warehouse_id}
-                        >
-                            {item.warehouse_id + ' - ' + item.name}
-                        </AutocompleteItem>
-                    ))}
-                </Autocomplete>
-
-                <Autocomplete
-                    aria-label='autocomplete-warehouese'
-                    label="Seleccionar la bodega"
-                    placeholder="Busca una bodega"
-                    isRequired
-                    className='w-[75%] h-[60px]'
-                    onSelectionChange={(value) => {
-                        const item = value;
-                        setNewRegister(prevData => ({
-                            ...prevData,
+                        setOutgoing(precData => ({
+                            ...precData,
                             details: [{
-                                ...prevData.details[0],
-                                warehouseLocation_id: parseInt(item)
+                                ...precData.details[0],
+                                remarks: e.target.value
                             }]
                         }));
                     }}
-                >
-                    {filteredItems.map((item) => (
-                        <AutocompleteItem
-                            key={item.codigo}
-                            value={item.codigo}
-                        >
-                            {item.codigo + ' - ' + item.name}
-                        </AutocompleteItem>
-                    ))}
-                </Autocomplete>
-
+                />
                 <Button onClick={(e) => handleSubmit(e)} color='success' className='text-white font-bold'>Registrar</Button>
                 <Button onClick={() => {
                     onClose();
