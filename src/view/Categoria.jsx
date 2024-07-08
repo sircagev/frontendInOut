@@ -48,7 +48,7 @@ export const Categoria = () => {
     const [isOpenUpdate, setIsOpenupdate] = useState(false);
 
     const handleDesactivar = async (codigoElemento, estadoActual) => {
-      const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+      const nuevoEstado = estadoActual == 1 ? '0' : '1';
       await DesactivarCategorias(codigoElemento, nuevoEstado);
       ListarCategorias();
     };
@@ -64,13 +64,13 @@ export const Categoria = () => {
           form={<FormUpdateCategoria onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarCategorias} />}
         />
         <Button
-          color={item.status === 'activo' ? 'danger' : 'success'}
+          color={item.status == 1 ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
           onClick={() => handleDesactivar(item.codigo, item.status)}
         >
-          {item.status === 'activo' ? 'Desactivar' : 'Activar'}
+          {item.status == 1 ? 'Desactivar' : 'Activar'}
         </Button>
       </div >
     )
