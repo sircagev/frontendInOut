@@ -19,6 +19,7 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   const BodegasListar = async () => {
     try {
       const response = await axiosClient.get('bodega/listar');
+      console.log(response.data)
       setBodegas(response.data);
     } catch (error) {
       console.error("Error fetching bodegas:", error);
@@ -27,9 +28,10 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   };
 
   useEffect(() => {
+    console.log(category)
     if (category) {
       setNombre(category.name);
-      setNombreBodega(category.warehouse_id);
+      setNombreBodega(category.code_warehouse);
     }
     BodegasListar();
   }, [category]);
@@ -39,6 +41,11 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
     if (!nombre.trim()) {
       formErrors.nombre = 'El nombre no debe estar vacío.';
     }
+
+    if (!bodega) {
+      formErrors.nombreBodega = 'Debe seleccionar una bodega.';
+    }
+
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
