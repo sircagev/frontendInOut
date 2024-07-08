@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
 import NextUITable from "../components/NextUITable";
-import { Button } from '@nextui-org/react';
+import { Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from '@nextui-org/react';
 import { columnsElements, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/ElementsData';
 import axiosClient from '../components/config/axiosClient';
 import Modal1 from "../components/Modal1";
@@ -23,6 +23,7 @@ export const Elemento = () => {
             console.log(error);
         }
     };
+
 
     useEffect(() => {
         ListarElementos();
@@ -49,10 +50,62 @@ export const Elemento = () => {
         const [isOpenLotes, setIsOpenLotes] = useState(false);
 
         const handleDesactivar = async (codigoElemento, estadoActual) => {
-            const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+            const nuevoEstado = estadoActual == 1 ? "0" : "1";
+            console.log(codigoElemento, nuevoEstado)
             await DesactivarElemento(codigoElemento, nuevoEstado);
             ListarElementos();
         };
+
+        const [data, setData] = useState([]);
+
+        const ListarBodegas = async () => {
+            try {
+                const response = await axiosClient.get(`batches/list/${item.codigo}`);
+                setData(response.data.data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        useEffect(() => {
+            ListarBodegas();
+        }, []);
+
+        const classNames = React.useMemo(
+            () => ({
+              wrapper: ["max-h-[382px]", "max-w-3xl"],
+              th: ["bg-transparent", "text-default-500", "border-b", "border-divider", "text-black", "text-center"],
+              td: [
+                // changing the rows border radius
+                // first
+                "group-data-[first=true]:first:before:rounded-none",
+                "group-data-[first=true]:last:before:rounded-none",
+                // middle
+                "group-data-[middle=true]:before:rounded-none",
+                // last
+                "group-data-[last=true]:first:before:rounded-none",
+                "group-data-[last=true]:last:before:rounded-none",
+                "text-center"
+              ],
+            }),
+            [],
+          );
+
+        const columns = [
+            {
+                key: 'batch_id',
+                label: "CODIGO"
+            },
+            {
+                key: "quantity",
+                label: "CANTIDAD"
+            },
+            {
+                key: "expiration",
+                label: "EXPIRACIÓN"
+            }
+        ];
 
         return (
             <div className='flex gap-3'>
@@ -65,67 +118,71 @@ export const Elemento = () => {
                     form={<FormUpdateElemento onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarElementos} />}
                 />
                 <Button
-                    color={item.status === 'activo' ? 'danger' : 'success'}
+                    color={item.status == 1 ? 'danger' : 'success'}
                     variant="bordered"
                     size="sm"
                     className="w-[15px]"
                     onClick={() => handleDesactivar(item.codigo, item.status)}
                 >
-                    {item.status === 'activo' ? 'Desactivar' : 'Activar'}
+                    {item.status == 1 ? 'Desactivar' : 'Activar'}
                 </Button>
-                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenLotes(true)}>Lotes</Button> 
+                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => {
+                    setIsOpenLotes(true);
+                    ListarBodegas();
+                }}>Lotes</Button>
                 <Modal1
                     title={"Lotes"}
-                    size={"2xl"}
+                    size={"3xl"}
                     isOpen={isOpenLotes}
                     onClose={() => setIsOpenLotes(false)}
+                    form={
+                        <Table
+                            aria-label="info table"
+                            removeWrapper
+                            classNames={classNames}>
+                            <TableHeader columns={columns}>
+                                {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                            </TableHeader>
+                            <TableBody items={data} emptyContent={'No hay detalles'}>
+                                {(item) => (
+                                    <TableRow key={item.batch_id}>
+                                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    }
                 />
             </div>
         );
     };
 
     return (
-        <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-5">
-            <Tabs aria-label="Options">
+        <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-2">
+            <Tabs aria-label="Options" className='ml-8'>
                 <Tab key="elementos" title="Elementos" color="primary">
-                    <Card>
-                        <CardBody>
-                            <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
-                                <NextUITable
-                                    columns={columnsElements}
-                                    rows={data}
-                                    initialColumns={INITIAL_VISIBLE_COLUMNS}
-                                    statusColorMap={statusColorMap}
-                                    statusOptions={statusOptions}
-                                    searchKeys={searchKeys}
-                                    buttons={Buttons}
-                                    statusOrType={'status'}
-                                    actions={Actions}
-                                />
-                            </div>
-                        </CardBody>
-                    </Card>
+                    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
+                        <NextUITable
+                            columns={columnsElements}
+                            rows={data}
+                            initialColumns={INITIAL_VISIBLE_COLUMNS}
+                            statusColorMap={statusColorMap}
+                            statusOptions={statusOptions}
+                            searchKeys={searchKeys}
+                            buttons={Buttons}
+                            statusOrType={'status'}
+                            actions={Actions}
+                        />
+                    </div>
                 </Tab>
                 <Tab key="categorias" title="Categorías">
-                    <Card>
-                        <CardBody>
-                            <Categoria />
-                        </CardBody>
-                    </Card>
+                    <Categoria />
                 </Tab>
                 <Tab key="empaques" title="Empaques">
-                    <Card>
-                        <CardBody>
-                            <Empaques />
-                        </CardBody>
-                    </Card>
+                    <Empaques />
                 </Tab>
                 <Tab key="medidas" title="Medidas">
-                    <Card>
-                        <CardBody>
-                            <Medidas />
-                        </CardBody>
-                    </Card>
+                    <Medidas />
                 </Tab>
             </Tabs>
         </div>

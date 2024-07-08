@@ -137,7 +137,7 @@ const NextUITable = ({
                 return (
 
                     <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
-                        {cellValue}
+                        {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
                     </Chip>
 
 
@@ -362,7 +362,7 @@ const NextUITable = ({
                     <TableColumn
                         key={column.uid}
                         align={column.uid === "actions" ? "center" : column.uid === "tipo" ? "center" : "start"}
-                        width={column.uid === "codigo" ? '2opx' : ''}
+                        width={column.uid === "codigo" ? '20px' : ''}
                         allowsSorting={column.sortable}
                     >
                         {column.name}
