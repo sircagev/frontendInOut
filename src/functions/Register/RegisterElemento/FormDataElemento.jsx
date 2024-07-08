@@ -12,6 +12,9 @@ export const FormDataElemento = ({ listar, onClose }) => {
   const [UseCategorias, setCategorias] = useState([]);
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
+  const [errors, setErrors] = useState({
+    name: ""
+  });
 
   const [values, setValues] = useState({
     name: "",
@@ -19,14 +22,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
     measurementUnit_id: "",
     category_id: "",
     packageType_id: ""
-  });
-
-  const [errorMessages, setErrorMessages] = useState({
-    name: '',
-    elementType_id: '',
-    measurementUnit_id: '',
-    category_id: '',
-    packageType_id: ''
   });
 
   useEffect(() => {
@@ -43,10 +38,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
         SetEmpaques(empaquesData || []);
         SetMedidas(medidasData || []);
       } catch (error) {
-        setErrorMessages(prevErrors => ({
-          ...prevErrors,
-          ubicacion: 'Error al cargar los datos. Inténtelo de nuevo.'
-        }));
         console.log(error);
       }
     };
@@ -61,46 +52,24 @@ export const FormDataElemento = ({ listar, onClose }) => {
       ...values,
       [name]: formattedValue,
     });
-
-    setErrorMessages({
-      ...errorMessages,
-      [name]: '' // Clear the error message for the current field
-    });
   };
+
+  const validateForm = () => {
+    let formErrors = {};
+
+    if (!values.name.trim()) {
+      formErrors.name = 'El nombre no debe estar vacío.';
+    }
+
+    setErrors(formErrors);
+    console.log('Form Errors:', formErrors); // Verifica los errores aquí
+    return Object.keys(formErrors).length === 0;
+  }
 
   const handleForm = async (event) => {
     event.preventDefault();
 
-    // Validate the form inputs
-    const newErrorMessages = {};
-
-    if (!values.name) {
-      newErrorMessages.name = 'El nombre es requerido';
-    } else if (/\d/.test(values.name)) {
-      newErrorMessages.name = 'El nombre no debe contener números';
-    }
-
-    if (!values.elementType_id) {
-      newErrorMessages.elementType_id = 'Debe seleccionar un tipo de elemento';
-    }
-
-    if (!values.measurementUnit_id) {
-      newErrorMessages.measurementUnit_id = 'Debe seleccionar un tipo de medida';
-    }
-
-    if (!values.category_id) {
-      newErrorMessages.category_id = 'Debe seleccionar una categoría';
-    }
-
-    if (!values.packageType_id) {
-      newErrorMessages.packageType_id = 'Debe seleccionar un empaque';
-    }
-
-    setErrorMessages(newErrorMessages);
-
-    if (Object.keys(newErrorMessages).length > 0) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       const response = await axiosClient.post('elemento/registrar', values);
@@ -141,10 +110,10 @@ export const FormDataElemento = ({ listar, onClose }) => {
               onChange={handleInputChange}
               className="w-[100%]"
             />
-            {errorMessages.name && (
-              <div className="flex text-red-500 text-xs mt-1 ml-2 items-center">
-                <FaExclamationCircle className="mr-2" />
-                {errorMessages.name}
+            {errors.name && (
+              <div className="flex items-center text-red-500 text-xs mt-1 ml-3">
+                <FaExclamationCircle className="mr-1" />
+                {errors.name}
               </div>
             )}
           </div>
@@ -169,12 +138,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <option disabled>No hay tipos disponibles</option>
             )}
           </select>
-          {errorMessages.elementType_id && (
-            <div className="flex items-center text-red-500 text-xs mt-1">
-              <FaExclamationCircle className="mr-2" />
-              {errorMessages.elementType_id}
-            </div>
-          )}
           <select
             name="measurementUnit_id"
             required
@@ -196,12 +159,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <option disabled>No hay tipos de medida disponibles</option>
             )}
           </select>
-          {errorMessages.measurementUnit_id && (
-            <div className="flex items-center text-red-500 text-xs mt-1">
-              <FaExclamationCircle className="mr-2" />
-              {errorMessages.measurementUnit_id}
-            </div>
-          )}
           <select
             name='category_id'
             required
@@ -223,12 +180,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <option disabled>No hay categorías disponibles</option>
             )}
           </select>
-          {errorMessages.category_id && (
-            <div className="flex items-center text-red-500 text-xs mt-1">
-              <FaExclamationCircle className="mr-2" />
-              {errorMessages.category_id}
-            </div>
-          )}
           <select
             name='packageType_id'
             required
@@ -250,12 +201,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
               <option disabled>No hay empaques disponibles</option>
             )}
           </select>
-          {errorMessages.packageType_id && (
-            <div className="flex items-center text-red-500 text-xs mt-1">
-              <FaExclamationCircle className="mr-2" />
-              {errorMessages.packageType_id}
-            </div>
-          )}
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
           <ButtonCerrar onClose={onClose} />
