@@ -11,6 +11,8 @@ import Modal1 from "../components/Modal1";
 import { useAuth } from "../context/AuthProvider";
 
 export const Navbar = ({ setLogIn }) => {
+
+  //#region constantes
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -26,7 +28,10 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
 
+  //#endregion constantes
+
   const { logout } = useAuth();
+ 
 
   const navigate = useNavigate();
 
@@ -51,6 +56,7 @@ export const Navbar = ({ setLogIn }) => {
   };
 
   const toggleSubMenu = () => {
+    
     setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
   };
 
@@ -117,7 +123,9 @@ export const Navbar = ({ setLogIn }) => {
         <div className="text-black flex items-center gap-2 relative">
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onClick={() => setIsOpen(true)} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+            onClick={() => (
+              setIsOpen(true)
+            )} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
           />
           <Modal1
             isOpen={isOpen}
