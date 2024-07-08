@@ -47,7 +47,7 @@ export const Medidas = () => {
     const [isOpenUpdate, setIsOpenupdate] = useState(false);
 
     const handleDesactivar = async (codigoElemento, estadoActual) => {
-      const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+      const nuevoEstado = estadoActual === 1 ? '0' : '1';
       await DesactivarMedida(codigoElemento, nuevoEstado);
       listarMedidas();
     };
@@ -63,13 +63,13 @@ export const Medidas = () => {
           form={<FormUpdateMedida onClose={() => setIsOpenupdate(false)} category={item} Listar={listarMedidas} />}
         />
         <Button
-          color={item.status === 'activo' ? 'danger' : 'success'}
+          color={item.status == 1 ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
           onClick={() => handleDesactivar(item.codigo, item.status)}
         >
-          {item.status === 'activo' ? 'Desactivar' : 'Activar'}
+          {item.status == 1 ? 'Desactivar' : 'Activar'}
         </Button>
       </div >
     )

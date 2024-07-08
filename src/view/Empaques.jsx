@@ -48,7 +48,7 @@ export const Empaques = () => {
     const [isOpenUpdate, setIsOpenupdate] = useState(false);
 
     const handleDesactivar = async (codigoElemento, estadoActual) => {
-      const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
+      const nuevoEstado = estadoActual == 1 ? "0" : "1";
       await DesactivarEmpaque(codigoElemento, nuevoEstado);
       ListarEmpaques();
     };

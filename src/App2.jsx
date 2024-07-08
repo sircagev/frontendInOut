@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Elementos } from "./view/Elementos"
 import { Elemento } from "./view/Elemento";
-import { Categorias } from "./view/Categorias";
 import { Categoria } from "./view/Categoria";
-import { Empaque } from "./view/Empaque";
 import { Empaques } from "./view/Empaques";
-import { Medida } from "./view/Medida";
 import { Medidas } from "./view/Medidas";
-import { Ubicacion } from "./view/Ubicacion";
 import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
 import Reporte from "./view/Reportes";

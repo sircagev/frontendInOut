@@ -11,13 +11,13 @@ const columnslocation = [
 const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "warehouse_id", "status", "actionElement"];
 
 const statusOptions = [
-    { name: "Activo", uid: "activo" },
-    { name: "Inactivo", uid: "inactivo" }
+    { name: "Activo", uid: "1" },
+    { name: "Inactivo", uid: "0" }
 ]
 
 const statusColorMap = {
-    "activo": 'success',
-    "inactivo": 'warning'
+    "1": 'success',
+    "0": 'warning'
 }
 
 const searchKeys = ['codigo', 'name', 'category_id']
