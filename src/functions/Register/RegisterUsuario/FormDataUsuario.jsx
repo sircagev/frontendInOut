@@ -4,7 +4,7 @@ import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { FaExclamationCircle } from 'react-icons/fa';
 import swal from 'sweetalert';
 
-export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
+export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
     const [values, setValues] = useState({
         user_id: "",
         name: "",
@@ -160,6 +160,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
 
         try {
             const response = await axiosClient.post('usuario/registrar', values);
+         
             if (response.status === 200) {
                 swal({
                     title: "Registro exitoso",
@@ -180,9 +181,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose }) => {
                     position_id: "",
                     course_id: ""
                 });
-
+                Listar();
                 // Llamar a onRegisterSuccess después de limpiar el formulario
-                onRegisterSuccess();
+                /* onRegisterSuccess(); */
             } else {
                 throw new Error('Error al registrar el usuario');
             }

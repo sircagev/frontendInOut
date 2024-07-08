@@ -63,6 +63,6 @@ export const DesactivarUsuario = async (CodigoUsuario, nuevoEstado) => {
         await axiosClient.put(`usuario/desactivar/${CodigoUsuario}`, { estado: nuevoEstado });
 
     } catch (error) {
-        console.error("Error al desactivar la bodega:", error);
+        console.error("Error al desactivar el Usuario:", error);
     }
 };

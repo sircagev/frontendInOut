@@ -11,18 +11,17 @@ import { DesactivarUsuario } from "../functions/Desactivar";
 export const Usuarios = () => {
   const [data, setData] = useState([])
 
-  const ListarCategorias = async () => {
+  const ListarUsuario = async () => {
     try {
       const response = await axiosClient.get('usuario/listar');
       setData(response.data)
-      console.log(response.data)
     } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    ListarCategorias()
+    ListarUsuario()
   }, [])
 
 
@@ -36,7 +35,7 @@ export const Usuarios = () => {
           size={"2xl"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          form={<FormDataUsuario onClose={() => setIsOpen(false)} listar={ListarCategorias} />}
+          form={<FormDataUsuario onClose={() => setIsOpen(false)} Listar={ListarUsuario} />}
         />
       </div>
     )
@@ -48,7 +47,7 @@ export const Usuarios = () => {
     const handleDesactivar = async (CodigoUsuario, estadoActual) => {
       const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
       await DesactivarUsuario(CodigoUsuario, nuevoEstado);
-      ListarCategorias();
+      ListarUsuario();
     };
 
     return (
@@ -59,7 +58,7 @@ export const Usuarios = () => {
           size={"2xl"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenupdate(false)}
-          form={<FormUpdateUsuario onClose={() => setIsOpenupdate(false)} category={codigo} Listar={ListarCategorias} />}
+          form={<FormUpdateUsuario onClose={() => setIsOpenupdate(false)} category={codigo} Listar={ListarUsuario} />}
         />
         <Button
           color={codigo.status === 'Activo' ? 'danger' : 'success'}
