@@ -207,3 +207,12 @@ export const MovementList = async () => {
         console.log(error);
     }
 }
+
+export const MovementDetailsById = async (id) => {
+    try {
+        const response = await axiosClient.get(`movimientos/movement-details/list/${id}`)
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
