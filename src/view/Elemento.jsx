@@ -46,6 +46,7 @@ export const Elemento = () => {
 
     const Actions = ({ item }) => {
         const [isOpenUpdate, setIsOpenupdate] = useState(false);
+        const [isOpenLotes, setIsOpenLotes] = useState(false);
 
         const handleDesactivar = async (codigoElemento, estadoActual) => {
             const nuevoEstado = estadoActual === 'activo' ? 'inactivo' : 'activo';
@@ -72,6 +73,13 @@ export const Elemento = () => {
                 >
                     {item.status === 'activo' ? 'Desactivar' : 'Activar'}
                 </Button>
+                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenLotes(true)}>Lotes</Button> 
+                <Modal1
+                    title={"Lotes"}
+                    size={"2xl"}
+                    isOpen={isOpenLotes}
+                    onClose={() => setIsOpenLotes(false)}
+                />
             </div>
         );
     };

@@ -39,9 +39,6 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
     if (!nombre.trim()) {
       formErrors.nombre = 'El nombre no debe estar vacío.';
     }
-    if (!nombreBodega) {
-      formErrors.nombreBodega = 'Debe seleccionar una bodega.';
-    }
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
