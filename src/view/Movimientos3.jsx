@@ -26,6 +26,7 @@ import { MovementList } from '../functions/Listar'
 //Formularios
 import { RegisterMovement } from '../components/forms/Movements/RegisterMovement';
 import { RegisterMovmentOutgoing } from '../components/forms/Movements/RegisterMovmentOutgoing';
+import { MovementDetails } from '../components/infos/Movements/MovementDetails';
 
 export const Movimientos3 = () => {
 
@@ -96,10 +97,11 @@ export const Movimientos3 = () => {
                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                         <Button color='primary' variant="ligth" className="text-lg" onClick={() => { setIsOpen3(true) }} isIconOnly> <EyeIcon color="#007BFF" /></Button>
                         <Modal1
-                            title={"El modal de info"}
-                            size={'xl'}
+                            title={`Movimiento # ${codigo.codigo}`}
+                            size={'2xl'}
                             isOpen={isOpen3}
-                            onClose={() => setIsOpen3(false)} />
+                            onClose={() => setIsOpen3(false)} 
+                            form={<MovementDetails movement={codigo}/>}/>
                     </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete user">
