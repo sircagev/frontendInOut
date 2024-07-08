@@ -1,19 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, user } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
 export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
+
+
     const [values, setValues] = useState({
         name: '',
         lastname: '',
         phone: '',
         email: '',
         identification: '',
-        course_id: ''
     });
+
+    const editValues = (event) => {
+        setValues(prevState => ({
+            ...prevState,
+            [event.target.name]: event.target.value
+        }))
+    }
+
+    const userIdentificacion = localStorage.getItem('identification');
+    const userId = localStorage.getItem('user_id');
+   
+     const getDataUser = async () => {
+       try {
+         const respuesta = await axiosClient.get(`usuario/buscar/${userIdentificacion}`).then((response) => {
+           console.log(response.data);
+           const userData = response.data.Datos;
+
+           const user = {
+            name: userData.user_name,
+            lastname: userData.lastname,
+            phone: userData.phone,
+            email: userData.email,
+            identification: userData.identification,
+           }
+
+           setValues(user);
+         })
+
+         
+         
+       } catch (error) {
+         console.log(error);
+       }
+     };
+
+     const putUser = async (event) => {
+        event.preventDefault();
+        try {
+            const respuesta = await axiosClient.put(`usuario/perfil/${userId}`, values)
+            if (respuesta.status === 200) {
+                alert("user update")
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+     }
+  
 
     const [errorMessages, setErrorMessages] = useState({
         name: '',
@@ -25,6 +74,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
     });
 
     useEffect(() => {
+        getDataUser();
         if (category) {
             setValues({
                 name: category.name,
@@ -142,7 +192,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={putUser}>
                 <div className='flex flex-col justify-center items-center gap-3 mb-4'>
                     <div className="w-auto flex gap-3 mb-2">
                         <div>
@@ -151,7 +201,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 label='Nombre Usuario'
                                 name='name'
                                 value={values.name}
-                                onChange={handleInputChange}
+                                onChange={editValues}
                                 className="w-[310px]"
                             />
                             {errorMessages.name && (
@@ -167,7 +217,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 label='Apellido Usuario'
                                 name='lastname'
                                 value={values.lastname}
-                                onChange={handleInputChange}
+                                onChange={editValues}
                                 className="w-[310px]"
                             />
                             {errorMessages.lastname && (
@@ -185,7 +235,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 label='Email'
                                 name='email'
                                 value={values.email}
-                                onChange={handleInputChange}
+                                onChange={editValues}
                                 className="w-[310px]"
                             />
                             {errorMessages.email && (
@@ -201,7 +251,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 label='Teléfono'
                                 name='phone'
                                 value={values.phone}
-                                onChange={handleInputChange}
+                                onChange={editValues}
                                 className="w-[310px]"
                             />
                             {errorMessages.phone && (
@@ -219,7 +269,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 label='Identifiación'
                                 name='identification'
                                 value={values.identification}
-                                onChange={handleInputChange}
+                                onChange={editValues}
                                 className="w-[310px]"
                                 onKeyPress={allowOnlyNumbers}
                                 inputMode="numeric"
@@ -228,24 +278,6 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                                 <div className="flex items-center text-red-500 text-xs mt-1">
                                     <FaExclamationCircle className="mr-2" />
                                     {errorMessages.identification}
-                                </div>
-                            )}
-                        </div>
-                        <div>
-                            <Input
-                                type='number'
-                                label='Ficha'
-                                name='course_id'
-                                value={values.course_id}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                                onKeyPress={allowOnlyNumbers}
-                                inputMode="numeric"
-                            />
-                            {errorMessages.course_id && (
-                                <div className="flex items-center text-red-500 text-xs mt-1">
-                                    <FaExclamationCircle className="mr-2" />
-                                    {errorMessages.course_id}
                                 </div>
                             )}
                         </div>

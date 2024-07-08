@@ -50,7 +50,8 @@ function Login() {
         localStorage.setItem('email', response.data.email); // Asegúrate de obtener y guardar el email
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
-
+        localStorage.setItem('user_id', response.data.user_id);
+        localStorage.setItem('identification', response.data.identification);
 
 
         console.log(user)
