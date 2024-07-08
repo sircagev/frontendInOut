@@ -91,16 +91,15 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
         }
     };
 
-
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         let hasError = validateForm();
-
+    
         if (hasError) return;
-
+    
         try {
-            // Enviar course_id solo si position_id es '1' (aprendiz)
+            // Preparar los datos para enviar en la solicitud PUT
             const dataToUpdate = {
                 name: values.name,
                 lastname: values.lastname,
@@ -110,13 +109,16 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                 role_id: values.role_id,
                 position_id: values.position_id
             };
-
+    
+            // Incluir course_id solo si position_id es '1' (aprendiz)
             if (values.position_id === '1') {
                 dataToUpdate.course_id = values.course_id;
             }
-
+    
+            // Enviar solicitud PUT para actualizar el usuario
             await axiosClient.put(`usuario/actualizar/${category.codigo}`, dataToUpdate);
-
+    
+            // Mostrar mensaje de éxito usando SweetAlert
             swal({
                 title: "Actualizado",
                 text: "Usuario actualizado con éxito.",
@@ -124,20 +126,38 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                 buttons: false,
                 timer: 2000,
             });
-
+    
+            // Actualizar la lista y cerrar el modal o ventana
             Listar();
             onClose();
-
-
+    
         } catch (error) {
-            let message = "Hubo un error al actualizar el usuario.";
+            console.log("Error al Actualizar el Usuario", error);
+    
+            // Mostrar mensaje de error específico si está disponible
             if (error.response && error.response.data && error.response.data.message) {
-                message = error.response.data.message;
+                swal({
+                    title: "Error",
+                    text: error.response.data.message, // Mostrar el mensaje específico del servidor
+                    icon: "error",
+                    buttons: {
+                        confirm: "OK",
+                    },
+                });
+            } else {
+                // Mostrar mensaje de error genérico si no se proporciona un mensaje específico
+                swal({
+                    title: "Error",
+                    text: "Error al actualizar el Usuario.",
+                    icon: "error",
+                    buttons: {
+                        confirm: "OK",
+                    },
+                });
             }
-            swal("Error", message, "error");
         }
     };
-
+    
 
 
     const validateForm = () => {

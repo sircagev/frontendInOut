@@ -6,7 +6,6 @@ import swal from 'sweetalert';
 
 export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
     const [values, setValues] = useState({
-        user_id: "",
         name: "",
         lastname: "",
         phone: "",
@@ -18,7 +17,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
     });
 
     const [errorMessages, setErrorMessages] = useState({
-        user_id: '',
         name: '',
         lastname: '',
         phone: '',
@@ -83,7 +81,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
 
         let hasError = false;
         let newErrorMessages = {
-            user_id: '',
             name: '',
             lastname: '',
             phone: '',
@@ -93,11 +90,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             position_id: '',
             course_id: ''
         };
-
-        if (!values.user_id.trim()) {
-            newErrorMessages.user_id = 'El campo de ID es requerido.';
-            hasError = true;
-        }
 
         if (!values.name.trim()) {
             newErrorMessages.name = 'El nombre de usuario es requerido.';
@@ -160,18 +152,17 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
 
         try {
             const response = await axiosClient.post('usuario/registrar', values);
-         
+        
             if (response.status === 200) {
                 swal({
                     title: "Registro exitoso",
                     text: "El Usuario se ha registrado correctamente.",
                     icon: "success",
-                    buttons: false,
+                    buttons: true,
                     timer: 2000,
                 });
-
+        
                 setValues({
-                    user_id: "",
                     name: "",
                     lastname: "",
                     phone: "",
@@ -188,18 +179,30 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                 throw new Error('Error al registrar el usuario');
             }
         } catch (error) {
-            console.error("Error al registrar el usuario:", error);
-
-            // Mostrar mensaje de error genérico
-            swal({
-                title: "Registro exitoso",
-                text: "El Usuario se ha registrado correctamente.",
-                icon: "success",
-                buttons: {
-                    confirm: "OK",
-                },
-            });
+            console.log("Error al registrar el usuario:", error);
+        
+            // Mostrar mensaje de error genérico o específico
+            if (error.response && error.response.data && error.response.data.message) {
+                swal({
+                    title: "Error",
+                    text: error.response.data.message, // Mostrar el mensaje específico del servidor
+                    icon: "error",
+                    buttons: {
+                        confirm: "OK",
+                    },
+                });
+            } else {
+                swal({
+                    title: "Error",
+                    text: "Error al registrar el Usuario.",
+                    icon: "error",
+                    buttons: {
+                        confirm: "OK",
+                    },
+                });
+            }
         }
+        
     };
 
     return (
@@ -207,22 +210,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             <form onSubmit={handleForm}>
                 <div className='flex flex-col justify-center items-center gap-3 mb-4'>
                     <div className='w-auto flex gap-3 mb-2'>
-                        <div>
-                            <Input
-                                type='number'
-                                label='Id Usuario'
-                                name='user_id'
-                                value={values.user_id}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                            />
-                            {errorMessages.user_id && (
-                                <div className="flex items-center text-red-500 text-xs mt-1">
-                                    <FaExclamationCircle className="mr-2" />
-                                    {errorMessages.user_id}
-                                </div>
-                            )}
-                        </div>
                         <div>
                             <Input
                                 type='text'
@@ -240,9 +227,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 </div>
                             )}
                         </div>
-                    </div>
-
-                    <div className='w-auto flex gap-3 mb-2'>
                         <div>
                             <Input
                                 type='text'
@@ -256,22 +240,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 <div className="flex items-center text-red-500 text-xs mt-1">
                                     <FaExclamationCircle className="mr-2" />
                                     {errorMessages.lastname}
-                                </div>
-                            )}
-                        </div>
-                        <div>
-                            <Input
-                                type='number'
-                                label='Telefono'
-                                name='phone'
-                                value={values.phone}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                            />
-                            {errorMessages.phone && (
-                                <div className="flex items-center text-red-500 text-xs mt-1">
-                                    <FaExclamationCircle className="mr-2" />
-                                    {errorMessages.phone}
                                 </div>
                             )}
                         </div>
@@ -297,6 +265,26 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                         <div>
                             <Input
                                 type='number'
+                                label='Telefono'
+                                name='phone'
+                                value={values.phone}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            />
+                            {errorMessages.phone && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.phone}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className='w-auto flex gap-3 mb-2'>
+
+                        <div>
+                            <Input
+                                type='number'
                                 label='Identificacion'
                                 name='identification'
                                 value={values.identification}
@@ -309,6 +297,25 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 <div className="flex items-center text-red-500 text-xs mt-1">
                                     <FaExclamationCircle className="mr-2" />
                                     {errorMessages.identification}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <Select
+                                label='Rol'
+                                name='role_id'
+                                value={values.role_id}
+                                onChange={handleInputChange}
+                                className="w-[310px]"
+                            >
+                                {roles.map((role) => (
+                                    <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
+                                ))}
+                            </Select>
+                            {errorMessages.role_id && (
+                                <div className="flex items-center text-red-500 text-xs mt-1">
+                                    <FaExclamationCircle className="mr-2" />
+                                    {errorMessages.role_id}
                                 </div>
                             )}
                         </div>
@@ -334,29 +341,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 </div>
                             )}
                         </div>
-
-                        <div>
-                            <Select
-                                label='Rol'
-                                name='role_id'
-                                value={values.role_id}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                            >
-                                {roles.map((role) => (
-                                    <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
-                                ))}
-                            </Select>
-                            {errorMessages.role_id && (
-                                <div className="flex items-center text-red-500 text-xs mt-1">
-                                    <FaExclamationCircle className="mr-2" />
-                                    {errorMessages.role_id}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className='w-auto flex gap-3 mb-2'>
                         <div>
                             <Input
                                 type='number'
@@ -375,7 +359,10 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 </div>
                             )}
                         </div>
+
                     </div>
+
+
                 </div>
                 <div className='flex justify-end gap-3 mb-3'>
                     <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
