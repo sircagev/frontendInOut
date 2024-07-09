@@ -208,6 +208,17 @@ export const MovementList = async () => {
     }
 }
 
+export const LoansList = async () => {
+    try {
+        const response = await axiosClient.get('movimientos/loans/list', {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const MovementDetailsById = async (id) => {
     try {
         const response = await axiosClient.get(`movimientos/movement-details/list/${id}`)

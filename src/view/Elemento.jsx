@@ -24,7 +24,6 @@ export const Elemento = () => {
         }
     };
 
-
     useEffect(() => {
         ListarElementos();
     }, []);

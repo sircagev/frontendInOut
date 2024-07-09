@@ -95,8 +95,6 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
         try {
             const register = await axiosClient.post('movimientos/register-incoming', newRegister);
 
-            console.log(register)
-
             const status = register.status >= 200 && register.status <= 210 ? true : false
 
             swal({

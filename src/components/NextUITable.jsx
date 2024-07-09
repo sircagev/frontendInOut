@@ -116,6 +116,36 @@ const NextUITable = ({
                         {item.correo}
                     </User>
                 );
+            case "usuario_manager":
+                return (
+                    <User
+                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                        description={item.correo_manager}
+                        name={capitalize(cellValue)}
+                    >
+                        {item.correo_manager}
+                    </User>
+                );
+            case "usuario_receiving":
+                return (
+                    <User
+                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                        description={item.correo_receiving}
+                        name={capitalize(cellValue)}
+                    >
+                        {item.correo_receiving}
+                    </User>
+                );
+            case "usuario_returning":
+                return (
+                    <User
+                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                        description={item.correo_returning}
+                        name={capitalize(cellValue)}
+                    >
+                        {item.correo_returning}
+                    </User>
+                );
             case "role":
                 return (
                     <div className="flex flex-col">
@@ -135,12 +165,9 @@ const NextUITable = ({
                 );
             case "status":
                 return (
-
                     <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
                         {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
                     </Chip>
-
-
                 );
             case "actions":
                 return (
