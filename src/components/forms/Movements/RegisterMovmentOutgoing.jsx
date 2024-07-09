@@ -14,7 +14,7 @@ import { ListarUsuarios } from "../../../functions/Listar";
 import { ListarElementos } from "../../../functions/Listar";
 
 
-export const RegisterMovmentOutgoing = ({ onClose }) => {
+export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
 
     const [errors, setErrors] = useState({
         user_application: '',
@@ -76,6 +76,7 @@ export const RegisterMovmentOutgoing = ({ onClose }) => {
                 timer: 2000,
             });
 
+            listarMovements();
             onClose();
         } catch (error) {
             console.log(error)

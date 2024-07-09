@@ -64,7 +64,8 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    form={<RegisterMovement onClose={() => setIsOpen(false)} />}
+                    form={<RegisterMovement onClose={() => setIsOpen(false)} 
+                    listarMovimientos={list}/>}
                 />
                 < Button
                     /* className="bg-foreground text-background" */
@@ -82,7 +83,7 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen2}
                     onClose={() => setIsOpen2(false)}
-                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} />}
+                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} listarMovements={list}/>}
                 />
             </>
         )

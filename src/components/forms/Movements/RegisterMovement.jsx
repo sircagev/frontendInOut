@@ -15,7 +15,7 @@ import { capitalize } from '../../../utils/columnsData';
 import swal from 'sweetalert';
 import axiosClient from '../../config/axiosClient';
 
-export const RegisterMovement = ({ onClose }) => {
+export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
     const [errors, setErrors] = useState({
         user_application: '',
@@ -106,7 +106,7 @@ export const RegisterMovement = ({ onClose }) => {
                 buttons: false,
                 timer: 2000,
             });
-
+            listarMovimientos();
             onClose();
         } catch (error) {
             /* console.log(error)
