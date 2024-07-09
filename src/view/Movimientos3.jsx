@@ -35,6 +35,7 @@ import { RegisterMovement } from '../components/forms/Movements/RegisterMovement
 import { RegisterMovmentOutgoing } from '../components/forms/Movements/RegisterMovmentOutgoing';
 import { MovementDetails } from '../components/infos/Movements/MovementDetails';
 import { RegisterLoans } from '../components/forms/Loans/RegisterLoans';
+import { LoanDetails } from '../components/infos/Loans/LoansDetails';
 
 export const Movimientos3 = () => {
 
@@ -121,7 +122,7 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    form={<RegisterLoans onClose={() => setIsOpen(false)} listarMovimientos={list}/>}
+                    form={<RegisterLoans onClose={() => setIsOpen(false)} listarMovimientos={list} />}
                 />
             </>
         )
@@ -141,6 +142,30 @@ export const Movimientos3 = () => {
                             isOpen={isOpen3}
                             onClose={() => setIsOpen3(false)}
                             form={<MovementDetails movement={codigo} />} />
+                    </span>
+                </Tooltip>
+                <Tooltip color="danger" content="Delete user">
+                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                        {/* <DeleteIcon /> */}
+                    </span>
+                </Tooltip>
+            </div>
+        )
+    }
+
+    const ActionsLoan = ({ codigo }) => {
+        const [isOpen3, setIsOpen3] = useState(false)
+        return (
+            <div className="relative flex items-center gap-2">
+                <Tooltip content="Details">
+                    <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                        <Button color='primary' variant="ligth" className="text-lg" onClick={() => { setIsOpen3(true) }} isIconOnly> <EyeIcon color="#007BFF" /></Button>
+                        <Modal1
+                            title={`Movimiento # ${codigo.codigo}`}
+                            size={'2xl'}
+                            isOpen={isOpen3}
+                            onClose={() => setIsOpen3(false)}
+                            form={<LoanDetails item={codigo} listarMovimientos={list}/>} />
                     </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete user">
@@ -181,7 +206,7 @@ export const Movimientos3 = () => {
                         statusColorMap={statusColorMapLoans}
                         initialColumns={INITIAL_VISIBLE_COLUMNS_LOANS}
                         statusOrType={'status'}
-                        actions={Actions}
+                        actions={ActionsLoan}
                         buttons={ButtonsLoans}
                     />
                 </Tab>
