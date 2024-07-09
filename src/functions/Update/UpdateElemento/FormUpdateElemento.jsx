@@ -30,10 +30,10 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
   useEffect(() => {
     if (category) {
       setNombre(category.name)
-      setTipo(category.elementType_id)
-      setMedida(category.measurementUnit_id)
-      setCategoria(category.category_id)
-      setEmpaque(category.packageType_id)
+      setTipo(category.code_elementType)
+      setMedida(category.code_Unit)
+      setCategoria(category.code_Category)
+      setEmpaque(category.code_Package)
     }
   }, [category]);
 
@@ -76,10 +76,10 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
     try {
       await axiosClient.put(`elemento/actualizar/${category.codigo}`, {
         name: nombre,
-        id_type: tipo,
-        id_unit: medida,
-        id_category: categoria,
-        id_package: empaque
+        elementType_id: tipo,
+        measurementUnit_id: medida,
+        category_id: categoria,
+        packageType_id: empaque
       });
       swal({
         title: "Actualizado",
@@ -122,7 +122,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
           >
             <option value="" disabled>Seleccione un Tipo</option>
             {tipos.map((tipo) => (
-              <option key={tipo.elementType_id} value={tipo.name}>
+              <option key={tipo.elementType_id} value={tipo.elementType_id}>
                 {tipo.name}
               </option>
             ))}
@@ -133,10 +133,6 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
               {errorMessages.tipo}
             </div>
           )}
-
-
-
-
           <select
             className="w-[100%] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
             value={medida}
@@ -144,7 +140,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
           >
             <option value="" disabled>Seleccione una medida</option>
             {medidas.map((medida) => (
-              <option key={medida.measurementUnit_id} value={medida.name}>
+              <option key={medida.measurementUnit_id} value={medida.measurementUnit_id}>
                 {medida.name}
               </option>
             ))}
@@ -158,7 +154,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
           >
             <option value="" disabled>Seleccione una categoría</option>
             {categorias.map((categoria) => (
-              <option key={categoria.category_id} value={categoria.name}>
+              <option key={categoria.category_id} value={categoria.category_id}>
                 {categoria.name}
               </option>
             ))}
@@ -174,7 +170,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
           >
             <option value="" disabled>Seleccione un Emapaque</option>
             {empaques.map((empaque) => (
-              <option key={empaque.packageType_id} value={empaque.name}>
+              <option key={empaque.packageType_id} value={empaque.packageType_id}>
                 {empaque.name}
               </option>
             ))}
@@ -184,7 +180,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
         </div>
         <div className='flex justify-end gap-3 mb-3'>
           <ButtonCerrar onClose={onClose} />
-          <ButtonRegistrar />
+          <ButtonRegistrar label={"Actualizar"}/>
         </div>
       </form>
     </div>

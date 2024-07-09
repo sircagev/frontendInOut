@@ -10,12 +10,12 @@ const columnsCategory = [
 const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "status", "actionElement"];
 
 const statusOptions = [
-    { name: "Activo", uid: "1" },
-    { name: "Inactivo", uid: "0" }
+    { name: "Activo", uid: "0" },
+    { name: "Inactivo", uid: "1" }
 ]
 
 const statusColorMap = {
-    "1": 'success',
+    "0": 'success',
     "0": 'warning'
 }
 

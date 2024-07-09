@@ -204,7 +204,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
           <ButtonCerrar onClose={onClose} />
-          <ButtonRegistrar />
+          <ButtonRegistrar label={"Registrar"}/>
         </div>
       </form>
     </div>

@@ -34,7 +34,7 @@ export const Empaques = () => {
       <div>
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
-          title={"Registrar Elemento"}
+          title={"Registrar Empaque"}
           size={"sm"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
@@ -64,13 +64,13 @@ export const Empaques = () => {
           form={<FormUpdateEmpaque onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarEmpaques} />}
         />
         <Button
-          color={item.status === 'activo' ? 'danger' : 'success'}
+          color={item.status == 1 ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
           onClick={() => handleDesactivar(item.codigo, item.status)}
         >
-          {item.status === 'activo' ? 'Desactivar' : 'Activar'}
+          {item.status == 1 ? 'Desactivar' : 'Activar'}
         </Button>
       </div >
     )

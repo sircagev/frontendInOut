@@ -69,7 +69,7 @@ export const FormUpdateCategoria = ({ onClose, category, Listar }) => {
             </div>
             <div className='flex justify-end gap-3 mb-3'>
               <ButtonCerrar/>
-              <ButtonRegistrar/>
+              <ButtonRegistrar label={"Actualizar"}/>
             </div>
           </form>
         </div>
