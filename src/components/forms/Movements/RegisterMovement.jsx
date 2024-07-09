@@ -5,13 +5,12 @@ import {
     Checkbox,
     Input,
     Button,
-    DateInput
 } from '@nextui-org/react';
 import { EyeIcon } from '../../icons/EyeIcon';
 import { ListarUsuarios } from '../../../functions/Listar';
 import { ListarElementos } from '../../../functions/Listar';
 import { Listarbodegas } from '../../../functions/Listar';
-import { ListarUbicacionesYBodegas } from '../../../functions/Listar';
+import { Listarubicacion } from '../../../functions/Listar';
 import { capitalize } from '../../../utils/columnsData';
 import swal from 'sweetalert';
 import axiosClient from '../../config/axiosClient';
@@ -50,9 +49,13 @@ export const RegisterMovement = ({ onClose }) => {
     const [newRegister, setNewRegister] = useState(objectRegister);
 
     const filteredItems = useMemo(() => {
-        const info = dataLocations.filter(item => item.code_warehouse == warehouse);
-        console.log(info)
-        return info;
+        if (dataLocations.length > 0) {
+            const info = dataLocations.filter(item => item.code_warehouse == warehouse);
+            console.log(info)
+            return info;
+        };
+
+        return [];
     }, [dataLocations, warehouse]);
 
     const isConsumable = useMemo(() => {
@@ -71,9 +74,9 @@ export const RegisterMovement = ({ onClose }) => {
             const users = await ListarUsuarios();
             const elements = await ListarElementos();
             const warehouses = await Listarbodegas();
-            const locations = await ListarUbicacionesYBodegas();
-            console.log(locations)
-            setDataUsers(users)
+            const locations = await Listarubicacion();
+            
+            setDataUsers(users);
             setDataElements(elements);
             setDataWarehouses(warehouses);
             setDataLocations(locations);
