@@ -1,70 +1,73 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { capitalize } from "../../../utils/columnsData";
-import swal from "sweetalert";
-import axiosClient from "../../config/axiosClient";
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     Autocomplete,
     AutocompleteItem,
-    Checkbox,
     Input,
     Button,
     Textarea
 } from '@nextui-org/react';
-import { ListarUsuarios } from "../../../functions/Listar";
-import { ListarElementos } from "../../../functions/Listar";
+import { ListarUsuarios, ListarElementos } from '../../../functions/Listar';
+import { capitalize } from '../../../utils/columnsData';
+import axiosClient from '../../config/axiosClient';
 
-
-export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
+export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
     const [errors, setErrors] = useState({
         user_application: '',
         element_id: '',
         quantity: '',
-        expiration: '',
-        warehouse: '',
-        location: '',
-    })
+        estimated_return: '',
+    });
 
-    const [checkUser, setCheckUser] = useState(false);
-
-    const objectOutgoing = {
+    const objectRegister = {
         user_application: null,
+        estimated_return: null,
         details: [{
-            element_id: null,
-            quantity: null,
+            element_id: '',
+            quantity: 0,
             remarks: null
         }]
     }
 
-    const [outgoingData, setOutgoing] = useState(objectOutgoing);
-
-    const [dataUsers, setDataUsers] = useState([]);
-    const [dataElements, setDataElements] = useState([]);
+    //Guardar la información que se envia para un nuevo registro
+    const [newRegister, setNewRegister] = useState(objectRegister);
+    const [usersData, setUsersData] = useState([]);
+    const [elementsData, setElementsData] = useState([]);
 
     const list = async () => {
         try {
             const users = await ListarUsuarios();
             const elements = await ListarElementos();
 
-            setDataUsers(users)
-            setDataElements(elements);
+            setUsersData(users);
+            setElementsData(elements);
+
+            console.log(users);
+            console.log(elements);
 
         } catch (error) {
             console.log(error);
         }
     }
 
+    const filteredItems = useMemo(() => {
+        if (elementsData.length > 0) {
+            const info = elementsData.filter(item => item.id_type == 2);
+            console.log(info)
+            return info;
+        };
+
+        return [];
+    }, [elementsData]);
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const res = validateForm();
-
+        let res = validateForm();
         if (res) return;
 
         try {
-            const register = await axiosClient.post('movimientos/register-outgoing', outgoingData);
-
-            console.log(register)
+            const register = await axiosClient.post('movimientos/register-loan', newRegister);
 
             const status = register.status >= 200 && register.status <= 210 ? true : false
 
@@ -75,8 +78,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                 buttons: false,
                 timer: 2000,
             });
-
-            listarMovements();
+            listarMovimientos();
             onClose();
         } catch (error) {
             console.log(error)
@@ -96,22 +98,25 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
             user_application: '',
             element_id: '',
             quantity: '',
-            expiration: '',
-            warehouse: '',
-            location: '',
+            estimated_return: '',
         };
 
-        if (checkUser && !outgoingData.user_application) {
+        if (!newRegister.user_application) {
             newErrorMessages.user_application = 'Debes seleccionar un usuario';
             hasError = true;
         }
 
-        if (!outgoingData.details[0].element_id) {
+        if (!newRegister.estimated_return) {
+            newErrorMessages.estimated_return = 'Debes seleccionar una fecha estimada de devolución';
+            hasError = true;
+        }
+
+        if (!newRegister.details[0].element_id) {
             newErrorMessages.element_id = 'Debes seleccionar un Elemento';
             hasError = true;
         }
 
-        if (!outgoingData.details[0].quantity) {
+        if (!newRegister.details[0].quantity) {
             newErrorMessages.quantity = 'Debes colocar una cantidad';
             hasError = true;
         }
@@ -126,81 +131,68 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
     }, [])
 
     useEffect(() => {
-        console.log(outgoingData)
-    }, [outgoingData])
+        console.log(newRegister)
+    }, [newRegister]);
 
     useEffect(() => {
         const handleErrors = () => {
             let newErrorMessages = { ...errors };
 
-            if (checkUser && outgoingData.user_application) {
+            if (newRegister.user_application) {
                 newErrorMessages.user_application = '';
             }
 
-            if (outgoingData.details[0].element_id) {
+            if (newRegister.details[0].element_id) {
                 newErrorMessages.element_id = '';
             }
 
-            if (outgoingData.details[0].quantity) {
+            if (newRegister.details[0].quantity) {
                 newErrorMessages.quantity = '';
             }
+
+            if (newRegister.estimated_return) {
+                newErrorMessages.estimated_return = '';
+            }
+
             setErrors(newErrorMessages);
         };
 
         handleErrors();
-    }, [outgoingData, checkUser]);
+    }, [newRegister]);
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                    <div className='flex gap-3 mb-2 w-full'>
-                        <div className='w-1/4 flex justify-center items-center'>
-                            <Checkbox
-                                onChange={() => {
-                                    setCheckUser(!checkUser)
-                                    if (checkUser) {
-                                        setOutgoing(precData => ({
-                                            ...precData,
-                                            user_application: null
-                                        }))
-                                    }
-                                }}
-                                color='success'>
-                                Usuario externo
-                            </Checkbox>
-                        </div>
-                        <div className='w-3/4'>
-                            {checkUser &&
-                                <Autocomplete
-                                    aria-label='autocomplete-users'
-                                    label="Seleccionar el usuario"
-                                    placeholder="Busca un usuario"
-                                    isRequired
-                                    isInvalid={errors.user_application ? true : false}
-                                    errorMessage={errors.user_application}
-                                    className='h-[60px]'
-                                    onSelectionChange={(value) => {
-                                        const element = value;
-                                        setOutgoing(precData => ({
-                                            ...precData,
-                                            user_application: parseInt(value)
-                                        }));
-                                    }}
+                    <div className='w-full flex gap-3 mb-2'>
+                        <Autocomplete
+                            aria-label='autocomplete-users'
+                            label="Seleccionar el usuario"
+                            placeholder="Busca un usuario"
+                            isRequired
+                            isInvalid={errors.user_application ? true : false}
+                            errorMessage={errors.user_application}
+                            className='h-[60px]'
+                            onSelectionChange={(value) => {
+                                const element = value;
+                                setNewRegister(precData => ({
+                                    ...precData,
+                                    user_application: parseInt(value)
+                                }));
+                            }}
+                        >
+                            {usersData.map((user) => (
+                                <AutocompleteItem
+                                    key={user.codigo}
+                                    value={user.codigo}
                                 >
-                                    {dataUsers.map((user) => (
-                                        <AutocompleteItem
-                                            key={user.codigo}
-                                            value={user.codigo}
-                                        >
-                                            {user.identification + ' - ' + capitalize(user.nombre)}
-                                        </AutocompleteItem>
-                                    ))}
-                                </Autocomplete>}
-                        </div>
+                                    {user.identification + ' - ' + capitalize(user.nombre)}
+                                </AutocompleteItem>
+                            ))}
+                        </Autocomplete>
                     </div>
                     <div className='w-full flex gap-3'>
-                        <div className='w-3/4'>
+                        <div className='w-[70%]'>
                             <Autocomplete
                                 isClearable
                                 aria-label='autocomplete-elements'
@@ -212,7 +204,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                 className='h-[60px]'
                                 onSelectionChange={(value) => {
                                     const item = value;
-                                    setOutgoing(prevData => ({
+                                    setNewRegister(prevData => ({
                                         ...prevData,
                                         details: [{
                                             ...prevData.details[0],
@@ -221,7 +213,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                     }));
                                 }}
                             >
-                                {dataElements.map((item) => (
+                                {filteredItems.map((item) => (
                                     <AutocompleteItem
                                         key={item.codigo}
                                         value={item.codigo}
@@ -231,20 +223,20 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                 ))}
                             </Autocomplete>
                         </div>
-                        <div className='w-1/4'>
+                        <div className='w-[30%]'>
                             <Input
                                 isRequired
                                 type="number"
                                 label="Cantidad"
                                 placeholder='Ingresa una cantidad'
-                                isInvalid={errors.quantity ? true : false}
+                                isInvalid={errors.quantity}
                                 errorMessage={errors.quantity}
                                 color={errors.quantity && 'danger'}
                                 min={0}
                                 onChange={(e) => {
                                     const nuevaCantidad = parseInt(e.target.value);
                                     if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
-                                        setOutgoing(precData => ({
+                                        setNewRegister(precData => ({
                                             ...precData,
                                             details: [{
                                                 ...precData.details[0],
@@ -259,6 +251,26 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                             />
                         </div>
                     </div>
+                    <div className='w-1/2'>
+                        <Input
+                            isRequired
+                            type="date"
+                            label="Fecha de devolución"
+                            isInvalid={errors.estimated_return}
+                            errorMessage={errors.estimated_return}
+                            color={errors.estimated_return && 'danger'}
+                            min={0}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (value) { // Verificar si el nuevo valor es un número
+                                    setNewRegister(precData => ({
+                                        ...precData,
+                                        estimated_return: value
+                                    }));
+                                }
+                            }}
+                        />
+                    </div>
                     <div className="w-full">
                         <Textarea
                             isRequired
@@ -268,7 +280,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                             labelPlacement="outside"
                             min={0}
                             onChange={(e) => {
-                                setOutgoing(precData => ({
+                                setNewRegister(precData => ({
                                     ...precData,
                                     details: [{
                                         ...precData.details[0],
@@ -279,7 +291,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                         />
                     </div>
                     <div className='flex justify-end gap-3 mt-2'>
-                        <Button color='success' className='text-white font-bold' type="submit">Registrar</Button>
+                        <Button color='success' className='text-white font-bold' type='submit'>Registrar</Button>
                         <Button onClick={onClose} color='danger' className='text-white font-bold'>Cancelar</Button>
                     </div>
                 </div>

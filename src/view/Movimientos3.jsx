@@ -4,7 +4,7 @@ import { useAuth } from './../context/AuthProvider';
 
 //Componentes de librerias
 import NextUITable from './../components/NextUITable'
-import { Button, Tooltip } from '@nextui-org/react';
+import { Button, Tooltip, Tabs, Tab } from '@nextui-org/react';
 import Modal1 from '../components/Modal1';
 
 //Iconos e imagenes
@@ -19,25 +19,37 @@ import {
     searchKeys, statusColorMap,
     statusOptions
 } from '../functions/Data/MovementsData'
+import {
+    columnsLoans,
+    INITIAL_VISIBLE_COLUMNS_LOANS,
+    searchKeysLoans,
+    statusColorMapLoans,
+    statusOptionsLoans
+} from '../functions/Data/LoansData';
 
 //Funciones propias
-import { MovementList } from '../functions/Listar'
+import { MovementList, LoansList } from '../functions/Listar'
 
 //Formularios
 import { RegisterMovement } from '../components/forms/Movements/RegisterMovement';
 import { RegisterMovmentOutgoing } from '../components/forms/Movements/RegisterMovmentOutgoing';
 import { MovementDetails } from '../components/infos/Movements/MovementDetails';
+import { RegisterLoans } from '../components/forms/Loans/RegisterLoans';
 
 export const Movimientos3 = () => {
 
     const { user } = useAuth();
 
     const [data, setData] = useState([]);
+    const [loans, setLoans] = useState([]);
 
     const list = async () => {
         try {
-            const response = await MovementList();
-            setData(response.data)
+            const movements = await MovementList();
+            const loans = await LoansList();
+            setData(movements.data)
+            setLoans(loans.data);
+            console.log(loans);
         } catch (error) {
             console.log(error);
         }
@@ -64,7 +76,8 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    form={<RegisterMovement onClose={() => setIsOpen(false)} />}
+                    form={<RegisterMovement onClose={() => setIsOpen(false)}
+                        listarMovimientos={list} />}
                 />
                 < Button
                     /* className="bg-foreground text-background" */
@@ -82,7 +95,33 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen2}
                     onClose={() => setIsOpen2(false)}
-                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} />}
+                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} listarMovements={list} />}
+                />
+            </>
+        )
+    }
+
+    const ButtonsLoans = () => {
+        const [isOpen, setIsOpen] = useState(false);
+        return (
+            <>
+                < Button
+                    /* className="bg-foreground text-background" */
+                    endContent={< PlusIcon />}
+                    size="sm"
+                    color="warning"
+                    variant="shadow"
+                    className="font-bold"
+                    onClick={() => setIsOpen(true)}
+                >
+                    Prestamo
+                </Button >
+                <Modal1
+                    title={"Registrar Préstamo"}
+                    size={"2xl"}
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    form={<RegisterLoans onClose={() => setIsOpen(false)} listarMovimientos={list}/>}
                 />
             </>
         )
@@ -100,8 +139,8 @@ export const Movimientos3 = () => {
                             title={`Movimiento # ${codigo.codigo}`}
                             size={'2xl'}
                             isOpen={isOpen3}
-                            onClose={() => setIsOpen3(false)} 
-                            form={<MovementDetails movement={codigo}/>}/>
+                            onClose={() => setIsOpen3(false)}
+                            form={<MovementDetails movement={codigo} />} />
                     </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete user">
@@ -118,18 +157,35 @@ export const Movimientos3 = () => {
     }, []);
 
     return (
-        <div className="w-auto h-[100%] m-auto flex pt-[15px]">
-            <NextUITable
-                columns={columnsMovements}
-                rows={data}
-                searchKeys={searchKeys}
-                statusOptions={statusOptions}
-                statusColorMap={statusColorMap}
-                initialColumns={INITIAL_VISIBLE_COLUMNS}
-                statusOrType={'tipo'}
-                actions={Actions}
-                buttons={Buttons}
-            />
+        <div className="w-auto h-[100%] m-auto flex flex-col pt-[15px]">
+            <Tabs>
+                <Tab key={'registerMovements'} title={'Ingresos y Salidas'}>
+                    <NextUITable
+                        columns={columnsMovements}
+                        rows={data}
+                        searchKeys={searchKeys}
+                        statusOptions={statusOptions}
+                        statusColorMap={statusColorMap}
+                        initialColumns={INITIAL_VISIBLE_COLUMNS}
+                        statusOrType={'tipo'}
+                        actions={Actions}
+                        buttons={Buttons}
+                    />
+                </Tab>
+                <Tab key={'loans'} title={'Préstamos'}>
+                    <NextUITable
+                        columns={columnsLoans}
+                        rows={loans}
+                        searchKeys={searchKeysLoans}
+                        statusOptions={statusOptionsLoans}
+                        statusColorMap={statusColorMapLoans}
+                        initialColumns={INITIAL_VISIBLE_COLUMNS_LOANS}
+                        statusOrType={'status'}
+                        actions={Actions}
+                        buttons={ButtonsLoans}
+                    />
+                </Tab>
+            </Tabs>
         </div>
     )
 }
