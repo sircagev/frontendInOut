@@ -1,56 +1,249 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { Elementos } from "./view/Elementos";
-import { Categorias } from "./view/Categorias";
+import { Elemento } from "./view/Elemento";
 import { Categoria } from "./view/Categoria";
-import { Empaque } from "./view/Empaque";
 import { Empaques } from "./view/Empaques";
-import { Medida } from "./view/Medida";
-import { Ubicacion } from "./view/Ubicacion";
+import { Medidas } from "./view/Medidas";
+import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
-import ReporteU from "./view/ReporteUsuario";
-import ReporteE from "./view/ReporteElemento";
-import ReporteB from "./view/ReporteBodega";
+import Reporte from "./view/Reportes";
+import ReporteE from "./view/ReporteElementos";
+import ReporteED from "./view/ReporteElementosDesactivados";
+import ReporteEX from "./view/ReporteElementosExpirados";
 import ReporteM from "./view/ReporteMovimiento";
+import ReporteMS from "./view/ReporteMinStock";
+import ReporteP from "./view/ReportePrestamos";
+import ReportePA from "./view/ReportePrestamosActivos";
+import ReporteS from "./view/ReporteSolicitud";
+import ReporteV from "./view/ReportePrestamosVencidos";
+import { Usuarios } from './view/Usuarios';
 import { Movimientos } from "./view/Movimientos";
 import { Movimientos2 } from "./view/Movimientos2";
 import Login from "./view/Login";
-import Bodega from "./view/Bodegas"
-import Reporte from "./view/Reportes"
+import Bodegas from "./view/Bodegas";
+import Home from "./view/Home";
 import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
 import { PageNotFound } from './view/PageNotFound';
-import { Prestamos } from './view/Prestamos';
+import { Prestamos } from './view/Prestamos'
+import ProtectedRoute from './components/auth/ProtectedRoutes2';
+import DashboardTemplate from './view/layouts/DashboardTemplate';
+import NotCredentials from './view/auth/NotCredentials';
+import { Movimientos3 } from './view/Movimientos3';
 
 function App2() {
 
     const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({role: ""})
-
+    const [user, setUser] = useState({ role: "" })
     return (
-        <Routes >
-            <Route index element={<Navigate to="/login"/>}/>
-            <Route path='/*' element={<PageNotFound/>}/>
-            <Route path="/login" element={<ProtectedRoutesLogin>
-                <Login setLoggedIn={setLoggedIn} />
-            </ProtectedRoutesLogin>} />
-            <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser}/>} >
-                <Route path="/home" element={<h1>Home</h1>} />
-                <Route path="/elementos" element={<Elementos user={user} />} />
-                <Route path="/elementos/categorias" element={<Categorias user={user} />} />
-                <Route path="/elementos/empaques" element={<Empaque user={user} />} />
-                <Route path="/elementos/medidas" element={<Medida user={user}/>} />
-                <Route path="/usuarios" element={<Usuario  userLogin={user}/>} />
-                <Route path="/reportes/usuarios" element={<ReporteU />} />
-                <Route path="/reportes/elementos" element={<ReporteE />} />
-                <Route path="/reportes/bodegas" element={<ReporteB />} />
-                <Route path="/reportes/movimientos" element={<ReporteM />} />
-                <Route path="/bodegas" element={<Bodega user={user} />} />
-                <Route path="/reportes" element={<Reporte />} />
-                <Route path="/bodegas/ubicacion" element={<Ubicacion user={user}/>} />
-                <Route path="/movimientos" element={<Movimientos2 user={user}/>} />
-                <Route path="/movimientos/prestamos" element={<Prestamos user={user}/>} />
-            </Route>
-        </Routes>
+        <div className="h-screen">
+            <Routes >
+                <Route index element={<Navigate to="/login" />} />
+                <Route path={'/NOT-CREDENTIALS'} element={<NotCredentials />} />
+                <Route path='/*' element={<PageNotFound />} />
+                {/* <Route path="/login" element={<ProtectedRoutesLogin>
+                    <Login setLoggedIn={setLoggedIn} />
+                </ProtectedRoutesLogin>} /> */}
+                <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
+                    {/* <Route path="/elementos/categorias" element={<Categoria user={user} />} /> */}
+                    {/* <Route path="/elementos/empaques" element={<Empaques user={user} />} /> */}
+                    {/* <Route path="/elementos/medidas" element={<Medidas user={user} />} /> */}
+                    {/* <Route path="/reportes" element={<Reporte />} /> */}
+                    {/* <Route path="/reportes/elementos" element={<ReporteE />} /> */}
+                    {/* <Route path="/reportes/elementosdesactivados" element={<ReporteED />} /> */}
+                    {/* <Route path="/reportes/elementosexpirados" element={<ReporteEX />} /> */}
+                    {/* <Route path="/reportes/movimientos" element={<ReporteM />} /> */}
+                    {/* <Route path="/reportes/stockmin" element={<ReporteMS />} /> */}
+                    {/* <Route path="/reportes/prestamos" element={<ReporteP />} />
+                    <Route path="/reportes/prestamosactivos" element={<ReportePA />} />
+                    <Route path="/reportes/solicitud" element={<ReporteS />} />
+                    <Route path="/reportes/prestamosvencidos" element={<ReporteV />} /> */}
+                    {/*<Route path="/usuarios" element={<Usuarios userLogin={user} />} />*/}
+
+                    {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
+{/*<Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} />
+                    <Route path="/movimientos" element={<Movimientos2 user={user} />} /> */}
+                    {/* <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
+                </Route>
+                <Route
+                    path='/login'
+                    element={<Login />}
+                />
+                <Route
+                    path='/home'
+                    element={
+                        <ProtectedRoute
+                            component={Home}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route path="/elementos"
+                    element={<ProtectedRoute
+                        component={Elemento}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route path="/elementos/categorias"
+                    element={<ProtectedRoute
+                        component={Categoria}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route path="/elementos/empaques"
+                    element={<ProtectedRoute
+                        component={Empaques}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route path="/elementos/medidas"
+                    element={<ProtectedRoute
+                        component={Medidas}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route
+                    path={'/movimientos'}
+                    element={
+                        <ProtectedRoute
+                            component={Movimientos3}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/bodegas'}
+                    element={
+                        <ProtectedRoute
+                            component={Bodegas}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/bodegas/ubicacion'}
+                    element={
+                        <ProtectedRoute
+                            component={Ubicaciones}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/reportes'}
+                    element={
+                        <ProtectedRoute
+                            component={Reporte}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/reportes/movimientos'}
+                    element={
+                        <ProtectedRoute
+                            component={ReporteM}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/reportes/stockmin'}
+                    element={
+                        <ProtectedRoute
+                            component={ReporteMS}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/reportes/elementos'}
+                    element={
+                        <ProtectedRoute
+                            component={ReporteE}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path="/reportes/elementosdesactivados"
+                    element={
+                        <ProtectedRoute
+                            component={ReporteED}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path="/reportes/elementosexpirados"
+                    element={
+                        <ProtectedRoute
+                            component={ReporteEX}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path="/reportes/prestamos"
+                    element={
+                        <ProtectedRoute
+                            component={ReporteP}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />}
+                />
+                <Route
+                    path="/reportes/prestamosactivos"
+                    element={
+                        <ProtectedRoute
+                            component={ReportePA}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />}
+                />
+                <Route
+                    path="/reportes/solicitud"
+                    element={
+                        <ProtectedRoute
+                            component={ReporteS}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />}
+                />
+                <Route
+                    path="/reportes/prestamosvencidos"
+                    element={
+                        <ProtectedRoute
+                            component={ReporteV}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />}
+                />
+                <Route
+                    path={'/usuarios'}
+                    element={
+                        <ProtectedRoute
+                            component={Usuarios}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+            </Routes>
+        </div>
     );
 }
 

@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios';
+import axiosClient from '../components/config/axiosClient';
 
 export const ListarElementos = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/elemento/listar');
+        const response = await axiosClient.get('elemento/listar');
         return response.data
     } catch (error) {
         console.log(error);
@@ -12,7 +13,7 @@ export const ListarElementos = async () => {
 
 export const BuscarElemento = async (codigoElemento) => {
     try {
-        const response = await axios.get(`http://localhost:3000/elemento/buscar/${codigoElemento}`);
+        const response = await axiosClient.get(`elemento/buscar/${codigoElemento}`);
         return response.data
     } catch (error) {
         console.log(error);
@@ -21,7 +22,7 @@ export const BuscarElemento = async (codigoElemento) => {
 
 export const ListarUsuarios = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/usuario/listar');
+        const response = await axiosClient.get('usuario/listar');
         return response.data
     } catch (error) {
         console.log(error);
@@ -30,8 +31,12 @@ export const ListarUsuarios = async () => {
 
 export const ListarTipo = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/tipo/listar')
-        return response.data
+        const response = await axiosClient.get('tipo/listar')
+        if (response.status === 200) {
+            return response.data
+        } else if (response.status === 204) {
+            return response.data
+        }
     } catch (error) {
         console.log(error);
     }
@@ -39,7 +44,8 @@ export const ListarTipo = async () => {
 
 export const ListarCategorias = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/categoria/listar')
+
+        const response = await axiosClient.get('categoria/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -48,7 +54,7 @@ export const ListarCategorias = async () => {
 
 export const Listarubicacion = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/ubicacion/listar')
+        const response = await axiosClient.get('ubicacion/listar')
         return response.data
     } catch (error) {
         console.log(error);
@@ -57,20 +63,54 @@ export const Listarubicacion = async () => {
 
 export const ListarEmpaques = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/empaque/listar')
+        const response = await axiosClient.get('empaque/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
 }
+
 export const ListarMedidas = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/medida/listar')
+        const response = await axiosClient.get('medida/listar')
         return response.data
     } catch (error) {
         console.log(error);
     }
 }
+
+export const Listarbodegas = async () => {
+    try {
+        const response = await axiosClient.get('bodega/listar')
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const ListarUbicacionesYBodegas = async () => {
+    try {
+        const [ubicaciones, bodegas] = await Promise.all([
+            Listarubicacion(),
+            Listarbodegas()
+        ]);
+
+        const bodegasMap = bodegas.reduce((acc, bodega) => {
+            acc[bodega.codigo_Bodega] = bodega.Nombre_bodega; // Asume que la bodega tiene una propiedad 'id' y 'Nombre_bodega'
+            return acc;
+        }, {});
+
+        // Agregar el nombre de la bodega a cada ubicación
+        const ubicacionesConBodega = ubicaciones.map(ubicacion => ({
+            ...ubicacion,
+            Nombre_bodega: bodegasMap[ubicacion.fk_bodega] // Asume que ubicacion tiene una propiedad 'bodegaId'
+        }));
+
+        return ubicacionesConBodega;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 export const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -78,6 +118,7 @@ export const capitalize = (str) => {
 
 export const convertirAMinusculas = (texto) => {
     return texto.toLowerCase();
+
 }
 
 export const convertirAMayusculas = (texto) => {
@@ -86,7 +127,7 @@ export const convertirAMayusculas = (texto) => {
 
 export const ListarMovimientosSolicitados = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = [];
         datos.forEach(dato => {
@@ -103,7 +144,7 @@ export const ListarMovimientosSolicitados = async () => {
 export const BuscarMovimientosSolicitados = async (codigoMovimiento) => {
     try {
         // Realizar una solicitud específica para obtener un movimiento por su código
-        const response = await axios.get(`http://localhost:3000/movimientos/buscar/${codigoMovimiento}`);
+        const response = await axiosClient.get(`movimientos/buscar/${codigoMovimiento}`);
         const data = response.data.Movimiento;
         console.log(data)
         const newData = [];
@@ -126,7 +167,7 @@ export const BuscarMovimientosSolicitados = async (codigoMovimiento) => {
 
 export const ListarMovimientosEnPrestamo = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {
@@ -142,7 +183,7 @@ export const ListarMovimientosEnPrestamo = async () => {
 
 export const ListarMovimientosCancelados = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/movimientos/listar')
+        const response = await axiosClient.get('movimientos/listar')
         const datos = response.data.datos;
         const newData = []
         datos.forEach(dato => {
@@ -151,6 +192,37 @@ export const ListarMovimientosCancelados = async () => {
             }
         });
         return newData
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const MovementList = async () => {
+    try {
+        const response = await axiosClient.get('movimientos/list', {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const LoansList = async () => {
+    try {
+        const response = await axiosClient.get('movimientos/loans/list', {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const MovementDetailsById = async (id) => {
+    try {
+        const response = await axiosClient.get(`movimientos/movement-details/list/${id}`)
+        return response.data
     } catch (error) {
         console.log(error);
     }

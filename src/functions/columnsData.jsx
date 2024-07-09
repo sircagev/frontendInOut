@@ -1,124 +1,359 @@
+import React from 'react';
 import { FaPencilAlt } from "react-icons/fa";
-import { Switch } from "@nextui-org/react";
-import { DesactivarCategorias } from "./Desactivar";
+import { Switch, Button } from "@nextui-org/react";
+import { DesactivarCategorias, DesactivarEmpaque, DesactivarMedida, DesactivarUbicacion, DesactivarElemento, DesactivarBodega, DesactivarUsuario } from "./Desactivar";
+import { createColumns } from './CreateColumn';
+import { faComputerMouse } from '@fortawesome/free-solid-svg-icons';
 
-export const columnsCategorias = [
-    {
-        name: "codigo_Categoria",
-        label: "Código",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: "Nombre_Categoria",
-        label: "Nombre",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: "estado",
-        label: "Estado",
-    },
-    {
-        name: "fecha_creacion",
-        label: "Creación",
-        options: {
-            filter: false,
-        },
-    },
-    {
-        name: 'options',
-        label: 'Opciones',
-        options: {
-            customBodyRender: (value, tableMeta, updateValue) => {
-                const codigoCategoria = tableMeta.rowData[0];
-                const estado = tableMeta.rowData[2];
-                const isActive = estado === 'Activo';
+const categoriasColumnData = [
+  { name: "codigo_Categoria", label: "Código" },
+  { name: "Nombre_Categoria", label: "Nombre" },
+  { name: "fecha_creacion", label: "Fecha" },
+  { name: "estado", label: "Estado" },
+];
 
-                const handleSwitchChange = async () => {
-                    const nuevoEstado = isActive ? 'Inactivo' : 'Activo';
-                    await DesactivarCategorias(codigoCategoria, nuevoEstado);
-                    updateValue(nuevoEstado); // Actualiza el estado en la tabla.
-                };
+export const columnsCategorias = (listar, setIsOpenUpdate, setSelectedCategory) =>
+  createColumns(categoriasColumnData, listar, setIsOpenUpdate, setSelectedCategory, DesactivarCategorias, {
+    codigo: 0, nombre: 1
+  });
 
-                return (
-                    <div className='flex justify-center items-center gap-3 text-xl'>
-                        <Switch
-                            isSelected={isActive} // El switch se selecciona cuando es 'Activo'
-                            onChange={handleSwitchChange} // Cambia el estado
-                        />
-                        <button>
-                            <FaPencilAlt />
-                        </button>
-                    </div>
-                );
-            },
-            filter: false,
-        },
+const empaquesColumnData = [
+  { name: "codigo_Empaque", label: "Código" },
+  { name: "Nombre_Empaque", label: "Nombre" },
+  { name: "fecha_creacion", label: "Fecha" },
+  { name: "estado", label: "Estado" },
+];
+
+export const columnsEmpaques = (listar, setIsOpenUpdate, setSelectedCategory) =>
+  createColumns(empaquesColumnData, listar, setIsOpenUpdate, setSelectedCategory, DesactivarEmpaque, {
+    codigo: 0, nombre: 1
+  });
+
+const medidasColumnData = [
+  { name: "codigo_medida", label: "Código" },
+  { name: "Nombre_Medida", label: "Nombre" },
+  { name: "fecha_creacion", label: "Fecha" },
+  { name: "estado", label: "Estado" },
+];
+
+export const columnsMedidas = (listar, setIsOpenUpdate, setSelectedCategory) =>
+  createColumns(medidasColumnData, listar, setIsOpenUpdate, setSelectedCategory, DesactivarMedida, {
+    codigo: 0, nombre: 1
+  });
+
+const BodegaColumnData = [
+  { name: "codigo_Bodega", label: "Código" },
+  { name: "Nombre_bodega", label: "Nombre" },
+  { name: "ubicacion", label: "Ubicación" },
+  { name: "fecha_creacion", label: "Fecha" },
+  { name: "Estado", label: "Estado" },
+];
+
+export const columnsBodegas = (listar, setIsOpenUpdate, setSelectedCategory) =>
+  createColumns(BodegaColumnData, listar, setIsOpenUpdate, setSelectedCategory, DesactivarBodega, {
+    codigo: 0, nombre: 1, ubicacion: 2
+  });
+
+const UbicacionColumnData = [
+  { name: "codigo_Detalle", label: "Código" },
+  { name: "Nombre_ubicacion", label: "Nombre" },
+  { name: "fk_bodega", label: "Bodega" },
+  { name: "fecha_creacion", label: "Fecha" },
+  { name: "estado", label: "Estado" },
+];
+
+export const columnsUbicacion = (listar, setIsOpenUpdate, setSelectedCategory) =>
+  createColumns(UbicacionColumnData, listar, setIsOpenUpdate, setSelectedCategory, DesactivarUbicacion, {
+    codigo: 0, nombre: 1, nombreBodega: 2
+  });
+
+
+export const columnsUsuarios = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "user_id",
+    label: "Código",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
     },
+  },
+  {
+    name: "user_name",
+    label: "Nombre",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "lastname",
+    label: "Apellido",
+    options: {
+      sort: false,
+      filter: false,
+    },
+  },
+  {
+    name: "phone",
+    label: "Telefono",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "email",
+    label: "Email",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "identification",
+    label: "ID",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "role_name",
+    label: "Rol",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "position_name",
+    label: "Cargo",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "course_id",
+    label: "Ficha",
+    options: {
+      sort: false, 
+      filter: false,
+    },
+  },
+  {
+    name: "status",
+    label: "Estado",
+    options: {
+      sort: false,
+    },
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[8] === "Activo";
+
+        const handleEstado = async () => {
+          const CodigoUsuario = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarUsuario(CodigoUsuario, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.error("Error al cambiar el estado:", error);
+          }
+        };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            user_name: rowData[1],
+            lastname: rowData[2],
+            phone: rowData[3],
+            email: rowData[4],
+            identification: rowData[5],
+            role_name: rowData[6],
+            positions: rowData[7],
+            course_id: rowData[8],
+          };
+          console.log(data);
+          setSelectedCategory(data);
+        };
+
+        return (
+          <div>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+    },
+  },
+];
+
+export const columnsElemntos = (listar, setIsOpenUpdate, setSelectedCategory) => [
+  {
+    name: "Codigo_elemento",
+    label: "Código",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "Nombre_elemento",
+    label: "Nombre",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "stock",
+    label: "Cantidad",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fecha_creacion",
+    label: "Fecha",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fk_tipoElemento",
+    label: "Tipo",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fk_unidadMedida",
+    label: "Medida",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fk_categoria",
+    label: "Categoria",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fk_tipoEmpaque",
+    label: "Empaque",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "fk_detalleUbicacion",
+    label: "Ubicación",
+    options: {
+      sort: false, // Deshabilita el ordenamiento para esta columna
+      filter: false,
+    },
+  },
+  {
+    name: "Estado",
+    label: "Estado",
+  },
+  {
+    name: 'options',
+    label: 'OPCIONES',
+    options: {
+      sort: false,
+      customBodyRender: (value, tableMeta, updateValue) => {
+        const rowData = tableMeta.rowData;
+        const Active = rowData[9] === "Activo";
+
+        const handleEstado = async () => {
+          const codigoElemento = rowData[0];
+          const nuevoEstado = Active ? "Inactivo" : "Activo";
+          try {
+            await DesactivarElemento(codigoElemento, nuevoEstado);
+            updateValue(nuevoEstado);
+            listar();
+          } catch (error) {
+            console.log(error);
+          }
+        };
+
+        const handleEdit = () => {
+          setIsOpenUpdate(true);
+          const data = {
+            codigo: rowData[0],
+            nombre: rowData[1],
+            tipo: rowData[4],
+            medida: rowData[5],
+            categoria: rowData[6],
+            empaque: rowData[7],
+            ubicacion: rowData[8],
+          }
+          console.log(data);
+          setSelectedCategory(data);
+        };
+        return (
+          <div className='flex'>
+            <Switch
+              isSelected={Active}
+              onChange={handleEstado}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit}
+            >
+              <FaPencilAlt />
+            </Button>
+          </div>
+        );
+      },
+    },
+  },
 ];
 
 
-export const columnsEmpaques = [
-    {
-        name: "codigo_Empaque",
-        label: "Codigo",
-        options: {
-            filter: false, // Desactivar filtro para esta columna
-        },
-    },
-    {
-        name: "Nombre_Empaque",
-        label: "Nombre",
-        options: {
-            filter: false, // Desactivar filtro para esta columna
-        },
-    },
-    {
-        name: "estado",
-        label: "Estado"
-    },
-    {
-        name: "fecha_creacion",
-        label: "Creación",
-        options: {
-            filter: false, // Desactivar filtro para esta columna
-        },
-    },
-    {
-        name: 'options', // Nombre de la nueva columna
-        label: 'Opciones',
-        options: {
-            customBodyRender: (value, tableMeta, updateValue) => {
-                return (
-                    <div className='flex gap-3 text-xl'>
-                        <button><FaPencilAlt /></button>
-                        <button><FaPencilAlt /></button>
-                    </div>
-                );
-            },
-            filter: false
-        }
-    }
-]
-
 export const columnsPrestamos = [
-    {
-        name: "Codigo",
-        label: "Codigo",
-    },
-    {
-        name: "Usuario",
-        label: "Usuario",
-    },
-    {
-        name: "Fecha",
-        label: "Fecha",
-    },
-    {
-        name: 'options', // Nombre de la nueva columna
-        label: 'Opciones',
-    }
+  {
+    name: "Codigo",
+    label: "Codigo",
+  },
+  {
+    name: "Usuario",
+    label: "Usuario",
+  },
+  {
+    name: "Fecha",
+    label: "Fecha",
+  },
+  {
+    name: 'options', // Nombre de la nueva columna
+    label: 'Opciones',
+  }
 ]
