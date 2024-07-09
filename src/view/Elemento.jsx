@@ -158,7 +158,7 @@ export const Elemento = () => {
 
     return (
         <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-2">
-            <Tabs aria-label="Options" className='ml-8'>
+            <Tabs aria-label="Options" className='ml-7'>
                 <Tab key="elementos" title="Elementos" color="primary">
                     <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
                         <NextUITable

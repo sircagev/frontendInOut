@@ -3,6 +3,7 @@ import { Input, Button } from "@nextui-org/react";
 import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
   
@@ -69,9 +70,7 @@ export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
               <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                 Cancelar
               </Button>
-              <Button className='font-bold text-white' color="primary" type='submit'>
-                Actualizar
-              </Button>
+              <ButtonRegistrar label={"Actualizar"}/>
             </div>
           </form>
         </div>

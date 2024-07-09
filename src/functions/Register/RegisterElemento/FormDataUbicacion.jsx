@@ -134,7 +134,7 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
                         <ButtonCerrar onClose={onClose}/>
-                        <ButtonRegistrar/>
+                        <ButtonRegistrar label={"Registrar"}/>
                     </div>
                 </form>
             </div>

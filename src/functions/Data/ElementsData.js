@@ -6,7 +6,7 @@ const columnsElements = [
     { name: 'Stock', uid: 'stock' },
     { name: 'Categoría', uid: 'category_id' },
     { name: 'Tipo', uid: 'elementType_id' },
-    { name: 'Meidida', uid: 'measurementUnit_id' },
+    { name: 'Medida', uid: 'measurementUnit_id' },
     { name: 'Empaque', uid: 'packageType_id' },
     { name: 'Creación', uid: 'fecha_creación' },
     { name: 'Estado', uid: 'status' },
