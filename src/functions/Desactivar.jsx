@@ -11,7 +11,7 @@ export const DesactivarElemento = async (codigoElemento, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 3000,
+            timer: 2000,
         });
     }
 };
