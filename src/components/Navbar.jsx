@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/in.png";
-import { FaBell, FaUserCircle } from "react-icons/fa";
+import { FaFileAlt, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
@@ -153,7 +153,7 @@ export const Navbar = ({ setLogIn }) => {
               {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados}
             </span>
           )}
-          <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
+          <FaFileAlt className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
         </div>
         <div>
 
