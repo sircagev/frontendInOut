@@ -30,13 +30,13 @@ export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
       await axiosClient.put(`empaque/actualizar/${category.codigo}`, {
         name: nombre,
       });
-      swal({
-        title: "Actualizado",
-        text: "Empaque actualizado correctamente.",
-        icon: "success",
-        buttons: false,
-        timer: 2000, 
-    });
+        swal({
+          title: "Actualizado",
+          text: "Empaque actualizado correctamente.",
+          icon: "success",
+          buttons: false,
+          timer: 2000, 
+      });
       onClose();
       Listar();
     } catch (error) {
