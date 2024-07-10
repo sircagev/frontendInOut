@@ -63,8 +63,7 @@ const NextUITable = ({
                 if (a[column] < b[column]) return direction === 'ascending' ? -1 : 1;
                 if (a[column] > b[column]) return direction === 'ascending' ? 1 : -1;
                 return 0;
-            });
-            setPage(1)
+            });  
         }
 
         if (hasSearchFilter) {
@@ -101,6 +100,10 @@ const NextUITable = ({
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]); */
+
+    useEffect(()=> {
+        setPage(1)
+    },[sortDescriptor])
 
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
