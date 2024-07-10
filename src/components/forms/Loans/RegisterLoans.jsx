@@ -25,7 +25,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
         details: [{
             element_id: '',
             quantity: 0,
-            remarks: null
+            remarks: ''
         }]
     }
 
@@ -33,6 +33,68 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
     const [newRegister, setNewRegister] = useState(objectRegister);
     const [usersData, setUsersData] = useState([]);
     const [elementsData, setElementsData] = useState([]);
+    const [editIndex, setEditIndex] = useState(0);
+
+    const addDetail = () => {
+
+        const lastDetail = newRegister.details[newRegister.details.length - 1];
+
+        let hasError = false;
+
+        let objectError = {
+            user_application: '',
+            element_id: '',
+            quantity: '',
+            estimated_return: '',
+        }
+
+        // Validar que el último detalle tenga `element_id` y `quantity`
+        if (!lastDetail.element_id) {
+            objectError.element_id = 'Debes seleccionar un elemento antes de agregar otro detalle';
+            hasError = true;
+        }
+
+        if (!lastDetail.quantity) {
+            objectError.quantity = 'Debes colocar una cantidad antes de agregar otro detalle';
+            hasError = true;
+        }
+
+        if (hasError) {
+            setErrors(objectError)
+            return
+        }
+
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: [...prevData.details, { element_id: '', quantity: 0, remarks: '' }]
+        }));
+
+        setEditIndex(newRegister.details.length)
+
+        // Limpiar los errores al agregar un nuevo detalle correctamente
+        setErrors({
+            user_application: '',
+            element_id: '',
+            quantity: '',
+            estimated_return: '',
+        });
+    };
+
+    const removeDetail = (index) => {
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: prevData.details.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleDetailChange = (index, field, value) => {
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: prevData.details.map((detail, i) =>
+                i === index ? { ...detail, [field]: value } : detail
+            )
+        }));
+    };
 
     const list = async () => {
         try {
@@ -111,12 +173,15 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
             hasError = true;
         }
 
-        if (!newRegister.details[0].element_id) {
+        const lastDetailIndex = newRegister.details.length - 1;
+        const lastDetail = newRegister.details[lastDetailIndex];
+
+        if (!lastDetail.element_id) {
             newErrorMessages.element_id = 'Debes seleccionar un Elemento';
             hasError = true;
         }
 
-        if (!newRegister.details[0].quantity) {
+        if (!lastDetail.quantity) {
             newErrorMessages.quantity = 'Debes colocar una cantidad';
             hasError = true;
         }
@@ -124,6 +189,10 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
         setErrors(newErrorMessages);
 
         return hasError;
+    };
+
+    const toggleEdit = (index) => {
+        setEditIndex(index);
     };
 
     useEffect(() => {
@@ -191,66 +260,90 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                             ))}
                         </Autocomplete>
                     </div>
-                    <div className='w-full flex gap-3'>
-                        <div className='w-[70%]'>
-                            <Autocomplete
-                                isClearable
-                                aria-label='autocomplete-elements'
-                                label="Seleccionar el elemento"
-                                placeholder="Busca un elemento"
-                                isRequired
-                                isInvalid={errors.element_id ? true : false}
-                                errorMessage={errors.element_id}
-                                className='h-[60px]'
-                                onSelectionChange={(value) => {
-                                    const item = value;
-                                    setNewRegister(prevData => ({
-                                        ...prevData,
-                                        details: [{
-                                            ...prevData.details[0],
-                                            element_id: parseInt(item)
-                                        }]
-                                    }));
-                                }}
-                            >
-                                {filteredItems.map((item) => (
-                                    <AutocompleteItem
-                                        key={item.codigo}
-                                        value={item.codigo}
-                                    >
-                                        {item.codigo + ' - ' + item.name}
-                                    </AutocompleteItem>
-                                ))}
-                            </Autocomplete>
+
+                    {newRegister.details.map((detail, index) => (
+
+                        <div className='w-full flex flex-col justify-center items-center' key={index}>
+                            <span>Detalle {index + 1}</span>
+                            {editIndex === index ? (
+                                <>
+                                    {detail.element_id}
+                                    <div className='w-full flex gap-3'>
+                                        <div className='w-[70%]'>
+                                            <Autocomplete
+                                                isClearable
+                                                aria-label='autocomplete-elements'
+                                                label="Seleccionar el elemento"
+                                                placeholder="Busca un elemento"
+                                                isRequired
+                                                isInvalid={errors.element_id ? true : false}
+                                                errorMessage={errors.element_id}
+                                                defaultItems={filteredItems}
+                                                className='h-[60px]'
+                                                onSelectionChange={(value) => {
+                                                    handleDetailChange(index, 'element_id', parseInt(value));
+                                                }}
+                                            >
+                                                {(item) => (
+                                                    <AutocompleteItem
+                                                        key={item.codigo}
+                                                        value={item.codigo}
+                                                    >
+                                                        {item.codigo + ' - ' + item.name}
+                                                    </AutocompleteItem>
+                                                )}
+                                            </Autocomplete>
+                                        </div>
+                                        <div className='w-[30%]'>
+                                            <Input
+                                                isRequired
+                                                type="number"
+                                                label="Cantidad"
+                                                placeholder='Ingresa una cantidad'
+                                                isInvalid={errors.quantity}
+                                                errorMessage={errors.quantity}
+                                                color={errors.quantity && 'danger'}
+                                                min={0}
+                                                onChange={(e) => {
+                                                    const nuevaCantidad = parseInt(e.target.value);
+                                                    if (!isNaN(nuevaCantidad)) {
+                                                        handleDetailChange(index, 'quantity', nuevaCantidad);
+                                                    } else {
+                                                        console.log('Por favor ingrese un número válido para la cantidad.');
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="w-full">
+                                        <Textarea
+                                            isRequired
+                                            type="text"
+                                            label="Observaciones"
+                                            placeholder=''
+                                            labelPlacement="outside"
+                                            min={0}
+                                            onChange={(e) => {
+                                                handleDetailChange(index, 'remarks', e.target.value);
+                                            }}
+                                        />
+                                    </div>
+                                    <Button onClick={() => removeDetail(index)} color='danger' className='text-white font-bold w-1/2 mt-2'>Eliminar</Button>
+                                </>
+                            ) : (
+                                <div className='flex w-full justify-center items-center gap-2'>
+                                    <div className='flex w-[33%] items-center justify-center'>
+                                        <span>{filteredItems.find(item => item.codigo === detail.element_id)?.name || 'No se ha seleccionado'}</span>
+                                    </div>
+                                    <div className='flex w-[25%] items-center justify-center'>
+                                        <span>{detail.quantity}</span>
+                                    </div>
+                                    <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>
+                                </div>
+                            )}
                         </div>
-                        <div className='w-[30%]'>
-                            <Input
-                                isRequired
-                                type="number"
-                                label="Cantidad"
-                                placeholder='Ingresa una cantidad'
-                                isInvalid={errors.quantity}
-                                errorMessage={errors.quantity}
-                                color={errors.quantity && 'danger'}
-                                min={0}
-                                onChange={(e) => {
-                                    const nuevaCantidad = parseInt(e.target.value);
-                                    if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
-                                        setNewRegister(precData => ({
-                                            ...precData,
-                                            details: [{
-                                                ...precData.details[0],
-                                                quantity: nuevaCantidad
-                                            }]
-                                        }));
-                                    } else {
-                                        // Aquí puedes manejar el caso cuando el usuario ingresa un valor no válido
-                                        console.log('Por favor ingrese un número válido para la cantidad.');
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
+                    ))}
+                    <Button onClick={addDetail} color='primary' className='text-white font-bold'>Agregar Detalle</Button>
                     <div className='w-1/2'>
                         <Input
                             isRequired
@@ -271,25 +364,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                             }}
                         />
                     </div>
-                    <div className="w-full">
-                        <Textarea
-                            isRequired
-                            type="text"
-                            label="Observaciones"
-                            placeholder=''
-                            labelPlacement="outside"
-                            min={0}
-                            onChange={(e) => {
-                                setNewRegister(precData => ({
-                                    ...precData,
-                                    details: [{
-                                        ...precData.details[0],
-                                        remarks: e.target.value
-                                    }]
-                                }));
-                            }}
-                        />
-                    </div>
+
                     <div className='flex justify-end gap-3 mt-2'>
                         <Button color='success' className='text-white font-bold' type='submit'>Registrar</Button>
                         <Button onClick={onClose} color='danger' className='text-white font-bold'>Cancelar</Button>

@@ -164,8 +164,11 @@ export const Movimientos3 = () => {
                             title={`Movimiento # ${codigo.codigo}`}
                             size={'2xl'}
                             isOpen={isOpen3}
-                            onClose={() => setIsOpen3(false)}
-                            form={<LoanDetails item={codigo} listarMovimientos={list}/>} />
+                            onClose={() => {
+                                setIsOpen3(false)
+                                list();
+                            }}
+                            form={<LoanDetails item={codigo} listarMovimientos={list} />} />
                     </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete user">
