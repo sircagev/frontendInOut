@@ -17,7 +17,6 @@ export const Empaques = () => {
       try {
           const response = await axiosClient.get('empaque/listar');
           setData(response.data);
-          console.log(response.data);
       } catch (error) {
           console.log(error);
       }
@@ -49,9 +48,7 @@ export const Empaques = () => {
       const handleDesactivar = async (codigoElemento, estadoActual) => {
           const nuevoEstado = estadoActual == 1 ? "0" : "1";
           await DesactivarEmpaque(codigoElemento, nuevoEstado);
-          await ListarEmpaques();
-          // Restaura la página actual después de la actualización
-          setCurrentPage(currentPage);
+          ListarEmpaques();
       };
 
       return (
