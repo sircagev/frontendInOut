@@ -265,7 +265,7 @@ const ReporteExpirados = ({ elementex }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

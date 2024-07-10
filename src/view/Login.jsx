@@ -4,7 +4,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Input, Button } from "@nextui-org/react";
 import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
-import logo from '../assets/in.png';
+import logo from '../assets/LogoIO.png';
 import { useAuth } from '../context/AuthProvider';
 import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; // Asegúrate de importar correctamente el componente
 
@@ -200,7 +200,7 @@ function Login() {
     <div className='w-full h-screen relative'>
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
-          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
+          <h1 className='text-white text-2xl font-bold ml-12'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
           <div className='ml-[60px] mt-[40px] h-[200px] w-[300px]'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
