@@ -61,7 +61,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
     const isConsumable = useMemo(() => {
         const codigo = newRegister.details[0].element_id ? newRegister.details[0].element_id : null
         const itemEncontrado = dataElements.find(item => item.codigo === codigo);
-        if (itemEncontrado && itemEncontrado.id_type === 1) {
+        if (itemEncontrado && itemEncontrado.code_elementType === 1) {
             console.log('esconsumible')
             return true
         }
@@ -75,7 +75,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             const elements = await ListarElementos();
             const warehouses = await Listarbodegas();
             const locations = await Listarubicacion();
-            
+
             setDataUsers(users);
             setDataElements(elements);
             setDataWarehouses(warehouses);
@@ -99,7 +99,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
             swal({
                 title: "Registro exitoso",
-                text: "La categoría se ha registrado correctamente.",
+                text: "El movimiento se ha registrado correctamente",
                 icon: `${status ? 'success' : "warning"}`,
                 buttons: false,
                 timer: 2000,
@@ -115,6 +115,14 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                 buttons: true,
                 timer: 2000,
             });*/
+            const message = error.response.data.message
+            swal({
+                title: "Registro exitoso",
+                text: message,
+                icon: `warning`,
+                buttons: false,
+                timer: 2000,
+            });
         }
     }
 

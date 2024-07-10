@@ -219,7 +219,7 @@ const NextUITable = ({
                             base: "w-full sm:max-w-[44%]",
                             inputWrapper: "border-1",
                         }}
-                        placeholder="Search by name..."
+                        placeholder="Buscar por..."
                         size="sm"
                         startContent={<SearchIcon className="text-default-300" />}
                         variant="bordered"
@@ -238,7 +238,7 @@ const NextUITable = ({
                                     variant="bordered"
                                     color="success"
                                 >
-                                    Status
+                                    Estado
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -270,7 +270,7 @@ const NextUITable = ({
                                     variant="bordered"
                                     color="primary"
                                 >
-                                    Columns
+                                    Columnas
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -299,7 +299,7 @@ const NextUITable = ({
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">Total {filteredItems.length} items</span>
                     <label className="flex items-center text-default-400 text-small">
-                        Rows per page:
+                        Filas por página:
                         <select
                             className="bg-transparent outline-none text-default-400 text-small"
                             onChange={onRowsPerPageChange}
