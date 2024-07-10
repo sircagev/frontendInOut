@@ -36,7 +36,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
         const courseMatches =
           row.course_id?.toString() === searchTerm.toString();
         const codeMatches =
-          row.element_id?.toString() === searchTerm.toString();
+          row.movement_id?.toString() === searchTerm.toString();
         const userMatches = row.user_applicant
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
@@ -67,15 +67,14 @@ const ReporteSolicitudes = ({ solicitudes }) => {
 
   const columns = useMemo(
     () => [
-      { Header: "Rol", accessor: "role_name" },
+      { Header: "Código", accessor: "movement_id" },
       { Header: "Usuario Solicitante", accessor: "user_applicant" },
       { Header: "Identificación", accessor: "user_id" },
+      { Header: "Teléfono", accessor: "phone" },
+      { Header: "Rol", accessor: "role_name" },
       { Header: "ID Ficha", accessor: "course_id" },
       { Header: "Elemento", accessor: "element_name" },
-      { Header: "Código Elemento", accessor: "element_id" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
-      { Header: "Fecha de Devolución", accessor: "actual_return" },
-      { Header: "Usuario que Recibe", accessor: "user_receiving" },
     ],
     []
   );
@@ -85,15 +84,14 @@ const ReporteSolicitudes = ({ solicitudes }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Rol", key: "role_name", width: 15 },
+      { header: "Código", key: "movement_id", width: 10 },
       { header: "Usuario Solicitante", key: "user_applicant", width: 20 },
       { header: "Identificación", key: "user_id", width: 20 },
+      { header: "Teléfono", key: "phone", width: 20 },
+      { header: "Rol", key: "role_name", width: 15 },
       { header: "ID Ficha", key: "course_id", width: 10 },
       { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Código Elemento", key: "element_id", width: 20 },
       { header: "Fecha de Solicitud", key: "created_at", width: 20 },
-      { header: "Fecha de Devolución", key: "actual_return", width: 20 },
-      { header: "Usuario que Recibe", key: "user_receiving", width: 20 },
     ];
 
     const response = await fetch(logoImg);
@@ -120,7 +118,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("H1:I1");
+    worksheet.mergeCells("H1:H1");
     worksheet.getCell("H1").value = "ADSO-2644590";
     worksheet.getCell("H1").alignment = {
       vertical: "middle",
@@ -128,15 +126,14 @@ const ReporteSolicitudes = ({ solicitudes }) => {
     };
 
     const headers = [
-      "Rol",
+      "Código",
       "Usuario Solicitante",
       "Identificación",
+      "Teléfono",
+      "Rol",
       "ID Ficha",
       "Elemento",
-      "Código Elemento",
       "Fecha de Solicitud",
-      "Fecha de Devolución",
-      "Usuario que Recibe",
     ];
     worksheet.addRow(headers);
 
@@ -148,15 +145,14 @@ const ReporteSolicitudes = ({ solicitudes }) => {
 
     data.forEach((row) => {
       worksheet.addRow([
-        row.role_name,
+        row.movement_id,
         row.user_applicant,
         row.user_id,
+        row.phone,
+        row.role_name,
         row.course_id,
         row.element_name,
-        row.element_id,
         row.created_at,
-        row.actual_return,
-        row.user_receiving,
       ]);
     });
 
@@ -256,7 +252,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

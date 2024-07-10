@@ -44,15 +44,15 @@ const ReportePrestamos = ({ prestamos }) => {
         const receivingMatches = row.user_receiving
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
-        const codeMatches =
-          row.element_id?.toString() === searchTerm.toString();
+        const idMatches =
+          row.movement_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches =
           (!startDate || rowDate >= startDate) &&
           (!endDate || rowDate <= endDate);
         return (
           (elementMatches ||
-            codeMatches ||
+            idMatches ||
             applicationMatches ||
             receivingMatches ||
             statusMatches) &&
@@ -66,10 +66,9 @@ const ReportePrestamos = ({ prestamos }) => {
 
   const columns = useMemo(
     () => [
+      { Header: "ID", accessor: "movement_id" },
       { Header: "Estado", accessor: "loan_status" },
-      { Header: "Código", accessor: "element_id" },
-      { Header: "Elemento", accessor: "element_name" },
-      { Header: "Cantidad", accessor: "quantity" },
+      { Header: "Elemento y Cantidad", accessor: "element_name" },
       { Header: "Usuario Solicita", accessor: "user_application" },
       { Header: "Usuario Recibe", accessor: "user_receiving" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
@@ -86,10 +85,9 @@ const ReportePrestamos = ({ prestamos }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Estado", key: "loan_status", width: 15 },
-      { header: "Código", key: "element_id", width: 8 },
-      { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 10 },
+      { header: "ID", key: "loan_status", width: 10 },
+      { header: "Estado", key: "loan_status", width: 12 },
+      { header: "Elemento y Cantidad", key: "element_name", width: 20 },
       { header: "Usuario Solicita", key: "user_application", width: 20 },
       { header: "Usuario Recibe", key: "user_receiving", width: 20 },
       { header: "Fecha de Solicitud", key: "created_at", width: 15 },
@@ -131,10 +129,9 @@ const ReportePrestamos = ({ prestamos }) => {
     };
 
     const headers = [
+      "ID",
       "Estado",
-      "Código",
       "Elemento",
-      "Cantidad",
       "Usuario Solicita",
       "Usuario Recibe",
       "Fecha de Solicitud",
@@ -153,10 +150,9 @@ const ReportePrestamos = ({ prestamos }) => {
 
     data.forEach((row) => {
       worksheet.addRow([
+        row.movement_id,
         row.loan_status,
-        row.element_id,
         row.element_name,
-        row.quantity,
         row.user_application,
         row.user_receiving,
         row.created_at,
@@ -263,7 +259,7 @@ const ReportePrestamos = ({ prestamos }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

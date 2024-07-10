@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import logo from "../assets/in.png";
+import logo from "../assets/LogoIO.png";
 import { FaFileAlt, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -114,9 +114,9 @@ export const Navbar = ({ setLogIn }) => {
   }, [setLogIn]);
 
   return (
-    <div className="w-full flex items-center justify-between h-[100px] bg-[#fff] text-white">
+    <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
-        <img src={logo} className="w-[80px] h-auto ml-10" alt="logo" />
+        <img src={logo} className="w-[60px] h-auto ml-10" alt="logo" />
         <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
