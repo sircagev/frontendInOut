@@ -214,7 +214,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
               name='packageType_id'
               value={values.packageType_id}
               onChange={handleInputChange}
-              className={`${errors.category_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
+              className={`${errors.packageType_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
             >
               <option value="" disabled>Seleccione un empaque</option>
               {UseEmpaques.length > 0 ? (
