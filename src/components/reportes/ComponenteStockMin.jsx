@@ -67,13 +67,9 @@ const ReporteStockMin = ({ stockmin }) => {
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Stock", accessor: "stock" },
       { Header: "Cantidad en Préstamo", accessor: "LoanElementsCount" },
-      { Header: "Lote", accessor: "batch_serial" },
       { Header: "Tipo", accessor: "element_type" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Medida", accessor: "measurement" },
-      { Header: "Bodega", accessor: "warehouse" },
-      { Header: "Ubicación", accessor: "wlocation" },
-      { Header: "Cant", accessor: "quantity" },
     ],
     []
   );
