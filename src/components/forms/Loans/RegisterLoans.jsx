@@ -52,7 +52,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
     const filteredItems = useMemo(() => {
         if (elementsData.length > 0) {
-            const info = elementsData.filter(item => item.id_type == 2);
+            const info = elementsData.filter(item => item.code_elementType == 2);
             console.log(info)
             return info;
         };
