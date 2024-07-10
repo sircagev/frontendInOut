@@ -40,7 +40,6 @@ export const DesactivarEmpaque = async (codigoEmpaque, nuevoEstado) => {
         // Mostrar alerta de éxito
         
     } catch (error) {
-        console.error("Error al desactivar el empaque:", error);
         // Mostrar alerta de error
         const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar el empaque.";
         swal({
@@ -65,7 +64,7 @@ export const DesactivarMedida = async (codigoMedida, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 3000,
+            timer: 200,
         });
     }
 };
