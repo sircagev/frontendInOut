@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: 'localhost', // O la IP específica que desees usar
-    port: 3001, // O el puerto que desees usar
+    port: 4003, // O el puerto que desees usar
   },
 })

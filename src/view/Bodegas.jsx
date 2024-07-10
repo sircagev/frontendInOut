@@ -41,15 +41,13 @@ const Bodegas = () => {
   return (
     <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
       <NextUITable
-        columns={columnsWarehouses}
-        rows={[]}
-        initialVisibleColumns={INITIAL_VISIBLE_COLUMNS}
+      columns={columnsWarehouses}
+        rows={data}
+        initialColumns={INITIAL_VISIBLE_COLUMNS}
         statusColorMap={statusColorMap}
         statusOptions={statusOptions}
         searchKeys={searchKeys}
         statusOrType={'status'}
-        buttons={Buttons}
-        actions={Actions}
       />
     </div>
   );
