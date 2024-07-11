@@ -29,6 +29,8 @@ import ProtectedRoute from './components/auth/ProtectedRoutes2';
 import DashboardTemplate from './view/layouts/DashboardTemplate';
 import NotCredentials from './view/auth/NotCredentials';
 import { Movimientos3 } from './view/Movimientos3';
+import { Reservas } from './view/Reservas';
+
 
 function App2() {
 
@@ -131,6 +133,16 @@ function App2() {
                     element={
                         <ProtectedRoute
                             component={Ubicaciones}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/reservas'}
+                    element={
+                        <ProtectedRoute
+                            component={Reservas}
                             layout={DashboardTemplate}
                             allowedRoles={[1, 2]}
                         />
