@@ -222,6 +222,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                 }}
                             >
                                 {dataElements.map((item) => (
+                                    (item.status == 1) &&
                                     <AutocompleteItem
                                         key={item.codigo}
                                         value={item.codigo}
