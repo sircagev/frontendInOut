@@ -30,8 +30,8 @@ export const Navbar = ({ setLogIn }) => {
 
   //#endregion constantes
 
-  const { logout } = useAuth();
- 
+  const { logout, user } = useAuth();
+
 
   const navigate = useNavigate();
 
@@ -56,7 +56,7 @@ export const Navbar = ({ setLogIn }) => {
   };
 
   const toggleSubMenu = () => {
-    
+
     setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
   };
 
@@ -117,7 +117,7 @@ export const Navbar = ({ setLogIn }) => {
     <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
         <img src={logo} className="w-[60px] h-auto ml-10" alt="logo" />
-        <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
+        <h1 className="hidden text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
         <div className="text-black flex items-center gap-2 relative">
@@ -144,7 +144,7 @@ export const Navbar = ({ setLogIn }) => {
           </div>
 
         </div>
-        <div
+        {user.role_id != 3 && <div
           className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
         >
@@ -154,7 +154,8 @@ export const Navbar = ({ setLogIn }) => {
             </span>
           )}
           <FaFileAlt className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
-        </div>
+        </div>}
+
         <div>
 
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
