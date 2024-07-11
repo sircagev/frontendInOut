@@ -10,8 +10,8 @@ const columnsWarehouses = [
 const INITIAL_VISIBLE_COLUMNS = ["codigo", "name","status","actions"];
 
 const statusOptions = [
-    { name: "Activo", uid: "activo" },
-    { name: "Inactivo", uid: "inactivo" }
+    { name: "Activo", uid: "1" },
+    { name: "Inactivo", uid: "0" }
 ]
 
 const statusColorMap = {

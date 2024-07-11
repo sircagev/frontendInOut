@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
+import axiosClient from '../../../components/config/axiosClient';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
-
-    const [errorMessages, setErrorMessages] = useState({
-        Nombre_bodega: '',
-        ubicacion: '',
-    });
+export const FormDataBodega = ({ listar, onClose }) => {
 
     const [values, setValues] = useState({
-        Nombre_bodega: "",
-        ubicacion: "",
+        name: ""
     });
+
+    const [errors, setErrors] = useState({});
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -28,37 +25,28 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        let hasError = false;
-        let newErrorMessages = {
-            Nombre_bodega: '',
-            ubicacion: '',
+        let hasErrors = false;
+
+        let errorObject = {
+            name: ''
         };
 
-        if (!values.Nombre_bodega.trim()) {
-            if (!values.Nombre_bodega.trim()) {
-                newErrorMessages.Nombre_bodega = 'El nombre de la bodega no puede estar vacío.';
-            } else {
-                newErrorMessages.Nombre_bodega = 'El nombre de la bodega no puede contener números.';
-            }
-            hasError = true;
+        if (!values.name) {
+            errorObject.name = 'Debe ingresar un nombre de bodega.';
+            hasErrors = true;
         }
 
-        if (!values.ubicacion.trim()) {
-            newErrorMessages.ubicacion = 'La ubicación no puede estar vacía.';
-            hasError = true;
+        if (hasErrors) {
+            setErrors(errorObject);
+            return;
         }
 
-        setErrorMessages(newErrorMessages);
-
-        if (hasError) return;
 
         try {
-            const response = await axios.post('http://localhost:3000/bodega/registrar', values);
+            const response = await axiosClient.post('bodega/registrar', values);
             if (response.status === 200) {
-
                 setValues({
-                    Nombre_bodega: '',
-                    ubicacion: ''
+                    name: ''
                 });
                 swal({
                     title: "Registro exitoso",
@@ -69,7 +57,7 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
                 });
 
                 onClose();
-                onRegisterSuccess();
+                listar();
             }
         } catch (error) {
             console.log(error);
@@ -84,40 +72,21 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
                         <Input
                             type='text'
                             label='Nombre Bodega'
-                            name='Nombre_bodega'
-                            value={values.Nombre_bodega}
+                            name='name'
+                            color={errors.name ? 'danger' : ''}
+                            errorMessage={errors.name}
+                            isInvalid={errors.name}
+                            value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
-                        {errorMessages.Nombre_bodega && (
-                            <div className="flex items-center text-red-500 text-xs mt-1">
-                                <FaExclamationCircle className="mr-2" />
-                                {errorMessages.Nombre_bodega}
-                            </div>
-                        )}
-                    </div>
-                    <div className='w-[100%]'>
-                        <Input
-                            type='text'
-                            label='Ubicación'
-                            name='ubicacion'
-                            value={values.ubicacion}
-                            onChange={handleInputChange}
-                            className="w-[100%]"
-                        />
-                        {errorMessages.ubicacion && (
-                            <div className="flex items-center text-red-500 text-xs mt-1">
-                                <FaExclamationCircle className="mr-2" />
-                                {errorMessages.ubicacion}
-                            </div>
-                        )}
                     </div>
                 </div>
                 <div className='flex justify-end gap-3 mb-3'>
                     <Button color="danger" className='bg-[#BF2A50] font-bold text-white' onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button className='font-bold text-white' color="primary" type='submit'>
+                    <Button className='font-bold text-white' color="success" type='submit'>
                         Registrar
                     </Button>
                 </div>
@@ -125,4 +94,3 @@ export const FormDataBodega = ({ onRegisterSuccess, onClose }) => {
         </div>
     )
 }
-
