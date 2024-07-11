@@ -117,7 +117,7 @@ export const Navbar = ({ setLogIn }) => {
     <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
         <img src={logo} className="w-[60px] h-auto ml-10" alt="logo" />
-        <h1 className="hidden text-black font-bold text-lg">Inventario de bodegas</h1>
+        <h1 className="hidden sm:block text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
         <div className="text-black flex items-center gap-2 relative">

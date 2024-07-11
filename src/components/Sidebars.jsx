@@ -6,7 +6,7 @@ const Sidebars = () => {
 
 
     return (
-        <div className={`flex flex-col items-center h-full overflow-hidden text-gray-400 bg-gray-900 rounded-s transition-all ${isHover ? 'w-44 duration-700 ' : ' w-16 duration-500'}`}
+        <div className={`hidden sm:flex sm:flex-col items-center h-full overflow-hidden text-gray-400 bg-gray-900 rounded-s transition-all ${isHover ? 'w-44 duration-700 ' : ' w-16 duration-500'}`}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}>
             <a className={`flex items-center ${isHover ? 'w-full px-3' : 'justify-center'} mt-3 h-12`} href="#">

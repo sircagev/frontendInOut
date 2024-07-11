@@ -78,7 +78,7 @@ export const Ubicaciones = () => {
 
 
   return (
-    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
       <NextUITable
         columns={columnslocation}
         rows={data}
