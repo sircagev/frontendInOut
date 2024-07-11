@@ -141,7 +141,6 @@ export const FormDataElemento = ({ listar, onClose }) => {
           <div className='w-full'>
             <select
               name="elementType_id"
-
               value={values.elementType_id}
               onChange={handleInputChange}
               className={`${errors.elementType_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
@@ -160,7 +159,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 <option disabled>No hay tipos disponibles</option>
               )}
             </select>
-            {errors.elementType_id && <span className='text-[10px] text-left w-full pl-3 text-red-500'>{errors.elementType_id}</span>}
+            {errors.elementType_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.elementType_id}</span>}
           </div>
           <div className='w-full'>
             <select
@@ -184,7 +183,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 <option disabled>No hay tipos de medida disponibles</option>
               )}
             </select>
-            {errors.measurementUnit_id && <span className='text-[10px] text-left w-full pl-3 text-red-500'>{errors.measurementUnit_id}</span>}
+            {errors.measurementUnit_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.measurementUnit_id}</span>}
           </div>
           <div className='w-full'>
             <select
@@ -207,7 +206,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 <option disabled>No hay categorías disponibles</option>
               )}
             </select>
-            {errors.category_id && <span className='text-[10px] text-left w-full pl-3 text-red-500'>{errors.category_id}</span>}
+            {errors.category_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.category_id}</span>}
           </div>
           <div className='w-full'>
             <select
@@ -230,7 +229,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
                 <option disabled>No hay empaques disponibles</option>
               )}
             </select>
-            {errors.packageType_id && <span className='text-[10px] text-left w-full pl-3 text-red-500'>{errors.packageType_id}</span>}
+            {errors.packageType_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.packageType_id}</span>}
           </div>
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
