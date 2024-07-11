@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, user } from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
-export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
+export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar }) => {
 
+    const userId = localStorage.getItem('user_id');
 
     const [values, setValues] = useState({
         name: '',
@@ -16,65 +17,15 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
         identification: '',
     });
 
-    const editValues = (event) => {
-        setValues(prevState => ({
-            ...prevState,
-            [event.target.name]: event.target.value
-        }))
-    }
-
-    const userIdentificacion = localStorage.getItem('identification');
-    const userId = localStorage.getItem('user_id');
-   
-     const getDataUser = async () => {
-       try {
-         const respuesta = await axiosClient.get(`usuario/buscar/${userIdentificacion}`).then((response) => {
-           console.log(response.data);
-           const userData = response.data.Datos;
-
-           const user = {
-            name: userData.user_name,
-            lastname: userData.lastname,
-            phone: userData.phone,
-            email: userData.email,
-            identification: userData.identification,
-           }
-
-           setValues(user);
-         })
-
-         
-         
-       } catch (error) {
-         console.log(error);
-       }
-     };
-
-     const putUser = async (event) => {
-        event.preventDefault();
-        try {
-            const respuesta = await axiosClient.put(`usuario/perfil/${userId}`, values)
-            if (respuesta.status === 200) {
-                alert("user update")
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-     }
-  
-
     const [errorMessages, setErrorMessages] = useState({
         name: '',
         lastname: '',
         phone: '',
         email: '',
         identification: '',
-        course_id: ''
     });
 
     useEffect(() => {
-        getDataUser();
         if (category) {
             setValues({
                 name: category.name,
@@ -82,17 +33,35 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                 phone: category.phone,
                 email: category.email,
                 identification: category.identification,
-                course_id: category.course_id,
             });
+        } else {
+            getDataUser();
         }
     }, [category]);
 
-    const handleInputChange = (event) => {
+    const getDataUser = async () => {
+        try {
+            const response = await axiosClient.get(`usuario/buscar/${userId}`);
+            const userData = response.data.Datos;
+
+            setValues({
+                name: userData.user_name,
+                lastname: userData.lastname,
+                phone: userData.phone,
+                email: userData.email,
+                identification: userData.identification,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const editValues = (event) => {
         const { name, value } = event.target;
-        setValues({
-            ...values,
-            [name]: value,
-        });
+        setValues(prevValues => ({
+            ...prevValues,
+            [name]: value
+        }));
     };
 
     const allowOnlyNumbers = (event) => {
@@ -110,85 +79,76 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
             phone: '',
             email: '',
             identification: '',
-            course_id: ''
         };
 
-        const strValues = Object.fromEntries(
-            Object.entries(values).map(([key, value]) => [key, String(value)])
-        );
-
-        if (!strValues.name.trim() || /\d/.test(strValues.name)) {
-            newErrorMessages.name = !strValues.name.trim()
+        if (!values.name.trim() || /\d/.test(values.name)) {
+            newErrorMessages.name = !values.name.trim()
                 ? 'El nombre del usuario no puede estar vacío.'
                 : 'El nombre del usuario no puede contener números.';
             hasError = true;
         }
 
-        if (!strValues.lastname.trim() || /\d/.test(strValues.lastname)) {
-            newErrorMessages.lastname = !strValues.lastname.trim()
+        if (!values.lastname.trim() || /\d/.test(values.lastname)) {
+            newErrorMessages.lastname = !values.lastname.trim()
                 ? 'El apellido del usuario no puede estar vacío.'
                 : 'El apellido del usuario no puede contener números.';
             hasError = true;
         }
-        if (!strValues.phone.trim()) {
+
+        if (!values.phone.trim()) {
             newErrorMessages.phone = 'El campo de teléfono es requerido.';
+            hasError = true;
+        } else if (values.phone.trim().length < 10 || values.phone.trim().length > 12) {
+            newErrorMessages.phone = 'Debe tener 10 números';
             hasError = true;
         }
 
-        if (!strValues.email.trim()) {
+        if (!values.identification.trim()) {
+            newErrorMessages.identification = 'El campo de identificación es requerido.';
+            hasError = true;
+        } else if (values.identification.trim().length < 6 || values.identification.trim().length > 10) {
+            newErrorMessages.identification = 'El campo de identificación debe tener entre 6 y 10 caracteres.';
+            hasError = true;
+        }
+
+        if (!values.email.trim()) {
             newErrorMessages.email = 'El correo electrónico es requerido.';
             hasError = true;
-        } else if (!/^\S+@\S+\.\S+$/.test(strValues.email)) {
+        } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
             newErrorMessages.email = 'El correo electrónico no es válido.';
             hasError = true;
         }
 
-       
-
-        if (!strValues.identification.trim()) {
-            newErrorMessages.identification = 'El campo de Identificación es requerido.';
-            hasError = true;
-        }
-
-        if (!strValues.course_id.trim()) {
-            newErrorMessages.course_id = 'El campo de Id-Ficha es requerido.';
-            hasError = true;
-        }
+      
 
         setErrorMessages(newErrorMessages);
         return !hasError;
     };
 
-    const handleSubmit = async (event) => {
+    const putUser = async (event) => {
         event.preventDefault();
         if (!validateForm()) return;
-    
+
         try {
-            const response = await axiosClient.put(`/perfil/${category.codigo}`, {
-                name: values.name,
-                lastname: values.lastname,
-                phone: values.phone,
-                email: values.email,
-                identification: values.identification,
-                course_id: values.course_id
-            });
-    
-            swal({
-                title: "Actualizado",
-                text: "Perfil actualizado con éxito.",
-                icon: "success",
-                buttons: false,
-                timer: 2000,
-            });
-    
-            onClose(); // Cierra el modal o formulario después de la actualización
-            onRegisterSuccess(); // Actualiza cualquier estado necesario en tu componente principal
+            const response = await axiosClient.put(`usuario/perfil/${userId}`, values);
+            if (response.status === 200) {
+                swal({
+                    title: "Actualizado",
+                    text: "Perfil actualizado con éxito.",
+                    icon: "success",
+                    buttons: false,
+                    timer: 2000,
+                });
+
+                Listar();
+                onClose();
+            }
+
         } catch (error) {
             console.error('Error al actualizar el perfil:', error);
             swal("Error", "Hubo un problema al actualizar el usuario", "error");
         }
     };
-    
 
     return (
         <div>
@@ -247,7 +207,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                         </div>
                         <div>
                             <Input
-                                type='text'
+                                type='number'
                                 label='Teléfono'
                                 name='phone'
                                 value={values.phone}
@@ -266,7 +226,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                         <div>
                             <Input
                                 type='number'
-                                label='Identifiación'
+                                label='Identificación'
                                 name='identification'
                                 value={values.identification}
                                 onChange={editValues}
@@ -284,8 +244,8 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess }) => {
                     </div>
                 </div>
                 <div className='flex justify-end gap-3 mb-3'>
-                    <ButtonCerrar onClose={onClose}/>
-                    <Button className='font-bold text-white' color="success" type='submit'>
+                    <ButtonCerrar onClose={onClose} />
+                    <Button className='font-bold text-white' color="primary" type='submit'>
                         Actualizar
                     </Button>
                 </div>

@@ -4,6 +4,7 @@ import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { FaExclamationCircle } from 'react-icons/fa';
 import swal from 'sweetalert';
 
+
 export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
     const [values, setValues] = useState({
         name: "",
@@ -110,7 +111,11 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         if (!values.phone.trim()) {
             newErrorMessages.phone = 'El campo de teléfono es requerido.';
             hasError = true;
+        } else if (values.phone.trim().length < 10 || values.phone.trim().length > 12) {
+            newErrorMessages.phone = 'Debe tener 10 números';
+            hasError = true;
         }
+        
 
         if (!values.email.trim()) {
             newErrorMessages.email = 'El correo electrónico es requerido.';
@@ -123,7 +128,11 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         if (!values.identification.trim()) {
             newErrorMessages.identification = 'El campo de identificación es requerido.';
             hasError = true;
+        } else if (values.identification.trim().length < 6 || values.identification.trim().length > 10) {
+            newErrorMessages.identification = 'El campo de identificación debe tener entre 6 y 10 caracteres.';
+            hasError = true;
         }
+        
 
         if (!values.role_id.toString().trim()) {
             newErrorMessages.role_id = 'El campo de Rol es requerido.';
@@ -134,16 +143,6 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             newErrorMessages.position_id = 'El campo de Cargo es requerido.';
             hasError = true;
         }
-
-        // Validar course_id basado en position_id
-        if (values.position_id === 2 || values.position_id === 3 || values.position_id === 4) {
-            // Posiciones donde course_id no debe ser ingresado
-            if (values.course_id.toString().trim()) {
-                newErrorMessages.course_id = 'El campo de Id ficha no debe ser ingresado para este cargo.';
-                hasError = true;
-            }
-        }
-
         setErrorMessages(newErrorMessages);
 
         if (hasError) {
@@ -158,7 +157,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                     title: "Registro exitoso",
                     text: "El Usuario se ha registrado correctamente.",
                     icon: "success",
-                    buttons: true,
+                    buttons: false,
                     timer: 2000,
                 });
         
@@ -180,16 +179,17 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             }
         } catch (error) {
             console.log("Error al registrar el usuario:", error);
+            if (error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.errors[0].msg;
         
-            // Mostrar mensaje de error genérico o específico
-            if (error.response && error.response.data && error.response.data.message) {
                 swal({
-                    title: "Error",
-                    text: error.response.data.message, // Mostrar el mensaje específico del servidor
-                    icon: "error",
+                    title: 'Error',
+                    text: errorMessage,
+                    icon: 'error',
                     buttons: {
-                        confirm: "OK",
+                        confirm: 'Cerrar'
                     },
+                    timer: 1000 
                 });
             } else {
                 swal({
@@ -197,8 +197,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                     text: "Error al registrar el Usuario.",
                     icon: "error",
                     buttons: {
-                        confirm: "OK",
+                        confirm: "Salir",
                     },
+                    timer: 1000,
                 });
             }
         }
@@ -341,7 +342,10 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                 </div>
                             )}
                         </div>
+
+                        {values.position_id == 1 && (
                         <div>
+         
                             <Input
                                 type='number'
                                 label='Id ficha'
@@ -358,8 +362,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                                     {errorMessages.course_id}
                                 </div>
                             )}
-                        </div>
-
+                        </div>   )}
                     </div>
 
 
