@@ -8,6 +8,8 @@ import { Tabs, Tab, Card, CardBody, Button } from "@nextui-org/react";
 import { columnsWarehouses, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/WarehousesData';
 import axiosClient from '../components/config/axiosClient';
 import NextUITable from "../components/NextUITable";
+import { DesactivarBodega } from "../functions/Desactivar";
+
 
 
 const Bodegas = () => {
@@ -46,6 +48,11 @@ const Bodegas = () => {
 
   const Actions = ({ codigo }) => {
     const [isOpenUpdate, setIsOpenUpdate] = useState(false);
+    const handleDesactivar = async (codigoElemento, estadoActual) => {
+      const nuevoEstado = estadoActual == 1 ? '0' : '1';
+      await DesactivarBodega(codigoElemento, nuevoEstado);
+      ListarBodegas();
+    };
     return (
       <div>
         <Button color="primary" variant="bordered" size="sm" onClick={()=> setIsOpenUpdate(true)}>Actualizar</Button>
@@ -56,6 +63,15 @@ const Bodegas = () => {
           onClose={() => setIsOpenUpdate(false)}
           form={<FormUpdateBodega onClose={()=> setIsOpenUpdate(false)} Listar={ListarBodegas} category={codigo}/>}
        /> 
+       <Button
+          color={codigo.status == 1 ? 'danger' : 'success'}
+          variant="bordered"
+          size="sm"
+          className="w-[15px] ml-1"
+          onClick={() => handleDesactivar(codigo.codigo, codigo.status)}
+        >
+          {codigo.status == 1 ? 'Desactivar' : 'Activar'}
+        </Button>
       </div>
     )
   }
