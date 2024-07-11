@@ -9,6 +9,7 @@ import { columnsWarehouses, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorM
 import axiosClient from '../components/config/axiosClient';
 import NextUITable from "../components/NextUITable";
 import { DesactivarBodega } from "../functions/Desactivar";
+import { Ubicaciones } from "./Ubicaciones"
 
 
 
@@ -40,7 +41,7 @@ const Bodegas = () => {
           size={"sm"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          form={<FormDataBodega onClose={()=> setIsOpen(false)} listar={ListarBodegas}/>}
+          form={<FormDataBodega onClose={() => setIsOpen(false)} listar={ListarBodegas} />}
         />
       </div>
     )
@@ -55,15 +56,15 @@ const Bodegas = () => {
     };
     return (
       <div>
-        <Button color="primary" variant="bordered" size="sm" onClick={()=> setIsOpenUpdate(true)}>Actualizar</Button>
+        <Button color="primary" variant="bordered" size="sm" onClick={() => setIsOpenUpdate(true)}>Actualizar</Button>
         <Modal1
           title={"Actualizar Bodega"}
           size={"sm"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenUpdate(false)}
-          form={<FormUpdateBodega onClose={()=> setIsOpenUpdate(false)} Listar={ListarBodegas} category={codigo}/>}
-       /> 
-       <Button
+          form={<FormUpdateBodega onClose={() => setIsOpenUpdate(false)} Listar={ListarBodegas} category={codigo} />}
+        />
+        <Button
           color={codigo.status == 1 ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
@@ -77,18 +78,27 @@ const Bodegas = () => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3 mt-8 w-full">
-      <NextUITable
-        columns={columnsWarehouses}
-        rows={data}
-        initialColumns={INITIAL_VISIBLE_COLUMNS}
-        statusColorMap={statusColorMap}
-        statusOptions={statusOptions}
-        searchKeys={searchKeys}
-        buttons={Buttons}
-        statusOrType={'status'}
-        actions={Actions}
-      />
+    <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-2">
+      <Tabs aria-label="Options" className='ml-7'>
+        <Tab key="bodegas" title="Bodegas" color="primary">
+        <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
+          <NextUITable
+            columns={columnsWarehouses}
+            rows={data}
+            initialColumns={INITIAL_VISIBLE_COLUMNS}
+            statusColorMap={statusColorMap}
+            statusOptions={statusOptions}
+            searchKeys={searchKeys}
+            buttons={Buttons}
+            statusOrType={'status'}
+            actions={Actions}
+          />
+         </div> 
+        </Tab>
+        <Tab key="ubicaciones" title="Ubicaciones">
+          <Ubicaciones />
+        </Tab>
+      </Tabs>
     </div>
   );
 
