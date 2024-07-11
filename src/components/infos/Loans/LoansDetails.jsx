@@ -67,6 +67,9 @@ export const LoanDetails = ({ item, listarMovimientos }) => {
     }
 
     const getKeyData = (item, columnKey) => {
+
+        /* const [isDisable, setIsDisable] = useState(false) */
+
         if (columnKey === 'element_name') {
             const filteredItems = Array.isArray(dataElements) ? dataElements.filter(element => element.codigo === item.element_id) : [];
             return filteredItems.length > 0 ? filteredItems[0].name : 'Elemento no encontrado';
@@ -75,7 +78,17 @@ export const LoanDetails = ({ item, listarMovimientos }) => {
         if (columnKey === 'actions') {
             return (
                 <>
-                    {((movement.status == 'En revisión') && (user.user_id == 1 || user.user_id == 2)) && (<Button size='sm'>Rechazar</Button>)}
+                    {((movement.status == 'En préstamo') && (user.user_id == 1 || user.user_id == 2)) && (
+                        <Button
+                            size='sm'
+                            onClick={() => {
+                                console.log({ id: item.movementDetail_id, newStatus: 6 })
+                                
+                            }}
+                            
+                        >
+                            Devolver
+                        </Button>)}
                 </>
             )
         }
