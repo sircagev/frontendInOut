@@ -18,7 +18,7 @@ export const Reservas = () => {
         <Modal1 
             title={"Reservar Elementos"}
             isOpen={isOpen}
-            size={"base"}
+            size={"sm"}
             onClose={()=> setIsOpen(false)}
             form={<FormDataReserva onClose={()=> setIsOpen(false)}/>}
         />
