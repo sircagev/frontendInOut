@@ -27,7 +27,8 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
   const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
-
+  const [data, setData] = useState([]);
+ 
   //#endregion constantes
 
   const { logout, user } = useAuth();
@@ -54,6 +55,18 @@ export const Navbar = ({ setLogIn }) => {
       }
     });
   };
+  const ListarUsuario = async () => {
+    try {
+      const response = await axiosClient.get('usuario/listar');
+      setData(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    ListarUsuario()
+  }, [])
 
   const toggleSubMenu = () => {
 
@@ -131,7 +144,7 @@ export const Navbar = ({ setLogIn }) => {
             isOpen={isOpen}
             size={"4xl"}
             onClose={() => setIsOpen(false)}
-            form={<FormUpdatePerfil onClose={() => setIsOpen(false)} />}
+            form={<FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario}/>}
             title={"Administrar perfil"}
           />
           <div className="flex flex-col gap-1 mt-3">

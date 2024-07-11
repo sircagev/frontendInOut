@@ -6,9 +6,12 @@ import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/LogoIO.png';
 import { useAuth } from '../context/AuthProvider';
-import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; // Asegúrate de importar correctamente el componente
+import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; 
+
+
 
 function Login() {
+
   const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,25 +24,13 @@ function Login() {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  useEffect(() => {
-    // Si hay un token en la URL, mostramos automáticamente el formulario de reset
-    if (token) {
-      setShowResetPassword(true);
-    }
-  }, [token]);
-
+  
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+
     try {
       const response = await axiosClient.post('validate/validar', {
-        email: email,
-        password: password,
-      });
-
-      console.log(response)
-
-      await login({
         email: email,
         password: password,
       });
@@ -47,15 +38,18 @@ function Login() {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
-        localStorage.setItem('email', response.data.email); // Asegúrate de obtener y guardar el email
+        localStorage.setItem('email', response.data.email);
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('identification', response.data.identification);
 
+        await login({
+          email: email,
+          password: password,
+        });
 
-        console.log(user)
-        navigate('/usuarios')
+        navigate('/usuarios');
       }
     } catch (error) {
       if (error.response) {
@@ -69,9 +63,16 @@ function Login() {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Por favor, verifica tus credenciales.',
+            text: 'El correo no se encuentra registrado en la base de datos',
           });
-        } else {
+        } else if (error.response.status === 403) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Contraseña incorrecta, Acceso denegado',
+          });
+        } 
+        else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -79,7 +80,6 @@ function Login() {
           });
         }
       } else {
-        console.log(error)
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -308,26 +308,13 @@ function Login() {
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Ingresar
                 </Button>
+                
               </div>
             </form>
           )}
         </div>
       </div>
-      {/* <div className='w-full h-[50%] bg-[#fff]'>
-        <FormUpdatePerfil
-          onClose={handleCloseModal}
-          category={{
-            name: localStorage.getItem('userName'),
-            email: localStorage.getItem('email'),
-            lastname: '', // Asegúrate de obtener el apellido si está disponible
-            phone: '', // Asegúrate de obtener el teléfono si está disponible
-            identification: '', // Asegúrate de obtener la identificación si está disponible
-            course_id: '', // Asegúrate de obtener el ID de ficha si está disponible
-          }}
-          onRegisterSuccess={handleRegisterSuccess}
-        />
-      </div> */}
-
+  
     </div>
   );
 }
