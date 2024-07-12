@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/LogoIO.png';
 import { useAuth } from '../context/AuthProvider';
-import { CiRead } from "react-icons/ci"; 
+import { CiRead } from "react-icons/ci";
 
 // Componente personalizado para el campo de contraseña con ícono de visualización
 const PasswordInput = ({ value, onChange }) => {
@@ -37,7 +37,7 @@ const PasswordInput = ({ value, onChange }) => {
 };
 
 function Login() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token');
@@ -67,15 +67,19 @@ function Login() {
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('identification', response.data.identification);
 
-        await login({
+        const respo = await login({
           email: email,
           password: password,
         });
-        console.log(user)
-        navigate('/estadistica')
+
+        console.log(respo)
+
+        if (respo.role_id == 1 || respo.role_id == 2) navigate('/estadistica')
+        if (respo.role_id == 3) navigate('/reservas')
 
       }
     } catch (error) {
+      console.log(error)
       if (error.response) {
         if (error.response.status === 401) {
           Swal.fire({
@@ -239,7 +243,27 @@ function Login() {
         <div className='w-[80%] mt-7 ml-[10%] mr-[10%]'>
           <h3 className='text-lg font-bold'>Bienvenido a <span className='text-[#00AC4F] text-4xl'>IN-OUT</span></h3>
           <h2 className='mt-1 mb-[60px] text-4xl font-semibold text-black'>Sign In</h2>
-          {showResetPassword ? (
+          {showForgotPassword ? (
+            <form onSubmit={handleForgotPassword}>
+              <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
+                <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
+                <input
+                  required
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full mb-[45px] p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Email"
+                />
+                <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
+                  Enviar
+                </Button>
+                <Button onClick={() => setShowForgotPassword(false)} className='bg-[#f1f1f1] mb-7 h-[50px] text-base font-medium'>
+                  Volver al Inicio de Sesión
+                </Button>
+              </div>
+            </form>
+          ) : showResetPassword ? (
             <form onSubmit={handleResetPassword}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3'>Ingrese su nueva contraseña:</label>
@@ -248,7 +272,7 @@ function Login() {
                 <label className='text-[15px] font-semibold mb-3'>Confirme su nueva contraseña:</label>
                 <PasswordInput value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
-              
+
 
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Restablecer Contraseña
@@ -279,13 +303,13 @@ function Login() {
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Ingresar
                 </Button>
-                
+
               </div>
             </form>
           )}
         </div>
       </div>
-  
+
     </div>
   );
 }

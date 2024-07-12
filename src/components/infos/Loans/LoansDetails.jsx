@@ -11,7 +11,8 @@ import {
     Button,
     Chip,
     Checkbox,
-    Input
+    Input,
+    input
 } from "@nextui-org/react";
 import { useAuth } from '../../../context/AuthProvider';
 import axiosClient from '../../config/axiosClient';
@@ -66,7 +67,7 @@ export const LoanDetails = ({ item, onClose }) => {
             const detailsData = await MovementDetailsById(movement.codigo);
             const elements = await ListarElementos();
             const details = detailsData.data
-
+            console.log(details)
             let objectDetails = [];
 
             for (const detail of details) {
@@ -150,17 +151,15 @@ export const LoanDetails = ({ item, onClose }) => {
 
         if (columnKey === 'actions') {
             return (
-                ((movement.status == 'En préstamo') && (user.user_id == 1 || user.user_id == 2)) && (
-                    (item.loanStatus_id == 5) ? (
-                        <Checkbox
-                            size='sm'
-                            onClick={() => {
-                                handleDetailChange(item)
-                            }}
-                        />/* {getLoanStatus(item) ? 'Entregar' : ''}</Button> */
-                    ) : (
-                        <div>Entregado</div>
-                    )
+                ((movement.status == 'En préstamo') && (user.role_id == 1 || user.role_id == 2) && (item.loanStatus_id == 5)) ? (
+                    <Checkbox
+                        size='sm'
+                        onClick={() => {
+                            handleDetailChange(item)
+                        }}
+                    />/* {getLoanStatus(item) ? 'Entregar' : ''}</Button> */
+                ) :  (
+                    <div>Entregado</div>
                 )
             )
         }
@@ -169,6 +168,7 @@ export const LoanDetails = ({ item, onClose }) => {
 
     useEffect(() => {
         list();
+        console.log(user)
     }, [])
 
     useEffect(() => {
@@ -264,7 +264,7 @@ export const LoanDetails = ({ item, onClose }) => {
                     )}
                 </TableBody>
             </Table>
-            {((movement.status == 'En préstamo') && (user.user_id == 1 || user.user_id == 2)) && (
+            {((movement.status == 'En préstamo') && (user.role_id == 1 || user.role_id == 2)) && (
                 <Button
                     size='sm'
                     onClick={handleUpdateStatus}

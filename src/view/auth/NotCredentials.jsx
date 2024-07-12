@@ -15,8 +15,8 @@ const NotCredentials = () => {
             }, 1000);
             return () => clearTimeout(timer); // Limpiar el temporizador al desmontar el componente
         } else {
-            // Redirigir a la página de perfil después de que termine la cuenta regresiva
-            window.location.href = user ? '/profile' : '/login';
+            // Redirigir a la página de reservas después de que termine la cuenta regresiva
+            window.location.href = user ? '/reservas' : '/login';
 
         }
     }, [countdown]);
@@ -47,7 +47,7 @@ const NotCredentials = () => {
                         <p className='text-[65px] text-gray-900 w-full pl-2'>{countdown}</p>
 
                     </div>
-                    <Link to={user ? 'profile' : '/login'} className="px-6 py-3 bg-blue-500 text-white rounded-lg inline-block hover:bg-blue-600 transition duration-300 ease-in-out">Ir ahora</Link>
+                    <Link to={user ? '/reservas' : '/login'} className="px-6 py-3 bg-blue-500 text-white rounded-lg inline-block hover:bg-blue-600 transition duration-300 ease-in-out">Ir ahora</Link>
 
                 </div>
             </div>
