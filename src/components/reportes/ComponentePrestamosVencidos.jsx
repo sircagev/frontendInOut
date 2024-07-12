@@ -64,9 +64,9 @@ const ReporteVencidos = ({ prestamosv }) => {
       { Header: "Identificación", accessor: "identification" },
       { Header: "Teléfono", accessor: "phone" },
       { Header: "Elemento", accessor: "element_name" },
-      { Header: "Observaciones", accessor: "remarks" },
       { Header: "Fecha Solicitud", accessor: "created_at" },
       { Header: "Fecha Vencimiento", accessor: "estimated_return" },
+      { Header: "Observaciones", accessor: "remarks" },
     ],
     []
   );
@@ -81,9 +81,9 @@ const ReporteVencidos = ({ prestamosv }) => {
       { header: "Identificación", key: "identification", width: 15 },
       { header: "Teléfono", key: "phone", width: 15 },
       { header: "Elemento", key: "element_name", width: 15 },
-      { header: "Observaciones", key: "remarks", width: 20 },
       { header: "Fecha Solicitud", key: "created_at", width: 15 },
       { header: "Fecha Vencimiento", key: "estimated_return", width: 20 },
+      { header: "Observaciones", key: "remarks", width: 20 },
     ];
 
     const response = await fetch(logoImg);
@@ -123,9 +123,9 @@ const ReporteVencidos = ({ prestamosv }) => {
       "Identificación",
       "Teléfono",
       "Elemento",
-      "Observaciones",
       "Fecha Solicitud",
       "Fecha Vencimiento",
+      "Observaciones",
     ];
     worksheet.addRow(headers);
 
@@ -142,9 +142,9 @@ const ReporteVencidos = ({ prestamosv }) => {
         row.identification,
         row.phone,
         row.element_name,
-        row.remarks,
         row.created_at,
         row.estimated_return,
+        row.remarks,
       ]);
     });
 

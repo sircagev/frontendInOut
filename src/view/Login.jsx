@@ -71,8 +71,9 @@ function Login() {
           email: email,
           password: password,
         });
+        console.log(user)
+        navigate('/estadistica')
 
-        navigate('/usuarios');
       }
     } catch (error) {
       if (error.response) {

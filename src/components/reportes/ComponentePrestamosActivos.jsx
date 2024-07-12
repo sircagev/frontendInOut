@@ -59,11 +59,10 @@ const ReporteActivos = ({ prestamosa }) => {
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "movement_id" },
+      { Header: "Código", accessor: "movement_id" },
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Usuario Solicitante", accessor: "user_application" },
       { Header: "Usuario Receptor", accessor: "user_receiving" },
-      { Header: "Estado Préstamo", accessor: "loan_status" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
       { Header: "Vencimiento Préstamo", accessor: "estimated_return" },
       { Header: "Observaciones", accessor: "remarks" },

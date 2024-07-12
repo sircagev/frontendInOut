@@ -172,9 +172,9 @@ export const Navbar = ({ setLogIn }) => {
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">
-              {role && role === "1" && "administrador"}
-              {role && role === "2" && "encargado"}
-              {role && role === "3" && "usuario"}
+              {role && role === "1" && "Administrador"}
+              {role && role === "2" && "Encargado"}
+              {role && role === "3" && "Usuario"}
             </p>
           </div>
         </div>
