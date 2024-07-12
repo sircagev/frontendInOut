@@ -7,15 +7,15 @@ import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
 import NotificacionesModal from "./modals/Notificaciones";
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
-import Modal1 from "../components/Modal1";
 import { useAuth } from "../context/AuthProvider";
+import { CiEdit, CiUnlock } from "react-icons/ci";
 
 export const Navbar = ({ setLogIn }) => {
-
-  //#region constantes
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
   const [prestamosVencidos, setPrestamosVencidos] = useState([]);
@@ -26,17 +26,10 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
-  const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
-  const [data, setData] = useState([]);
- 
-  //#endregion constantes
 
   const { logout, user } = useAuth();
 
-
   const navigate = useNavigate();
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     swal({
@@ -55,21 +48,21 @@ export const Navbar = ({ setLogIn }) => {
       }
     });
   };
+
   const ListarUsuario = async () => {
     try {
       const response = await axiosClient.get('usuario/listar');
-      setData(response.data)
+      setData(response.data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    ListarUsuario()
-  }, [])
+    ListarUsuario();
+  }, []);
 
   const toggleSubMenu = () => {
-
     setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
   };
 
@@ -136,17 +129,26 @@ export const Navbar = ({ setLogIn }) => {
         <div className="text-black flex items-center gap-2 relative">
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onClick={() => (
-              setIsOpen(true)
-            )} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+            onClick={() => {
+              setShowEditProfile(!showEditProfile);
+              setShowChangePassword(false);
+            }}
           />
-          <Modal1
-            isOpen={isOpen}
-            size={"4xl"}
-            onClose={() => setIsOpen(false)}
-            form={<FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario}/>}
-            title={"Administrar perfil"}
-          />
+          {showEditProfile && (
+            <div className="absolute top-[40px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowEditProfile(false)}>
+                <CiEdit className="text-gray-500" />
+                <h1 className="font-bold text-[16px]">Editar Perfil</h1>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowChangePassword(true)}>
+                <CiUnlock className="text-gray-500" />
+                <h1 className="font-bold text-[16px]">Cambiar Contraseña</h1>
+              </div>
+              <div className="mt-3">
+                <FormUpdatePerfil onClose={() => setShowEditProfile(false)} Listar={ListarUsuario} />
+              </div>
+            </div>
+          )}
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">
@@ -155,7 +157,6 @@ export const Navbar = ({ setLogIn }) => {
               {role && role === "3" && "usuario"}
             </p>
           </div>
-
         </div>
         {user.role_id != 3 && <div
           className="relative cursor-pointer"
@@ -170,11 +171,9 @@ export const Navbar = ({ setLogIn }) => {
         </div>}
 
         <div>
-
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>
       </div>
-
       <NotificacionesModal
         showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados > 0)}
         setShowModal={setShowModal}

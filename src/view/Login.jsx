@@ -1,32 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosClient from '../components/config/axiosClient';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Input, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
 import logo from '../assets/LogoIO.png';
 import { useAuth } from '../context/AuthProvider';
-import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; 
+import { CiRead } from "react-icons/ci"; // Importa el ícono de react-icons
 
+// Componente personalizado para el campo de contraseña con ícono de visualización
+const PasswordInput = ({ value, onChange }) => {
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <div className="relative">
+      <input
+        required
+        type={showPassword ? "text" : "password"}
+        value={value}
+        onChange={onChange}
+        className="w-full mb-2 pr-10 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+        placeholder="Password"
+      />
+      <div
+        className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+        onClick={togglePasswordVisibility}
+      >
+        <CiRead className={`text-gray-500 ${showPassword ? 'opacity-100' : 'opacity-50'}`} />
+      </div>
+    </div>
+  );
+};
 
 function Login() {
-
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const token = new URLSearchParams(location.search).get('token');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(!!token);
 
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
@@ -71,8 +93,7 @@ function Login() {
             title: 'Error',
             text: 'Contraseña incorrecta, Acceso denegado',
           });
-        } 
-        else {
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -123,7 +144,7 @@ function Login() {
     const lengthRegex = /^.{8,}$/;
 
     // Verificar que la contraseña cumpla con todos los criterios
-    if (!uppercaseRegex.test(newPassword)) {
+    if (!uppercaseRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -132,7 +153,7 @@ function Login() {
       return;
     }
 
-    if (!numberRegex.test(newPassword)) {
+    if (!numberRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -141,7 +162,7 @@ function Login() {
       return;
     }
 
-    if (!specialCharRegex.test(newPassword)) {
+    if (!specialCharRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -150,7 +171,7 @@ function Login() {
       return;
     }
 
-    if (!lengthRegex.test(newPassword)) {
+    if (!lengthRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -159,20 +180,10 @@ function Login() {
       return;
     }
 
-    // Si las contraseñas no coinciden, mostrar mensaje de error
-    if (newPassword !== confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Las contraseñas no coinciden.',
-      });
-      return;
-    }
-
     try {
       const response = await axiosClient.put('/contrasena/cambiar', {
         token,
-        password: newPassword,
+        password: password,
       });
 
       if (response.status === 200) {
@@ -230,14 +241,13 @@ function Login() {
             <form onSubmit={handleForgotPassword}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
-                <Input
+                <input
                   required
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  label="Email"
-                  variant="bordered"
-                  className="w-full mb-[45px]"
+                  className="w-full mb-[45px] p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Email"
                 />
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Enviar
@@ -251,24 +261,22 @@ function Login() {
             <form onSubmit={handleResetPassword}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3'>Ingrese su nueva contraseña:</label>
-                <Input
+                <input
                   required
                   type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  label="Nueva Contraseña"
-                  variant="bordered"
-                  className="w-full mb-4"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full mb-4 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Nueva Contraseña"
                 />
                 <label className='text-[15px] font-semibold mb-3'>Confirme su nueva contraseña:</label>
-                <Input
+                <input
                   required
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  label="Confirmar Nueva Contraseña"
-                  variant="bordered"
-                  className="w-full mb-4"
+                  className="w-full mb-4 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Confirmar Nueva Contraseña"
                 />
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Restablecer Contraseña
@@ -279,25 +287,16 @@ function Login() {
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
-                <Input
+                <input
                   required
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  label="Email"
-                  variant="bordered"
-                  className="w-full mb-[45px]"
+                  className="w-full mb-[45px] p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Email"
                 />
                 <label className='text-[15px] font-semibold mb-3'>Ingrese su contraseña:</label>
-                <Input
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  label="Password"
-                  variant="bordered"
-                  className="w-full mb-2"
-                />
+                <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
 
                 <div className='flex justify-end items-center mb-[20px] mr-[10px]'>
                   <Link to="#" onClick={() => setShowForgotPassword(true)} className='text-[14px] text-[#39A900] cursor-pointer'>
