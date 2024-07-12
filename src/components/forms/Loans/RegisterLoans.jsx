@@ -4,8 +4,7 @@ import {
     AutocompleteItem,
     Input,
     Button,
-    Textarea,
-    DateInput
+    Textarea
 } from '@nextui-org/react';
 import { ListarUsuarios, ListarElementos } from '../../../functions/Listar';
 import { capitalize } from '../../../utils/columnsData';
@@ -314,66 +313,8 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                             <span>Detalle {index + 1}</span>
                             {editIndex === index ? (
                                 <>
-                                    {detail.element_id}
                                     <div className='w-full flex gap-3'>
                                         <div className='w-[70%]'>
-                                            {/* <Autocomplete
-                                                isClearable
-                                                aria-label='autocomplete-elements'
-                                                label="Seleccionar el elemento"
-                                                placeholder="Busca un elemento"
-                                                isRequired
-                                                isInvalid={errors.element_id ? true : false}
-                                                errorMessage={errors.element_id}
-                                                defaultItems={filteredItems}
-
-                                                className='h-[60px]'
-                                                onSelectionChange={(value) => {
-                                                    handleDetailChange(index, 'element_id', parseInt(value));
-                                                }}
-                                            >
-                                                {(item) => (
-                                                    <AutocompleteItem
-                                                        key={item.codigo}
-                                                        value={item.codigo}
-                                                    >
-                                                        {item.codigo + ' - ' + item.name}
-                                                    </AutocompleteItem>
-                                                )}
-                                            </Autocomplete> */}
-                                            {/* <div className="relative w-full">
-                                                <label htmlFor="autocomplete-elements" className="block text-sm font-medium text-gray-700">
-                                                    Seleccionar el elemento
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    id="autocomplete-elements"
-                                                    aria-label="autocomplete-elements"
-                                                    placeholder="Busca un elemento"
-                                                    value={newRegister.details.element_id}
-                                                    onChange={(e) => {
-                                                        handleDetailChange(index, 'element_id', e.target.value)
-                                                    }}
-                                                    className={`block w-full px-3 py-2 mt-1 text-gray-700 border ${errors.element_id ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
-                                                />
-                                                {errors.element_id && (
-                                                    <p className="mt-2 text-sm text-red-600">
-                                                        {errors.element_id}
-                                                    </p>
-                                                )}
-                                                <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                                                    {filteredItems.map((item) => (
-                                                        <li
-                                                            key={item.codigo}
-                                                            value={item.codigo}
-                                                            onClick={() => handleSelect(item.codigo)}
-                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                                        >
-                                                            {item.codigo + ' - ' + item.name}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div> */}
                                             <AutocompleteMine
                                                 items={filteredItems}
                                                 handleDetailChange={handleDetailChange}
