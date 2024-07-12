@@ -10,8 +10,6 @@ import {
 import { ListarUsuarios, ListarElementos } from '../../../functions/Listar';
 import { capitalize } from '../../../utils/columnsData';
 import axiosClient from '../../config/axiosClient';
-import { now, parseAbsoluteToLocal } from "@internationalized/date";
-import { useDateFormatter } from "@react-aria/i18n";
 import AutocompleteMine from '../../AutoCompleteMine';
 
 export const RegisterLoans = ({ onClose, listarMovimientos }) => {

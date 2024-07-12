@@ -159,16 +159,25 @@ export const Movimientos3 = () => {
             <div className="relative flex items-center gap-2">
                 <Tooltip content="Details">
                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                        <Button color='primary' variant="ligth" className="text-lg" onClick={() => { setIsOpen3(true) }} isIconOnly> <EyeIcon color="#007BFF" /></Button>
+                        <Button
+                            color='primary'
+                            variant="ligth"
+                            className="text-lg"
+                            onClick={() => { setIsOpen3(true) }}
+                            isIconOnly
+                        >
+                            <EyeIcon color="#007BFF" />
+                        </Button>
                         <Modal1
                             title={`Movimiento # ${codigo.codigo}`}
-                            size={'2xl'}
+                            size={'4xl'}
                             isOpen={isOpen3}
                             onClose={() => {
                                 setIsOpen3(false)
                                 list();
                             }}
-                            form={<LoanDetails item={codigo} listarMovimientos={list} />} />
+                            form={<LoanDetails item={codigo} listarMovimientos={list} />}
+                        />
                     </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete user">
