@@ -9,6 +9,8 @@ import NotificacionesModal from "./modals/Notificaciones";
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
 import { useAuth } from "../context/AuthProvider";
 import { CiEdit, CiUnlock } from "react-icons/ci";
+import Modal1 from "./Modal1";
+import { FormUpdateContraseña } from "../functions/Update/UpdateContraseña/FormUpdateContraseña"
 
 export const Navbar = ({ setLogIn }) => {
   const [userName, setUserName] = useState("");
@@ -26,6 +28,14 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [activeForm, setActiveForm] = useState('');
+
+  const openModal = (formType) => {
+    setActiveForm(formType);
+    setIsOpen(true);
+  };
 
   const { logout, user } = useAuth();
 
@@ -135,20 +145,30 @@ export const Navbar = ({ setLogIn }) => {
             }}
           />
           {showEditProfile && (
-            <div className="absolute top-[40px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4">
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowEditProfile(false)}>
-                <CiEdit className="text-gray-500" />
+            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+              <div className="flex items-center gap-2 cursor-pointer w-full mb-2" onClick={()=> openModal('editProfile')}>
+                <CiEdit className="text-gray-500 text-2xl" />
                 <h1 className="font-bold text-[16px]">Editar Perfil</h1>
               </div>
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowChangePassword(true)}>
-                <CiUnlock className="text-gray-500" />
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => openModal('changePassword')}>
+                <CiUnlock className="text-gray-500 text-2xl" />
                 <h1 className="font-bold text-[16px]">Cambiar Contraseña</h1>
-              </div>
-              <div className="mt-3">
-                <FormUpdatePerfil onClose={() => setShowEditProfile(false)} Listar={ListarUsuario} />
               </div>
             </div>
           )}
+          <Modal1
+           title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
+           size={activeForm === 'editProfile' ? '2xl' : 'base'}
+           isOpen={isOpen}
+           onClose={()=> setIsOpen(false)}
+           form={
+            activeForm === 'editProfile' ? (
+              <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
+            ) : (
+              <FormUpdateContraseña onClose={() => setIsOpen(false)} />
+            )
+          }
+          />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">
