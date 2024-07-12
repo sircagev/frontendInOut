@@ -71,12 +71,8 @@ function Login() {
           email: email,
           password: password,
         });
-
-        console.log(respo)
-
         if (respo.role_id == 1 || respo.role_id == 2) navigate('/estadistica')
         if (respo.role_id == 3) navigate('/reservas')
-
       }
     } catch (error) {
       console.log(error)
