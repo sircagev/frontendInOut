@@ -176,7 +176,10 @@ export const Movimientos3 = () => {
                                 setIsOpen3(false)
                                 list();
                             }}
-                            form={<LoanDetails item={codigo} listarMovimientos={list} />}
+                            form={<LoanDetails item={codigo} onClose={()=>{
+                                setIsOpen3(false)
+                                list();
+                            } } />}
                         />
                     </span>
                 </Tooltip>

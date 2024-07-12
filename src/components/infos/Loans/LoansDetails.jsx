@@ -17,7 +17,7 @@ import { useAuth } from '../../../context/AuthProvider';
 import axiosClient from '../../config/axiosClient';
 import swal from 'sweetalert';
 
-export const LoanDetails = ({ item, listarMovimientos }) => {
+export const LoanDetails = ({ item, onClose }) => {
 
     const { user } = useAuth();
 
@@ -122,20 +122,6 @@ export const LoanDetails = ({ item, listarMovimientos }) => {
         })
     };
 
-    const getLoanStatus = (item) => {
-        const detail = newStatus.details.find(detail => detail.movementDetail_id === item.movementDetail_id);
-
-        console.log(detail)
-        if (detail) {
-            const currentStatus = detail.loanStatus_id;
-
-            if (currentStatus != 5) return false
-        }
-
-        return true
-    }
-
-
     const getKeyData = (item, columnKey) => {
 
         /* const [isDisable, setIsDisable] = useState(false) */
@@ -221,6 +207,7 @@ export const LoanDetails = ({ item, listarMovimientos }) => {
                         icon: `${statusCode == 201 ? 'warning' : 'success'}`,
                         buttons: true
                     })
+                    onClose();
                 })
                 .catch(error => {
                     if (error.response) {
