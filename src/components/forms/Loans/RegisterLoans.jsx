@@ -4,11 +4,13 @@ import {
     AutocompleteItem,
     Input,
     Button,
-    Textarea
+    Textarea,
+    DateInput
 } from '@nextui-org/react';
 import { ListarUsuarios, ListarElementos } from '../../../functions/Listar';
 import { capitalize } from '../../../utils/columnsData';
 import axiosClient from '../../config/axiosClient';
+import AutocompleteMine from '../../AutoCompleteMine';
 
 export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
@@ -34,6 +36,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
     const [usersData, setUsersData] = useState([]);
     const [elementsData, setElementsData] = useState([]);
     const [editIndex, setEditIndex] = useState(0);
+    const [minDate, setMinDate] = useState('');
 
     const addDetail = () => {
 
@@ -129,7 +132,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
         if (res) return;
 
         try {
-            const register = await axiosClient.post('movimientos/register-loan', newRegister);
+            const register = await axiosClient.post('movimientos/register-loan-in-warehouse', newRegister);
 
             const status = register.status >= 200 && register.status <= 210 ? true : false
 
@@ -173,6 +176,11 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
             hasError = true;
         }
 
+        if (newRegister.estimated_return && (new Date(newRegister.estimated_return) < new Date(minDate))) {
+            newErrorMessages.estimated_return = `Debes seleccionar una fecha mayor a ${minDate}`;
+            hasError = true;
+        }
+
         const lastDetailIndex = newRegister.details.length - 1;
         const lastDetail = newRegister.details[lastDetailIndex];
 
@@ -197,10 +205,27 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
     useEffect(() => {
         list();
+        console.log(newRegister.details.length)
+        const date = getTargetDate();
+        const dateString = date.toISOString()
+        setNewRegister(precData => ({
+            ...precData,
+            estimated_return: dateString.slice(0, 16)
+        }));
+
+        const now = new Date();
+        now.setHours(now.getHours() - 5);
+        const formattedNow = (now).toISOString().slice(0, 16);
+        console.log(formattedNow)
+        setMinDate(formattedNow);
     }, [])
 
     useEffect(() => {
         console.log(newRegister)
+        const num = newRegister.details.length;
+        if (num == 1) {
+            setEditIndex(0)
+        }
     }, [newRegister]);
 
     useEffect(() => {
@@ -228,6 +253,28 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
         handleErrors();
     }, [newRegister]);
+
+    const getTargetDate = () => {
+        const now = new Date();
+        const currentHour = now.getUTCHours(); // Obtener la hora actual en UTC
+        let targetDate;
+
+        if (currentHour < 17) {
+            // Si la hora actual es antes de las 5 de la tarde UTC
+            targetDate = new Date(now);
+        } else {
+            // Si la hora actual es después de las 5 de la tarde UTC
+            targetDate = new Date(now);
+            targetDate.setUTCDate(targetDate.getUTCDate() + 1);
+        }
+
+        targetDate.setUTCHours(17, 0, 0, 0); // Establecer la hora a las 5 de la tarde UTC
+        // Ajustar la fecha según la diferencia de zona horaria (por ejemplo, UTC-5)
+        const offsetHours = 5; // Diferencia de horas
+        targetDate.setHours(targetDate.getHours());
+
+        return targetDate;
+    };
 
     return (
         <div>
@@ -270,7 +317,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                     {detail.element_id}
                                     <div className='w-full flex gap-3'>
                                         <div className='w-[70%]'>
-                                            <Autocomplete
+                                            {/* <Autocomplete
                                                 isClearable
                                                 aria-label='autocomplete-elements'
                                                 label="Seleccionar el elemento"
@@ -279,6 +326,7 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                                 isInvalid={errors.element_id ? true : false}
                                                 errorMessage={errors.element_id}
                                                 defaultItems={filteredItems}
+
                                                 className='h-[60px]'
                                                 onSelectionChange={(value) => {
                                                     handleDetailChange(index, 'element_id', parseInt(value));
@@ -292,7 +340,47 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                                         {item.codigo + ' - ' + item.name}
                                                     </AutocompleteItem>
                                                 )}
-                                            </Autocomplete>
+                                            </Autocomplete> */}
+                                            {/* <div className="relative w-full">
+                                                <label htmlFor="autocomplete-elements" className="block text-sm font-medium text-gray-700">
+                                                    Seleccionar el elemento
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="autocomplete-elements"
+                                                    aria-label="autocomplete-elements"
+                                                    placeholder="Busca un elemento"
+                                                    value={newRegister.details.element_id}
+                                                    onChange={(e) => {
+                                                        handleDetailChange(index, 'element_id', e.target.value)
+                                                    }}
+                                                    className={`block w-full px-3 py-2 mt-1 text-gray-700 border ${errors.element_id ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                                                />
+                                                {errors.element_id && (
+                                                    <p className="mt-2 text-sm text-red-600">
+                                                        {errors.element_id}
+                                                    </p>
+                                                )}
+                                                <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                                                    {filteredItems.map((item) => (
+                                                        <li
+                                                            key={item.codigo}
+                                                            value={item.codigo}
+                                                            onClick={() => handleSelect(item.codigo)}
+                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                        >
+                                                            {item.codigo + ' - ' + item.name}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div> */}
+                                            <AutocompleteMine
+                                                items={filteredItems}
+                                                handleDetailChange={handleDetailChange}
+                                                index={index}
+                                                errors={errors}
+                                                newRegister={newRegister}
+                                            />
                                         </div>
                                         <div className='w-[30%]'>
                                             <Input
@@ -304,13 +392,11 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                                 errorMessage={errors.quantity}
                                                 color={errors.quantity && 'danger'}
                                                 min={0}
+                                                value={newRegister.details[index].quantity ? newRegister.details[index].quantity : null}
                                                 onChange={(e) => {
-                                                    const nuevaCantidad = parseInt(e.target.value);
-                                                    if (!isNaN(nuevaCantidad)) {
-                                                        handleDetailChange(index, 'quantity', nuevaCantidad);
-                                                    } else {
-                                                        console.log('Por favor ingrese un número válido para la cantidad.');
-                                                    }
+                                                    let nuevaCantidad = parseInt(e.target.value);
+                                                    if (isNaN(nuevaCantidad)) nuevaCantidad = null;
+                                                    handleDetailChange(index, 'quantity', nuevaCantidad);
                                                 }}
                                             />
                                         </div>
@@ -322,13 +408,14 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                             label="Observaciones"
                                             placeholder=''
                                             labelPlacement="outside"
+                                            value={newRegister.details[index].remarks}
                                             min={0}
                                             onChange={(e) => {
                                                 handleDetailChange(index, 'remarks', e.target.value);
                                             }}
                                         />
                                     </div>
-                                    <Button onClick={() => removeDetail(index)} color='danger' className='text-white font-bold w-1/2 mt-2'>Eliminar</Button>
+                                    {(newRegister.details.length > 1) && <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>}
                                 </>
                             ) : (
                                 <div className='flex w-full justify-center items-center gap-2'>
@@ -338,33 +425,37 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                     <div className='flex w-[25%] items-center justify-center'>
                                         <span>{detail.quantity}</span>
                                     </div>
-                                    <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>
+                                    {(newRegister.details.length > 1) && <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>}
                                 </div>
                             )}
                         </div>
                     ))}
                     <Button onClick={addDetail} color='primary' className='text-white font-bold'>Agregar Detalle</Button>
-                    <div className='w-1/2'>
-                        <Input
-                            isRequired
-                            type="date"
-                            label="Fecha de devolución"
-                            isInvalid={errors.estimated_return}
-                            errorMessage={errors.estimated_return}
-                            color={errors.estimated_return && 'danger'}
-                            min={0}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                if (value) { // Verificar si el nuevo valor es un número
-                                    setNewRegister(precData => ({
-                                        ...precData,
-                                        estimated_return: value
-                                    }));
-                                }
-                            }}
-                        />
-                    </div>
+                    <div className='w-auto'>
+                        <div className={`relative px-3 cursor-text tap-highlight-transparent shadow-sm  focus-within:hover:bg-default-100 group-data-[invalid=true]:bg-danger-50 group-data-[invalid=true]:hover:bg-danger-100 group-data-[invalid=true]:focus-within:hover:bg-danger-50 min-h-10 rounded-medium flex-col  justify-center gap-0 w-full transition-background motion-reduce:transition-none !duration-150 h-14 py-2 flex items-center ${errors.estimated_return ? 'bg-[#fee7ef] hover:bg-[#fdd0df]' : 'bg-default-100 hover:bg-default-200 '}`}>
+                            <span className="block subpixel-antialiased text-default-600 group-data-[required=true]:after:content-['*'] group-data-[required=true]:after:text-danger group-data-[required=true]:after:ml-0.5 group-data-[invalid=true]:text-danger w-full text-tiny cursor-text !ease-out !duration-200 will-change-auto motion-reduce:transition-none transition-[color,opacity] ">Fecha de devolución <span className='text-red-500'>*</span> </span>
+                            <input
+                                className={`flex items-center  text-[14px] w-full gap-x-2 h-6 bg-transparent   ${errors.estimated_return ? 'text-red-500' : 'text-default-400'} `}
+                                type="datetime-local"
+                                name='estimated_return'
+                                value={newRegister.estimated_return}
+                                onChange={(e) => {
+                                    const value = e.target.value
+                                    console.log(value)
+                                    if (value) { // Verificar si el nuevo valor es un número
+                                        setNewRegister(precData => ({
+                                            ...precData,
+                                            estimated_return: value
+                                        }));
+                                    }
+                                }}
+                            />
 
+                        </div>
+                        {
+                            errors.estimated_return && <span className='text-tiny text-danger'>{errors.estimated_return}</span>
+                        }
+                    </div>
                     <div className='flex justify-end gap-3 mt-2'>
                         <Button color='success' className='text-white font-bold' type='submit'>Registrar</Button>
                         <Button onClick={onClose} color='danger' className='text-white font-bold'>Cancelar</Button>

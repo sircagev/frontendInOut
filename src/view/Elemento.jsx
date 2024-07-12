@@ -107,7 +107,7 @@ export const Elemento = () => {
         ];
 
         return (
-            <div className='flex gap-3 w-full items-center justify-center'>
+            <div className='flex gap-3'>
                 <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
                 <Modal1
                     title={"Actualizar Elemento"}

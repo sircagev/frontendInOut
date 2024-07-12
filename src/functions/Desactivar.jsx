@@ -11,7 +11,7 @@ export const DesactivarElemento = async (codigoElemento, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 3000,
+            timer: 2000,
         });
     }
 };
@@ -27,7 +27,7 @@ export const DesactivarCategorias = async (codigoCategoria, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 3000,
+            timer: 2000,
         });  
     }
 };
@@ -47,7 +47,7 @@ export const DesactivarEmpaque = async (codigoEmpaque, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 3000,
+            timer: 2000,
         });
     }
 };
@@ -64,7 +64,7 @@ export const DesactivarMedida = async (codigoMedida, nuevoEstado) => {
             text: errorMessage,
             icon: "error",
             buttons: false,
-            timer: 200,
+            timer: 2000,
         });
     }
 };

@@ -10,7 +10,7 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 export const FormUpdateMedida = ({ onClose, category, Listar }) => {
 
   const [nombre, setNombre] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErros] = useState({});
 
   useEffect(() => {
     if (category) {
@@ -21,11 +21,20 @@ export const FormUpdateMedida = ({ onClose, category, Listar }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!nombre.trim() || /\d/.test(nombre.trim())) {
-      setErrorMessage('No debe estar vacío ni tener números.');
+    let hasError = false;
+
+    let errorObject = {
+      nombre: ''
+    }
+
+    if (!nombre || /\d/.test(nombre)) {
+      errorObject.nombre = 'No puede contener números no estar vacío';
+      hasError = true;
+    }
+
+    if(hasError) {
+      setErros(errorObject);
       return;
-    } else {
-      setErrorMessage('');
     }
 
     try {
@@ -58,15 +67,12 @@ export const FormUpdateMedida = ({ onClose, category, Listar }) => {
                 type='text'
                 label='Nombre Medida'
                 className="w-[100%]"
+                color={errors.nombre ? 'danger' : ''}
+                errorMessage={errors.nombre}
+                isInvalid={errors.nombre}
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
               />
-              {errorMessage && (
-                <div className="flex items-center gap-2 text-red-500 text-xs mt-2 ml-3">
-                  <FaExclamationCircle className="" />
-                  {errorMessage}
-                </div>
-              )}
             </div>
             <div className='flex justify-end gap-3 mb-3'>
               <ButtonCerrar onClose={onClose}/>

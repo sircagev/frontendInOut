@@ -288,7 +288,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                                 }}
                             >
                                 {dataElements.map((item) => (
-                                    <AutocompleteItem
+                                    (item.status == 1) && <AutocompleteItem
                                         key={item.codigo}
                                         value={item.codigo}
                                     >

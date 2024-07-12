@@ -7,15 +7,17 @@ import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
 import NotificacionesModal from "./modals/Notificaciones";
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
-import Modal1 from "../components/Modal1";
 import { useAuth } from "../context/AuthProvider";
+import { CiEdit, CiUnlock } from "react-icons/ci";
+import Modal1 from "./Modal1";
+import { FormUpdateContraseña } from "../functions/Update/UpdateContraseña/FormUpdateContraseña"
 
 export const Navbar = ({ setLogIn }) => {
-
-  //#region constantes
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const [prestamosActivos, setPrestamosActivos] = useState([]);
   const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
   const [prestamosVencidos, setPrestamosVencidos] = useState([]);
@@ -26,16 +28,18 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
-  const [showSubMenu, setShowSubMenu] = useState(false); // Estado para controlar la visibilidad del submenú
+  const [isOpen, setIsOpen] = useState(false);
 
-  //#endregion constantes
+  const [activeForm, setActiveForm] = useState('');
 
-  const { logout } = useAuth();
- 
+  const openModal = (formType) => {
+    setActiveForm(formType);
+    setIsOpen(true);
+  };
+
+  const { logout, user } = useAuth();
 
   const navigate = useNavigate();
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     swal({
@@ -55,9 +59,21 @@ export const Navbar = ({ setLogIn }) => {
     });
   };
 
+  const ListarUsuario = async () => {
+    try {
+      const response = await axiosClient.get('usuario/listar');
+      setData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    ListarUsuario();
+  }, []);
+
   const toggleSubMenu = () => {
-    
-    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
+    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenúf04122badf8cae22b1fdea26cce71c80204cc399
   };
 
   useEffect(() => {
@@ -117,22 +133,41 @@ export const Navbar = ({ setLogIn }) => {
     <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
         <img src={logo} className="w-[60px] h-auto ml-10" alt="logo" />
-        <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
+        <h1 className="hidden sm:block text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
         <div className="text-black flex items-center gap-2 relative">
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onClick={() => (
-              setIsOpen(true)
-            )} // Alternar la visibilidad del submenú al hacer clic en el icono de usuario
+            onClick={() => {
+              setShowEditProfile(!showEditProfile);
+              setShowChangePassword(false);
+            }}
           />
+          {showEditProfile && (
+            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+              <div className="flex items-center gap-2 cursor-pointer w-full mb-2" onClick={()=> openModal('editProfile')}>
+                <CiEdit className="text-gray-500 text-2xl" />
+                <h1 className="font-bold text-[16px]">Editar Perfil</h1>
+              </div>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => openModal('changePassword')}>
+                <CiUnlock className="text-gray-500 text-2xl" />
+                <h1 className="font-bold text-[16px]">Cambiar Contraseña</h1>
+              </div>
+            </div>
+          )}
           <Modal1
-            isOpen={isOpen}
-            size={"4xl"}
-            onClose={() => setIsOpen(false)}
-            form={<FormUpdatePerfil onClose={() => setIsOpen(false)} />}
-            title={"Administrar perfil"}
+           title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
+           size={activeForm === 'editProfile' ? '2xl' : 'base'}
+           isOpen={isOpen}
+           onClose={()=> setIsOpen(false)}
+           form={
+            activeForm === 'editProfile' ? (
+              <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
+            ) : (
+              <FormUpdateContraseña onClose={() => setIsOpen(false)} />
+            )
+          }
           />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
@@ -142,9 +177,8 @@ export const Navbar = ({ setLogIn }) => {
               {role && role === "3" && "Usuario"}
             </p>
           </div>
-
         </div>
-        <div
+        {user.role_id != 3 && <div
           className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
         >
@@ -154,13 +188,12 @@ export const Navbar = ({ setLogIn }) => {
             </span>
           )}
           <FaFileAlt className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
-        </div>
-        <div>
+        </div>}
 
+        <div>
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>
       </div>
-
       <NotificacionesModal
         showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados > 0)}
         setShowModal={setShowModal}

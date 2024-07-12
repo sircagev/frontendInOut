@@ -109,9 +109,9 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                 role_id: values.role_id,
                 position_id: values.position_id
             };
-    
+            console.log(values.position_id == '1')
             // Incluir course_id solo si position_id es '1' (aprendiz)
-            if (values.position_id === '1') {
+            if (values.position_id == '1') {
                 dataToUpdate.course_id = values.course_id;
             }
     
@@ -130,35 +130,37 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
             // Actualizar la lista y cerrar el modal o ventana
             Listar();
             onClose();
-    
+            
         } catch (error) {
             console.log("Error al Actualizar el Usuario", error);
     
-            // Mostrar mensaje de error específico si está disponible
+            // Mostrar mensaje de error genérico o específico
             if (error.response && error.response.data && error.response.data.message) {
                 swal({
                     title: "Error",
                     text: error.response.data.message, // Mostrar el mensaje específico del servidor
                     icon: "error",
-                    buttons: {
-                        confirm: "OK",
+                    buttons:  {
+                        confirm: "Salir",
                     },
+                    timer: 1000,
                 });
             } else {
-                // Mostrar mensaje de error genérico si no se proporciona un mensaje específico
                 swal({
                     title: "Error",
-                    text: "Error al actualizar el Usuario.",
+                    text: "Error al registrar el Usuario.",
                     icon: "error",
                     buttons: {
-                        confirm: "OK",
+                        confirm: "Salir",
                     },
+                    dangerMode: true,
                 });
             }
         }
     };
     
-
+    useEffect(()=> {
+    }, [values])
 
     const validateForm = () => {
         let hasError = false;
@@ -172,22 +174,30 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
             position_id: '',
             course_id: ''
         };
-
         if (!values.name.trim()) {
             newErrorMessages.name = 'El nombre es requerido.';
             hasError = true;
+        } else if (/\d/.test(values.name.trim())) {
+            newErrorMessages.name = 'El nombre no puede contener números.';
+            hasError = true;
         }
-
+        
         if (!values.lastname.trim()) {
             newErrorMessages.lastname = 'El apellido es requerido.';
             hasError = true;
-        }
-
-        if (!values.phone.trim()) {
-            newErrorMessages.phone = 'El número de Teléfono es requerido.';
+        } else if (/\d/.test(values.lastname.trim())) {
+            newErrorMessages.lastname = 'El apellido no puede contener números.';
             hasError = true;
         }
-
+        
+        if (!values.phone.trim()) {
+            newErrorMessages.phone = 'El campo de teléfono es requerido.';
+            hasError = true;
+        } else if (values.phone.trim().length < 10 || values.phone.trim().length > 12) {
+            newErrorMessages.phone = 'Debe tener 10 números';
+            hasError = true;
+        }
+        
         if (!values.email.trim()) {
             newErrorMessages.email = 'El correo electrónico es requerido.';
             hasError = true;
@@ -197,7 +207,10 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
         }
 
         if (!values.identification.trim()) {
-            newErrorMessages.identification = 'El número de Identificación es requerido.';
+            newErrorMessages.identification = 'El campo de identificación es requerido.';
+            hasError = true;
+        } else if (values.identification.trim().length < 6 || values.identification.trim().length > 10) {
+            newErrorMessages.identification = 'El campo de identificación debe tener entre 6 y 10 caracteres.';
             hasError = true;
         }
 
@@ -211,12 +224,7 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
             hasError = true;
         }
 
-        // Validar course_id solo si position_id es '1' (aprendiz)
-        if (values.position_id === '1' && (!values.course_id)) {
-            newErrorMessages.course_id = 'El campo Id de Ficha es requerido para un aprendiz.';
-            hasError = true;
-        }
-
+      
 
         setErrorMessages(newErrorMessages);
 
@@ -283,7 +291,7 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                             </div>
                             <div>
                                 <Input
-                                    type='text'
+                                    type='number'
                                     label='Teléfono'
                                     name='phone'
                                     value={values.phone}
@@ -301,7 +309,7 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                         <div className="w-auto flex gap-3 mb-2">
                             <div>
                                 <Input
-                                    type='text'
+                                    type='number'
                                     label='Identificación'
                                     name='identification'
                                     value={values.identification}

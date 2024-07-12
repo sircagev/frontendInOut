@@ -74,7 +74,7 @@ export const Usuarios = () => {
   }
 
   return (
-    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-4'>
       <NextUITable
         columns={columnsUsers}
         rows={data}
