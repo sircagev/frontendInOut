@@ -15,7 +15,7 @@ export const DashboardTemplate = ({ setLoggedIn, user }) => {
                 <Sidebars/>
             </section>
             <section className="flex flex-col w-full h-screen">
-                <Navbar setLogIn={setLoggedIn} />
+                <Navbar setLogIn={setLoggedIn}/>
                 <div className="flex-1 overflow-y-auto bg-gray-100">
                     <Outlet user={user}/>
                 </div>

@@ -92,7 +92,7 @@ export const FormUpdateContraseña = ({ onClose, category, Listar }) => {
                         name='password'
                         value={values.password}
                         onChange={handleInputChange}
-                        className="w-[310px]"
+                        className="w-full"
                     />
                     {errorMessages.password && (
                         <div className="flex items-center text-red-500 text-xs mt-1">
@@ -107,7 +107,7 @@ export const FormUpdateContraseña = ({ onClose, category, Listar }) => {
                         name='newPassword'
                         value={values.newPassword}
                         onChange={handleInputChange}
-                        className="w-[310px]"
+                        className="w-full"
                     />
                     {errorMessages.newPassword && (
                         <div className="flex items-center text-red-500 text-xs mt-1">
@@ -122,7 +122,7 @@ export const FormUpdateContraseña = ({ onClose, category, Listar }) => {
                         name='confirmPassword'
                         value={values.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-[310px]"
+                        className="full"
                     />
                     {errorMessages.confirmPassword && (
                         <div className="flex items-center text-red-500 text-xs mt-1">
