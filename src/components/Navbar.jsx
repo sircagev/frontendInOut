@@ -27,9 +27,7 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
 
-
   const { logout, user } = useAuth();
-
 
   const navigate = useNavigate();
 
@@ -65,9 +63,7 @@ export const Navbar = ({ setLogIn }) => {
   }, []);
 
   const toggleSubMenu = () => {
-
-    setShowSubMenu(!showSubMenu);
-
+    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
   };
 
   useEffect(() => {
