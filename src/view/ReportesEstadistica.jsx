@@ -183,7 +183,7 @@ const datosConsumableApi = Array.isArray(consumableApiData)
           <div className="flex flex-col items-center pl-10">
             <h2 className="font-bold ">Top 5 Consumibles Más Solicitados</h2>
             {datosConsumablePie.length > 0 ? (
-              <PieChart width={300} height={300}>
+              <PieChart width={350} height={300}>
                 <Pie
                   data={datosConsumablePie}
                   dataKey="value"
@@ -247,7 +247,7 @@ const datosConsumableApi = Array.isArray(consumableApiData)
           <div className="flex flex-col items-center pl-10">
             <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
             {datosLoansPie.length > 0 ? (
-              <PieChart width={300} height={300}>
+              <PieChart width={350} height={300}>
                 <Pie
                   data={datosLoansPie}
                   dataKey="value"
