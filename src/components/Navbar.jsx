@@ -63,8 +63,7 @@ export const Navbar = ({ setLogIn }) => {
   }, []);
 
   const toggleSubMenu = () => {
-    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenú
-
+    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenúf04122badf8cae22b1fdea26cce71c80204cc399
   };
 
   useEffect(() => {
