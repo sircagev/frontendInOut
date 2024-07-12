@@ -26,39 +26,56 @@ const ReporteEstadistico = () => {
   const navigate = useNavigate();
   const [movementsData, setmovementsData] = useState([]);
   const [loansEleData, setloansEleData] = useState([]);
-  const [loansApiData, setloansApiData] = useState([]);
+  const [loansBarData, setloansBarData] = useState([]);
   const [consumableData, setconsumableData] = useState([]);
-  const [consumableApiData, setconsumableApiData] = useState([]);
+  const [consumableBarData, setconsumableBarData] = useState([]);
 
   const fetchData = async () => {
     try {
-      const movementsResponse = await axiosClient.get("/reporte/movimientospie");
+      const movementsResponse = await axiosClient.get(
+        "/reporte/movimientospie"
+      );
+
       const loansResponse = await axiosClient.get("/reporte/prestamospie");
-      const loansApiResponse = await axiosClient.get("/reporte/prestamosapi");
-      const consumableResponse = await axiosClient.get("/reporte/consumiblespie");
-      const consumableApiResponse = await axiosClient.get("/reporte/consumiblesapi");
-  
+      const loansBarResponse = await axiosClient.get("/reporte/prestamosbar");
+      const consumableResponse = await axiosClient.get(
+        "/reporte/consumiblespie"
+      );
+      const consumableBarResponse = await axiosClient.get(
+        "/reporte/consumiblesbar"
+      );
+
       console.log("Datos recibidos movimientos:", movementsResponse.data.datos);
-      console.log("Datos recibidos prestamos Pie:", loansResponse.data.datos);
-      console.log("Datos recibidos prestamos Api:", loansApiResponse.data.datos);
-      console.log("Datos recibidos consumibles:", consumableResponse.data.datos);
-      console.log("Datos recibidos consumibles Api:", consumableApiResponse.data.datos);
-  
+
+      console.log("Datos recibidos prestamos:", loansResponse.data.datos);
+      console.log(
+        "Datos recibidos prestamos Bar:",
+        loansBarResponse.data.datos
+      );
+      console.log(
+        "Datos recibidos consumibles:",
+        consumableResponse.data.datos
+      );
+      console.log(
+        "Datos recibidos consumibles Bar:",
+        consumableBarResponse.data.datos
+      );
+
       setmovementsData(movementsResponse.data.datos);
+
       setloansEleData(loansResponse.data.datos);
-      setloansApiData(loansApiResponse.data.datos);
+      setloansBarData(loansBarResponse.data.datos);
       setconsumableData(consumableResponse.data.datos);
-      setconsumableApiData(consumableApiResponse.data.datos);
+      setconsumableBarData(consumableBarResponse.data.datos);
     } catch (error) {
       console.error("Error al obtener la información:", error);
       setmovementsData([]);
       setloansEleData([]);
-      setloansApiData([]);
+      setloansBarData([]);
       setconsumableData([]);
-      setconsumableApiData([]);
+      setconsumableBarData([]);
     }
   };
-  
 
   useEffect(() => {
     fetchData();
@@ -77,35 +94,34 @@ const ReporteEstadistico = () => {
     : [];
 
   const datosConsumablePie = Array.isArray(consumableData)
-  ? consumableData.map((item) => ({
-    name: item.name,
-    value: parseFloat(item.Percentage),
-  }))
-: [];
+    ? consumableData.map((item) => ({
+        name: item.name,
+        value: parseFloat(item.percentage),
+      }))
+    : [];
 
-const datosConsumableApi = Array.isArray(consumableApiData)
-? consumableApiData.reduce((acc, curr) => {
-    const found = acc.find((item) => item.mes === curr.month_year);
-    if (found) {
-      found.Total += parseFloat(curr.Total);
-    } else {
-      acc.push({
-        mes: curr.date,
-        Total: parseFloat(curr.Total),
-      });
-    }
-    return acc;
-  }, [])
-: [];
+  const datosConsumableBar = Array.isArray(consumableBarData)
+    ? consumableBarData.reduce((acc, curr) => {
+        const found = acc.find((item) => item.mes === curr.date);
+        if (found) {
+          found.Total += parseFloat(curr.Total);
+        } else {
+          acc.push({
+            mes: curr.date,
+            Total: curr.Total,
+          });
+        }
+        return acc;
+      }, [])
+    : [];
 
   const datosMovementsBar = Array.isArray(movementsData)
     ? movementsData.reduce((acc, curr) => {
-        const monthYear = getMonthYear(curr.created_at);
-        const found = acc.find((item) => item.mes === monthYear);
+        const found = acc.find((item) => item.mes === curr.date);
         if (found) {
           found[curr.movement_type] = (found[curr.movement_type] || 0) + 1;
         } else {
-          acc.push({ mes: monthYear, [curr.movement_type]: 1 });
+          acc.push({ mes: curr.date, [curr.movement_type]: 1 });
         }
         return acc;
       }, [])
@@ -113,19 +129,19 @@ const datosConsumableApi = Array.isArray(consumableApiData)
 
   const datosLoansPie = Array.isArray(loansEleData)
     ? loansEleData.map((item) => ({
-        name: item.element_name,
+        name: item.name,
         value: parseFloat(item.percentage),
       }))
     : [];
 
-  const datosLoansBar = Array.isArray(loansApiData)
-    ? loansApiData.reduce((acc, curr) => {
-        const found = acc.find((item) => item.mes === curr.month_year);
+  const datosLoansBar = Array.isArray(loansBarData)
+    ? loansBarData.reduce((acc, curr) => {
+        const found = acc.find((item) => item.mes === curr.date);
         if (found) {
           found.Total += parseFloat(curr.Total);
         } else {
           acc.push({
-            mes: curr.month_year,
+            mes: curr.date,
             Total: parseFloat(curr.Total),
           });
         }
@@ -137,22 +153,16 @@ const datosConsumableApi = Array.isArray(consumableApiData)
   console.log("Datos para el gráfico de movimientos Barra:", datosMovementsBar);
   console.log("Datos para el gráfico de prestamos Pie:", datosLoansPie);
   console.log("Datos para el gráfico de prestamos Barra:", datosLoansBar);
-  console.log("Datos para el gráfico de consumible Barra:", datosConsumableApi);
-  console.log(
-    "Datos para el gráfico de consumibles Pie:",
-    datosConsumablePie
-  );
+  console.log("Datos para el gráfico de consumible Barra:", datosConsumableBar);
+  console.log("Datos para el gráfico de consumibles Pie:", datosConsumablePie);
 
   const coloresPie = [
-    "#8884d8",
-    "#00C49F",
-    "#FFD700",
-    "#ff8042",
+    "#07597e",
+    "#2183b3",
+    "#30a0d9",
     "#83a6ed",
-    "#FF8042",
-    "#d0ed57",
-    "#a4de6c",
-    "#8dd1e1",
+    "#75bbeb",
+    "#00b8d3",
   ];
   const coloresBar = {
     ingreso: "#8884d8",
@@ -174,14 +184,74 @@ const datosConsumableApi = Array.isArray(consumableApiData)
       <h1 className="flex justify-center font-extrabold text-2xl mb-4">
         Bienvenid@!
       </h1>
-
       <div className="pl-12 pr-12">
         <h2 className="font-bold text-lg justify-center flex pb-2">
+          Módulo de Préstamos
+        </h2>
+        <div className="flex justify-between pl-12 pr-12">
+          <div className="flex flex-col items-center pl-10">
+            <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
+            {datosLoansPie.length > 0 ? (
+              <PieChart width={350} height={300}>
+                <Pie
+                  data={datosLoansPie}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  label={({ value }) => `${value.toFixed(2)}%`}
+                >
+                  {datosLoansPie.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={coloresPie[index % coloresPie.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            ) : (
+              <p>No hay datos para mostrar</p>
+            )}
+          </div>
+          <div className="flex flex-col items-center pr-10">
+            <h2 className="font-bold ">Comparativa Mensual</h2>
+            {datosConsumableBar.length > 0 ? (
+              <ResponsiveContainer width={200} height={300}>
+                <BarChart
+                  data={datosConsumableBar}
+                  margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                >
+                  <XAxis dataKey="mes" />
+                  <YAxis hide={true} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="Total" stackId="a" fill="#5b9eca">
+                    <LabelList
+                      fill={coloresBar.text}
+                      dataKey="Total"
+                      position="inside"
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p>No hay datos para mostrar</p>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="pl-12 pr-12 pt-5">
+        <h2 className="font-bold text-lg justify-center pt-3 flex pb-2 ">
           Módulo de Consumibles
         </h2>
         <div className="flex justify-between pl-12 pr-12">
           <div className="flex flex-col items-center pl-10">
-            <h2 className="font-bold ">Top 5 Consumibles Más Solicitados</h2>
+            <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
             {datosConsumablePie.length > 0 ? (
               <PieChart width={350} height={300}>
                 <Pie
@@ -209,71 +279,6 @@ const datosConsumableApi = Array.isArray(consumableApiData)
               <p>No hay datos para mostrar</p>
             )}
           </div>
-
-          <div className="flex flex-col items-center pr-10">
-            <h2 className="font-bold ">Comparativa Mensual</h2>
-            {datosConsumableApi.length > 0 ? (
-              <ResponsiveContainer width={200} height={300}>
-                <BarChart
-                  data={datosConsumableApi}
-                  margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="mes" />
-                  <YAxis hide={true} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="Total" stackId="a" fill="#8884d8">
-                    <LabelList
-                      fill={coloresBar.text}
-                      dataKey="Total"
-                      position="inside"
-                    />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <p>No hay datos para mostrar</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="pl-12 pr-12 pt-5">
-        <h2 className="font-bold text-lg justify-center pt-3 flex pb-2 ">
-          Módulo de Préstamos
-        </h2>
-        <div className="flex justify-between pl-12 pr-12">
-          <div className="flex flex-col items-center pl-10">
-            <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
-            {datosLoansPie.length > 0 ? (
-              <PieChart width={350} height={300}>
-                <Pie
-                  data={datosLoansPie}
-                  dataKey="value"
-                  nameKey="element_name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={70}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  label={({ value }) => `${value.toFixed(2)}%`}
-                >
-                  {datosLoansPie.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={coloresPie[index % coloresPie.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            ) : (
-              <p>No hay datos para mostrar</p>
-            )}
-          </div>
-
           <div className="flex flex-col items-center pr-10">
             <h2 className="font-bold ">Comparativa Mensual</h2>
             {datosLoansBar.length > 0 ? (
@@ -282,12 +287,11 @@ const datosConsumableApi = Array.isArray(consumableApiData)
                   data={datosLoansBar}
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="mes" />
                   <YAxis hide={true} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="Total" stackId="a" fill="#8884d8">
+                  <Bar dataKey="Total" stackId="a" fill="#5b9eca">
                     <LabelList
                       fill={coloresBar.text}
                       dataKey="Total"
@@ -302,7 +306,6 @@ const datosConsumableApi = Array.isArray(consumableApiData)
           </div>
         </div>
       </div>
-
       <div className="pl-12 pr-12 pt-5">
         <h2 className="font-bold text-lg justify-center flex pb-2">
           Módulo de Movimientos
@@ -311,7 +314,7 @@ const datosConsumableApi = Array.isArray(consumableApiData)
           <div className="flex flex-col items-center pl-10">
             <h2 className="font-bold ">Movimientos Totales</h2>
             {datosMovementsPie.length > 0 ? (
-              <PieChart width={300} height={300}>
+              <PieChart width={350} height={300}>
                 <Pie
                   data={datosMovementsPie}
                   dataKey="value"
@@ -346,19 +349,18 @@ const datosConsumableApi = Array.isArray(consumableApiData)
                   data={datosMovementsBar}
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="mes" />
                   <YAxis hide={true} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="ingreso" stackId="a" fill={coloresBar.ingreso}>
+                  <Bar dataKey="ingreso" stackId="a" fill={"#11678f"}>
                     <LabelList
                       fill={coloresBar.text}
                       dataKey="ingreso"
                       position="inside"
                     />
                   </Bar>
-                  <Bar dataKey="salida" stackId="a" fill={coloresBar.salida}>
+                  <Bar dataKey="salida" stackId="a" fill={"#37afec"}>
                     <LabelList
                       fill={coloresBar.text}
                       dataKey="salida"
