@@ -12,9 +12,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
   const [UseCategorias, setCategorias] = useState([]);
   const [UseEmpaques, SetEmpaques] = useState([]);
   const [UseMedidas, SetMedidas] = useState([]);
-  const [errors, setErrors] = useState({
-    name: ""
-  });
+  const [errors, setErrors] = useState({});
 
   const [values, setValues] = useState({
     name: "",
@@ -54,22 +52,48 @@ export const FormDataElemento = ({ listar, onClose }) => {
     });
   };
 
-  const validateForm = () => {
-    let formErrors = {};
-
-    if (!values.name.trim()) {
-      formErrors.name = 'El nombre no debe estar vacío.';
-    }
-
-    setErrors(formErrors);
-    console.log('Form Errors:', formErrors); // Verifica los errores aquí
-    return Object.keys(formErrors).length === 0;
-  }
-
   const handleForm = async (event) => {
     event.preventDefault();
 
-    if (!validateForm()) return;
+    let hasError = false;
+
+    let errorsObject = {
+      name: '',
+      elementType_id: '',
+      measurementUnit_id: '',
+      category_id: '',
+      packageType_id: ''
+    }
+
+    if (!values.name) {
+      errorsObject.name = 'No puede contener números ni estar vacío';
+      hasError = true;
+    }
+
+    if (!values.elementType_id) {
+      errorsObject.elementType_id = 'No puede estar vacío';
+      hasError = true;
+    }
+
+    if (!values.measurementUnit_id) {
+      errorsObject.measurementUnit_id = 'No puede estar vacío';
+      hasError = true;
+    }
+
+    if (!values.category_id) {
+      errorsObject.category_id = 'No puede estar vacío';
+      hasError = true;
+    }
+
+    if (!values.packageType_id) {
+      errorsObject.packageType_id = 'No puede estar vacío';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setErrors(errorsObject);
+      return;
+    }
 
     try {
       const response = await axiosClient.post('elemento/registrar', values);
@@ -106,105 +130,111 @@ export const FormDataElemento = ({ listar, onClose }) => {
               type='text'
               label='Nombre Elemento'
               name='name'
+              color={errors.name ? 'danger' : ''}
+              errorMessage={errors.name}
+              isInvalid={errors.name}
               value={values.name}
               onChange={handleInputChange}
               className="w-[100%]"
             />
-            {errors.name && (
-              <div className="flex items-center text-red-500 text-xs mt-1 ml-3">
-                <FaExclamationCircle className="mr-1" />
-                {errors.name}
-              </div>
-            )}
           </div>
-          <select
-            name="elementType_id"
-            required
-            value={values.elementType_id}
-            onChange={handleInputChange}
-            className="bg-[#F4F4F5] border border-gray-300 w-[100%] h-[58px] text-gray-900 pr-5 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-          >
-            <option value="" disabled>Seleccione un tipo de elemento</option>
-            {UseTipo.length > 0 ? (
-              UseTipo.map(tipo => (
-                <option
-                  value={tipo.elementType_id}
-                  key={tipo.name}
-                >
-                  {tipo.name}
-                </option>
-              ))
-            ) : (
-              <option disabled>No hay tipos disponibles</option>
-            )}
-          </select>
-          <select
-            name="measurementUnit_id"
-            required
-            value={values.measurementUnit_id}
-            onChange={handleInputChange}
-            className="bg-[#F4F4F5] border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-          >
-            <option value="" disabled>Seleccione un tipo de medida</option>
-            {UseMedidas.length > 0 ? (
-              UseMedidas.map(medida => (
-                <option
-                  value={medida.measurementUnit_id}
-                  key={medida.name}
-                >
-                  {medida.name}
-                </option>
-              ))
-            ) : (
-              <option disabled>No hay tipos de medida disponibles</option>
-            )}
-          </select>
-          <select
-            name='category_id'
-            required
-            value={values.category_id}
-            onChange={handleInputChange}
-            className="bg-[#F4F4F5] border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-          >
-            <option value="" disabled>Seleccione una categoría</option>
-            {UseCategorias.length > 0 ? (
-              UseCategorias.map(categoria => (
-                <option
-                  value={categoria.category_id}
-                  key={categoria.name}
-                >
-                  {categoria.name}
-                </option>
-              ))
-            ) : (
-              <option disabled>No hay categorías disponibles</option>
-            )}
-          </select>
-          <select
-            name='packageType_id'
-            required
-            value={values.packageType_id}
-            onChange={handleInputChange}
-            className="bg-[#F4F4F5] border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-          >
-            <option value="" disabled>Seleccione un empaque</option>
-            {UseEmpaques.length > 0 ? (
-              UseEmpaques.map(empaque => (
-                <option
-                  value={empaque.packageType_id}
-                  key={empaque.name}
-                >
-                  {empaque.name}
-                </option>
-              ))
-            ) : (
-              <option disabled>No hay empaques disponibles</option>
-            )}
-          </select>
+          <div className='w-full'>
+            <select
+              name="elementType_id"
+              value={values.elementType_id}
+              onChange={handleInputChange}
+              className={`${errors.elementType_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
+            >
+              <option value="" disabled>Seleccione un tipo de elemento</option>
+              {UseTipo.length > 0 ? (
+                UseTipo.map(tipo => (
+                  <option
+                    value={tipo.elementType_id}
+                    key={tipo.name}
+                  >
+                    {tipo.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay tipos disponibles</option>
+              )}
+            </select>
+            {errors.elementType_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.elementType_id}</span>}
+          </div>
+          <div className='w-full'>
+            <select
+              name="measurementUnit_id"
+              value={values.measurementUnit_id}
+              onChange={handleInputChange}
+              className={`${errors.measurementUnit_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
+            >
+              <option value="" disabled>Seleccione un tipo de medida</option>
+              {UseMedidas.length > 0 ? (
+                UseMedidas.map(medida => (
+                  <option
+                    value={medida.measurementUnit_id}
+                    key={medida.name}
+                  >
+                    {medida.name}
+                  </option>
+                ))
+
+              ) : (
+                <option disabled>No hay tipos de medida disponibles</option>
+              )}
+            </select>
+            {errors.measurementUnit_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.measurementUnit_id}</span>}
+          </div>
+          <div className='w-full'>
+            <select
+              name='category_id'
+              value={values.category_id}
+              onChange={handleInputChange}
+              className={`${errors.category_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
+            >
+              <option value="" disabled>Seleccione una categoría</option>
+              {UseCategorias.length > 0 ? (
+                UseCategorias.map(categoria => (
+                  <option
+                    value={categoria.category_id}
+                    key={categoria.name}
+                  >
+                    {categoria.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay categorías disponibles</option>
+              )}
+            </select>
+            {errors.category_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.category_id}</span>}
+          </div>
+          <div className='w-full'>
+            <select
+              name='packageType_id'
+              value={values.packageType_id}
+              onChange={handleInputChange}
+              className={`${errors.packageType_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
+            >
+              <option value="" disabled>Seleccione un empaque</option>
+              {UseEmpaques.length > 0 ? (
+                UseEmpaques.map(empaque => (
+                  <option
+                    value={empaque.packageType_id}
+                    key={empaque.name}
+                  >
+                    {empaque.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>No hay empaques disponibles</option>
+              )}
+            </select>
+            {errors.packageType_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.packageType_id}</span>}
+          </div>
         </div>
         <div className='w-full flex justify-end gap-3 mb-3'>
           <ButtonCerrar onClose={onClose} />
-          <ButtonRegistrar label={"Registrar"}/>
+          <ButtonRegistrar label={"Registrar"} />
         </div>
       </form>
     </div>

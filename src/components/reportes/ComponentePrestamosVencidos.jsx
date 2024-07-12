@@ -42,7 +42,7 @@ const ReporteVencidos = ({ prestamosv }) => {
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
         const codeMatches =
-          row.element_id?.toString() === searchTerm.toString();
+          row.movement_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches =
           (!startDate || rowDate >= startDate) &&
@@ -59,12 +59,11 @@ const ReporteVencidos = ({ prestamosv }) => {
 
   const columns = useMemo(
     () => [
+      { Header: "Código", accessor: "movement_id" },
       { Header: "Usuario Solicitante", accessor: "user_application" },
       { Header: "Identificación", accessor: "identification" },
       { Header: "Teléfono", accessor: "phone" },
       { Header: "Elemento", accessor: "element_name" },
-      { Header: "Código", accessor: "element_id" },
-      { Header: "Cantidad", accessor: "quantity" },
       { Header: "Observaciones", accessor: "remarks" },
       { Header: "Fecha Solicitud", accessor: "created_at" },
       { Header: "Fecha Vencimiento", accessor: "estimated_return" },
@@ -77,12 +76,11 @@ const ReporteVencidos = ({ prestamosv }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
+      { header: "Código", key: "movement_id", width: 10 },
       { header: "Usuario", key: "user_application", width: 20 },
       { header: "Identificación", key: "identification", width: 15 },
       { header: "Teléfono", key: "phone", width: 15 },
       { header: "Elemento", key: "element_name", width: 15 },
-      { header: "Código", key: "element_id", width: 8 },
-      { header: "Cantidad", key: "quantity", width: 10 },
       { header: "Observaciones", key: "remarks", width: 20 },
       { header: "Fecha Solicitud", key: "created_at", width: 15 },
       { header: "Fecha Vencimiento", key: "estimated_return", width: 20 },
@@ -112,7 +110,7 @@ const ReporteVencidos = ({ prestamosv }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("H1:I1");
+    worksheet.mergeCells("H1");
     worksheet.getCell("H1").value = "ADSO-2644590";
     worksheet.getCell("H1").alignment = {
       vertical: "middle",
@@ -120,12 +118,11 @@ const ReporteVencidos = ({ prestamosv }) => {
     };
 
     const headers = [
+      "Código",
       "Usuario",
       "Identificación",
       "Teléfono",
       "Elemento",
-      "Código",
-      "Cantidad",
       "Observaciones",
       "Fecha Solicitud",
       "Fecha Vencimiento",
@@ -140,12 +137,11 @@ const ReporteVencidos = ({ prestamosv }) => {
 
     data.forEach((row) => {
       worksheet.addRow([
+        row.movement_id,
         row.user_application,
         row.identification,
         row.phone,
         row.element_name,
-        row.element_id,
-        row.quantity,
         row.remarks,
         row.created_at,
         row.estimated_return,
@@ -248,7 +244,7 @@ const ReporteVencidos = ({ prestamosv }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

@@ -67,13 +67,9 @@ const ReporteStockMin = ({ stockmin }) => {
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Stock", accessor: "stock" },
       { Header: "Cantidad en Préstamo", accessor: "LoanElementsCount" },
-      { Header: "Lote", accessor: "batch_serial" },
       { Header: "Tipo", accessor: "element_type" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Medida", accessor: "measurement" },
-      { Header: "Bodega", accessor: "warehouse" },
-      { Header: "Ubicación", accessor: "wlocation" },
-      { Header: "Cant", accessor: "quantity" },
     ],
     []
   );
@@ -83,17 +79,13 @@ const ReporteStockMin = ({ stockmin }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Código", key: "element_id", width: 8 },
+      { header: "Código", key: "element_id", width: 12 },
       { header: "Elemento", key: "element_name", width: 15 },
       { header: "Stock", key: "stock", width: 8 },
-      { header: "Cantidad en Préstamo", key: "LoanElementsCount", width: 20 },
-      { header: "Lote", key: "batch_serial", width: 8 },
+      { header: "Cantidad en Préstamo", key: "LoanElementsCount", width: 24 },
       { header: "Tipo", key: "element_type", width: 15 },
       { header: "Categoría", key: "category", width: 15 },
       { header: "Medida", key: "measurement", width: 15 },
-      { header: "warehouse", key: "warehouse", width: 15 },
-      { header: "Ubicación", key: "wlocation", width: 15 },
-      { header: "Cant", key: "quantity", width: 15 },
     ];
 
     const response = await fetch(logoImg);
@@ -104,7 +96,7 @@ const ReporteStockMin = ({ stockmin }) => {
     });
     worksheet.addImage(imageId, "A1:A2");
 
-    worksheet.mergeCells("B2:I2");
+    worksheet.mergeCells("B2:G2");
     worksheet.getCell("B2").value = "Reporte de Elementos con Bajo Stock";
     worksheet.getCell("B2").alignment = {
       vertical: "middle",
@@ -112,7 +104,7 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B2").font = { size: 16, bold: true };
 
-    worksheet.mergeCells("B1:I1");
+    worksheet.mergeCells("B1:G1");
     worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
     worksheet.getCell("B1").alignment = {
       vertical: "middle",
@@ -120,9 +112,9 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("J1:K1");
-    worksheet.getCell("J1").value = "ADSO-2644590";
-    worksheet.getCell("J1").alignment = {
+    worksheet.mergeCells("H1:I1");
+    worksheet.getCell("H1").value = "ADSO-2644590";
+    worksheet.getCell("H1").alignment = {
       vertical: "middle",
       horizontal: "center",
     };
@@ -132,13 +124,9 @@ const ReporteStockMin = ({ stockmin }) => {
       "Elemento",
       "Stock",
       "Cantidad en Préstamo",
-      "Lote",
       "Tipo",
       "Categoría",
       "Medida",
-      "warehouse",
-      "Ubicación",
-      "Cantidad",
     ];
     worksheet.addRow(headers);
 
@@ -154,13 +142,9 @@ const ReporteStockMin = ({ stockmin }) => {
         row.element_name,
         row.stock,
         row.LoanElementsCount,
-        row.batch_serial,
         row.element_type,
         row.category,
         row.measurement,
-        row.warehouse,
-        row.wlocation,
-        row.quantity,
       ]);
     });
 
@@ -250,7 +234,7 @@ const ReporteStockMin = ({ stockmin }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

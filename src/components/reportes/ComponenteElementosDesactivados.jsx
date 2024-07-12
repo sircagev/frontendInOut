@@ -68,10 +68,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
       { Header: "Fecha de Desactivación", accessor: "update_at" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Tipo", accessor: "element_type" },
-      { Header: "Lote", accessor: "batch_serial" },
       { Header: "Medida", accessor: "measurement_unit" },
-      { Header: "Bodega", accessor: "warehouse" },
-      { Header: "Ubicación", accessor: "wlocation" },
     ],
     []
   );
@@ -81,15 +78,12 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
     const worksheet = workbook.addWorksheet("Reporte");
 
     worksheet.columns = [
-      { header: "Código", key: "element_id", width: 8 },
+      { header: "Código", key: "element_id", width: 12 },
       { header: "Elemento", key: "element_name", width: 20 },
       { header: "Stock", key: "stock", width: 8 },
       { header: "Categoría", key: "category", width: 15 },
       { header: "Tipo", key: "element_type", width: 15 },
-      { header: "Lote", key: "batch_serial", width: 5 },
       { header: "Medida", key: "measurement_unit", width: 10 },
-      { header: "Bodega", key: "warehouse", width: 15 },
-      { header: "Ubicación", key: "wlocation", width: 15 },
       { header: "Desactivación", key: "update_at", width: 20 },
     ];
 
@@ -101,7 +95,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
     });
     worksheet.addImage(imageId, "A1:A2");
 
-    worksheet.mergeCells("B2:H2");
+    worksheet.mergeCells("B2:G2");
     worksheet.getCell("B2").value = "Reporte de Elementos Desactivados";
     worksheet.getCell("B2").alignment = {
       vertical: "middle",
@@ -109,7 +103,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
     };
     worksheet.getCell("B2").font = { size: 16, bold: true };
 
-    worksheet.mergeCells("B1:H1");
+    worksheet.mergeCells("B1:G1");
     worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
     worksheet.getCell("B1").alignment = {
       vertical: "middle",
@@ -117,9 +111,9 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("I1:J1");
-    worksheet.getCell("I1").value = "ADSO-2644590";
-    worksheet.getCell("I1").alignment = {
+    worksheet.mergeCells("H1:I1");
+    worksheet.getCell("H1").value = "ADSO-2644590";
+    worksheet.getCell("H1").alignment = {
       vertical: "middle",
       horizontal: "center",
     };
@@ -130,10 +124,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
       "Stock",
       "Categoría",
       "Tipo",
-      "Lote",
       "Medida",
-      "Bodega",
-      "Ubicación",
       "Desactivación",
     ];
     worksheet.addRow(headers);
@@ -151,10 +142,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
         row.stock,
         row.category,
         row.element_type,
-        row.batch_serial,
         row.measurement_unit,
-        row.warehouse,
-        row.wlocation,
         row.update_at,
       ]);
     });
@@ -259,7 +247,7 @@ const ReporteElementosDesactivados = ({ elementosd }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {

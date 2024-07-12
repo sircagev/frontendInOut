@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from "@nextui-org/react";
-import { Select, SelectItem } from "@nextui-org/select";
 import axiosClient from '../../../components/config/axiosClient';
 import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques, Listarubicacion } from '../../Listar';
+import { ListarTipo, ListarMedidas, ListarCategorias, ListarEmpaques } from '../../Listar';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
@@ -14,18 +13,12 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
   const [medida, setMedida] = useState('')
   const [categoria, setCategoria] = useState('')
   const [empaque, setEmpaque] = useState('')
+  const [errors, setErrors] = useState({})
 
   const [tipos, setTipos] = useState([]);
   const [medidas, setMedidas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [empaques, SetEmpaques] = useState([]);
-
-  const [errorMessages, setErrorMessages] = useState({
-    tipo: '',
-    medida: '',
-    categoria: '',
-    empaque: ''
-  })
 
   useEffect(() => {
     if (category) {
@@ -62,15 +55,17 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    let hasError = false;
+    let errorsObject = {};
+
     if (!nombre || /\d/.test(nombre)) {
-      let errorMessage = !nombre ? 'El nombre es requerido' : 'El nombre no debe contener números';
-      setErrorMessages({ ...errorMessages, nombre: errorMessage });
-      return;
+      errorsObject.nombre = 'No puede contener números ni estar vacío.';
+      hasError = true;
     }
 
-    if (!tipo) {
-      setErrorMessages({ ...errorMessages, tipo: 'Debe seleccionar un tipo de elemento' });
-      return;
+    if (hasError) {
+      setErrors(errorsObject);
+      return; // Detener el envío del formulario si hay errores
     }
 
     try {
@@ -104,16 +99,13 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
             <Input
               type='text'
               label='Nombre Ubicación'
-              className="w-[100%]"
+              className="w-full"
+              color={errors.nombre ? 'danger' : ''}
+              errorMessage={errors.nombre}
+              isInvalid={errors.nombre}
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
             />
-            {errorMessages.nombre && (
-              <div className="flex text-red-500 text-xs mt-1 ml-2 items-center">
-                <FaExclamationCircle className="mr-2" />
-                {errorMessages.nombre}
-              </div>
-            )}
           </div>
           <select
             className="w-[100%] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
@@ -127,10 +119,10 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
               </option>
             ))}
           </select>
-          {errorMessages.tipo && (
+          {errors.tipo && (
             <div className="flex items-center text-red-500 text-xs mt-1">
               <FaExclamationCircle className="mr-2" />
-              {errorMessages.tipo}
+              {errors.tipo}
             </div>
           )}
           <select
@@ -145,8 +137,6 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
               </option>
             ))}
           </select>
-
-
           <select
             className="w-[100%] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
             value={categoria}
@@ -159,28 +149,22 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
               </option>
             ))}
           </select>
-
-
-
-
           <select
             className="w-[100%] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
             value={empaque}
             onChange={(e) => setEmpaque(e.target.value)}
           >
-            <option value="" disabled>Seleccione un Emapaque</option>
+            <option value="" disabled>Seleccione un Empaque</option>
             {empaques.map((empaque) => (
               <option key={empaque.packageType_id} value={empaque.packageType_id}>
                 {empaque.name}
               </option>
             ))}
           </select>
-
-
         </div>
         <div className='flex justify-end gap-3 mb-3'>
           <ButtonCerrar onClose={onClose} />
-          <ButtonRegistrar label={"Actualizar"}/>
+          <ButtonRegistrar label={"Actualizar"} />
         </div>
       </form>
     </div>

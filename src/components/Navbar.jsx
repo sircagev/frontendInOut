@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import logo from "../assets/in.png";
-import { FaBell, FaUserCircle } from "react-icons/fa";
+import logo from "../assets/LogoIO.png";
+import { FaFileAlt, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
@@ -27,7 +27,10 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
 
-  const { logout } = useAuth();
+
+  const { logout, user } = useAuth();
+
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -62,7 +65,9 @@ export const Navbar = ({ setLogIn }) => {
   }, []);
 
   const toggleSubMenu = () => {
+
     setShowSubMenu(!showSubMenu);
+
   };
 
   useEffect(() => {
@@ -119,10 +124,10 @@ export const Navbar = ({ setLogIn }) => {
   }, [setLogIn]);
 
   return (
-    <div className="w-full flex items-center justify-between h-[100px] bg-[#fff] text-white">
+    <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
-        <img src={logo} className="w-[80px] h-auto ml-10" alt="logo" />
-        <h1 className="text-black font-bold text-lg">Inventario de bodegas</h1>
+        <img src={logo} className="w-[60px] h-auto ml-10" alt="logo" />
+        <h1 className="hidden sm:block text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
         <div className="text-black flex items-center gap-2 relative">
@@ -157,7 +162,7 @@ export const Navbar = ({ setLogIn }) => {
             </p>
           </div>
         </div>
-        <div
+        {user.role_id != 3 && <div
           className="relative cursor-pointer"
           onClick={() => setShowModal(true)}
         >
@@ -166,8 +171,9 @@ export const Navbar = ({ setLogIn }) => {
               {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados}
             </span>
           )}
-          <FaBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
-        </div>
+          <FaFileAlt className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
+        </div>}
+
         <div>
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>

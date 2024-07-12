@@ -10,7 +10,7 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 export const FormDataMedida = ({listar, onClose}) => {
     
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, serErrors] = useState({});
 
     const [values, setValues] = useState(
         {
@@ -30,11 +30,20 @@ export const FormDataMedida = ({listar, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.name.trim() || /\d/.test(values.name.trim())) {
-            setErrorMessage('No debe estar vacío ni tener números.');
-            return; 
-        } else {
-            setErrorMessage('');
+        let hasError = false;
+
+        let errorObject = {
+            name: ''
+        }
+
+        if (!values.name || /\d/.test(values.name)) {
+            errorObject.name = 'No puede contener números ni estar vacío';
+            hasError = true;
+        }
+
+        if (hasError) {
+            serErrors(errorObject);
+            return;
         }
 
         try {
@@ -68,16 +77,13 @@ export const FormDataMedida = ({listar, onClose}) => {
                             type='text'
                             label='Nombre Medida'
                             name='name'
+                            color={errors.name ? 'danger' : ''}
+                            errorMessage={errors.name}
+                            isInvalid={errors.name}
                             value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
-                        {errorMessage && (
-                            <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                                <FaExclamationCircle className="mr-1" />
-                                {errorMessage}
-                            </div>
-                        )}
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
                         <ButtonCerrar onClose={onClose}/>
