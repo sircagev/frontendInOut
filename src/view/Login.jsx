@@ -55,7 +55,7 @@ function Login() {
 
 
         console.log(user)
-        navigate('/usuarios')
+        navigate('/estadistica')
       }
     } catch (error) {
       if (error.response) {

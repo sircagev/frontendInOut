@@ -8,7 +8,8 @@ import elementosInactivosImg from "../assets/student.png";
 import elementosTImg from "../assets/inventory.png";
 import prestamosImg from "../assets/transaction.png";
 import vencidosImg from "../assets/due-date.png";
-import elementosexpiradosImg from "../assets/expiration-date.png";//descargas FlatIcon
+import { BiRightArrowAlt } from "react-icons/bi";
+import elementosexpiradosImg from "../assets/expiration-date.png"; // descargas FlatIcon
 
 const Reportes = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Reportes = () => {
       img: bodegasImg,
       text: "Elementos bajo stock",
       path: "/reportes/stockmin",
-    },  
+    },
     {
       title: "Reporte",
       img: usuariosImg,
@@ -41,13 +42,13 @@ const Reportes = () => {
     {
       title: "Reporte",
       img: movimientosImg,
-      text: " de Movimientos",
+      text: "de Movimientos",
       path: "/reportes/movimientos",
     },
     {
       title: "Reporte",
       img: elementosInactivosImg,
-      text: " Elementos Desactivados",
+      text: "Elementos Desactivados",
       path: "/reportes/elementosdesactivados",
     },
     {
@@ -61,7 +62,7 @@ const Reportes = () => {
       img: vencidosImg,
       text: "Préstamos Vencidos",
       path: "/reportes/prestamosvencidos",
-    }, 
+    },
     {
       title: "Reporte",
       img: elementosexpiradosImg,
@@ -89,6 +90,15 @@ const Reportes = () => {
             <p className="text-center">{item.text}</p>
           </div>
         ))}
+      </div>
+      <div className="absolute right-[5px] bottom-[5px]">
+        <button
+          onClick={() => navigate("/estadistica")}
+          className="flex items-center justify-center p-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
+        >
+          <BiRightArrowAlt className="mr-1" size={24} />
+          Estadística
+        </button>
       </div>
     </div>
   );
