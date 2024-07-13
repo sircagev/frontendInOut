@@ -90,12 +90,18 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar 
                 ? 'El nombre del usuario no puede estar vacío.'
                 : 'El nombre del usuario no puede contener números.';
             hasError = true;
+        } else if (values.name.trim().length < 3 || values.name.trim().length > 40) {
+            newErrorMessages.name = 'El Nombre debe tener más de 3 Letras';
+            hasError = true;
         }
 
         if (!values.lastname.trim() || /\d/.test(values.lastname)) {
             newErrorMessages.lastname = !values.lastname.trim()
                 ? 'El apellido del usuario no puede estar vacío.'
                 : 'El apellido del usuario no puede contener números.';
+            hasError = true;
+        } else if (values.lastname.trim().length < 3 || values.lastname.trim().length > 40) {
+            newErrorMessages.lastname = 'El Apellido debe tener más de 3 Letras';
             hasError = true;
         }
 
@@ -143,7 +149,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar 
                     buttons: false,
                     timer: 2000,
                 });
-
+                console.log(Listar())
                 console.log(values)
                 await login({
                     email: values.email,

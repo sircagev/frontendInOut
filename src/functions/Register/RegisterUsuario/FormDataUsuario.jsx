@@ -98,6 +98,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         } else if (/\d/.test(values.name)) {
             newErrorMessages.name = 'El nombre de usuario no puede contener números.';
             hasError = true;
+        } else if (values.name.trim().length < 3 || values.name.trim().length > 40) {
+            newErrorMessages.name = 'El Nombre debe tener más de 3 Letras';
+            hasError = true;
         }
 
         if (!values.lastname.trim()) {
@@ -105,6 +108,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             hasError = true;
         } else if (/\d/.test(values.lastname)) {
             newErrorMessages.lastname = 'El apellido de usuario no puede contener números.';
+            hasError = true;
+        } else if (values.lastname.trim().length < 3 || values.lastname.trim().length > 40) {
+            newErrorMessages.lastname = 'El Apellido debe tener más de 3 Letras';
             hasError = true;
         }
 
@@ -199,7 +205,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                     buttons: {
                         confirm: "Salir",
                     },
-                    timer: 1000,
+                    timer: 1000
                 });
             }
         }
