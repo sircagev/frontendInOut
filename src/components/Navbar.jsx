@@ -139,13 +139,21 @@ export const Navbar = ({ setLogIn }) => {
         <div className="text-black flex items-center gap-2 relative">
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onClick={() => {
-              setShowEditProfile(!showEditProfile);
+            onMouseEnter={() => {
+              setShowEditProfile(true);
               setShowChangePassword(false);
             }}
+            /* onClick={() => {
+              setShowEditProfile(!showEditProfile);
+              setShowChangePassword(false);
+            }} */
           />
           {showEditProfile && (
-            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4"
+            onMouseLeave={() => {
+              setShowEditProfile(false);
+              setShowChangePassword(false);
+            }}>
               <div className="flex items-center gap-2 cursor-pointer w-full mb-2" onClick={()=> openModal('editProfile')}>
                 <CiEdit className="text-gray-500 text-2xl" />
                 <h1 className="font-bold text-[16px]">Editar Perfil</h1>
