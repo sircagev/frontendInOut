@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
 import axiosClient from '../../../components/config/axiosClient';
 import { Input } from "@nextui-org/react";
 import swal from 'sweetalert';
-import { FaExclamationCircle } from 'react-icons/fa';
 import { ButtonGeneral } from '../../../components/Buttons/Button';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
-
-
 
 export const FormDataCategoria = ({ listar, onClose }) => {
 
@@ -50,7 +47,6 @@ export const FormDataCategoria = ({ listar, onClose }) => {
         try {
             const response = await axiosClient.post('categoria/registrar', values);
             if (response.status === 200) {
-
                 setValues({ name: '' });
                 swal({
                     title: "Registro exitoso",
@@ -59,12 +55,15 @@ export const FormDataCategoria = ({ listar, onClose }) => {
                     buttons: false,
                     timer: 2000,
                 });
-
                 onClose();
                 listar();
             }
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.data.message.includes('Duplicate entry')) {
+                setErrors({ name: 'El nombre de la categoría ya existe.' });
+            } else {
+                setErrors({ name: 'Ocurrió un error al registrar la categoría. Inténtalo de nuevo.' });
+            }
         }
     };
 

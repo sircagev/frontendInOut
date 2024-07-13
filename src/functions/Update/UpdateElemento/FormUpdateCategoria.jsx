@@ -51,8 +51,11 @@ export const FormUpdateCategoria = ({ onClose, category, Listar }) => {
       onClose();
       Listar();
     } catch (error) {
-      console.log(error)
-      swal("Error", "Hubo un problema al actualizar la categoría", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErrors({ nombre: 'El empaque ya existe' });
+      } else {
+        setErrors({ nombre: 'El nombre de la categoría ya existe' });
+      }
     }
   };
 
@@ -75,7 +78,7 @@ export const FormUpdateCategoria = ({ onClose, category, Listar }) => {
               />
             </div>
             <div className='flex justify-end gap-3 mb-3'>
-              <ButtonCerrar />
+              <ButtonCerrar onClose={onClose} />
               <ButtonRegistrar label={"Actualizar"} />
             </div>
           </form>
