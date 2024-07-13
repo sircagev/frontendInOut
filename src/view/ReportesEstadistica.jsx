@@ -32,37 +32,13 @@ const ReporteEstadistico = () => {
 
   const fetchData = async () => {
     try {
-      const movementsResponse = await axiosClient.get(
-        "/reporte/movimientospie"
-      );
-
+      const movementsResponse = await axiosClient.get("/reporte/movimientospie");
       const loansResponse = await axiosClient.get("/reporte/prestamospie");
       const loansBarResponse = await axiosClient.get("/reporte/prestamosbar");
-      const consumableResponse = await axiosClient.get(
-        "/reporte/consumiblespie"
-      );
-      const consumableBarResponse = await axiosClient.get(
-        "/reporte/consumiblesbar"
-      );
-
-      console.log("Datos recibidos movimientos:", movementsResponse.data.datos);
-
-      console.log("Datos recibidos prestamos:", loansResponse.data.datos);
-      console.log(
-        "Datos recibidos prestamos Bar:",
-        loansBarResponse.data.datos
-      );
-      console.log(
-        "Datos recibidos consumibles:",
-        consumableResponse.data.datos
-      );
-      console.log(
-        "Datos recibidos consumibles Bar:",
-        consumableBarResponse.data.datos
-      );
+      const consumableResponse = await axiosClient.get("/reporte/consumiblespie");
+      const consumableBarResponse = await axiosClient.get("/reporte/consumiblesbar");
 
       setmovementsData(movementsResponse.data.datos);
-
       setloansEleData(loansResponse.data.datos);
       setloansBarData(loansBarResponse.data.datos);
       setconsumableData(consumableResponse.data.datos);
@@ -148,13 +124,6 @@ const ReporteEstadistico = () => {
         return acc;
       }, [])
     : [];
-
-  console.log("Datos para el gráfico de movimientos Pie:", datosMovementsPie);
-  console.log("Datos para el gráfico de movimientos Barra:", datosMovementsBar);
-  console.log("Datos para el gráfico de prestamos Pie:", datosLoansPie);
-  console.log("Datos para el gráfico de prestamos Barra:", datosLoansBar);
-  console.log("Datos para el gráfico de consumible Barra:", datosConsumableBar);
-  console.log("Datos para el gráfico de consumibles Pie:", datosConsumablePie);
 
   const coloresPie = [
     "#07597e",
