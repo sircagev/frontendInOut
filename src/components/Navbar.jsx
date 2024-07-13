@@ -141,35 +141,43 @@ export const Navbar = ({ setLogIn }) => {
         <div className="text-black flex items-center gap-2 relative">
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onClick={() => {
-              setShowEditProfile(!showEditProfile);
+            onMouseEnter={() => {
+              setShowEditProfile(true);
               setShowChangePassword(false);
             }}
+            /* onClick={() => {
+              setShowEditProfile(!showEditProfile);
+              setShowChangePassword(false);
+            }} */
           />
           {showEditProfile && (
-            <div className="absolute w-[250px] top-[60px] right-0 z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4"
+            onMouseLeave={() => {
+              setShowEditProfile(false);
+              setShowChangePassword(false);
+            }}>
               <div className="flex items-center gap-2 cursor-pointer w-full mb-2 hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('editProfile')}>
                 <CiEdit className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px]">Editar Perfil</h1>
+                <h1 className="font-bold text-[16px] hover:text-gray-500">Editar Perfil</h1>
               </div>
               <div className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('changePassword')}>
                 <CiUnlock className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px]">Cambiar Contraseña</h1>
+                <h1 className="font-bold text-[16px] hover:text-gray-500">Cambiar Contraseña</h1>
               </div>
             </div>
           )}
           <Modal1
-            title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
-            size={activeForm === 'editProfile' ? '2xl' : 'base'}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            form={
-              activeForm === 'editProfile' ? (
-                <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
-              ) : (
-                <FormUpdateContraseña onClose={() => setIsOpen(false)} />
-              )
-            }
+           title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
+           size={activeForm === 'editProfile' ? '2xl' : 'sm'}
+           isOpen={isOpen}
+           onClose={()=> setIsOpen(false)}
+           form={
+            activeForm === 'editProfile' ? (
+              <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
+            ) : (
+              <FormUpdateContraseña onClose={() => setIsOpen(false)} />
+            )
+          }
           />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{user.name}</h1>
