@@ -44,7 +44,7 @@ const NotificationsModal = ({
       prestamosVencidos > 0 ||
       solicitudes > 0 ||
       elementosExpirados > 0) && (
-      <div className="absolute top-7 right-[70px] z-50 animate-cascade-slide-down">
+      <div className="absolute top-4 right-[70px] z-50 animate-cascade-slide-down">
         <div
           className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
           onClick={() => setShowModal(false)}

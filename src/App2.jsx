@@ -7,6 +7,7 @@ import { Medidas } from "./view/Medidas";
 import { Ubicaciones } from "./view/Ubicaciones";
 import Usuario from "./view/Usuario";
 import Reporte from "./view/Reportes";
+import Estadistica from "./view/ReportesEstadistica";
 import ReporteE from "./view/ReporteElementos";
 import ReporteED from "./view/ReporteElementosDesactivados";
 import ReporteEX from "./view/ReporteElementosExpirados";
@@ -70,6 +71,7 @@ function App2() {
                     path='/login'
                     element={<Login />}
                 />
+                
                 <Route
                     path='/home'
                     element={
@@ -153,6 +155,16 @@ function App2() {
                     element={
                         <ProtectedRoute
                             component={Reporte}
+                            layout={DashboardTemplate}
+                            allowedRoles={[1, 2]}
+                        />
+                    }
+                />
+                <Route
+                    path={'/estadistica'}
+                    element={
+                        <ProtectedRoute
+                            component={Estadistica}
                             layout={DashboardTemplate}
                             allowedRoles={[1, 2]}
                         />

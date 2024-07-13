@@ -59,11 +59,10 @@ const ReporteActivos = ({ prestamosa }) => {
 
   const columns = useMemo(
     () => [
-      { Header: "ID", accessor: "movement_id" },
+      { Header: "Código", accessor: "movement_id" },
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Usuario Solicitante", accessor: "user_application" },
       { Header: "Usuario Receptor", accessor: "user_receiving" },
-      { Header: "Estado Préstamo", accessor: "loan_status" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
       { Header: "Vencimiento Préstamo", accessor: "estimated_return" },
       { Header: "Observaciones", accessor: "remarks" },
@@ -372,81 +371,138 @@ const ReporteActivos = ({ prestamosa }) => {
                 })}
               </tbody>
             </table>
-            <div className="flex justify-end mt-3">
+            <div className="flex justify-between mt-3">
               <div className="flex items-center">
                 <span className="mr-2 text-gray-400">
                   Página {currentPage + 1} de {pageCount}
                 </span>
               </div>
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="previous page button"
-                onClick={previousPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
-                  !canPreviousPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canPreviousPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
-              {pages.map((page) => (
-                <li
-                  key={page}
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => gotoPage(page)}
-                  className={`flex items-center justify-center w-8 h-8 text-xs ${
-                    currentPage === page
-                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                      : "bg-foreground hover:bg-gray-700 text-white"
-                  }`}
-                >
-                  {page + 1}
-                </li>
-              ))}
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="next page button"
-                onClick={nextPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
-                  !canNextPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canNextPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current rotate-180"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
+              <div className="flex justify-end mt-3">
+                {pageCount > 1 && (
+                  <>
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="previous page button"
+                      onClick={previousPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
+                        !canPreviousPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canPreviousPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                    {currentPage >= 4 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(0)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === 0
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        1
+                      </li>
+                    )}
+                    {currentPage >= 5 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage < 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {pages.slice(currentPage, currentPage + 3).map((page) => (
+                      <li
+                        key={page}
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(page)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === page
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {page + 1}
+                      </li>
+                    ))}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          pageCount - currentPage > 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(pageCount - 1)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === pageCount - 1
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {pageCount}
+                      </li>
+                    )}
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="next page button"
+                      onClick={nextPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
+                        !canNextPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canNextPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current rotate-180"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                  </>
+                )}
+              </div>
+
             </div>
           </div>
         ) : (
