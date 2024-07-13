@@ -13,6 +13,7 @@ import Modal1 from "./Modal1";
 import { FormUpdateContraseña } from "../functions/Update/UpdateContraseña/FormUpdateContraseña"
 
 export const Navbar = ({ setLogIn }) => {
+
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -29,6 +30,7 @@ export const Navbar = ({ setLogIn }) => {
   const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
   const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState([])
 
   const [activeForm, setActiveForm] = useState('');
 
@@ -154,19 +156,19 @@ export const Navbar = ({ setLogIn }) => {
               setShowEditProfile(false);
               setShowChangePassword(false);
             }}>
-              <div className="flex items-center gap-2 cursor-pointer w-full mb-2" onClick={()=> openModal('editProfile')}>
+              <div className="flex items-center gap-2 cursor-pointer w-full mb-2 hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('editProfile')}>
                 <CiEdit className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px]">Editar Perfil</h1>
+                <h1 className="font-bold text-[16px] hover:text-gray-500">Editar Perfil</h1>
               </div>
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => openModal('changePassword')}>
+              <div className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('changePassword')}>
                 <CiUnlock className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px]">Cambiar Contraseña</h1>
+                <h1 className="font-bold text-[16px] hover:text-gray-500">Cambiar Contraseña</h1>
               </div>
             </div>
           )}
           <Modal1
            title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
-           size={activeForm === 'editProfile' ? '2xl' : 'base'}
+           size={activeForm === 'editProfile' ? '2xl' : 'sm'}
            isOpen={isOpen}
            onClose={()=> setIsOpen(false)}
            form={
@@ -178,11 +180,11 @@ export const Navbar = ({ setLogIn }) => {
           }
           />
           <div className="flex flex-col gap-1 mt-3">
-            <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
+            <h1 className="cursor-pointer font-bold text-[16px]">{user.name}</h1>
             <p className="flex text-xs">
-              {role && role === "1" && "Administrador"}
-              {role && role === "2" && "Encargado"}
-              {role && role === "3" && "Usuario"}
+              {user.role_id == "1" && "Administrador"}
+              {user.role_id == "2" && "Encargado"}
+              {user.role_id == "3" && "Usuario"}
             </p>
           </div>
         </div>

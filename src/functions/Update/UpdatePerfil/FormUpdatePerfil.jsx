@@ -4,8 +4,11 @@ import swal from 'sweetalert';
 import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
+import { useAuth } from '../../../context/AuthProvider';
 
-export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar }) => {
+export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
+
+    const { login } = useAuth()
 
     const userId = localStorage.getItem('user_id');
 
@@ -50,6 +53,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar 
                 phone: userData.phone,
                 email: userData.email,
                 identification: userData.identification,
+                password: '101010'
             });
         } catch (error) {
             console.log(error);
@@ -119,7 +123,7 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar 
             hasError = true;
         }
 
-      
+
 
         setErrorMessages(newErrorMessages);
         return !hasError;
@@ -140,6 +144,11 @@ export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar 
                     timer: 2000,
                 });
 
+                console.log(values)
+                await login({
+                    email: values.email,
+                    password: values.password
+                });
                 Listar();
                 onClose();
             }
