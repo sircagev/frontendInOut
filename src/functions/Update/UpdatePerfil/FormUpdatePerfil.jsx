@@ -5,7 +5,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 
-export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar }) => {
+export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
 
     const userId = localStorage.getItem('user_id');
 
