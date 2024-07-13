@@ -6,7 +6,7 @@ import axiosClient from '../../../components/config/axiosClient';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { useAuth } from '../../../context/AuthProvider';
 
-export const FormUpdatePerfil = ({ onClose, category, onRegisterSuccess, Listar }) => {
+export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
 
     const { login } = useAuth()
 
