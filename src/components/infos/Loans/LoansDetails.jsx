@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { MovementDetailsById, ListarElementos } from '../../../functions/Listar';
 import {
     Table,
@@ -12,9 +12,7 @@ import {
     Chip,
     Checkbox,
     Input,
-    input,
-    RadioGroup,
-    Radio
+    Textarea
 } from "@nextui-org/react";
 import { useAuth } from '../../../context/AuthProvider';
 import axiosClient from '../../config/axiosClient';
@@ -30,7 +28,7 @@ export const LoanDetails = ({ item, onClose }) => {
     const [dataElements, setElements] = useState([]);
     const [newStatus, setNewStatus] = useState('');
 
-    const stateNoActions = ["Solicitado", "Rechazado", "Aceptado","Cancelado"];
+    const stateNoActions = ["Solicitado", "Rechazado", "Aceptado", "Cancelado"];
 
     const baseColumns = [
         {
@@ -62,7 +60,7 @@ export const LoanDetails = ({ item, onClose }) => {
             label: "ESTADO",
         }
     ];
-    const columns = (!stateNoActions.includes(movement.status) )
+    const columns = (!stateNoActions.includes(movement.status))
         ? [...baseColumns, { key: "actions", label: "ENTREGA" }]
         : baseColumns;
 
@@ -135,8 +133,6 @@ export const LoanDetails = ({ item, onClose }) => {
     };
 
     const getKeyData = (item, columnKey) => {
-
-        /* const [isDisable, setIsDisable] = useState(false) */
 
         if (columnKey === 'element_name') {
             const filteredItems = Array.isArray(dataElements) ? dataElements.filter(element => element.codigo === item.element_id) : [];
@@ -254,6 +250,47 @@ export const LoanDetails = ({ item, onClose }) => {
                 )
             )
         }
+
+        if (columnKey === 'remarks') {
+
+            let detail = newStatus.details.filter(detail => detail.movementDetail_id == item.movementDetail_id)
+
+            return (
+                [2, 3, 5].includes(item.loanStatus_id) ? (
+                    <Textarea
+                        /* readOnly */
+                        variant='flat'
+                        size='sm'
+                        minRows={2}
+                        placeholder='Observaciones'
+                        defaultValue={detail[0].remarks}
+                        onChange={(e) => {
+                            const remarkValue = e.target.value;
+                            setNewStatus(prevNewStatus => {
+                                const detailIn = prevNewStatus.details.find(detail => detail.movementDetail_id == item.movementDetail_id)
+                                if (detailIn) {
+                                    const detailIndex = prevNewStatus.details.indexOf(detailIn);
+                                    // Realiza el cambio en el objeto encontrado
+                                    const updatedDetails = prevNewStatus.details.map((detail, i) =>
+                                        i === detailIndex ? { ...detail, remarks: remarkValue } : detail
+                                    );
+                                    return { ...prevNewStatus, details: updatedDetails };
+                                } else {
+                                    console.log("No se encontró el detail con el movementDetail_id especificado.");
+                                    return prevNewStatus;
+                                }
+                            })
+                        }}
+                    />
+                ) : (
+                    <span>
+                        {detail[0].remarks}
+                    </span>
+                )
+
+
+            );
+        }
         return item[columnKey];
     };
 
@@ -264,15 +301,13 @@ export const LoanDetails = ({ item, onClose }) => {
             case 'En revisión':
                 return (
                     <div className='flex gap-5'>
-                        <Button onClick={handleUpdateStatus}>Aceptar</Button>
-                        <Button onClick={handleUpdateStatus}>Rechazar</Button>
+                        <Button onClick={handleUpdateStatus}>Enviar Datos</Button>
                     </div>
                 )
             case 'Aceptado':
                 return (
                     <div className='flex gap-5'>
-                        <Button onClick={handleUpdateStatus}>Aceptar</Button>
-                        <Button onClick={handleUpdateStatus}>Rechazar</Button>
+                        <Button onClick={handleUpdateStatus}>Realizar Entrega</Button>
                     </div>
                 )
             case 'Rechazado':
@@ -280,7 +315,7 @@ export const LoanDetails = ({ item, onClose }) => {
             case 'En préstamo':
                 return (
                     <Button size='sm' onClick={handleUpdateStatus}>
-                        Realizar entrega
+                        Aceptar devolución
                     </Button>
                 );
             case 'Completado':
@@ -362,7 +397,7 @@ export const LoanDetails = ({ item, onClose }) => {
 
     return (
         <div className='w-full px-3 pb-3 flex flex-col items-center justify-center gap-4'>
-            {movement.status == 'En préstamo' && (
+            {(movement.status == 'En préstamo' || movement.status == "Aceptado") && (
                 <Input
                     type='text'
                     placeholder='Selecciona un usuario'
@@ -379,9 +414,9 @@ export const LoanDetails = ({ item, onClose }) => {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody items={data} emptyContent={'No hay detalles'}>
-                    {(item) => (
+                    {(item, index) => (
                         <TableRow key={item.movementDetail_id}>
-                            {(columnKey) => <TableCell>{getKeyData(item, columnKey)}</TableCell>}
+                            {(columnKey) => <TableCell>{getKeyData(item, columnKey, index)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>
