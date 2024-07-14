@@ -30,6 +30,8 @@ export const LoanDetails = ({ item, onClose }) => {
     const [dataElements, setElements] = useState([]);
     const [newStatus, setNewStatus] = useState('');
 
+    const stateNoActions = ["Solicitado", "Rechazado", "Aceptado","Cancelado"];
+
     const baseColumns = [
         {
             key: "movementDetail_id",
@@ -60,7 +62,7 @@ export const LoanDetails = ({ item, onClose }) => {
             label: "ESTADO",
         }
     ];
-    const columns = (movement.status !== "Solicitado" && movement.status !== "Rechazado" && movement.status !== "Cancelado")
+    const columns = (!stateNoActions.includes(movement.status) )
         ? [...baseColumns, { key: "actions", label: "ENTREGA" }]
         : baseColumns;
 
@@ -111,14 +113,14 @@ export const LoanDetails = ({ item, onClose }) => {
         }
     }
 
-    const handleDetailChange = (item) => {
+    const handleDetailChange = (item, numState) => {
         setNewStatus(prevNewStatus => {
             const detail = prevNewStatus.details.find(detail => detail.movementDetail_id === item.movementDetail_id);
 
             if (detail) {
                 const detailIndex = prevNewStatus.details.indexOf(detail);
                 const currentStatus = detail.loanStatus_id;
-                const newDatum = currentStatus === 5 ? 6 : 5;
+                const newDatum = currentStatus === numState[0] ? numState[1] : numState[0];
                 console.log(newDatum)
                 // Realiza el cambio en el objeto encontrado
                 const updatedDetails = prevNewStatus.details.map((detail, i) =>
@@ -236,10 +238,16 @@ export const LoanDetails = ({ item, onClose }) => {
                                 </div>
                             </div>
                         )}
+                        {movement.status == 'Aceptado' && item.loanStatus_id == 3 && (
+                            <Checkbox
+                                size='sm'
+                                onClick={() => handleDetailChange(item, [3, 5])}
+                            />
+                        )}
                         {movement.status == 'En préstamo' && item.loanStatus_id == 5 && (
                             <Checkbox
                                 size='sm'
-                                onClick={() => handleDetailChange(item)}
+                                onClick={() => handleDetailChange(item, [5, 6])}
                             />
                         )}
                     </>
