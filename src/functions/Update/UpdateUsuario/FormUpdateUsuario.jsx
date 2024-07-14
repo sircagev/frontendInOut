@@ -153,7 +153,7 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
                     buttons: {
                         confirm: "Salir",
                     },
-                    dangerMode: true,
+                    timer: 1000,
                 });
             }
         }
@@ -180,6 +180,9 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
         } else if (/\d/.test(values.name.trim())) {
             newErrorMessages.name = 'El nombre no puede contener números.';
             hasError = true;
+        }  else if (values.name.trim().length < 3 || values.name.trim().length > 40) {
+            newErrorMessages.name = 'El Nombre debe tener más de 3 Letras';
+            hasError = true;
         }
         
         if (!values.lastname.trim()) {
@@ -187,6 +190,9 @@ export const FormUpdateUsuario = ({ onClose, category, Listar }) => {
             hasError = true;
         } else if (/\d/.test(values.lastname.trim())) {
             newErrorMessages.lastname = 'El apellido no puede contener números.';
+            hasError = true;
+        } else if (values.lastname.trim().length < 3 || values.lastname.trim().length > 40) {
+            newErrorMessages.lastname = 'El Apellido debe tener más de 3 Letras';
             hasError = true;
         }
         

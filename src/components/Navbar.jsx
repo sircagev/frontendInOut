@@ -151,7 +151,7 @@ export const Navbar = ({ setLogIn }) => {
             }} */
           />
           {showEditProfile && (
-            <div className="absolute w-[200px] top-[60px] right-0 z-10 bg-white border border-gray-200 rounded-md shadow-lg p-4"
+            <div className="absolute w-[200px] top-[60px] right-0 z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4"
             onMouseLeave={() => {
               setShowEditProfile(false);
               setShowChangePassword(false);
