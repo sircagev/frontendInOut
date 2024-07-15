@@ -131,7 +131,7 @@ function Login() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'No se pudo enviar el correo de recuperación.',
+        text: 'No se pudo enviar el correo de recuperación, Email Incorrecto',
       });
     }
   };

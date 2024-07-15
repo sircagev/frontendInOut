@@ -94,6 +94,18 @@ export const FormUpdateContraseña = ({ onClose, Listar }) => {
             newErrorMessages.newPassword = 'La contraseña debe tener al menos 8 caracteres.';
             hasError = true;
         }
+        if (!values.password.trim()) {
+            newErrorMessages.password = 'La contraseña actual es Requerida.';
+            hasError = true;
+        }
+        if (!values.newPassword.trim()) {
+            newErrorMessages.newPassword = 'La nueva contraseña es requerida.';
+            hasError = true;
+        }
+        if (!values.confirmPassword.trim()) {
+            newErrorMessages.confirmPassword = 'La Confirmación de nueva contraseña es requerida.';
+            hasError = true;
+        }
 
         if (values.newPassword !== values.confirmPassword) {
             newErrorMessages.confirmPassword = 'Las contraseñas no coinciden.';
