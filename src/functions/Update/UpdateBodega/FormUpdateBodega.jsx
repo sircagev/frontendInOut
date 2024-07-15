@@ -55,8 +55,11 @@ export const FormUpdateBodega = ({ onClose, category, Listar }) => {
             onClose();
             Listar();
         } catch (error) {
-            console.log(error);
-            swal("Error", "Hubo un problema al actualizar la bodega", "error");
+            if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+                setErrors({ nombre: 'La bodega ya existe' });
+              } else {
+                setErrors({ nombre: 'El nombre de la bodega ya existe' });
+              }
         }
     };
 

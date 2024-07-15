@@ -17,7 +17,6 @@ export const Categoria = () => {
     try {
       const response = await axiosClient.get('categoria/listar');
       setData(response.data)
-      console.log(response.data)
     } catch (error) {
       console.log(error);
     }

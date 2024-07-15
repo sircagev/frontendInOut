@@ -73,8 +73,11 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
       onClose();
       Listar();
     } catch (error) {
-      console.log(error);
-      swal("Error", "Hubo un problema al actualizar la ubicación", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErrors({ nombre: 'La ubicación ya existe' });
+      } else {
+        setErrors({ nombre: 'El nombre de la ubicación ya existe' });
+      }
     }
   };
 

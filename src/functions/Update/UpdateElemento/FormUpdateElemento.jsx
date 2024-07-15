@@ -86,8 +86,11 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
       onClose();
       Listar(); // Actualiza la lista de elementos
     } catch (error) {
-      console.log(error)
-      swal("Error", "Hubo un problema al actualizar el elemento", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErrors({ nombre: 'El elemento ya existe' });
+      } else {
+        setErrors({ nombre: 'El nombre del elemeneto ya existe' });
+      }
     }
   };
 
