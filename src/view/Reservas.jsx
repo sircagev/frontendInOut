@@ -72,7 +72,7 @@ export const Reservas = () => {
           }
           classNames={{
             wrapper: "min-h-[222px] lg:min-h-[400px]",
-            table: "w-full lg:w-[800px]" 
+            table: "w-full lg:w-[500px]" 
           }}
         >
           <TableHeader>
