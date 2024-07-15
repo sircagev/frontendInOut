@@ -8,7 +8,7 @@ import elementosInactivosImg from "../assets/student.png";
 import elementosTImg from "../assets/inventory.png";
 import prestamosImg from "../assets/transaction.png";
 import vencidosImg from "../assets/due-date.png";
-import { BiRightArrowAlt } from "react-icons/bi";
+import { BiBarChartSquare } from "react-icons/bi";
 import elementosexpiradosImg from "../assets/expiration-date.png"; // descargas FlatIcon
 
 const Reportes = () => {
@@ -94,9 +94,12 @@ const Reportes = () => {
       <div className="absolute right-[5px] bottom-[5px]">
         <button
           onClick={() => navigate("/estadistica")}
-          className="flex items-center justify-center p-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition-colors"
+          className="flex text-blue-900 items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-100"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}
         >
-          <BiRightArrowAlt className="mr-1" size={24} />
+          <BiBarChartSquare className="mr-1" size={24} />
           Estadística
         </button>
       </div>

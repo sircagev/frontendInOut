@@ -1,154 +1,210 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BiSearch, BiX } from "react-icons/bi";
+import { BiSearch, BiX, BiTrash } from "react-icons/bi";
+import axiosClient from "../config/axiosClient";
 
-const NotificationsModal = ({
-  showModal,
-  setShowModal,
-  elementosConBajoStock,
-  prestamosActivos,
-  elementosExpirados,
-  prestamosVencidos,
-  solicitudes,
-}) => {
+export const fetchCountersData = async () => {
+  try {
+    const countersResponse = await axiosClient.get("/counter/get");
+    return countersResponse.data;
+  } catch (error) {
+    console.error("Error fetching counters data:", error);
+    throw error;
+  }
+};
+
+export const NotificationsModal = ({ showModal, setShowModal }) => {
   const navigate = useNavigate();
 
-  const handleViewStockClick = () => {
-    setShowModal(false);
-    navigate("/reportes/stockmin");
+  const [stockMinData, setStockMinData] = useState(null);
+  const [vencidosData, setVencidosData] = useState(null);
+  const [solicitudesData, setSolicitudesData] = useState(null);
+  const [expiradosData, setExpiradosData] = useState(null);
+  const [countersData, setCountersData] = useState([]);
+
+  const [showStockMin, setShowStockMin] = useState(true);
+  const [showVencidos, setShowVencidos] = useState(true);
+  const [showSolicitudes, setShowSolicitudes] = useState(true);
+  const [showExpirados, setShowExpirados] = useState(true);
+
+  useEffect(() => {
+    if (showModal) {
+      const fetchData = async () => {
+        try {
+          const stockMinResponse = await axiosClient.get(
+            "/reporte/stockminmodal"
+          );
+          const vencidosResponse = await axiosClient.get(
+            "/reporte/prestamosvencidosmodal"
+          );
+          const solicitudesResponse = await axiosClient.get(
+            "/reporte/solicitudesmodal"
+          );
+          const expiradosResponse = await axiosClient.get(
+            "/reporte/elementosexpiradosmodal"
+          );
+          const countersResponse = await axiosClient.get("/counter/get");
+
+          setStockMinData(stockMinResponse.data);
+          setVencidosData(vencidosResponse.data);
+          setSolicitudesData(solicitudesResponse.data);
+          setExpiradosData(expiradosResponse.data);
+          setCountersData(countersResponse.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [showModal]);
+
+  const handleViewClick = async (navigateRoute) => {
+    try {
+      navigate(navigateRoute);
+    } catch (error) {
+      console.error("Error redirecting route:", error);
+    }
   };
 
-  const handleViewPrestamosClick = () => {
-    setShowModal(false);
-    navigate("/reportes/prestamosactivos");
+  const handleViewClose = async (resetRoute, setShowFunction) => {
+    try {
+      await axiosClient.post(resetRoute);
+      setShowFunction(false);
+    } catch (error) {
+      console.error('Error resetting status:', error);
+    }
   };
 
-  const handleViewVencidosClick = () => {
-    setShowModal(false);
-    navigate("/reportes/prestamosvencidos");
-  };
-
-  const handleViewSolicitudesClick = () => {
-    setShowModal(false);
-    navigate("/reportes/solicitud");
-  };
-
-  const handleViewExpiradosClick = () => {
-    setShowModal(false);
-    navigate("/reportes/elementosexpirados");
-  };
+  const shouldShowStockMin = countersData.some(
+    (item) => item.counter_name === "low_stock" && item.status > 0
+  );
+  const shouldShowVencidos = countersData.some(
+    (item) => item.counter_name === "loans_due" && item.status > 0
+  );
+  const shouldShowSolicitudes = countersData.some(
+    (item) => item.counter_name === "requesteds" && item.status > 0
+  );
+  const shouldShowExpirados = countersData.some(
+    (item) => item.counter_name === "date_expired" && item.status > 0
+  );
 
   return (
-    showModal &&
-    (elementosConBajoStock > 0 ||
-      prestamosActivos > 0 ||
-      prestamosVencidos > 0 ||
-      solicitudes > 0 ||
-      elementosExpirados > 0) && (
-      <div className="absolute top-4 right-[70px] z-50 animate-cascade-slide-down">
+    showModal && (
+      <div className="absolute top-4 right-[70px] z-50 w-[290px] animate-cascade-slide-down">
         <div
           className="fixed top-9 right-11 bottom-0 bg-gray-500 bg-opacity-50 cursor-pointer"
           onClick={() => setShowModal(false)}
         />
-        <div className="bg-white p-3 rounded-lg shadow-lg ">
-          <h2 className="flex text-xl text-black font-bold mb-2 justify-center">
+        <div className="bg-white p-3 rounded-lg shadow-lg">
+          <h2 className="flex text-l text-black font-bold mb-3 justify-center">
             Notificaciones
             <span
               className="ml-2 cursor-pointer"
               onClick={() => setShowModal(false)}
-            ></span>{" "}
+            ></span>
           </h2>
-          {elementosConBajoStock > 0 && (
-            <div
-              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
-              onClick={handleViewStockClick}
-            >
-              <p className="flex-1 text-black pr-5">
-                <span className="text-blue-700 font-bold">
-                  {elementosConBajoStock}
-                </span>{" "}
-                Elementos con bajo Stock
-              </p>
-              <BiSearch className="text-blue-900" />
+
+          {shouldShowVencidos && showVencidos && (
+            <div className="flex justify-between w-[265px] ">
+              <div
+                className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
+                style={{ boxShadow: "inset 0 0 0 2px " }}
+                onClick={() => handleViewClick("/reportes/prestamosvencidos")}
+              >
+                <div className="text-blue-700 font-bold mr-2 w-[25px]">
+                  {vencidosData}
+                </div>
+                <p className="flex-1 text-black w-[157px]">
+                  Préstamos vencidos
+                </p>
+                <BiSearch className="text-blue-900 ml-2" />
+              </div>
+              <div
+                className="text-blue-700 hover:text-red-600 p-2 text-lg rounded cursor-pointer transition duration-200"
+                onClick={() => handleViewClose("/counter/resetloans", setShowVencidos)}
+              >
+                <BiTrash />
+              </div>
             </div>
           )}
-          {prestamosActivos > 0 && (
-            <div
-              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
-              onClick={handleViewPrestamosClick}
-            >
-              <p className="flex-1 text-black">
-                <span className="text-blue-700 font-bold">
-                  {prestamosActivos}
-                </span>{" "}
-                Préstamos activos
-              </p>
-              <BiSearch className="text-blue-900" />
+          {shouldShowSolicitudes && showSolicitudes && (
+            <div className="flex justify-between w-[265px] ">
+              <div
+                className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
+                style={{ boxShadow: "inset 0 0 0 2px " }}
+                onClick={() =>
+                  handleViewClick("/reportes/solicitud")}
+              >
+                <div className="text-blue-700 font-bold mr-2 w-[25px]">
+                  {solicitudesData}
+                </div>
+                <p className="flex-1 text-black w-[157px]">
+                  Solicitudes pendientes
+                </p>
+                <BiSearch className="text-blue-900 ml-2" />
+              </div>
+              <div
+                className="text-blue-700 hover:text-red-600 p-2 text-lg rounded cursor-pointer transition duration-200"
+                onClick={() => handleViewClose("/counter/resetrequesteds", setShowSolicitudes)}
+              >
+                <BiTrash />
+              </div>
             </div>
           )}
-          {prestamosVencidos > 0 && (
-            <div
-              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
-              onClick={handleViewVencidosClick}
-            >
-              <p className="flex-1 text-black">
-                <span className="text-blue-700 font-bold">
-                  {prestamosVencidos}
-                </span>{" "}
-                Préstamos vencidos
-              </p>
-              <BiSearch className="text-blue-900" />
+          {shouldShowExpirados && showExpirados && (
+            <div className="flex justify-between w-[265px] ">
+              <div
+                className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
+                style={{ boxShadow: "inset 0 0 0 2px " }}
+                onClick={() => handleViewClick("/reportes/elementosexpirados")}
+              >
+                <div className="text-blue-700 font-bold mr-2 w-[25px]">
+                  {expiradosData}
+                </div>
+                <p className="flex-1 text-black w-[157px]">
+                  Elementos expirados
+                </p>
+                <BiSearch className="text-blue-900 ml-2" />
+              </div>
+              <div
+                className="text-blue-700 hover:text-red-600 p-2 text-lg rounded cursor-pointer transition duration-200"
+                onClick={() => handleViewClose("/counter/resetexpired", setShowExpirados)}
+              >
+                <BiTrash />
+              </div>
             </div>
           )}
-          {solicitudes > 0 && (
-            <div
-              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
-              onClick={handleViewSolicitudesClick}
-            >
-              <p className="flex-1 text-black">
-                <span className="text-blue-700 font-bold">{solicitudes}</span>{" "}
-                Solicitudes
-              </p>
-              <BiSearch className="text-blue-900" />
-            </div>
-          )}
-          {elementosExpirados > 0 && (
-            <div
-              className="flex items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-300"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
-              onClick={handleViewExpiradosClick}
-            >
-              <p className="flex-1 text-black">
-                <span className="text-blue-700 font-bold">
-                  {elementosExpirados}
-                </span>{" "}
-                Elementos expirados
-              </p>
-              <BiSearch className="text-blue-900" />
+          {shouldShowStockMin && showStockMin && (
+            <div className="flex justify-between w-[265px] ">
+              <div
+                className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
+                style={{ boxShadow: "inset 0 0 0 2px " }}
+                onClick={() => handleViewClick("/reportes/stockmin")}
+              >
+                <div className="text-blue-700 font-bold mr-2 w-[25px]">
+                  {stockMinData}
+                </div>
+                <p className="flex-1 text-black">
+                  Elementos con bajo stock
+                </p>
+                <BiSearch className="text-blue-900 ml-2"/>
+              </div>
+              <div
+                className="text-blue-700 hover:text-red-600 p-2 text-lg rounded cursor-pointer transition duration-200"
+                onClick={() => handleViewClose("/counter/resetstock", setShowStockMin)}
+              >
+                <BiTrash />
+              </div>
             </div>
           )}
           <div className="absolute top-1 right-4 justify-center mt-2">
             <button
               className="bg-red-400 hover:text-red-500 shadow-xl font-extrabold px-2 py-2 rounded-full"
-              style={{
-                boxShadow: "inset 0 0 0 2px ",
-              }}
+              style={{ boxShadow: "inset 0 0 0 2px " }}
               onClick={() => setShowModal(false)}
             >
-              <BiX />
+              <BiX className="text-white font-bold" />
             </button>
           </div>
         </div>
@@ -156,5 +212,6 @@ const NotificationsModal = ({
     )
   );
 };
+
 
 export default NotificationsModal;

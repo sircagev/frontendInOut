@@ -1,37 +1,27 @@
 import React, { useState, useEffect } from "react";
 import logo from "../assets/LogoIO.png";
-import { FaFileAlt, FaUserCircle } from "react-icons/fa";
+import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import axiosClient from "../components/config/axiosClient";
-import NotificacionesModal from "./modals/Notificaciones";
+import { fetchCountersData, NotificationsModal } from "./modals/Notificaciones";
 import { FormUpdatePerfil } from "../functions/Update/UpdatePerfil/FormUpdatePerfil";
 import { useAuth } from "../context/AuthProvider";
 import { CiEdit, CiUnlock } from "react-icons/ci";
 import Modal1 from "./Modal1";
-import { FormUpdateContraseña } from "../functions/Update/UpdateContraseña/FormUpdateContraseña"
+import { FormUpdateContraseña } from "../functions/Update/UpdateContraseña/FormUpdateContraseña";
 
 export const Navbar = ({ setLogIn }) => {
-
   const [userName, setUserName] = useState("");
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const [prestamosActivos, setPrestamosActivos] = useState([]);
-  const [elementosConBajoStock, setElementosConBajoStock] = useState([]);
-  const [prestamosVencidos, setPrestamosVencidos] = useState([]);
-  const [solicitudes, setSolicitudes] = useState([]);
-  const [elementosExpirados, setElementosExpirados] = useState([]);
-  const [contadorPrestamosActivos, setContadorPrestamosActivos] = useState(0);
-  const [contadorStockMin, setContadorStockMin] = useState(0);
-  const [contadorPrestamosVencidos, setContadorPrestamosVencidos] = useState(0);
-  const [contadorSolicitudes, setContadorSolicitudes] = useState(0);
-  const [contadorElementosExpirados, setContadorElementosExpirados] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([])
-
+  const [data, setData] = useState([]);
+  
   const [activeForm, setActiveForm] = useState('');
 
   const openModal = (formType) => {
@@ -70,49 +60,23 @@ export const Navbar = ({ setLogIn }) => {
     }
   };
 
-  useEffect(() => {
-    ListarUsuario();
-  }, []);
-
-  const toggleSubMenu = () => {
-    setShowSubMenu(!showSubMenu); // Alternar la visibilidad del submenúf04122badf8cae22b1fdea26cce71c80204cc399
+  const fetchNotifications = async () => {
+    try {
+      const countersData = await fetchCountersData();
+      const unread = countersData.filter(item => item.status > 0).length;
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
   };
 
   useEffect(() => {
+    ListarUsuario();
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
-      try {
-        const responseStock = await axiosClient.get("/reporte/stockminmodal");
-        const stockMinimo = responseStock.data;
-        setElementosConBajoStock(stockMinimo);
-        setContadorStockMin(stockMinimo > 0 ? 1 : 0);
-
-        const responsePrestamos = await axiosClient.get("/reporte/prestamosactivosmodal");
-        const prestamosActivos = responsePrestamos.data;
-        setPrestamosActivos(prestamosActivos);
-        setContadorPrestamosActivos(prestamosActivos > 0 ? 1 : 0);
-
-        const responseLoansDue = await axiosClient.get("/reporte/prestamosvencidosmodal");
-        const loansDue = responseLoansDue.data;
-        setPrestamosVencidos(loansDue);
-        setContadorPrestamosVencidos(loansDue > 0 ? 1 : 0);
-
-        const responseApplications = await axiosClient.get("/reporte/solicitudesmodal");
-        const applications = responseApplications.data;
-        setSolicitudes(applications);
-        setContadorSolicitudes(applications > 0 ? 1 : 0);
-
-        const responseExpired = await axiosClient.get("/reporte/elementosexpiradosmodal");
-        const expired = responseExpired.data;
-        setElementosExpirados(expired);
-        setContadorElementosExpirados(expired > 0 ? 1 : 0);
-
-      } catch (error) {
-        console.error(
-          "Error al obtener información de los contadores para el modal:",
-          error
-        );
-      }
-
       const storedUserName = localStorage.getItem("userName");
       const storedRole = localStorage.getItem("role");
 
@@ -126,10 +90,16 @@ export const Navbar = ({ setLogIn }) => {
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 1000);
+    const intervalId = setInterval(async () => {
+      await fetchNotifications();
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, [setLogIn]);
+
+  const handleNotificationsClick = () => {
+    setShowModal(!showModal);
+  };
 
   return (
     <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
@@ -180,39 +150,34 @@ export const Navbar = ({ setLogIn }) => {
           }
           />
           <div className="flex flex-col gap-1 mt-3">
-            <h1 className="cursor-pointer font-bold text-[16px]">{user.name}</h1>
+            <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
             <p className="flex text-xs">
-              {user.role_id == "1" && "Administrador"}
-              {user.role_id == "2" && "Encargado"}
-              {user.role_id == "3" && "Usuario"}
+              {role === "1" && "Administrador"}
+              {role === "2" && "Encargado"}
+              {role === "3" && "Usuario"}
             </p>
           </div>
         </div>
-        {user.role_id != 3 && <div
-          className="relative cursor-pointer"
-          onClick={() => setShowModal(true)}
-        >
-          {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados > 0 && (
-            <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 rounded-full text-white font-bold px-2 py-1 text-xs">
-              {contadorStockMin + contadorPrestamosActivos + contadorPrestamosVencidos + contadorSolicitudes + contadorElementosExpirados}
-            </span>
-          )}
-          <FaFileAlt className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
-        </div>}
-
+        {role !== "3" && (
+          <div className="relative cursor-pointer" onClick={handleNotificationsClick}>
+            <FaRegBell className="flex text-black text-[25px] top-1 right-[28px] bottom-[28px]" />
+            {unreadCount > 0 && (
+              <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 rounded-full text-white font-bold px-2 py-1 text-xs">
+                {unreadCount}
+              </span>
+            )}
+          </div>
+        )}
         <div>
           <IoMdLogOut className='cursor-pointer text-black text-[30px] font-bold' onClick={handleLogout} />
         </div>
       </div>
-      <NotificacionesModal
-        showModal={showModal && (contadorStockMin > 0 || contadorPrestamosActivos > 0 || contadorPrestamosVencidos > 0 || contadorSolicitudes > 0 || contadorElementosExpirados > 0)}
+      {unreadCount > 0 && (
+      <NotificationsModal
+        showModal={showModal}
         setShowModal={setShowModal}
-        elementosConBajoStock={elementosConBajoStock}
-        prestamosActivos={prestamosActivos}
-        prestamosVencidos={prestamosVencidos}
-        solicitudes={solicitudes}
-        elementosExpirados={elementosExpirados}
       />
+      )}
     </div>
   );
 };

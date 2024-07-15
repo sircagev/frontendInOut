@@ -32,7 +32,7 @@ const ReporteVencidos = ({ prestamosv }) => {
 
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
-        const idMatches = row.identification
+        const idMatches = row.rol
           ?.toString()
           .includes(searchTerm.toString());
         const userMatches = row.user_application
@@ -61,8 +61,9 @@ const ReporteVencidos = ({ prestamosv }) => {
     () => [
       { Header: "Código", accessor: "movement_id" },
       { Header: "Usuario Solicitante", accessor: "user_application" },
-      { Header: "Identificación", accessor: "identification" },
+      { Header: "Rol", accessor: "rol" },
       { Header: "Teléfono", accessor: "phone" },
+      { Header: "ID Ficha", accessor: "course_id" },
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Fecha Solicitud", accessor: "created_at" },
       { Header: "Fecha Vencimiento", accessor: "estimated_return" },
@@ -78,8 +79,9 @@ const ReporteVencidos = ({ prestamosv }) => {
     worksheet.columns = [
       { header: "Código", key: "movement_id", width: 10 },
       { header: "Usuario", key: "user_application", width: 20 },
-      { header: "Identificación", key: "identification", width: 15 },
+      { header: "Rol", key: "rol", width: 12 },
       { header: "Teléfono", key: "phone", width: 15 },
+      { header: "Id Ficha", key: "course_id", width: 10 },
       { header: "Elemento", key: "element_name", width: 15 },
       { header: "Fecha Solicitud", key: "created_at", width: 15 },
       { header: "Fecha Vencimiento", key: "estimated_return", width: 20 },
@@ -110,7 +112,7 @@ const ReporteVencidos = ({ prestamosv }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("H1");
+    worksheet.mergeCells("H1:I1");
     worksheet.getCell("H1").value = "ADSO-2644590";
     worksheet.getCell("H1").alignment = {
       vertical: "middle",
@@ -120,8 +122,9 @@ const ReporteVencidos = ({ prestamosv }) => {
     const headers = [
       "Código",
       "Usuario",
-      "Identificación",
+      "Rol",
       "Teléfono",
+      "Id Ficha",
       "Elemento",
       "Fecha Solicitud",
       "Fecha Vencimiento",
@@ -139,8 +142,9 @@ const ReporteVencidos = ({ prestamosv }) => {
       worksheet.addRow([
         row.movement_id,
         row.user_application,
-        row.identification,
+        row.rol,
         row.phone,
+        row.course_id,
         row.element_name,
         row.created_at,
         row.estimated_return,
@@ -341,7 +345,7 @@ const ReporteVencidos = ({ prestamosv }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",

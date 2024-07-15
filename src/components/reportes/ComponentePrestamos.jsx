@@ -356,7 +356,7 @@ const ReportePrestamos = ({ prestamos }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table  text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",

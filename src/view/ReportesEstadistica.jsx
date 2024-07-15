@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BiRightArrowAlt } from "react-icons/bi";
+import { BiFile } from 'react-icons/bi';
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../components/config/axiosClient";
 import {
@@ -141,12 +141,14 @@ const ReporteEstadistico = () => {
 
   return (
     <div className="container mx-auto pl-12 pr-12">
-      <div className="absolute right-[15px] bottom-[5px]">
+      <div className="absolute right-[40px] bottom-[30px]">
         <button
           onClick={() => navigate("/reportes")}
-          className="flex items-center justify-center p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
-        >
-          <BiRightArrowAlt className="mr-1" size={24} />
+          className="flex text-blue-900 items-center hover:text-blue-600 p-2 rounded cursor-pointer transition duration-100 z-10"
+              style={{
+                boxShadow: "inset 0 0 0 2px ",
+              }}  >
+          <BiFile className="mr-1" size={24} />
           Reportes
         </button>
       </div>
