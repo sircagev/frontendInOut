@@ -208,7 +208,7 @@ const ReporteStockMin = ({ stockmin }) => {
   };
 
   return (
-    <div className=" pl-4 pr-4">
+    <div className="pl-4 pr-4 w-full">
       <div className="p-1 text-gray-400 rounded text-s">
         <span>
           {" "}
@@ -246,7 +246,7 @@ const ReporteStockMin = ({ stockmin }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center ml-4 rounded-lg cursor-pointer">
+              <div className="flex items-center ml-4 mr-12 rounded-lg cursor-pointer">
                 <div
                   onClick={handleSearch}
                   className="text-blue-500 hover:text-white py-2 px-2 rounded uppercase transition duration-300"
@@ -255,6 +255,12 @@ const ReporteStockMin = ({ stockmin }) => {
                   }}
                 >
                   <BiSearch className="ml-1 text-lg" />
+                </div>
+              </div>
+              <div className="flex items-center ml-4">
+                <div className="bg-transparent h-8 w-25"></div>
+                <div className="text-transparent rounded p-1 flex-grow ml-2">
+                  <span>Contenido no interactuable</span>
                 </div>
               </div>
             </div>
@@ -315,7 +321,7 @@ const ReporteStockMin = ({ stockmin }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table table-fixed text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",
@@ -414,7 +420,9 @@ const ReporteStockMin = ({ stockmin }) => {
                         role="button"
                         tabIndex="0"
                         className={`flex items-center justify-center w-8 h-8 text-xs ${
-                          currentPage < 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                          currentPage < 3
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
                         }`}
                       >
                         ...
@@ -440,7 +448,9 @@ const ReporteStockMin = ({ stockmin }) => {
                         role="button"
                         tabIndex="0"
                         className={`flex items-center justify-center w-8 h-8 text-xs ${
-                          pageCount - currentPage > 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                          pageCount - currentPage > 3
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
                         }`}
                       >
                         ...
@@ -490,7 +500,6 @@ const ReporteStockMin = ({ stockmin }) => {
                   </>
                 )}
               </div>
-
             </div>
           </div>
         ) : (

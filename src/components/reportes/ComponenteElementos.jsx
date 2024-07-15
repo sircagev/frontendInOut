@@ -356,7 +356,7 @@ const ReporteElementos = ({ elementos }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table table-fixed text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",
