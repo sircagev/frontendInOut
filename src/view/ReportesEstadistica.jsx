@@ -177,7 +177,7 @@ const ReporteEstadistico = () => {
           <div className="flex flex-col items-center pl-10">
             <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
             {datosLoansPie.length > 0 ? (
-              <PieChart width={350} height={300}>
+              <PieChart width={350} height={310}>
                 <Pie
                   data={datosLoansPie}
                   dataKey="value"
@@ -238,7 +238,7 @@ const ReporteEstadistico = () => {
           <div className="flex flex-col items-center pl-10">
             <h2 className="font-bold ">Top 5 Elementos Más Solicitados</h2>
             {datosConsumablePie.length > 0 ? (
-              <PieChart width={350} height={300}>
+              <PieChart width={350} height={310}>
                 <Pie
                   data={datosConsumablePie}
                   dataKey="value"
