@@ -29,6 +29,10 @@ const ReporteEstadistico = () => {
   const [loansBarData, setloansBarData] = useState([]);
   const [consumableData, setconsumableData] = useState([]);
   const [consumableBarData, setconsumableBarData] = useState([]);
+  const [expiradosData, setExpiradosData] = useState([]);
+  const [vencidosData, setVencidosData] = useState([]);
+  const [stockMinData, setStockMinData] = useState([]);
+  
 
   const fetchData = async () => {
     try {
@@ -37,12 +41,19 @@ const ReporteEstadistico = () => {
       const loansBarResponse = await axiosClient.get("/reporte/prestamosbar");
       const consumableResponse = await axiosClient.get("/reporte/consumiblespie");
       const consumableBarResponse = await axiosClient.get("/reporte/consumiblesbar");
+      const expiradosResponse = await axiosClient.get("/reporte/elementosexpiradosmodal");
+      const vencidosResponse = await axiosClient.get("/reporte/prestamosvencidosmodal");
+      const stockMinResponse = await axiosClient.get("/reporte/stockminmodal");
+
 
       setmovementsData(movementsResponse.data.datos);
       setloansEleData(loansResponse.data.datos);
       setloansBarData(loansBarResponse.data.datos);
       setconsumableData(consumableResponse.data.datos);
       setconsumableBarData(consumableBarResponse.data.datos);
+      setExpiradosData(expiradosResponse.data.datos);
+      setVencidosData(vencidosResponse.data.datos);
+      setStockMinData(stockMinResponse.data.datos);
     } catch (error) {
       console.error("Error al obtener la información:", error);
       setmovementsData([]);
@@ -50,6 +61,9 @@ const ReporteEstadistico = () => {
       setloansBarData([]);
       setconsumableData([]);
       setconsumableBarData([]);
+      setExpiradosData([]);
+      setVencidosData([]);
+      setStockMinData([]);
     }
   };
 
