@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faScrewdriverWrench, faWarehouse, faClipboard, faUser, faArrowsAltH  } from '@fortawesome/free-solid-svg-icons';
-
+import Logo from "../../public/img/Logo.png";
 
 
 const Sidebars = () => {

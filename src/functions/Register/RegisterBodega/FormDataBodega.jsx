@@ -32,7 +32,7 @@ export const FormDataBodega = ({ listar, onClose }) => {
         };
 
         if (!values.name) {
-            errorObject.name = 'Debe ingresar un nombre de bodega.';
+            errorObject.name = 'Debe ingresar una unidad productiva.';
             hasErrors = true;
         }
 
@@ -50,7 +50,7 @@ export const FormDataBodega = ({ listar, onClose }) => {
                 });
                 swal({
                     title: "Registro exitoso",
-                    text: "La bodega se ha registrado correctamente.",
+                    text: "La unidad productiva se ha registrado correctamente.",
                     icon: "success",
                     buttons: false,
                     timer: 2000,
@@ -75,7 +75,7 @@ export const FormDataBodega = ({ listar, onClose }) => {
                     <div className='w-[100%]'>
                         <Input
                             type='text'
-                            label='Nombre Bodega'
+                            label='Unidad Productiva'
                             name='name'
                             color={errors.name ? 'danger' : ''}
                             errorMessage={errors.name}
