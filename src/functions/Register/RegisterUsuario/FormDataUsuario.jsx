@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import axiosClient from '../../../components/config/axiosClient';
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { FaExclamationCircle } from 'react-icons/fa';
 import swal from 'sweetalert';
 
 
-export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
+export const FormDataUsuario = ({ onRegisterSuccess,category, onClose, Listar }) => {
     const [values, setValues] = useState({
         name: "",
         lastname: "",
@@ -16,6 +16,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         position_id: "",
         course_id: ""
     });
+    
+const [dataRoles, setDataRoles] = useState([]);
+const [dataPositions, setDataPositions] = useState([]);
 
     const [errorMessages, setErrorMessages] = useState({
         name: '',
@@ -28,18 +31,48 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         course_id: ''
     });
 
-    const roles = [
-        { value: 1, label: 'Administrador' },
-        { value: 2, label: 'Encargado' },
-        { value: 3, label: 'Usuario' }
-    ];
+    const listData = async () => {
+        try {
+            const roles = await axiosClient.get('roles/list');
+            const positions = await axiosClient.get('positions/list');
 
-    const positions = [
-        { value: 1, label: 'Aprendiz' },
-        { value: 2, label: 'Instructor' },
-        { value: 3, label: 'Operario' },
-        { value: 4, label: 'Coordinador' }
-    ];
+            setDataRoles(roles.data.data);
+            setDataPositions(positions.data.data);
+
+        } catch (error) {
+            swal({
+                title: "Error",
+                text: "error.",
+                icon: "warning",
+                buttons: false,
+                timer: 2000,
+            });
+        }
+    }
+
+    useEffect(() => {
+
+        listData();
+        if (category) {
+
+            let dataName = category.nombre.split(" ");
+            const name = dataName[0]
+            const lastname = dataName[1]
+
+            setValues({
+                name: name || '',
+                lastname: lastname || '',
+                phone: category.phone || '',
+                email: category.correo || '',
+                identification: category.identification || '',
+                role_id: category.role_id || '', // Cambiado de role_id a role_name
+                position_id: category.position_id || '',
+                course_id: category.course_id || '',
+            });
+        }
+    }, [category]);
+
+    
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -98,6 +131,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
         } else if (/\d/.test(values.name)) {
             newErrorMessages.name = 'El nombre de usuario no puede contener números.';
             hasError = true;
+        } else if (values.name.trim().length < 3 || values.name.trim().length > 40) {
+            newErrorMessages.name = 'El Nombre debe tener más de 3 Letras';
+            hasError = true;
         }
 
         if (!values.lastname.trim()) {
@@ -105,6 +141,9 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
             hasError = true;
         } else if (/\d/.test(values.lastname)) {
             newErrorMessages.lastname = 'El apellido de usuario no puede contener números.';
+            hasError = true;
+        } else if (values.lastname.trim().length < 3 || values.lastname.trim().length > 40) {
+            newErrorMessages.lastname = 'El Apellido debe tener más de 3 Letras';
             hasError = true;
         }
 
@@ -199,7 +238,7 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                     buttons: {
                         confirm: "Salir",
                     },
-                    timer: 1000,
+                    timer: 1000
                 });
             }
         }
@@ -302,17 +341,19 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
                             )}
                         </div>
                         <div>
-                            <Select
-                                label='Rol'
-                                name='role_id'
-                                value={values.role_id}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                            >
-                                {roles.map((role) => (
-                                    <SelectItem key={role.value} value={role.value}>{role.label}</SelectItem>
-                                ))}
-                            </Select>
+                        <select
+                                    className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                                    value={values.role_id}
+                                    name='role_id'
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="" disabled>Seleccione un rol</option>
+                                    {dataRoles.map((role) => (
+                                        <option key={role.role_id} value={role.role_id}>
+                                            {role.name}
+                                        </option>
+                                    ))}
+                                </select>
                             {errorMessages.role_id && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
                                     <FaExclamationCircle className="mr-2" />
@@ -324,17 +365,19 @@ export const FormDataUsuario = ({ onRegisterSuccess, onClose, Listar }) => {
 
                     <div className='w-auto flex gap-3 mb-2'>
                         <div>
-                            <Select
-                                label='Cargo'
-                                name='position_id'
-                                value={values.position_id}
-                                onChange={handleInputChange}
-                                className="w-[310px]"
-                            >
-                                {positions.map((position) => (
-                                    <SelectItem key={position.value} value={position.value}>{position.label}</SelectItem>
-                                ))}
-                            </Select>
+                        <select
+                                    className="w-[310px] h-[58px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                                    value={values.position_id}
+                                    name='position_id'
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="" disabled>Seleccione un cargo</option>
+                                    {dataPositions.map((position) => (
+                                        <option key={position.position_id} value={position.position_id}>
+                                            {position.name}
+                                        </option>
+                                    ))}
+                                </select>
                             {errorMessages.position_id && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
                                     <FaExclamationCircle className="mr-2" />

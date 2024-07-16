@@ -6,7 +6,6 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
-
   const [nombre, setNombre] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -26,7 +25,7 @@ export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
     }
 
     if (!nombre || /\d/.test(nombre)) {
-      errorObject.nombre = 'No puede contener números no estar vacío';
+      errorObject.nombre = 'No puede contener números ni estar vacío';
       hasError = true;
     }
 
@@ -49,8 +48,11 @@ export const FormUpdateEmpaque = ({ onClose, category, Listar }) => {
       onClose();
       Listar();
     } catch (error) {
-      console.log(error)
-      swal("Error", "Hubo un problema el empaque", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErrors({ nombre: 'El empaque ya existe' });
+      } else {
+        setErrors({ nombre: 'El nombre del empaque ya existe' });
+      }
     }
   };
 

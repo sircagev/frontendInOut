@@ -16,7 +16,6 @@ export const Medidas = () => {
     try {
       const response = await axiosClient.get('medida/listar');
       setData(response.data)
-      console.log(response.data)
     } catch (error) {
       console.log(error);
     }

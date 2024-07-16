@@ -51,8 +51,11 @@ export const FormUpdateMedida = ({ onClose, category, Listar }) => {
       onClose();
       Listar();
     } catch (error) {
-      console.log(error)
-      swal("Error", "Hubo un problema al actualizar la medida", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErros({ nombre: 'La medida ya existe' });
+      } else {
+        setErros({ nombre: 'El nombre de la medida ya existe' });
+      }
     }
   };
 
