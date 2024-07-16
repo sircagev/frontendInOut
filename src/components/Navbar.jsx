@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import logo from "../assets/LogoIO.png";
 import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
@@ -17,12 +17,11 @@ export const Navbar = ({ setLogIn }) => {
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
-  
   const [activeForm, setActiveForm] = useState('');
+  const profileRef = useRef(null);
 
   const openModal = (formType) => {
     setActiveForm(formType);
@@ -30,7 +29,6 @@ export const Navbar = ({ setLogIn }) => {
   };
 
   const { logout, user } = useAuth();
-
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -101,6 +99,19 @@ export const Navbar = ({ setLogIn }) => {
     setShowModal(!showModal);
   };
 
+  const handleClickOutside = (event) => {
+    if (profileRef.current && !profileRef.current.contains(event.target)) {
+      setShowEditProfile(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="w-full flex items-center justify-between h-[80px] bg-[#fff] text-white">
       <div className="flex items-center gap-4">
@@ -108,46 +119,41 @@ export const Navbar = ({ setLogIn }) => {
         <h1 className="hidden sm:block text-black font-bold text-lg">Inventario de bodegas</h1>
       </div>
       <div className="flex items-center gap-4 mr-10">
-        <div className="text-black flex items-center gap-2 relative">
+        <div className="text-black flex items-center gap-2 relative" ref={profileRef}>
           <FaUserCircle
             className="text-[38px] cursor-pointer"
-            onMouseEnter={() => {
-              setShowEditProfile(true);
-              setShowChangePassword(false);
-            }}
-            /* onClick={() => {
-              setShowEditProfile(!showEditProfile);
-              setShowChangePassword(false);
-            }} */
+            onClick={() => setShowEditProfile(!showEditProfile)}
           />
           {showEditProfile && (
-            <div className="absolute w-[200px] top-[60px] right-0 z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4"
-            onMouseLeave={() => {
-              setShowEditProfile(false);
-              setShowChangePassword(false);
-            }}>
-              <div className="flex items-center gap-2 cursor-pointer w-full mb-2 hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('editProfile')}>
+            <div className="absolute w-[200px] top-[60px] right-0 z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+              <div
+                className="flex items-center gap-2 cursor-pointer w-full mb-2 px-2 py-[3px] rounded-xl transition-all"
+                onClick={() => openModal('editProfile')}
+              >
                 <CiEdit className="text-gray-500 text-2xl" />
                 <h1 className="font-bold text-[16px] hover:text-gray-500">Editar Perfil</h1>
               </div>
-              <div className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all" onClick={() => openModal('changePassword')}>
+              <div
+                className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all"
+                onClick={() => openModal('changePassword')}
+              >
                 <CiUnlock className="text-gray-500 text-2xl" />
                 <h1 className="font-bold text-[16px] hover:text-gray-500">Cambiar Contraseña</h1>
               </div>
             </div>
           )}
           <Modal1
-           title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
-           size={activeForm === 'editProfile' ? '2xl' : 'sm'}
-           isOpen={isOpen}
-           onClose={()=> setIsOpen(false)}
-           form={
-            activeForm === 'editProfile' ? (
-              <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
-            ) : (
-              <FormUpdateContraseña onClose={() => setIsOpen(false)} />
-            )
-          }
+            title={activeForm === 'editProfile' ? 'Editar Perfil' : 'Cambiar Contraseña'}
+            size={activeForm === 'editProfile' ? '2xl' : 'sm'}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            form={
+              activeForm === 'editProfile' ? (
+                <FormUpdatePerfil onClose={() => setIsOpen(false)} Listar={ListarUsuario} />
+              ) : (
+                <FormUpdateContraseña onClose={() => setIsOpen(false)} />
+              )
+            }
           />
           <div className="flex flex-col gap-1 mt-3">
             <h1 className="cursor-pointer font-bold text-[16px]">{userName}</h1>
@@ -173,10 +179,10 @@ export const Navbar = ({ setLogIn }) => {
         </div>
       </div>
       {unreadCount > 0 && (
-      <NotificationsModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
+        <NotificationsModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
       )}
     </div>
   );

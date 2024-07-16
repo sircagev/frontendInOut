@@ -37,7 +37,7 @@ const Bodegas = () => {
       <div>
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
         <Modal1
-          title={"Registrar Bodega"}
+          title={"Registrar Unidad Productiva"}
           size={"sm"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
@@ -58,7 +58,7 @@ const Bodegas = () => {
       <div>
         <Button color="primary" variant="bordered" size="sm" onClick={() => setIsOpenUpdate(true)}>Actualizar</Button>
         <Modal1
-          title={"Actualizar Bodega"}
+          title={"Actualizar Unidad Productiva"}
           size={"sm"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenUpdate(false)}
@@ -78,10 +78,7 @@ const Bodegas = () => {
   }
 
   return (
-    <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-2">
-      <Tabs aria-label="Options" className='ml-7'>
-        <Tab key="bodegas" title="Bodegas" color="primary">
-        <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
+    <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-8">
           <NextUITable
             columns={columnsWarehouses}
             rows={data}
@@ -93,12 +90,6 @@ const Bodegas = () => {
             statusOrType={'status'}
             actions={Actions}
           />
-         </div> 
-        </Tab>
-        <Tab key="ubicaciones" title="Ubicaciones">
-          <Ubicaciones />
-        </Tab>
-      </Tabs>
     </div>
   );
 

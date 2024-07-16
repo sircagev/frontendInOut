@@ -129,8 +129,6 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
             hasError = true;
         }
 
-
-
         setErrorMessages(newErrorMessages);
         return !hasError;
     };
@@ -149,8 +147,6 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                     buttons: false,
                     timer: 2000,
                 });
-                console.log(Listar())
-                console.log(values)
                 await login({
                     email: values.email,
                     password: values.password
@@ -169,7 +165,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
         <div>
             <form onSubmit={putUser}>
                 <div className='flex flex-col justify-center items-center gap-3 mb-4'>
-                    <div className="w-auto flex gap-3 mb-2">
+                    <div className="w-auto flex flex-col md:flex-row gap-3 mb-2">
                         <div>
                             <Input
                                 type='text'
@@ -177,7 +173,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='name'
                                 value={values.name}
                                 onChange={editValues}
-                                className="w-[310px]"
+                                className="w-[250px] lg:w-[310px]"
                             />
                             {errorMessages.name && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
@@ -193,7 +189,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='lastname'
                                 value={values.lastname}
                                 onChange={editValues}
-                                className="w-[310px]"
+                                className="w-[250px] lg:w-[310px]"
                             />
                             {errorMessages.lastname && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
@@ -203,7 +199,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                             )}
                         </div>
                     </div>
-                    <div className="w-auto flex gap-3 mb-2">
+                    <div className="w-auto flex flex-col md:flex-row gap-3 mb-2">
                         <div>
                             <Input
                                 type='text'
@@ -211,7 +207,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='email'
                                 value={values.email}
                                 onChange={editValues}
-                                className="w-[310px]"
+                                className="w-[250px] lg:w-[310px]"
                             />
                             {errorMessages.email && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
@@ -227,7 +223,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='phone'
                                 value={values.phone}
                                 onChange={editValues}
-                                className="w-[310px]"
+                                 className="w-[250px] lg:w-[310px]"
                             />
                             {errorMessages.phone && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">
@@ -237,7 +233,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                             )}
                         </div>
                     </div>
-                    <div className="w-auto flex gap-3 mb-2">
+                    <div className="w-auto flex flex-col md:flex-row gap-3 mb-2">
                         <div>
                             <Input
                                 type='number'
@@ -245,7 +241,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='identification'
                                 value={values.identification}
                                 onChange={editValues}
-                                className="w-[310px]"
+                                className="w-[250px] lg:w-[310px]"
                                 onKeyPress={allowOnlyNumbers}
                                 inputMode="numeric"
                             />

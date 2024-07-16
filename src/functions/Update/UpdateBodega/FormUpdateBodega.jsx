@@ -30,7 +30,7 @@ export const FormUpdateBodega = ({ onClose, category, Listar }) => {
         }
 
         if (!nombre) {
-            errorObject.nombre = 'Debe ingresar un nombre para la bodega';
+            errorObject.nombre = 'Debe ingresar una unidad productiva.';
             hasError = true;
         }
 
@@ -46,7 +46,7 @@ export const FormUpdateBodega = ({ onClose, category, Listar }) => {
             if (response.status === 200) {
                 swal({
                     title: "Actualizado",
-                    text: "Bodega actualizada con éxito",
+                    text: "La unidad productiva se ha actualizada con éxito",
                     icon: "success",
                     button: false,
                     timer: 1500,
