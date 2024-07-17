@@ -64,7 +64,7 @@ export const FormDataMedida = ({listar, onClose}) => {
             }
         } catch (error) {
             if (error.response && error.response.data.message.includes('Duplicate entry')) {
-                serErrors({ name: 'El nombre de la categoría ya existe.' });
+                serErrors({ name: 'El nombre de la medida ya existe.' });
             } else
                 serErrors({ name: 'Ocurrió un error al registrar la categoría. Inténtalo de nuevo.' });
             

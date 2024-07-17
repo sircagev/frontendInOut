@@ -65,7 +65,7 @@ export const FormDataEmpaque = ({ listar, onClose }) => {
             }
         } catch (error) {
             if (error.response && error.response.data.message.includes('Duplicate entry')) {
-                setErrors({ name: 'El nombre de la categoría ya existe.' });
+                setErrors({ name: 'El nombre del empaque ya existe.' });
             } else {
                 setErrors({ name: 'Ocurrió un error al registrar la categoría. Inténtalo de nuevo.' });
             }
