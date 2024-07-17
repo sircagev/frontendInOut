@@ -8,8 +8,11 @@ import { FormDataCategoria } from "../functions/Register/RegisterElemento/FormDa
 import { FormUpdateCategoria } from "../functions/Update/UpdateElemento/FormUpdateCategoria";
 import Modal1 from "../components/Modal1";
 import { DesactivarCategorias } from "../functions/Desactivar";
+import { useAuth } from "../context/AuthProvider";
 
 export const Categoria = () => {
+
+  const { user } = useAuth();
 
   const [data, setData] = useState([])
 
@@ -31,14 +34,18 @@ export const Categoria = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div>
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
-        <Modal1
-          title={"Registrar Categoría"}
-          size={"sm"}
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          form={<FormDataCategoria onClose={() => setIsOpen(false)} listar={ListarCategorias} />}
-        />
+        {user.role_id == 1 ? (
+          <>
+            <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
+            <Modal1
+              title={"Registrar Categoría"}
+              size={"sm"}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              form={<FormDataCategoria onClose={() => setIsOpen(false)} listar={ListarCategorias} />}
+            />
+          </>
+        ) : (null)}
       </div>
     )
   }
@@ -54,20 +61,25 @@ export const Categoria = () => {
 
     return (
       <div className="flex gap-2">
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
+        <Button
+          color={user.role_id == 1 ? 'primary' : 'default'} variant="bordered" size="sm" className="w-[15px]"
+          onClick={() => setIsOpenupdate(true)}
+          disabled={user.role_id != 1}>Actualizar</Button>
         <Modal1
           title={"Actualizar Categoría"}
           size={"sm"}
           isOpen={isOpenUpdate}
           onClose={() => setIsOpenupdate(false)}
           form={<FormUpdateCategoria onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarCategorias} />}
+
         />
         <Button
-          color={item.status == 1 ? 'danger' : 'success'}
+          color={user.role_id != 1 ? 'default' : item.status === 'Activo' ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
           onClick={() => handleDesactivar(item.codigo, item.status)}
+          disabled={user.role_id != 1}
         >
           {item.status == 1 ? 'Desactivar' : 'Activar'}
         </Button>
