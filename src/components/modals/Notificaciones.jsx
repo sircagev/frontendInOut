@@ -134,7 +134,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
                 className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
                 style={{ boxShadow: "inset 0 0 0 2px " }}
                 onClick={() =>
-                  handleViewClick("/reportes/solicitud")}
+                  handleViewClick("/movimientos")}
               >
                 <div className="text-blue-700 font-bold mr-2 w-[25px]">
                   {solicitudesData}
