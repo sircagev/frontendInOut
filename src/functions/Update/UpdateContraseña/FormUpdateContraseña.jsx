@@ -145,7 +145,7 @@ export const FormUpdateContraseña = ({ onClose, Listar }) => {
                         </div>
                         {errorMessages.password && (
                             <div className="flex items-center text-red-500 text-xs mt-1">
-                                <FaExclamationCircle className="mr-2" />
+                            
                                 {errorMessages.password}
                             </div>
                         )}
@@ -171,7 +171,7 @@ export const FormUpdateContraseña = ({ onClose, Listar }) => {
                         </div>
                         {errorMessages.newPassword && (
                             <div className="flex items-center text-red-500 text-xs mt-1">
-                                <FaExclamationCircle className="mr-2" />
+                             
                                 {errorMessages.newPassword}
                             </div>
                         )}
@@ -197,7 +197,7 @@ export const FormUpdateContraseña = ({ onClose, Listar }) => {
                         </div>
                         {errorMessages.confirmPassword && (
                             <div className="flex items-center text-red-500 text-xs mt-1">
-                                <FaExclamationCircle className="mr-2" />
+                         
                                 {errorMessages.confirmPassword}
                             </div>
                         )}
