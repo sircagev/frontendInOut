@@ -125,20 +125,20 @@ export const Navbar = ({ setLogIn }) => {
             onClick={() => setShowEditProfile(!showEditProfile)}
           />
           {showEditProfile && (
-            <div className="absolute w-[200px] top-[60px] right-0 z-20 bg-white border border-gray-200 rounded-md shadow-lg p-4">
+            <div className="absolute w-[230px] top-[60px] right-0 z-20 bg-white border border-gray-300 rounded-md shadow-lg p-4">
               <div
-                className="flex items-center gap-2 cursor-pointer w-full mb-2 px-2 py-[3px] rounded-xl transition-all"
+                className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 w-full mb-2 px-2 py-[3px] rounded-xl transition-all"
                 onClick={() => openModal('editProfile')}
               >
                 <CiEdit className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px] hover:text-gray-500">Editar Perfil</h1>
+                <h1 className="font-bold text-[13px] hover:text-gray-500">Editar Perfil</h1>
               </div>
               <div
                 className="flex items-center gap-2 cursor-pointer hover:bg-slate-300 px-2 py-[3px] rounded-xl transition-all"
                 onClick={() => openModal('changePassword')}
               >
                 <CiUnlock className="text-gray-500 text-2xl" />
-                <h1 className="font-bold text-[16px] hover:text-gray-500">Cambiar Contraseña</h1>
+                <h1 className="font-bold text-[13px] hover:text-gray-500">Cambiar Contraseña</h1>
               </div>
             </div>
           )}
