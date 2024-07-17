@@ -5,11 +5,14 @@ import { FormUpdateUsuario } from "../functions/Update/UpdateUsuario/FormUpdateU
 import axiosClient from '../components/config/axiosClient'
 import NextUITable from "../components/NextUITable"
 import { columnsUsers, statusOptions, INITIAL_VISIBLE_COLUMNS, statusColorMap, searchKeys } from '../functions/Data/UserData'
-import { Button } from '@nextui-org/react'
+import { Button, user } from '@nextui-org/react'
 import { DesactivarUsuario } from "../functions/Desactivar";
+import { useAuth } from "../context/AuthProvider";
 
 export const Usuarios = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+
+  const { user } = useAuth();
 
   const ListarUsuario = async () => {
     try {
@@ -29,14 +32,18 @@ export const Usuarios = () => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div>
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
-        <Modal1
-          title={"Registrar Usuario"}
-          size={"2xl"}
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          form={<FormDataUsuario onClose={() => setIsOpen(false)} Listar={ListarUsuario} />}
-        />
+        {user.role_id == 1 ? (
+          <>
+            <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
+            <Modal1
+              title={"Registrar Usuario"}
+              size={"2xl"}
+              isOpen={isOpen}
+              onClose={() => setIsOpen(false)}
+              form={<FormDataUsuario onClose={() => setIsOpen(false)} Listar={ListarUsuario} />}
+            />
+          </>
+        ) : (null)}
       </div>
     )
   }
@@ -52,7 +59,16 @@ export const Usuarios = () => {
 
     return (
       <div className="flex gap-2">
-        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
+        <Button
+          color={user.role_id == 1 ? 'primary' : 'default'}
+          variant="bordered"
+          size="sm"
+          className="w-[15px]"
+          onClick={() => setIsOpenupdate(true)}
+          disabled={user.role_id != 1}
+        >
+          Actualizar
+        </Button>
         <Modal1
           title={"Actualizar Usuario"}
           size={"2xl"}
@@ -61,11 +77,12 @@ export const Usuarios = () => {
           form={<FormUpdateUsuario onClose={() => setIsOpenupdate(false)} category={codigo} Listar={ListarUsuario} />}
         />
         <Button
-          color={codigo.status === 'Activo' ? 'danger' : 'success'}
+          color={user.role_id != 1 ? 'default' : codigo.status === 'Activo' ? 'danger' : 'success'}
           variant="bordered"
           size="sm"
           className="w-[15px]"
           onClick={() => handleDesactivar(codigo.codigo, codigo.status)}
+          disabled={user.role_id != 1}
         >
           {codigo.status === 'Activo' ? 'Desactivar' : 'Activar'}
         </Button>
