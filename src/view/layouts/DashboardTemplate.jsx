@@ -18,7 +18,7 @@ const DashboardTemplate = ({ children }) => {
           <main className='w-full flex flex-col justify-center items-center '>
             {children}
           </main>
-          <footer className='flex justify-center'>Dashboard Footer</footer>
+          {/* <footer className='flex justify-center'>Dashboard Footer</footer> */}
         </div>
       </div>
     </div>
