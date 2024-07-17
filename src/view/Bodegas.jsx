@@ -79,17 +79,26 @@ const Bodegas = () => {
 
   return (
     <div className="flex w-[95%] mr-[2.5%] ml-[2.5%] flex-col mt-8">
-          <NextUITable
-            columns={columnsWarehouses}
-            rows={data}
-            initialColumns={INITIAL_VISIBLE_COLUMNS}
-            statusColorMap={statusColorMap}
-            statusOptions={statusOptions}
-            searchKeys={searchKeys}
-            buttons={Buttons}
-            statusOrType={'status'}
-            actions={Actions}
-          />
+      <Tabs aria-label="Options" className='ml-7'>
+        <Tab key="bodegas" title="Bodegas" color="primary">
+          <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
+            <NextUITable
+              columns={columnsWarehouses}
+              rows={data}
+              initialColumns={INITIAL_VISIBLE_COLUMNS}
+              statusColorMap={statusColorMap}
+              statusOptions={statusOptions}
+              searchKeys={searchKeys}
+              buttons={Buttons}
+              statusOrType={'status'}
+              actions={Actions}
+            />
+          </div> 
+        </Tab>
+        <Tab key="ubicaciones" title="Ubicaciones">
+          <Ubicaciones />
+        </Tab>
+      </Tabs>   
     </div>
   );
 

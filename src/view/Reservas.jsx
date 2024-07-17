@@ -21,7 +21,7 @@ const columns = [
   { name: 'Acciones', uid: 'actions' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "fecha", "actions", "tipo"]
+const INITIAL_VISIBLE_COLUMNS = ["codigo", "fecha", "actions", "status"];
 
 const searchKeysLoans = ['codigo', "fecha", "identificacion_manager", "usuario_manager"]
 

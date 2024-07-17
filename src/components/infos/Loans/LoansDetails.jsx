@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { MovementDetailsById, ListarElementos } from '../../../functions/Listar';
+import { MovementDetailsById, ListarElementos, ListarUsuarios } from '../../../functions/Listar';
 import {
     Table,
     TableHeader,
@@ -11,12 +11,15 @@ import {
     Chip,
     Checkbox,
     Input,
-    Textarea
+    Textarea,
+    Autocomplete,
+    AutocompleteItem
 } from "@nextui-org/react";
 import { useAuth } from '../../../context/AuthProvider';
 import axiosClient from '../../config/axiosClient';
 import swal from 'sweetalert';
 import './styles.css'
+import { capitalize } from '../../../utils/columnsData';
 
 export const LoanDetails = ({ item, onClose }) => {
 
@@ -26,6 +29,8 @@ export const LoanDetails = ({ item, onClose }) => {
     const [data, setData] = useState([]);
     const [dataElements, setElements] = useState([]);
     const [newStatus, setNewStatus] = useState('');
+    const [usersData, setUsersData] = useState([]);
+    const [userReturning, setUserReturning] = useState(null);
 
     const stateNoActions = ["Solicitado", "Rechazado", "Aceptado", "Cancelado"];
 
@@ -72,10 +77,11 @@ export const LoanDetails = ({ item, onClose }) => {
 
             await esperar(200);
             const detailsData = await MovementDetailsById(movement.codigo);
+            const users = await ListarUsuarios();
 
             const elements = await ListarElementos();
             const details = detailsData.data
-            console.log(details)
+            console.log(users)
             let objectDetails = [];
 
             for (const detail of details) {
@@ -92,9 +98,10 @@ export const LoanDetails = ({ item, onClose }) => {
 
             setData(details);
             setElements(elements);
+            setUsersData(users);
 
             const objectNewStatus = {
-                user_returning: 1,
+                user_returning: null,
                 details: objectDetails
             }
 
@@ -367,6 +374,7 @@ export const LoanDetails = ({ item, onClose }) => {
                     icon: `${statusCode === 201 ? 'warning' : 'success'}`,
                     buttons: true
                 }).then(() => {
+                    setNewStatus('');
                     onClose(); // Asegúrate de definir onClose adecuadamente
                 });
             }
@@ -397,13 +405,31 @@ export const LoanDetails = ({ item, onClose }) => {
     return (
         <div className='w-full px-3 pb-3 flex flex-col items-center justify-center gap-4'>
             {(movement.status == 'En préstamo' || movement.status == "Aceptado") && (
-                <Input
-                    type='text'
-                    placeholder='Selecciona un usuario'
-                    label="Usuario"
+                <Autocomplete
+                    aria-label='autocomplete-users'
+                    label="Seleccionar el usuario"
+                    placeholder="Busca un usuario"
                     isRequired
-                    className='w-1/2'
-                />
+                    /* isInvalid={errors.user_application ? true : false}
+                    errorMessage={errors.user_application} */
+                    className='h-[60px]'
+                    onSelectionChange={(value) => {
+                        const element = value;
+                        setNewStatus(precData => ({
+                            ...precData,
+                            user_returning: parseInt(value)
+                        }));
+                    }}
+                >
+                    {usersData.map((user) => (
+                        <AutocompleteItem
+                            key={user.codigo}
+                            value={user.codigo}
+                        >
+                            {user.identification + ' - ' + capitalize(user.nombre)}
+                        </AutocompleteItem>
+                    ))}
+                </Autocomplete>
             )}
             <Table
                 aria-label="info table"
