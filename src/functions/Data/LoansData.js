@@ -22,6 +22,7 @@ const statusOptionsLoans = [
     { name: "En préstamo", uid: "En préstamo" },
     { name: "Completado", uid: "Completado" },
     { name: "Cancelado", uid: "Cancelado" },
+    { name: "Estado nulo", uid: "" },
 ]
 
 const statusColorMapLoans = {
@@ -32,6 +33,9 @@ const statusColorMapLoans = {
     "Cancelado": 'danger',
     "Completado": 'default',
     "En préstamo": 'warning',
+    "ingreso" : 'success',
+    "salida" : 'danger',
+    "prestamo" : 'warning',
 }
 
 const searchKeysLoans = ['nombre', 'codigo', 'identificacion']

@@ -198,10 +198,6 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
         return hasError;
     };
 
-    const toggleEdit = (index) => {
-        setEditIndex(index);
-    };
-
     useEffect(() => {
         list();
         console.log(newRegister.details.length)

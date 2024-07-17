@@ -63,7 +63,7 @@ const NextUITable = ({
                 if (a[column] < b[column]) return direction === 'ascending' ? -1 : 1;
                 if (a[column] > b[column]) return direction === 'ascending' ? 1 : -1;
                 return 0;
-            });  
+            });
         }
 
         if (hasSearchFilter) {
@@ -91,22 +91,21 @@ const NextUITable = ({
         return filteredItems.slice(start, end);
     }, [page, filteredItems, rowsPerPage]);
 
-    /* const sortedItems = React.useMemo(() => {
-        return [...items].sort((a, b) => {
-            const first = a[sortDescriptor.column];
-            const second = b[sortDescriptor.column];
-            const cmp = first < second ? -1 : first > second ? 1 : 0;
-
-            return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        });
-    }, [sortDescriptor, items]); */
-
-    useEffect(()=> {
+    useEffect(() => {
         setPage(1)
-    },[sortDescriptor])
+    }, [sortDescriptor])
+
+    function formatDateTime(dateTimeString) {
+        const [date, time] = dateTimeString.split('T');
+        const [hours, minutes] = time.split(':');
+        const formattedTime = `${hours}:${minutes}`; // Only keep hours and minutes
+        return { date, time: formattedTime };
+    }
 
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
+
+
 
         switch (columnKey) {
             case "nombre":
@@ -168,10 +167,21 @@ const NextUITable = ({
                 );
             case "status":
                 return (
-                    <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
-                        {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
-                    </Chip>
-                );
+                    cellValue ? (
+                        <div className="flex justify-center items-center w-full">
+                            < Chip
+                                className="capitalize"
+                                color={statusColorMap[item.status]}
+                                classNames={{
+                                    content: "w-[80px] text-center"
+                                }}
+                                size="sm" variant="flat"
+                            >
+                                {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
+                            </Chip >
+                        </div>) : (
+                        <div className="flex justify-center items-center w-full">---------</div>
+                    ));
             case "actions":
                 return (
                     <Actions codigo={item}></Actions>
@@ -186,6 +196,21 @@ const NextUITable = ({
                 return (
                     <div className="flex flex-col w-full">
                         <Actions item={item} />
+                    </div>
+                )
+            case "fecha":
+                let formattedDate = "";
+                let formattedTime = "";
+
+                if (cellValue) {
+                    const { date, time } = formatDateTime(cellValue);
+                    formattedDate = date;
+                    formattedTime = time;
+                }
+                return (
+                    <div className="flex flex-col w-ful">
+                        <div className="text-[14px]">{formattedDate}</div>
+                        <div className="text-[10px] text-gray-600">{formattedTime}</div>
                     </div>
                 )
             default:

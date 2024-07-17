@@ -43,35 +43,7 @@ function App2() {
                 <Route index element={<Navigate to="/login" />} />
                 <Route path={'/NOT-CREDENTIALS'} element={<NotCredentials />} />
                 <Route path='/*' element={<PageNotFound />} />
-                {/* <Route path="/login" element={<ProtectedRoutesLogin>
-                    <Login setLoggedIn={setLoggedIn} />
-                </ProtectedRoutesLogin>} /> */}
-                <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
-                    {/* <Route path="/elementos/categorias" element={<Categoria user={user} />} /> */}
-                    {/* <Route path="/elementos/empaques" element={<Empaques user={user} />} /> */}
-                    {/* <Route path="/elementos/medidas" element={<Medidas user={user} />} /> */}
-                    {/* <Route path="/reportes" element={<Reporte />} /> */}
-                    {/* <Route path="/reportes/elementos" element={<ReporteE />} /> */}
-                    {/* <Route path="/reportes/elementosdesactivados" element={<ReporteED />} /> */}
-                    {/* <Route path="/reportes/elementosexpirados" element={<ReporteEX />} /> */}
-                    {/* <Route path="/reportes/movimientos" element={<ReporteM />} /> */}
-                    {/* <Route path="/reportes/stockmin" element={<ReporteMS />} /> */}
-                    {/* <Route path="/reportes/prestamos" element={<ReporteP />} />
-                    <Route path="/reportes/prestamosactivos" element={<ReportePA />} />
-                    <Route path="/reportes/solicitud" element={<ReporteS />} />
-                    <Route path="/reportes/prestamosvencidos" element={<ReporteV />} /> */}
-                    {/*<Route path="/usuarios" element={<Usuarios userLogin={user} />} />*/}
-
-                    {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
-{/*<Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} />
-                    <Route path="/movimientos" element={<Movimientos2 user={user} />} /> */}
-                    {/* <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
-                </Route>
-                <Route
-                    path='/login'
-                    element={<Login />}
-                />
-                
+                <Route path='/login' element={<Login />} />
                 <Route
                     path='/home'
                     element={
@@ -79,31 +51,34 @@ function App2() {
                             component={Home}
                             layout={DashboardTemplate}
                             allowedRoles={[1, 2, 3]}
-                        />
-                    }
+                        />}
                 />
-                <Route path="/elementos"
+                <Route
+                    path="/elementos"
                     element={<ProtectedRoute
                         component={Elemento}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/categorias"
+                <Route
+                    path="/elementos/categorias"
                     element={<ProtectedRoute
                         component={Categoria}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/empaques"
+                <Route
+                    path="/elementos/empaques"
                     element={<ProtectedRoute
                         component={Empaques}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/medidas"
+                <Route
+                    path="/elementos/medidas"
                     element={<ProtectedRoute
                         component={Medidas}
                         layout={DashboardTemplate}
@@ -112,73 +87,59 @@ function App2() {
                 />
                 <Route
                     path={'/movimientos'}
-                    element={
-                        <ProtectedRoute
-                            component={Movimientos3}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Movimientos3}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/bodegas'}
-                    element={
-                        <ProtectedRoute
-                            component={Bodegas}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Bodegas}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/bodegas/ubicacion'}
-                    element={
-                        <ProtectedRoute
-                            component={Ubicaciones}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Ubicaciones}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/reservas'}
-                    element={
-                        <ProtectedRoute
-                            component={Reservas}
-                            layout={UserTemplate}
-                            allowedRoles={[1, 2, 3]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Reservas}
+                        layout={UserTemplate}
+                        allowedRoles={[1, 2, 3]}
+                    />}
                 />
                 <Route
                     path={'/reportes'}
-                    element={
-                        <ProtectedRoute
-                            component={Reporte}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Reporte}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/estadistica'}
-                    element={
-                        <ProtectedRoute
-                            component={Estadistica}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Estadistica}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/reportes/movimientos'}
-                    element={
-                        <ProtectedRoute
-                            component={ReporteM}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={ReporteM}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/reportes/stockmin'}
