@@ -18,7 +18,7 @@ import axiosClient from '../../config/axiosClient';
 import swal from 'sweetalert';
 import './styles.css'
 
-export const LoanDetails = ({ item, onClose }) => {
+export const UserMovementDetails = ({ item, onClose }) => {
 
     const { user } = useAuth();
 
@@ -27,9 +27,7 @@ export const LoanDetails = ({ item, onClose }) => {
     const [dataElements, setElements] = useState([]);
     const [newStatus, setNewStatus] = useState('');
 
-    const stateNoActions = ["Solicitado", "Rechazado", "Aceptado", "Cancelado"];
-
-    const baseColumns = [
+    const columns = [
         {
             key: "movementDetail_id",
             label: "CODIGO",
@@ -59,9 +57,6 @@ export const LoanDetails = ({ item, onClose }) => {
             label: "ESTADO",
         }
     ];
-    const columns = (!stateNoActions.includes(movement.status))
-        ? [...baseColumns, { key: "actions", label: "ENTREGA" }]
-        : baseColumns;
 
     const esperar = (ms) => {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -296,27 +291,23 @@ export const LoanDetails = ({ item, onClose }) => {
     const StatusActions = ({ status }) => {
         switch (status) {
             case 'Solicitado':
-                return <Button onClick={handleUpdateStatus}>Revisar</Button>
+                return (
+                    <Button onClick={() => {
+                        handleUpdateStatus(1)
+                    }}>Cancelar Solicitud</Button>
+                )
             case 'En revisión':
                 return (
-                    <div className='flex gap-5'>
-                        <Button onClick={handleUpdateStatus}>Enviar Datos</Button>
-                    </div>
+                    <Button onClick={handleUpdateStatus}>Cancelar Solicitud</Button>
                 )
             case 'Aceptado':
                 return (
-                    <div className='flex gap-5'>
-                        <Button onClick={handleUpdateStatus}>Realizar Entrega</Button>
-                    </div>
+                    <Button onClick={handleUpdateStatus}>Cancelar Solicitud</Button>
                 )
             case 'Rechazado':
                 return null
             case 'En préstamo':
-                return (
-                    <Button size='sm' onClick={handleUpdateStatus}>
-                        Aceptar devolución
-                    </Button>
-                );
+                return null
             case 'Completado':
                 return null
             case 'Cancelado':
@@ -328,7 +319,6 @@ export const LoanDetails = ({ item, onClose }) => {
 
     useEffect(() => {
         list();
-        console.log(user)
     }, [])
 
     useEffect(() => {
@@ -354,32 +344,49 @@ export const LoanDetails = ({ item, onClose }) => {
         ],
     }), []);
 
-    const handleUpdateStatus = async () => {
+    const handleUpdateStatus = async (state) => {
         try {
-            const response = await axiosClient.put(`movimientos/update-logan-status/${movement.codigo}`, newStatus);
+
+            let data = newStatus;
+
+            if (state == 1) {
+                for (const state of data.details) {
+                    const { loanStatus_id } = state;
+                    console.log(state)
+                    if (loanStatus_id == 1) state.loanStatus_id = 7
+                }
+            }
+
+            if (state == 2) {
+                for (const state of data.details) {
+                    const { loanStatus_id } = state;
+
+                    if (loanStatus_id == 2) state.loanStatus_id = 7
+                }
+            }
+
+            if (state == 3) {
+                for (const state of data.details) {
+                    const { loanStatus_id } = state;
+
+                    if (loanStatus_id == 3) state.loanStatus_id = 7
+                }
+            }
+
+            const response = await axiosClient.put(`movimientos/update-logan-status/${movement.codigo}`, data);
             const statusCode = response.status;
 
-            // Puedes manejar la respuesta según el código de estado
-            if (movement.status !== 'Solicitado') {
-                swal({
-                    title: `${statusCode === 201 ? 'Info' : 'Éxito'}`,
-                    text: response.data.message,
-                    icon: `${statusCode === 201 ? 'warning' : 'success'}`,
-                    buttons: true
-                }).then(() => {
-                    onClose(); // Asegúrate de definir onClose adecuadamente
-                });
-            }
-
-            if (movement.status == "Solicitado") {
-                list();
-                const response = await axiosClient.get(`movimientos/loans/list/${movement.codigo}`)
-                setMovement(response.data.data[0])
-            }
+            swal({
+                title: `${statusCode === 201 ? 'Info' : 'Éxito'}`,
+                text: response.data.message,
+                icon: `${statusCode === 201 ? 'warning' : 'success'}`,
+                buttons: true
+            }).then(() => {
+                onClose(); // Asegúrate de definir onClose adecuadamente
+            });
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;
-                console.log(error.response);
                 swal({
                     title: "Error",
                     text: error.response.data.message,
@@ -396,15 +403,6 @@ export const LoanDetails = ({ item, onClose }) => {
 
     return (
         <div className='w-full px-3 pb-3 flex flex-col items-center justify-center gap-4'>
-            {(movement.status == 'En préstamo' || movement.status == "Aceptado") && (
-                <Input
-                    type='text'
-                    placeholder='Selecciona un usuario'
-                    label="Usuario"
-                    isRequired
-                    className='w-1/2'
-                />
-            )}
             <Table
                 aria-label="info table"
                 removeWrapper
@@ -420,9 +418,7 @@ export const LoanDetails = ({ item, onClose }) => {
                     )}
                 </TableBody>
             </Table>
-            {(user.role_id == 1 || user.role_id == 2) && (
-                <StatusActions status={movement.status} onUpdateStatus={handleUpdateStatus} />
-            )}
+            <StatusActions status={movement.status} onUpdateStatus={handleUpdateStatus} />
         </div>
     )
 }

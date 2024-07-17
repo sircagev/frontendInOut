@@ -132,10 +132,17 @@ export const Movimientos3 = () => {
         const [isOpen3, setIsOpen3] = useState(false)
         return (
             <div className="relative flex items-center gap-2">
-
                 <Tooltip content="Details">
                     <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                        <Button color='primary' variant="ligth" className="text-lg" onClick={() => { setIsOpen3(true) }} isIconOnly> <EyeIcon color="#007BFF" /></Button>
+                        <Button
+                            color='primary'
+                            variant="ligth"
+                            className="text-lg"
+                            onClick={() => { setIsOpen3(true) }}
+                            isIconOnly
+                        >
+                            <EyeIcon color="#007BFF" />
+                        </Button>
                         <Modal1
                             title={`Movimiento # ${codigo.codigo}`}
                             size={'2xl'}
@@ -176,16 +183,11 @@ export const Movimientos3 = () => {
                                 setIsOpen3(false)
                                 list();
                             }}
-                            form={<LoanDetails item={codigo} onClose={()=>{
+                            form={<LoanDetails item={codigo} onClose={() => {
                                 setIsOpen3(false)
                                 list();
-                            } } />}
+                            }} />}
                         />
-                    </span>
-                </Tooltip>
-                <Tooltip color="danger" content="Delete user">
-                    <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                        {/* <DeleteIcon /> */}
                     </span>
                 </Tooltip>
             </div>
@@ -199,19 +201,6 @@ export const Movimientos3 = () => {
     return (
         <div className="w-auto h-[100%] m-auto flex flex-col pt-[15px]">
             <Tabs>
-                <Tab key={'registerMovements'} title={'Ingresos y Salidas'}>
-                    <NextUITable
-                        columns={columnsMovements}
-                        rows={data}
-                        searchKeys={searchKeys}
-                        statusOptions={statusOptions}
-                        statusColorMap={statusColorMap}
-                        initialColumns={INITIAL_VISIBLE_COLUMNS}
-                        statusOrType={'tipo'}
-                        actions={Actions}
-                        buttons={Buttons}
-                    />
-                </Tab>
                 <Tab key={'loans'} title={'Préstamos'}>
                     <NextUITable
                         columns={columnsLoans}
@@ -223,6 +212,19 @@ export const Movimientos3 = () => {
                         statusOrType={'status'}
                         actions={ActionsLoan}
                         buttons={ButtonsLoans}
+                    />
+                </Tab>
+                <Tab key={'registerMovements'} title={'Ingresos y Salidas'}>
+                    <NextUITable
+                        columns={columnsMovements}
+                        rows={data}
+                        searchKeys={searchKeys}
+                        statusOptions={statusOptions}
+                        statusColorMap={statusColorMap}
+                        initialColumns={INITIAL_VISIBLE_COLUMNS}
+                        statusOrType={'tipo'}
+                        actions={Actions}
+                        buttons={Buttons}
                     />
                 </Tab>
             </Tabs>
