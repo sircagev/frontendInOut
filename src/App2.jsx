@@ -35,13 +35,6 @@ import ReporteV from "./view/ReportePrestamosVencidos";
 import { Movimientos3 } from './view/Movimientos3';
 import { Reservas } from './view/Reservas';
 
-
-
-
-
-
-
-
 function App2() {
 
     return (
