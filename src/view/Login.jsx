@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosClient from '../components/config/axiosClient';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button } from "@nextui-org/react";
@@ -208,6 +208,13 @@ function Login() {
       });
     }
   };
+
+  useEffect(()=> {
+    if(user){
+      if(user.role_id == 1 || user.role_id == 2) navigate('/estadistica')
+      if(user.role_id == 3) navigate('/reservas')
+    }
+  })
 
   return (
     <div className='w-full h-screen relative'>
