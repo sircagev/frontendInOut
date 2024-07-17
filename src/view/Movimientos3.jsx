@@ -96,7 +96,7 @@ export const Movimientos3 = () => {
                     size={"2xl"}
                     isOpen={isOpen2}
                     onClose={() => setIsOpen2(false)}
-                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen(false)} listarMovements={list} />}
+                    form={<RegisterMovmentOutgoing onClose={() => setIsOpen2(false)} listarMovements={list} />}
                 />
             </>
         )
