@@ -13,11 +13,8 @@ const Sidebars = () => {
             <div className={`hidden sm:flex sm:flex-col items-center h-full overflow-hidden text-gray-400 bg-gray-900 rounded-s transition-all ${isHover ? 'w-44 duration-700 ' : ' w-16 duration-500'}`}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}>
-                <a className={`flex items-center ${isHover ? 'w-full px-3' : 'justify-center'} mt-3 h-12`} href="#">
-                    <svg className="w-8 h-8 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 17a1 1 0 001.447.894l4-2A1 1 0 0017 15V9.236a1 1 0 00-1.447-.894l-4 2a1 1 0 00-.553.894V17zM15.211 6.276a1 1 0 000-1.788l-4.764-2.382a1 1 0 00-.894 0L4.789 4.488a1 1 0 000 1.788l4.764 2.382a1 1 0 00.894 0l4.764-2.382zM4.447 8.342A1 1 0 003 9.236V15a1 1 0 00.553.894l4 2A1 1 0 009 17v-5.764a1 1 0 00-.553-.894l-4-2z" />
-                    </svg>
-                    {isHover && <span className="ml-2 text-sm font-bold">SENA</span>}
+                <a className="flex items-center justify-center mt-3 h-12" href="#">
+                    <img src={Logo} alt="Logo" className={`transition-all ${isHover ? 'w-10 h-10' : 'w-8 h-8'}`} />
                 </a>
                 <div className={`w-full ${isHover && 'px-2'}`}>
                     <div className={`flex flex-col items-center mt-3 border-t border-gray-700 ${isHover && 'w-full'}`}>

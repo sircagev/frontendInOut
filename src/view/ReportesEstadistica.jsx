@@ -49,8 +49,10 @@ const ReporteEstadistico = () => {
       setmovementsData(movementsResponse.data.datos);
       setloansEleData(loansResponse.data.datos);
       setloansBarData(loansBarResponse.data.datos);
+      console.log(loansBarResponse.data.datos)
       setconsumableData(consumableResponse.data.datos);
       setconsumableBarData(consumableBarResponse.data.datos);
+      console.log(consumableBarResponse.data.datos)
       setExpiradosData(expiradosResponse.data.datos);
       setVencidosData(vencidosResponse.data.datos);
       setStockMinData(stockMinResponse.data.datos);
@@ -98,7 +100,22 @@ const ReporteEstadistico = () => {
         } else {
           acc.push({
             mes: curr.date,
-            Total: curr.Total,
+            Total: parseFloat(curr.Total),
+          });
+        }
+        return acc;
+      }, [])
+    : [];
+
+    const datosLoansBar = Array.isArray(loansBarData)
+    ? loansBarData.reduce((acc, curr) => {
+        const found = acc.find((item) => item.mes === curr.date);
+        if (found) {
+          found.Total += parseFloat(curr.Total);
+        } else {
+          acc.push({
+            mes: curr.date,
+            Total: parseFloat(curr.Total),
           });
         }
         return acc;
@@ -124,20 +141,7 @@ const ReporteEstadistico = () => {
       }))
     : [];
 
-  const datosLoansBar = Array.isArray(loansBarData)
-    ? loansBarData.reduce((acc, curr) => {
-        const found = acc.find((item) => item.mes === curr.date);
-        if (found) {
-          found.Total += parseFloat(curr.Total);
-        } else {
-          acc.push({
-            mes: curr.date,
-            Total: parseFloat(curr.Total),
-          });
-        }
-        return acc;
-      }, [])
-    : [];
+
 
   const coloresPie = [
     "#07597e",
@@ -268,7 +272,7 @@ const ReporteEstadistico = () => {
             <h2 className="font-bold ">Comparativa Mensual</h2>
             {datosLoansBar.length > 0 ? (
               <ResponsiveContainer width={200} height={300}>
-                <BarChart
+               <BarChart
                   data={datosLoansBar}
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
@@ -325,7 +329,6 @@ const ReporteEstadistico = () => {
               <p>No hay datos para mostrar</p>
             )}
           </div>
-
           <div className="flex flex-col items-center pr-10">
             <h2 className="font-bold ">Comparativa Mensual</h2>
             {datosMovementsBar.length > 0 ? (
@@ -338,20 +341,21 @@ const ReporteEstadistico = () => {
                   <YAxis hide={true} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="ingreso" stackId="a" fill={"#11678f"}>
-                    <LabelList
-                      fill={coloresBar.text}
-                      dataKey="ingreso"
-                      position="inside"
-                    />
-                  </Bar>
-                  <Bar dataKey="salida" stackId="a" fill={"#37afec"}>
+                  <Bar dataKey="salida" stackId="a" fill={"#11678f"}>
                     <LabelList
                       fill={coloresBar.text}
                       dataKey="salida"
                       position="inside"
                     />
                   </Bar>
+                  <Bar dataKey="ingreso" stackId="a" fill={"#37afec"}>
+                    <LabelList
+                      fill={coloresBar.text}
+                      dataKey="ingreso"
+                      position="inside"
+                    />
+                  </Bar>
+
                 </BarChart>
               </ResponsiveContainer>
             ) : (
