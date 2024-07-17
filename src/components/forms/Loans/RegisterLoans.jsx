@@ -304,7 +304,6 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                     </div>
 
                     {newRegister.details.map((detail, index) => (
-
                         <div className='w-full flex flex-col justify-center items-center' key={index}>
                             <span>Detalle {index + 1}</span>
                             {editIndex === index ? (

@@ -38,7 +38,7 @@ const Sidebars = () => {
                         </Link>
                         <Link to="/bodegas" className={`relative flex items-center ${isHover ? 'w-full px-3' : 'w-12 justify-center '} h-12 mt-2 rounded hover:bg-gray-700 hover:text-gray-300`} href="#">
                             <FontAwesomeIcon icon={faWarehouse} className="w-6 h-6" />
-                            {isHover && <span className="ml-2 text-sm font-medium">Bodegas</span>}
+                            {isHover && <span className="ml-2 text-sm font-medium">Unidades Productivas</span>}
                         </Link>
                     </div>
                 </div>

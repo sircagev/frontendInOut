@@ -1,11 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import ProtectedRoute from './components/auth/ProtectedRoutes2';
+import NotCredentials from './view/auth/NotCredentials';
+import { PageNotFound } from './view/PageNotFound';
+
+import UserTemplate from './view/layouts/UserTemplate';
+import DashboardTemplate from './view/layouts/DashboardTemplate';
+
+import Login from "./view/Login";
+import { Usuarios } from './view/Usuarios';
+import Home from "./view/Home";
+
 import { Elemento } from "./view/Elemento";
 import { Categoria } from "./view/Categoria";
 import { Empaques } from "./view/Empaques";
 import { Medidas } from "./view/Medidas";
+
 import { Ubicaciones } from "./view/Ubicaciones";
-import Usuario from "./view/Usuario";
+import Bodegas from "./view/Bodegas";
+
 import Reporte from "./view/Reportes";
 import Estadistica from "./view/ReportesEstadistica";
 import ReporteE from "./view/ReporteElementos";
@@ -17,26 +31,12 @@ import ReporteP from "./view/ReportePrestamos";
 import ReportePA from "./view/ReportePrestamosActivos";
 import ReporteS from "./view/ReporteSolicitud";
 import ReporteV from "./view/ReportePrestamosVencidos";
-import { Usuarios } from './view/Usuarios';
-import { Movimientos } from "./view/Movimientos";
-import { Movimientos2 } from "./view/Movimientos2";
-import Login from "./view/Login";
-import Bodegas from "./view/Bodegas";
-import Home from "./view/Home";
-import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
-import { PageNotFound } from './view/PageNotFound';
-import { Prestamos } from './view/Prestamos'
-import ProtectedRoute from './components/auth/ProtectedRoutes2';
-import DashboardTemplate from './view/layouts/DashboardTemplate';
-import NotCredentials from './view/auth/NotCredentials';
+
 import { Movimientos3 } from './view/Movimientos3';
 import { Reservas } from './view/Reservas';
-import UserTemplate from './view/layouts/UserTemplate';
 
 function App2() {
 
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({ role: "" })
     return (
         <div className="h-screen">
             <Routes >

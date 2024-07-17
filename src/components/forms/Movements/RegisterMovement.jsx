@@ -14,6 +14,7 @@ import { Listarubicacion } from '../../../functions/Listar';
 import { capitalize } from '../../../utils/columnsData';
 import swal from 'sweetalert';
 import axiosClient from '../../config/axiosClient';
+import AutocompleteMine from '../../AutoCompleteMine';
 
 export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
@@ -33,6 +34,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
     const [dataElements, setDataElements] = useState([]);
     const [dataWarehouses, setDataWarehouses] = useState([]);
     const [dataLocations, setDataLocations] = useState([]);
+    const [editIndex, setEditIndex] = useState(0);
 
     const objectRegister = {
         user_application: null,
@@ -59,15 +61,20 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
     }, [dataLocations, warehouse]);
 
     const isConsumable = useMemo(() => {
-        const codigo = newRegister.details[0].element_id ? newRegister.details[0].element_id : null
-        const itemEncontrado = dataElements.find(item => item.codigo === codigo);
+
+        const detail = newRegister.details[editIndex];
+        if (!detail) {
+            return false; // o cualquier valor predeterminado que tenga sentido en tu contexto
+        }
+
+        console.log(editIndex)
+        const codigo = newRegister.details[editIndex].element_id ? newRegister.details[editIndex].element_id : null
+        const itemEncontrado = dataElements.find(item => item.codigo == codigo);
         if (itemEncontrado && itemEncontrado.code_elementType === 1) {
-            console.log('esconsumible')
             return true
         }
-        console.log('No consumible')
         return false
-    }, [newRegister])
+    }, [newRegister, editIndex])
 
     const list = async () => {
         try {
@@ -137,22 +144,24 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             location: '',
         };
 
+        const index = newRegister.details.length - 1;
+
         if (checkUser && !newRegister.user_application) {
             newErrorMessages.user_application = 'Debes seleccionar un usuario';
             hasError = true;
         }
 
-        if (!newRegister.details[0].element_id) {
+        if (!newRegister.details[index].element_id) {
             newErrorMessages.element_id = 'Debes seleccionar un Elemento';
             hasError = true;
         }
 
-        if (!newRegister.details[0].quantity) {
+        if (!newRegister.details[index].quantity) {
             newErrorMessages.quantity = 'Debes colocar una cantidad';
             hasError = true;
         }
 
-        if (isConsumable && !newRegister.details[0].expiration) {
+        if (isConsumable && !newRegister.details[index].expiration) {
             newErrorMessages.expiration = 'Debes colocar una fecha de expiracion';
             hasError = true;
         }
@@ -162,7 +171,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             hasError = true;
         }
 
-        if (!newRegister.details[0].warehouseLocation_id) {
+        if (!newRegister.details[index].warehouseLocation_id) {
             newErrorMessages.location = 'Debes elegir una ubicacion en Bodega';
             hasError = true;
         }
@@ -178,7 +187,11 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
     useEffect(() => {
         console.log(newRegister)
-    }, [newRegister])
+        const num = newRegister.details.length;
+        if (num == 1) {
+            setEditIndex(0)
+        }
+    }, [newRegister]);
 
     useEffect(() => {
         const handleErrors = () => {
@@ -214,6 +227,91 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
         handleErrors();
     }, [newRegister, checkUser, isConsumable, warehouse]);
 
+    const addDetail = () => {
+
+        const lastDetail = newRegister.details[newRegister.details.length - 1];
+
+        let hasError = false;
+
+        let objectError = {
+            user_application: '',
+            element_id: '',
+            quantity: '',
+            expiration: '',
+            location: '',
+            warehouse: ''
+        }
+
+        // Validar que el último detalle tenga `element_id` y `quantity`
+        if (!lastDetail.element_id) {
+            objectError.element_id = 'Debes seleccionar un elemento antes de agregar otro detalle';
+            hasError = true;
+        }
+
+        if (!lastDetail.quantity) {
+            objectError.quantity = 'Debes colocar una cantidad antes de agregar otro detalle';
+            hasError = true;
+        }
+        console.log(lastDetail)
+        const datum = dataElements.find(item => item.codigo == lastDetail.element_id);
+        console.log(datum)
+        if (datum && datum.code_elementType === 1 && !lastDetail.expiration) {
+            objectError.expiration = 'Debes colocar una Fecha de vencimiento para elementos cosumibles';
+            hasError = true;
+        }
+
+        if (!warehouse) {
+            objectError.warehouse = 'Debes elegir la ubicacion';
+            hasError = true;
+        }
+
+        if (!lastDetail.warehouseLocation_id) {
+            objectError.location = 'Debes elegir la ubicacion especifica';
+            hasError = true;
+        }
+
+        if (hasError) {
+            setErrors(objectError)
+            return
+        }
+
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: [...prevData.details, {
+                element_id: '',
+                expiration: null,
+                quantity: 0,
+                warehouseLocation_id: null,
+                remarks: null
+            }]
+        }));
+
+        setEditIndex(newRegister.details.length)
+        // Limpiar los errores al agregar un nuevo detalle correctamente
+        setErrors({
+            user_application: '',
+            element_id: '',
+            quantity: '',
+            estimated_return: '',
+        });
+    };
+
+    const removeDetail = (index) => {
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: prevData.details.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleDetailChange = (index, field, value) => {
+        setNewRegister(prevData => ({
+            ...prevData,
+            details: prevData.details.map((detail, i) =>
+                i === index ? { ...detail, [field]: value } : detail
+            )
+        }));
+    };
+
     return (
         <div>
             <form onSubmit={handleSubmit} >
@@ -222,7 +320,6 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                         <div className='w-1/4 flex justify-center items-center'>
                             <Checkbox
                                 icon={<EyeIcon />}
-                                /* isSelected={checkUser} */
                                 onChange={() => {
                                     setCheckUser(!checkUser)
                                     if (checkUser) {
@@ -265,146 +362,130 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                                 </Autocomplete>}
                         </div>
                     </div>
-                    <div className='w-full flex gap-3'>
-                        <div className='w-3/4'>
-                            <Autocomplete
-                                isClearable
-                                aria-label='autocomplete-elements'
-                                label="Seleccionar el elemento"
-                                placeholder="Busca un elemento"
-                                isRequired
-                                isInvalid={errors.element_id ? true : false}
-                                errorMessage={errors.element_id}
-                                className='h-[60px]'
-                                onSelectionChange={(value) => {
-                                    const item = value;
-                                    setNewRegister(prevData => ({
-                                        ...prevData,
-                                        details: [{
-                                            ...prevData.details[0],
-                                            element_id: parseInt(item)
-                                        }]
-                                    }));
-                                }}
-                            >
-                                {dataElements.map((item) => (
-                                    (item.status == 1) && <AutocompleteItem
-                                        key={item.codigo}
-                                        value={item.codigo}
-                                    >
-                                        {item.codigo + ' - ' + item.name}
-                                    </AutocompleteItem>
-                                ))}
-                            </Autocomplete>
+                    {newRegister.details.map((detail, index) => (
+                        <div className='w-full flex gap-3 flex-col' key={index}>
+                            <span>Detalle {index + 1}</span>
+                            {editIndex === index ? (
+                                <>
+                                    <div className='w-full flex gap-3'>
+                                        <div className='w-3/4'>
+                                            <AutocompleteMine
+                                                items={dataElements}
+                                                handleDetailChange={handleDetailChange}
+                                                index={index}
+                                                errors={errors}
+                                                newRegister={newRegister}
+                                            />
+                                        </div>
+                                        <div className='w-1/4'>
+                                            <Input
+                                                isRequired
+                                                type="number"
+                                                label="Cantidad"
+                                                placeholder='Ingresa una cantidad'
+                                                isInvalid={errors.quantity}
+                                                errorMessage={errors.quantity}
+                                                color={errors.quantity && 'danger'}
+                                                min={0}
+                                                value={newRegister.details[index].quantity ? newRegister.details[index].quantity : null}
+                                                onChange={(e) => {
+                                                    const nuevaCantidad = parseInt(e.target.value);
+                                                    if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
+                                                        handleDetailChange(index, 'quantity', nuevaCantidad)
+                                                    } else {
+                                                        // Aquí puedes manejar el caso cuando el usuario ingresa un valor no válido
+                                                        console.log('Por favor ingrese un número válido para la cantidad.');
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className='w-3/5'>
+                                        {isConsumable && <Input
+                                            isRequired
+                                            type="date"
+                                            label="Fecha de expiración"
+                                            isInvalid={errors.expiration}
+                                            errorMessage={errors.expiration}
+                                            color={errors.expiration && 'danger'}
+                                            min={0}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value) { // Verificar si el nuevo valor es un número
+                                                    handleDetailChange(index, 'expiration', value)
+                                                }
+                                            }}
+                                        />}
+                                    </div>
+                                    <div className='w-full flex gap-3'>
+                                        <div className='w-1/2'>
+                                            <Autocomplete
+                                                aria-label='autocomplete-warehouese'
+                                                label="Seleccionar la bodega"
+                                                placeholder="Busca una bodega"
+                                                isRequired
+                                                className='h-[60px]'
+                                                isInvalid={errors.warehouse}
+                                                errorMessage={errors.warehouse}
+                                                color={errors.warehouse && 'danger'}
+                                                onSelectionChange={(value) => {
+                                                    const item = value;
+                                                    setWarehouse(item)
+                                                }}
+                                                defaultSelectedKey={warehouse}
+                                            >
+                                                {dataWarehouses.map((item) => (
+                                                    <AutocompleteItem
+                                                        key={item.warehouse_id}
+                                                        value={item.warehouse_id}
+                                                    >
+                                                        {item.warehouse_id + ' - ' + item.name}
+                                                    </AutocompleteItem>
+                                                ))}
+                                            </Autocomplete>
+                                        </div>
+                                        <div className='w-1/2'>
+                                            <Autocomplete
+                                                aria-label='autocomplete-location'
+                                                label="Seleccionar la Ubicacion en Bodega"
+                                                placeholder="Busca una ubicacion"
+                                                isRequired
+                                                className='h-[60px]'
+                                                isInvalid={errors.location}
+                                                errorMessage={errors.location}
+                                                color={errors.location && 'danger'}
+                                                onSelectionChange={(value) => {
+                                                    const item = value;
+                                                    handleDetailChange(index, 'warehouseLocation_id', value)
+                                                }}
+                                                defaultSelectedKey={newRegister.details[index].warehouseLocation_id}
+                                            >
+                                                {filteredItems.map((item) => (
+                                                    <AutocompleteItem
+                                                        key={item.codigo}
+                                                        value={item.codigo}
+                                                    >
+                                                        {item.codigo + ' - ' + item.name}
+                                                    </AutocompleteItem>
+                                                ))}
+                                            </Autocomplete></div>
+                                    </div>
+                                    {(newRegister.details.length > 1) && <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>}
+                                </>
+                            ) : (
+                                <div className='flex w-full justify-center items-center gap-2'>
+                                    <div className='flex w-[33%] items-center justify-center'>
+                                        <span>{dataElements.find(item => item.codigo == detail.element_id)?.name || 'No se ha seleccionado'}</span>
+                                    </div>
+                                    <div className='flex w-[25%] items-center justify-center'>
+                                        <span>{detail.quantity}</span>
+                                    </div>
+                                    {(newRegister.details.length > 1) && <Button onClick={() => removeDetail(index)} color='danger' size='sm' className='text-white font-bold w-[10%]'>Eliminar</Button>}
+                                </div>
+                            )}
                         </div>
-                        <div className='w-1/4'>
-                            <Input
-                                isRequired
-                                type="number"
-                                label="Cantidad"
-                                placeholder='Ingresa una cantidad'
-                                isInvalid={errors.quantity}
-                                errorMessage={errors.quantity}
-                                color={errors.quantity && 'danger'}
-                                min={0}
-                                onChange={(e) => {
-                                    const nuevaCantidad = parseInt(e.target.value);
-                                    if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
-                                        setNewRegister(precData => ({
-                                            ...precData,
-                                            details: [{
-                                                ...precData.details[0],
-                                                quantity: nuevaCantidad
-                                            }]
-                                        }));
-                                    } else {
-                                        // Aquí puedes manejar el caso cuando el usuario ingresa un valor no válido
-                                        console.log('Por favor ingrese un número válido para la cantidad.');
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <div className='w-3/5'>
-                        {isConsumable && <Input
-                            isRequired
-                            type="date"
-                            label="Fecha de expiración"
-                            isInvalid={errors.expiration}
-                            errorMessage={errors.expiration}
-                            color={errors.expiration && 'danger'}
-                            min={0}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                if (value) { // Verificar si el nuevo valor es un número
-                                    setNewRegister(precData => ({
-                                        ...precData,
-                                        details: [{
-                                            ...precData.details[0],
-                                            expiration: value
-                                        }]
-                                    }));
-                                }
-                            }}
-                        />}
-                    </div>
-                    <div className='w-full flex gap-3'>
-                        <div className='w-1/2'>
-                            <Autocomplete
-                                aria-label='autocomplete-warehouese'
-                                label="Seleccionar la bodega"
-                                placeholder="Busca una bodega"
-                                isRequired
-                                className='h-[60px]'
-                                isInvalid={errors.warehouse}
-                                errorMessage={errors.warehouse}
-                                color={errors.warehouse && 'danger'}
-                                onSelectionChange={(value) => {
-                                    const item = value;
-                                    setWarehouse(item)
-                                }}
-                            >
-                                {dataWarehouses.map((item) => (
-                                    <AutocompleteItem
-                                        key={item.warehouse_id}
-                                        value={item.warehouse_id}
-                                    >
-                                        {item.warehouse_id + ' - ' + item.name}
-                                    </AutocompleteItem>
-                                ))}
-                            </Autocomplete>
-                        </div>
-                        <div className='w-1/2'>
-                            <Autocomplete
-                                aria-label='autocomplete-location'
-                                label="Seleccionar la Ubicacion en Bodega"
-                                placeholder="Busca una ubicacion"
-                                isRequired
-                                className='h-[60px]'
-                                isInvalid={errors.location}
-                                errorMessage={errors.location}
-                                color={errors.location && 'danger'}
-                                onSelectionChange={(value) => {
-                                    const item = value;
-                                    setNewRegister(prevData => ({
-                                        ...prevData,
-                                        details: [{
-                                            ...prevData.details[0],
-                                            warehouseLocation_id: parseInt(item)
-                                        }]
-                                    }));
-                                }}
-                            >
-                                {filteredItems.map((item) => (
-                                    <AutocompleteItem
-                                        key={item.codigo}
-                                        value={item.codigo}
-                                    >
-                                        {item.codigo + ' - ' + item.name}
-                                    </AutocompleteItem>
-                                ))}
-                            </Autocomplete></div>
-                    </div>
+                    ))}
+                    <Button onClick={addDetail} color='primary' className='text-white font-bold'>Agregar Detalle</Button>
                     <div className='flex justify-end gap-3 mt-2'>
                         <Button /* onClick={handleSubmit} */ color='success' className='text-white font-bold' type='submit'>Registrar</Button>
                         <Button onClick={onClose} color='danger' className='text-white font-bold'>Cancelar</Button>
