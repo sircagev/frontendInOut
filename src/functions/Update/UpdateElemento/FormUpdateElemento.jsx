@@ -101,7 +101,7 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
           <div className='w-full'>
             <Input
               type='text'
-              label='Nombre Ubicación'
+              label='Nombre Elemento'
               className="w-full"
               color={errors.nombre ? 'danger' : ''}
               errorMessage={errors.nombre}
