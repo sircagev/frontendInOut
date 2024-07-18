@@ -291,7 +291,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                     }
                                 }}
                                 color='success'>
-                                Usuario externo
+                                Solicitante
                             </Checkbox>
                         </div>
                         <div className='w-3/4'>
