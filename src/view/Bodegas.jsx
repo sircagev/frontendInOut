@@ -18,7 +18,9 @@ const Bodegas = () => {
   const ListarBodegas = async () => {
     try {
       const response = await axiosClient.get('bodega/listar');
-      setData(response.data);
+      setData(response.data.data);
+
+      console.log(response.data.data)
     } catch (error) {
       swal({
         title: "Error",

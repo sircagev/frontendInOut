@@ -204,7 +204,7 @@ export const Movimientos3 = () => {
     }, []);
 
     return (
-        <div className="w-auto h-[100%] m-auto flex flex-col pt-[15px]">
+        <div className="w-[95%] h-[100%] m-auto flex flex-col justify-center pt-[15px]">
             <Tabs>
                 <Tab key={'loans'} title={'Préstamos'}>
                     <NextUITable
