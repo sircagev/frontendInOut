@@ -60,7 +60,7 @@ export const Categoria = () => {
     };
 
     return (
-      <div className="flex gap-2">
+      <div className="flex justify-center items-center gap-2">
         <Button
           color={user.role_id == 1 ? 'primary' : 'default'} variant="bordered" size="sm" className="w-[15px]"
           onClick={() => setIsOpenupdate(true)}

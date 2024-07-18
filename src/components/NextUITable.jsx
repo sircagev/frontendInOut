@@ -110,13 +110,15 @@ const NextUITable = ({
         switch (columnKey) {
             case "nombre":
                 return (
-                    <User
-                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
-                        description={item.correo}
-                        name={capitalize(cellValue)}
-                    >
-                        {item.correo}
-                    </User>
+                    <div className="w-full flex items-center">
+                        <User
+                            /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                            description={item.correo}
+                            name={capitalize(cellValue)}
+                        >
+                            {item.correo}
+                        </User>
+                    </div>
                 );
             case "usuario_manager":
                 return (
@@ -184,7 +186,9 @@ const NextUITable = ({
                     ));
             case "actions":
                 return (
-                    <Actions codigo={item}></Actions>
+                    <div className="flex justify-center items-center">
+                        <Actions codigo={item}></Actions>
+                    </div>
                 );
             case "codigo":
                 return (
@@ -415,6 +419,7 @@ const NextUITable = ({
             >
                 {(column) => (
                     <TableColumn
+                        className="text-center"
                         key={column.uid}
                         align={column.uid === "actions" ? "center" : column.uid === "tipo" ? "center" : "start"}
                         width={column.uid === "codigo" ? '20px' : ''}
@@ -426,8 +431,8 @@ const NextUITable = ({
             </TableHeader>
             <TableBody items={items} emptyContent={"No hay movimientos"}>
                 {(item) => (
-                    <TableRow key={item.codigo}>
-                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                    <TableRow  key={item.codigo}>
+                        {(columnKey) => <TableCell className="text-center">{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
             </TableBody>

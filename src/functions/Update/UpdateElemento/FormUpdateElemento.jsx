@@ -58,8 +58,8 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
     let hasError = false;
     let errorsObject = {};
 
-    if (!nombre || /\d/.test(nombre)) {
-      errorsObject.nombre = 'No puede contener números ni estar vacío.';
+    if (!nombre) {
+      errorsObject.nombre = 'No puede estar vacío';
       hasError = true;
     }
 
