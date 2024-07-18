@@ -16,16 +16,13 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   const BodegasListar = async () => {
     try {
       const response = await axiosClient.get('bodega/listar');
-      console.log(response.data)
       setBodegas(response.data);
     } catch (error) {
-      console.error("Error fetching bodegas:", error);
       swal("Error", "Hubo un problema al cargar las bodegas", "error");
     }
   };
 
   useEffect(() => {
-    console.log(category)
     if (category) {
       setNombre(category.name);
       setNombreBodega(category.code_warehouse);

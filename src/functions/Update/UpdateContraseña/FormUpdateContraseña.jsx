@@ -72,7 +72,6 @@ export const FormUpdateContraseña = ({ onClose, Listar }) => {
             onClose();
 
         } catch (error) {
-            console.error("Error al Actualizar Contraseña", error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',

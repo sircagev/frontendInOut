@@ -11,8 +11,6 @@ import NextUITable from "../components/NextUITable";
 import { DesactivarBodega } from "../functions/Desactivar";
 import { Ubicaciones } from "./Ubicaciones"
 
-
-
 const Bodegas = () => {
 
   const [data, setData] = useState([]);
@@ -21,9 +19,14 @@ const Bodegas = () => {
     try {
       const response = await axiosClient.get('bodega/listar');
       setData(response.data);
-      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      swal({
+        title: "Error",
+        text: error.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   };
 
@@ -93,12 +96,12 @@ const Bodegas = () => {
               statusOrType={'status'}
               actions={Actions}
             />
-          </div> 
+          </div>
         </Tab>
         <Tab key="ubicaciones" title="Ubicaciones">
           <Ubicaciones />
         </Tab>
-      </Tabs>   
+      </Tabs>
     </div>
   );
 

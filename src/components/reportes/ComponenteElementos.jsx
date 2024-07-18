@@ -210,10 +210,6 @@ const ReporteElementos = ({ elementos }) => {
   };
 
   const handleSearch = () => {
-    console.log("Search button clicked");
-    console.log("Search term:", searchTerm);
-    console.log("Start date:", startDate);
-    console.log("End date:", endDate);
     setSearchPerformed(true);
     setShowFilters(false);
   };

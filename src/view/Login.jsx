@@ -75,7 +75,6 @@ function Login() {
         if (respo.role_id == 3) navigate('/reservas')
       }
     } catch (error) {
-      console.log(error)
       if (error.response) {
         if (error.response.status === 401) {
           Swal.fire({

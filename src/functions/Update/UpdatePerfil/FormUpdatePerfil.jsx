@@ -56,7 +56,13 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                 password: '101010'
             });
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     };
 
@@ -156,7 +162,6 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
             }
 
         } catch (error) {
-            console.error('Error al actualizar el perfil:', error);
             swal("Error", "Hubo un problema al actualizar el usuario", "error");
         }
     };
@@ -223,7 +228,7 @@ export const FormUpdatePerfil = ({ onClose, category, Listar }) => {
                                 name='phone'
                                 value={values.phone}
                                 onChange={editValues}
-                                 className="w-[250px] lg:w-[310px]"
+                                className="w-[250px] lg:w-[310px]"
                             />
                             {errorMessages.phone && (
                                 <div className="flex items-center text-red-500 text-xs mt-1">

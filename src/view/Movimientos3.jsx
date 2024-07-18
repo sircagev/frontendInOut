@@ -50,9 +50,14 @@ export const Movimientos3 = () => {
             const loans = await LoansList();
             setData(movements.data)
             setLoans(loans.data);
-            console.log(loans);
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 

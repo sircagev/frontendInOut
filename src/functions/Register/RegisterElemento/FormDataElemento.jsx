@@ -36,7 +36,13 @@ export const FormDataElemento = ({ listar, onClose }) => {
         SetEmpaques(empaquesData || []);
         SetMedidas(medidasData || []);
       } catch (error) {
-        console.log(error);
+        swal({
+          title: "Error",
+          text: error.response.data.message,
+          icon: `warning`,
+          buttons: true,
+          timer: 2000,
+        });
       }
     };
     fetchData();
@@ -68,7 +74,7 @@ export const FormDataElemento = ({ listar, onClose }) => {
     if (!values.name) {
       errorsObject.name = 'No puede estar vacío';
       hasError = true;
-    }    
+    }
 
     if (!values.elementType_id) {
       errorsObject.elementType_id = 'No puede estar vacío';

@@ -8,7 +8,6 @@ export const fetchCountersData = async () => {
     const countersResponse = await axiosClient.get("/counter/get");
     return countersResponse.data;
   } catch (error) {
-    console.error("Error fetching counters data:", error);
     throw error;
   }
 };
@@ -51,7 +50,13 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
           setExpiradosData(expiradosResponse.data);
           setCountersData(countersResponse.data);
         } catch (error) {
-          console.error("Error fetching data:", error);
+          swal({
+            title: "Error",
+            text: error.response.data.message,
+            icon: `warning`,
+            buttons: true,
+            timer: 2000,
+          });
         }
       };
 
@@ -63,7 +68,13 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
     try {
       navigate(navigateRoute);
     } catch (error) {
-      console.error("Error redirecting route:", error);
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   };
 
@@ -72,7 +83,13 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
       await axiosClient.post(resetRoute);
       setShowFunction(false);
     } catch (error) {
-      console.error('Error resetting status:', error);
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   };
 
@@ -188,7 +205,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
                 <p className="flex-1 text-black">
                   Elementos con bajo stock
                 </p>
-                <BiSearch className="text-blue-900 ml-2"/>
+                <BiSearch className="text-blue-900 ml-2" />
               </div>
               <div
                 className="text-blue-700 hover:text-red-600 p-2 text-lg rounded cursor-pointer transition duration-200"

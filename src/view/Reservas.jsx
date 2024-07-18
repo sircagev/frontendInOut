@@ -120,9 +120,14 @@ export const Reservas = () => {
       const movements = await MovementsByUserId(user.user_id);
       setElementsData(elements);
       setData(movements.data);
-      console.log(movements.data)
     } catch (error) {
-      console.log(error);
+      swal({
+        title: "Error",
+        text: error.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   }
 
@@ -139,7 +144,6 @@ export const Reservas = () => {
     event.preventDefault();
 
     let res = validateForm();
-    console.log(errors)
     if (res) return;
 
     try {
@@ -157,7 +161,6 @@ export const Reservas = () => {
       list();
       setNewRegister(objectRegister);
     } catch (error) {
-      console.log(error)
       swal({
         title: "Error",
         text: error.response.data.message,
@@ -242,7 +245,6 @@ export const Reservas = () => {
   }, []);
 
   useEffect(() => {
-    console.log(newRegister)
     const num = newRegister.details.length;
     if (num == 1) {
       setEditIndex(0)
@@ -390,7 +392,6 @@ export const Reservas = () => {
                 value={newRegister.estimated_return}
                 onChange={(e) => {
                   const value = e.target.value
-                  console.log(value)
                   if (value) { // Verificar si el nuevo valor es un número
                     setNewRegister(precData => ({
                       ...precData,
