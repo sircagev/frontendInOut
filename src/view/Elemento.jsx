@@ -166,7 +166,7 @@ export const Elemento = () => {
                             <TableBody items={data} emptyContent={'No hay detalles'}>
                                 {(item) => (
                                     <TableRow key={item.batch_id}>
-                                        {(columnKey) => <TableCell>{    (item, columnKey)}</TableCell>}
+                                        {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
                                     </TableRow>
                                 )}
                             </TableBody>

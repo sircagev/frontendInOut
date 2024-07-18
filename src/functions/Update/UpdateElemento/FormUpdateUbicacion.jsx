@@ -86,8 +86,8 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
       <div>
         <div>
           <form onSubmit={handleSubmit}>
-            <div className='flex justify-center items-center'></div>
-            <div className="relative mb-2 justify-center items-center h-[70px]" data-twe-input-wrapper-init>
+            <div className='flex flex-col gap-3 justify-center items-center'>
+            <div className="w-full" data-twe-input-wrapper-init>
               <Input
                 type='text'
                 label='Nombre Ubicación'
@@ -99,7 +99,7 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
                 onChange={(e) => setNombre(e.target.value)}
               />
             </div>
-            <div className="relative mb-2 justify-center items-center h-[75px]" data-twe-input-wrapper-init>
+            <div className="w-full" data-twe-input-wrapper-init>
               <select
                 className={`${errors.bodega ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
                 value={bodega}
@@ -114,9 +114,10 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
               </select>
               {errors.bodega && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.bodega}</span>}
             </div>
-            <div className='flex justify-end gap-3 mb-3'>
+            <div className='w-full flex justify-end gap-3 mb-3'>
               <ButtonCerrar onClose={onClose} />
               <ButtonRegistrar label={"Actualizar"} />
+            </div>
             </div>
           </form>
         </div>
