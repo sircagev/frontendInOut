@@ -67,7 +67,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
 
             setDataUsers(users)
             setDataElements(elements);
-            setDataWarehouses(warehouses);
+            setDataWarehouses(warehouses.data);
             setDataLocations(locations);
         } catch (error) {
             swal({

@@ -67,7 +67,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
         }
 
         const codigo = newRegister.details[editIndex].element_id ? newRegister.details[editIndex].element_id : null
-        const itemEncontrado = dataElements.find(item => item.codigo == codigo);
+        const itemEncontrado = dataElements.length > 0 && dataElements.find(item => item.codigo == codigo);
         if (itemEncontrado && itemEncontrado.code_elementType === 1) {
             return true
         }
@@ -83,7 +83,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
             setDataUsers(users);
             setDataElements(elements);
-            setDataWarehouses(warehouses);
+            setDataWarehouses(warehouses.data);
             setDataLocations(locations);
         } catch (error) {
             swal({
@@ -427,14 +427,23 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                                                 }}
                                                 defaultSelectedKey={warehouse}
                                             >
-                                                {dataWarehouses.map((item) => (
+                                                {dataWarehouses.length > 0 ? (
+                                                    dataWarehouses.map((item) => (
+                                                        <AutocompleteItem
+                                                            key={item.warehouse_id}
+                                                            value={item.warehouse_id}
+                                                        >
+                                                            {item.warehouse_id + ' - ' + item.name}
+                                                        </AutocompleteItem>
+                                                    ))
+                                                ) : (
                                                     <AutocompleteItem
-                                                        key={item.warehouse_id}
-                                                        value={item.warehouse_id}
+                                                        key={0}
+                                                        value={0}
                                                     >
-                                                        {item.warehouse_id + ' - ' + item.name}
+                                                        No hay elementos
                                                     </AutocompleteItem>
-                                                ))}
+                                                )}
                                             </Autocomplete>
                                         </div>
                                         <div className='w-1/2'>
