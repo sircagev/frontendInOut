@@ -58,7 +58,7 @@ export const Usuarios = () => {
     };
 
     return (
-      <div className="flex gap-2">
+      <div className="flex justify-center items-center gap-2">
         <Button
           color={user.role_id == 1 ? 'primary' : 'default'}
           variant="bordered"

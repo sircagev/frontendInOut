@@ -114,7 +114,7 @@ export const Elemento = () => {
         ];
 
         return (
-            <div className='flex gap-3'>
+            <div className='flex justify-center items-center gap-3'>
                 <Button
                     color={user.role_id == 1 ? 'primary' : 'default'}
                     variant="bordered"

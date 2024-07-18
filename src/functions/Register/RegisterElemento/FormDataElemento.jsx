@@ -65,8 +65,8 @@ export const FormDataElemento = ({ listar, onClose }) => {
       packageType_id: ''
     }
 
-    if (!values.name || /\d/.test(values.name)) {
-      errorsObject.name = 'No puede contener números ni estar vacío';
+    if (!values.name) {
+      errorsObject.name = 'No puede estar vacío';
       hasError = true;
     }    
 
