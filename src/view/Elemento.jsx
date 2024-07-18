@@ -110,6 +110,10 @@ export const Elemento = () => {
             {
                 key: "expiration",
                 label: "EXPIRACIÓN"
+            },
+            {
+                key: "location_nanme",
+                label: "UBICACIÓN"
             }
         ];
 
