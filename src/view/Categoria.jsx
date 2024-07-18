@@ -21,7 +21,13 @@ export const Categoria = () => {
       const response = await axiosClient.get('categoria/listar');
       setData(response.data)
     } catch (error) {
-      console.log(error);
+      swal({
+        title: "Error",
+        text: error.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+    });
     }
   }
 

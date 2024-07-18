@@ -49,10 +49,8 @@ const ReporteEstadistico = () => {
       setmovementsData(movementsResponse.data.datos);
       setloansEleData(loansResponse.data.datos);
       setloansBarData(loansBarResponse.data.datos);
-      console.log(loansBarResponse.data.datos)
       setconsumableData(consumableResponse.data.datos);
       setconsumableBarData(consumableBarResponse.data.datos);
-      console.log(consumableBarResponse.data.datos)
       setExpiradosData(expiradosResponse.data.datos);
       setVencidosData(vencidosResponse.data.datos);
       setStockMinData(stockMinResponse.data.datos);

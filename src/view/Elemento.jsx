@@ -23,7 +23,13 @@ export const Elemento = () => {
             const response = await axiosClient.get('elemento/listar');
             setData(response.data);
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     };
 
@@ -57,7 +63,6 @@ export const Elemento = () => {
 
         const handleDesactivar = async (codigoElemento, estadoActual) => {
             const nuevoEstado = estadoActual == 1 ? "0" : "1";
-            console.log(codigoElemento, nuevoEstado)
             await DesactivarElemento(codigoElemento, nuevoEstado);
             ListarElementos();
         };
@@ -70,7 +75,13 @@ export const Elemento = () => {
                 setData(response.data.data);
 
             } catch (error) {
-                console.log(error);
+                swal({
+                    title: "Error",
+                    text: error.message,
+                    icon: `warning`,
+                    buttons: true,
+                    timer: 2000,
+                });
             }
         };
 

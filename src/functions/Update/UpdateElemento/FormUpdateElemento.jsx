@@ -45,7 +45,13 @@ export const FormUpdateElemento = ({ onClose, category, Listar }) => {
         setCategorias(CategoriasData);
         SetEmpaques(EmpaquesData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        swal({
+          title: "Error",
+          text: error.response.data.message,
+          icon: `warning`,
+          buttons: true,
+          timer: 2000,
+        });
       }
     };
 

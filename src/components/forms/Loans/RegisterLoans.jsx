@@ -105,19 +105,20 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
             setUsersData(users);
             setElementsData(elements);
-
-            console.log(users);
-            console.log(elements);
-
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 
     const filteredItems = useMemo(() => {
         if (elementsData.length > 0) {
             const info = elementsData.filter(item => item.code_elementType == 2);
-            console.log(info)
             return info;
         };
 
@@ -145,7 +146,6 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
             listarMovimientos();
             onClose();
         } catch (error) {
-            console.log(error)
             swal({
                 title: "Error",
                 text: error.response.data.message,
@@ -200,7 +200,6 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
 
     useEffect(() => {
         list();
-        console.log(newRegister.details.length)
         const date = getTargetDate();
         const dateString = date.toISOString()
         setNewRegister(precData => ({
@@ -211,12 +210,10 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
         const now = new Date();
         now.setHours(now.getHours() - 5);
         const formattedNow = (now).toISOString().slice(0, 16);
-        console.log(formattedNow)
         setMinDate(formattedNow);
     }, [])
 
     useEffect(() => {
-        console.log(newRegister)
         const num = newRegister.details.length;
         if (num == 1) {
             setEditIndex(0)
@@ -377,7 +374,6 @@ export const RegisterLoans = ({ onClose, listarMovimientos }) => {
                                 value={newRegister.estimated_return}
                                 onChange={(e) => {
                                     const value = e.target.value
-                                    console.log(value)
                                     if (value) { // Verificar si el nuevo valor es un número
                                         setNewRegister(precData => ({
                                             ...precData,

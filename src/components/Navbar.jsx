@@ -54,7 +54,13 @@ export const Navbar = ({ setLogIn }) => {
       const response = await axiosClient.get('usuario/listar');
       setData(response.data);
     } catch (error) {
-      console.log(error);
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   };
 
@@ -64,7 +70,13 @@ export const Navbar = ({ setLogIn }) => {
       const unread = countersData.filter(item => item.status > 0).length;
       setUnreadCount(unread);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      swal({
+        title: "Error",
+        text: error.response.data.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   };
 

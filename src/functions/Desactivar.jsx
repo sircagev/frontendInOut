@@ -75,7 +75,14 @@ export const DesactivarUbicacion = async (codigoUbicacion, nuevoEstado) => {
         await axiosClient.put(`ubicacion/desactivar/${codigoUbicacion}`, { estado: nuevoEstado });
 
     } catch (error) {
-        console.error("Error al desactivar la medida:", error);
+        const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar la ubicación.";
+        swal({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+        });
     }
 };
 
