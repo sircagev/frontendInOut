@@ -55,7 +55,13 @@ export const FormDataEmpaque = ({onRegisterSuccess, onClose}) => {
                 onRegisterSuccess();
             }
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     };
 

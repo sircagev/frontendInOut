@@ -7,9 +7,11 @@ const AutocompleteMine = ({ items, handleDetailChange, index, newRegister, error
     const autocompleteRef = useRef(null);
 
     useEffect(() => {
-        const selectedItem = items.find(item => item.codigo === newRegister.details[index].element_id);
-        if (selectedItem) {
-            setInputValue(`${selectedItem.codigo} ${selectedItem.name}`);
+        if (items.length > 0) {
+            const selectedItem = items.find(item => item.codigo === newRegister.details[index].element_id);
+            if (selectedItem) {
+                setInputValue(`${selectedItem.codigo} ${selectedItem.name}`);
+            }
         }
     }, [index, items, newRegister.details]);
 

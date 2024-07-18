@@ -217,7 +217,6 @@ const [dataPositions, setDataPositions] = useState([]);
                 throw new Error('Error al registrar el usuario');
             }
         } catch (error) {
-            console.log("Error al registrar el usuario:", error);
             if (error.response && error.response.status === 400) {
                 const errorMessage = error.response.data.errors[0].msg;
         

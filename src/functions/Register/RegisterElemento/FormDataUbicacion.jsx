@@ -22,7 +22,13 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
                 const response = await axiosClient.get('bodega/listar');
                 setBodegas(response.data);
             } catch (error) {
-                console.log(error);
+                swal({
+                    title: "Error",
+                    text: error.response.data.message,
+                    icon: `warning`,
+                    buttons: true,
+                    timer: 2000,
+                });
             }
         };
 

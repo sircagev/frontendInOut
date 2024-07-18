@@ -18,7 +18,13 @@ export const Ubicaciones = () => {
       const response = await axiosClient.get('ubicacion/listar');
       setData(response.data.data)
     } catch (error) {
-      console.log(error);
+      swal({
+        title: "Error",
+        text: error.message,
+        icon: `warning`,
+        buttons: true,
+        timer: 2000,
+      });
     }
   }
 
@@ -38,7 +44,7 @@ export const Ubicaciones = () => {
           size={"sm"}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          form={<FormDataUbicacion onClose={()=> setIsOpen(false)} listar={ListarUbicaciones} />}
+          form={<FormDataUbicacion onClose={() => setIsOpen(false)} listar={ListarUbicaciones} />}
         />
       </div>
     )
@@ -52,7 +58,7 @@ export const Ubicaciones = () => {
       await DesactivarUbicacion(codigoElemento, nuevoEstado);
       ListarUbicaciones();
     };
-    
+
     return (
       <div className="flex justify-center item-center gap-2">
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>

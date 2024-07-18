@@ -105,8 +105,6 @@ const NextUITable = ({
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
 
-
-
         switch (columnKey) {
             case "nombre":
                 return (
@@ -122,33 +120,39 @@ const NextUITable = ({
                 );
             case "usuario_manager":
                 return (
-                    <User
-                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
-                        description={item.correo_manager}
-                        name={capitalize(cellValue)}
-                    >
-                        {item.correo_manager}
-                    </User>
+                    <div className="w-full flex items-center">
+                        <User
+                            /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                            description={item.correo_manager}
+                            name={capitalize(cellValue)}
+                        >
+                            {item.correo_manager}
+                        </User>
+                    </div>
                 );
             case "usuario_receiving":
                 return (
-                    <User
-                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
-                        description={item.correo_receiving}
-                        name={capitalize(cellValue)}
-                    >
-                        {item.correo_receiving}
-                    </User>
+                    <div className="w-full flex items-center">
+                        <User
+                            /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                            description={item.correo_receiving}
+                            name={capitalize(cellValue)}
+                        >
+                            {item.correo_receiving}
+                        </User>
+                    </div>
                 );
             case "usuario_returning":
                 return (
-                    <User
-                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
-                        description={item.correo_returning}
-                        name={capitalize(cellValue)}
-                    >
-                        {item.correo_returning}
-                    </User>
+                    <div className="w-full flex items-center">
+                        <User
+                            /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                            description={item.correo_returning}
+                            name={capitalize(cellValue)}
+                        >
+                            {item.correo_returning}
+                        </User>
+                    </div>
                 );
             case "role":
                 return (
@@ -270,7 +274,7 @@ const NextUITable = ({
                                     variant="bordered"
                                     color="success"
                                 >
-                                    Estado
+                                    {statusOrType == 'tipo' ? 'Tipo' : 'Estado'}
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -431,7 +435,7 @@ const NextUITable = ({
             </TableHeader>
             <TableBody items={items} emptyContent={"No hay movimientos"}>
                 {(item) => (
-                    <TableRow  key={item.codigo}>
+                    <TableRow key={item.codigo}>
                         {(columnKey) => <TableCell className="text-center">{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
