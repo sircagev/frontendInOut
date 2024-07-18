@@ -10,7 +10,6 @@ import DashboardTemplate from './view/layouts/DashboardTemplate';
 
 import Login from "./view/Login";
 import { Usuarios } from './view/Usuarios';
-import Home from "./view/Home";
 
 import { Elemento } from "./view/Elemento";
 import { Categoria } from "./view/Categoria";
@@ -44,15 +43,6 @@ function App2() {
                 <Route path={'/NOT-CREDENTIALS'} element={<NotCredentials />} />
                 <Route path='/*' element={<PageNotFound />} />
                 <Route path='/login' element={<Login />} />
-                <Route
-                    path='/home'
-                    element={
-                        <ProtectedRoute
-                            component={Home}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2, 3]}
-                        />}
-                />
                 <Route
                     path="/elementos"
                     element={<ProtectedRoute
