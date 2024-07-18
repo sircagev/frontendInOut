@@ -218,29 +218,29 @@ function Login() {
   return (
     <div className='w-full h-screen relative'>
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
-        <div>
-          <h1 className='text-white text-2xl font-bold ml-12'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
-          <div className='ml-[60px] mt-[40px] h-[200px] w-[300px]'>
+        <div className='w-full md:w-auto'>
+          <h1 className='text-white text-2xl font-bold lg:ml-12 w-full flex justify-center lg:block'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
+          <div className='ml-[60px] mt-[40px] h-[200px] w-[300px] hidden md:block'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
-            <p className='text-sm mt-2 text-white font-light text-justify'>
+            <p className=' text-sm mt-2 text-white font-light text-justify'>
               InOut es un software que a través de múltiples funciones, aumenta la eficiencia de la gestión de préstamos.
               Logrando con esto automatizar procesos, optimizar recursos, y mejorar la experiencia del cliente.
             </p>
           </div>
         </div>
-        <div className='ml-[30px] mt-5'>
+        <div className='hidden xl:block ml-[30px] mt-5'>
           <img src={imgLogin} alt="Descripción de la imagen" className='w-[300px] h-[250px]' />
         </div>
       </div>
       <div
-        className='w-[500px] h-auto bg-[#fff] rounded-[25px] absolute shadow-xl'
-        style={{
+        className='w-[350px] sm:w-[500px] left-[50%] h-auto bg-[#fff] rounded-[25px] absolute shadow-xl top-[50%]  mr-[120px] transform -translate-x-1/2 -translate-y-1/2 lg:ml-[25%]'
+        /* style={{
           top: '50%',
           right: '10px',
           transform: 'translateY(-50%)',
           marginRight: '120px'
-        }}
+        }} */
       >
         <div className='w-[80%] mt-7 ml-[10%] mr-[10%]'>
           <h3 className='text-lg font-bold'>Bienvenido a <span className='text-[#00AC4F] text-4xl'>IN-OUT</span></h3>
