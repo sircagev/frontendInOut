@@ -252,7 +252,7 @@ export const UserMovementDetails = ({ item, onClose }) => {
             return (
                 [2, 3, 5].includes(item.loanStatus_id) ? (
                     <Textarea
-                        /* readOnly */
+                        readOnly
                         variant='flat'
                         size='sm'
                         minRows={2}
