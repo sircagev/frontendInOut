@@ -310,7 +310,6 @@ export const Reservas = () => {
       null
     )
   }
-  const pages = Math.ceil(data.length / rowsPerPage);
 
   return (
     <div className='flex flex-col lg:flex-row gap-4 lg:gap-96 mt-16 px-4'>
@@ -423,40 +422,6 @@ export const Reservas = () => {
           actions={Actions}
           buttons={Buttons}
         />
-        {/* <Table
-          aria-label="Example table with client side pagination"
-          bottomContent={
-            <div className="flex w-full justify-center">
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="secondary"
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
-              />
-            </div>
-          }
-          classNames={{
-            wrapper: "min-h-[222px] lg:min-h-[400px]",
-            table: "w-full lg:w-[500px]"
-          }}
-        >
-          <TableHeader>
-            <TableColumn className='bg-[#1F2937] text-white' key="codigo">NAME</TableColumn>
-            <TableColumn className='bg-[#1F2937] text-white' key="fecha">STOCK</TableColumn>
-            <TableColumn className='bg-[#1F2937] text-white' key="tipo">CATEGORY ID</TableColumn>
-            <TableColumn className='bg-[#1F2937] text-white' key="status">CATEGORY ID</TableColumn>
-          </TableHeader>
-          <TableBody items={items}>
-            {(item) => (
-              <TableRow key={item.codigo}>
-                {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table> */}
       </div>
     </div>
   );
