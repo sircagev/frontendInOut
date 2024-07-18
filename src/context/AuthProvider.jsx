@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }) => {
             Cookies.set('token', token);
             const decoded = jwtDecode(token);
             setUser(decoded);
+            return decoded
         } catch (error) {
             console.error(error);
         }

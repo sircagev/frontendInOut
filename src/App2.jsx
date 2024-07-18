@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import React from 'react';
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import ProtectedRoute from './components/auth/ProtectedRoutes2';
+import NotCredentials from './view/auth/NotCredentials';
+import { PageNotFound } from './view/PageNotFound';
+
+import UserTemplate from './view/layouts/UserTemplate';
+import DashboardTemplate from './view/layouts/DashboardTemplate';
+
+import Login from "./view/Login";
+import { Usuarios } from './view/Usuarios';
+
 import { Elemento } from "./view/Elemento";
 import { Categoria } from "./view/Categoria";
 import { Empaques } from "./view/Empaques";
 import { Medidas } from "./view/Medidas";
+
 import { Ubicaciones } from "./view/Ubicaciones";
-import Usuario from "./view/Usuario";
+import Bodegas from "./view/Bodegas";
+
 import Reporte from "./view/Reportes";
+import Estadistica from "./view/ReportesEstadistica";
 import ReporteE from "./view/ReporteElementos";
 import ReporteED from "./view/ReporteElementosDesactivados";
 import ReporteEX from "./view/ReporteElementosExpirados";
@@ -16,90 +30,45 @@ import ReporteP from "./view/ReportePrestamos";
 import ReportePA from "./view/ReportePrestamosActivos";
 import ReporteS from "./view/ReporteSolicitud";
 import ReporteV from "./view/ReportePrestamosVencidos";
-import { Usuarios } from './view/Usuarios';
-import { Movimientos } from "./view/Movimientos";
-import { Movimientos2 } from "./view/Movimientos2";
-import Login from "./view/Login";
-import Bodegas from "./view/Bodegas";
-import Home from "./view/Home";
-import { ProtectedRoutes, ProtectedRoutesLogin } from './components/auth/ProtectedRoutes';
-import { PageNotFound } from './view/PageNotFound';
-import { Prestamos } from './view/Prestamos'
-import ProtectedRoute from './components/auth/ProtectedRoutes2';
-import DashboardTemplate from './view/layouts/DashboardTemplate';
-import NotCredentials from './view/auth/NotCredentials';
+
 import { Movimientos3 } from './view/Movimientos3';
+import { Reservas } from './view/Reservas';
 
 function App2() {
 
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState({ role: "" })
     return (
         <div className="h-screen">
             <Routes >
                 <Route index element={<Navigate to="/login" />} />
                 <Route path={'/NOT-CREDENTIALS'} element={<NotCredentials />} />
                 <Route path='/*' element={<PageNotFound />} />
-                {/* <Route path="/login" element={<ProtectedRoutesLogin>
-                    <Login setLoggedIn={setLoggedIn} />
-                </ProtectedRoutesLogin>} /> */}
-                <Route element={<ProtectedRoutes setLoggedIn={setLoggedIn} setUser={setUser} />} >
-                    {/* <Route path="/elementos/categorias" element={<Categoria user={user} />} /> */}
-                    {/* <Route path="/elementos/empaques" element={<Empaques user={user} />} /> */}
-                    {/* <Route path="/elementos/medidas" element={<Medidas user={user} />} /> */}
-                    {/* <Route path="/reportes" element={<Reporte />} /> */}
-                    {/* <Route path="/reportes/elementos" element={<ReporteE />} /> */}
-                    {/* <Route path="/reportes/elementosdesactivados" element={<ReporteED />} /> */}
-                    {/* <Route path="/reportes/elementosexpirados" element={<ReporteEX />} /> */}
-                    {/* <Route path="/reportes/movimientos" element={<ReporteM />} /> */}
-                    {/* <Route path="/reportes/stockmin" element={<ReporteMS />} /> */}
-                    {/* <Route path="/reportes/prestamos" element={<ReporteP />} />
-                    <Route path="/reportes/prestamosactivos" element={<ReportePA />} />
-                    <Route path="/reportes/solicitud" element={<ReporteS />} />
-                    <Route path="/reportes/prestamosvencidos" element={<ReporteV />} /> */}
-                    {/*<Route path="/usuarios" element={<Usuarios userLogin={user} />} />*/}
-
-                    {/* <Route path="/bodegas" element={<Bodegas user={user} />} /> */}
-{/*<Route path="/bodegas/ubicacion" element={<Ubicaciones user={user} />} />
-                    <Route path="/movimientos" element={<Movimientos2 user={user} />} /> */}
-                    {/* <Route path="/movimientos/prestamos" element={<Prestamos user={user} />} />*/}
-                </Route>
+                <Route path='/login' element={<Login />} />
                 <Route
-                    path='/login'
-                    element={<Login />}
-                />
-                <Route
-                    path='/home'
-                    element={
-                        <ProtectedRoute
-                            component={Home}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
-                />
-                <Route path="/elementos"
+                    path="/elementos"
                     element={<ProtectedRoute
                         component={Elemento}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/categorias"
+                <Route
+                    path="/elementos/categorias"
                     element={<ProtectedRoute
                         component={Categoria}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/empaques"
+                <Route
+                    path="/elementos/empaques"
                     element={<ProtectedRoute
                         component={Empaques}
                         layout={DashboardTemplate}
                         allowedRoles={[1, 2]}
                     />}
                 />
-                <Route path="/elementos/medidas"
+                <Route
+                    path="/elementos/medidas"
                     element={<ProtectedRoute
                         component={Medidas}
                         layout={DashboardTemplate}
@@ -108,53 +77,59 @@ function App2() {
                 />
                 <Route
                     path={'/movimientos'}
-                    element={
-                        <ProtectedRoute
-                            component={Movimientos3}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Movimientos3}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/bodegas'}
-                    element={
-                        <ProtectedRoute
-                            component={Bodegas}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Bodegas}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/bodegas/ubicacion'}
-                    element={
-                        <ProtectedRoute
-                            component={Ubicaciones}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Ubicaciones}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route
+                    path={'/reservas'}
+                    element={<ProtectedRoute
+                        component={Reservas}
+                        layout={UserTemplate}
+                        allowedRoles={[1, 2, 3]}
+                    />}
                 />
                 <Route
                     path={'/reportes'}
-                    element={
-                        <ProtectedRoute
-                            component={Reporte}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={Reporte}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
+                />
+                <Route
+                    path={'/estadistica'}
+                    element={<ProtectedRoute
+                        component={Estadistica}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/reportes/movimientos'}
-                    element={
-                        <ProtectedRoute
-                            component={ReporteM}
-                            layout={DashboardTemplate}
-                            allowedRoles={[1, 2]}
-                        />
-                    }
+                    element={<ProtectedRoute
+                        component={ReporteM}
+                        layout={DashboardTemplate}
+                        allowedRoles={[1, 2]}
+                    />}
                 />
                 <Route
                     path={'/reportes/stockmin'}

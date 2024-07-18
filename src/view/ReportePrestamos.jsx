@@ -19,7 +19,7 @@ const ReportePrestamosContainer = () => {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 2000);
+    const intervalId = setInterval(fetchData, 4000);
     return () => clearInterval(intervalId);
   }, []);
 

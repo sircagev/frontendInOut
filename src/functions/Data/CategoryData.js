@@ -10,13 +10,13 @@ const columnsCategory = [
 const INITIAL_VISIBLE_COLUMNS = ["codigo", "name", "status", "actionElement"];
 
 const statusOptions = [
-    { name: "Activo", uid: "0" },
-    { name: "Inactivo", uid: "1" }
+    { name: "Activo", uid: "activo" },
+    { name: "Inactivo", uid: "inactivo" }
 ]
 
 const statusColorMap = {
-    "0": 'success',
-    "0": 'warning'
+    "activo": 'success',
+    "inactivo": 'warning'
 }
 
 const searchKeys = ['codigo', 'name', 'status']

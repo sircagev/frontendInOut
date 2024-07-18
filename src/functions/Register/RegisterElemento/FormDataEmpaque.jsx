@@ -9,9 +9,9 @@ import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
 
 
-export const FormDataEmpaque = ({listar, onClose}) => {
+export const FormDataEmpaque = ({ listar, onClose }) => {
 
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState({});
 
     const [values, setValues] = useState(
         {
@@ -31,31 +31,44 @@ export const FormDataEmpaque = ({listar, onClose}) => {
     const handleForm = async (event) => {
         event.preventDefault();
 
-        if (!values.name.trim() || /\d/.test(values.name.trim())) {
-            setErrorMessage('No debe estar vacío ni tener números.');
-            return; 
-        } else {
-            setErrorMessage('');
+        let hasError = false;
+
+        let errorObject = {
+            name: ''
+        }
+
+        if (!values.name || /\d/.test(values.name)) {
+            errorObject.name = 'No puede contener números no estar vacío';
+            hasError = true;
+        }
+
+        if (hasError) {
+            setErrors(errorObject);
+            return;
         }
 
         try {
             const response = await axiosClient.post('empaque/registrar', values);
             if (response.status === 200) {
-                
+
                 setValues({ name: '' });
                 swal({
                     title: "Registro exitoso",
                     text: "El empaque se ha registrado correctamente.",
                     icon: "success",
                     buttons: false,
-                    timer: 2000, 
+                    timer: 2000,
                 });
-                
-                onClose(); 
+
+                onClose();
                 listar();
             }
         } catch (error) {
-            console.log(error);
+            if (error.response && error.response.data.message.includes('Duplicate entry')) {
+                setErrors({ name: 'El nombre del empaque ya existe.' });
+            } else {
+                setErrors({ name: 'Ocurrió un error al registrar la categoría. Inténtalo de nuevo.' });
+            }
         }
     };
 
@@ -69,20 +82,17 @@ export const FormDataEmpaque = ({listar, onClose}) => {
                             type='text'
                             label='Nombre Empaque'
                             name='name'
+                            color={errors.name ? 'danger' : ''}
+                            errorMessage={errors.name}
+                            isInvalid={errors.name}
                             value={values.name}
                             onChange={handleInputChange}
                             className="w-[100%]"
                         />
-                        {errorMessage && (
-                            <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                                <FaExclamationCircle className="mr-1" />
-                                {errorMessage}
-                            </div>
-                        )}
                     </div>
                     <div className='flex justify-end gap-3 mb-3'>
-                        <ButtonCerrar onClose={onClose}/>
-                        <ButtonRegistrar label={"Registrar"}/>
+                        <ButtonCerrar onClose={onClose} />
+                        <ButtonRegistrar label={"Registrar"} />
                     </div>
                 </form>
             </div>

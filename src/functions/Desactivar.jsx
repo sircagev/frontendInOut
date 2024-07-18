@@ -4,7 +4,15 @@ export const DesactivarElemento = async (codigoElemento, nuevoEstado) => {
     try {
         await axiosClient.put(`elemento/desactivar/${codigoElemento}`, { estado: nuevoEstado });
     } catch (error) {
-        console.error("Error al desactivar el elemento:", error);
+        // Mostrar alerta de error
+        const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar el elemento.";
+        swal({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+        });
     }
 };
 
@@ -13,7 +21,14 @@ export const DesactivarCategorias = async (codigoCategoria, nuevoEstado) => {
     try {
         await axiosClient.put(`categoria/desactivar/${codigoCategoria}`, { estado: nuevoEstado });
     } catch (error) {
-        console.error("Error al desactivar la categoría:", error);
+        const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar la categoría.";
+        swal({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+        });  
     }
 };
 
@@ -22,8 +37,18 @@ export const DesactivarEmpaque = async (codigoEmpaque, nuevoEstado) => {
         // Realiza la solicitud para desactivar/activar el empaque
         await axiosClient.put(`empaque/desactivar/${codigoEmpaque}`, { estado: nuevoEstado });
 
+        // Mostrar alerta de éxito
+        
     } catch (error) {
-        console.error("Error al desactivar el empaque:", error);
+        // Mostrar alerta de error
+        const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar el empaque.";
+        swal({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+        });
     }
 };
 
@@ -33,7 +58,14 @@ export const DesactivarMedida = async (codigoMedida, nuevoEstado) => {
         await axiosClient.put(`medida/desactivar/${codigoMedida}`, { estado: nuevoEstado });
 
     } catch (error) {
-        console.error("Error al desactivar la medida:", error);
+        const errorMessage = error.response?.data?.message || "Ocurrió un error al desactivar la medida.";
+        swal({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            buttons: false,
+            timer: 2000,
+        });
     }
 };
 

@@ -11,10 +11,7 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   const [nombre, setNombre] = useState('');
   const [bodega, setNombreBodega] = useState('');
 
-  const [errors, setErrors] = useState({
-    nombre: '',
-    nombreBodega: '',
-  });
+  const [errors, setErrors] = useState({});
 
   const BodegasListar = async () => {
     try {
@@ -36,41 +33,51 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
     BodegasListar();
   }, [category]);
 
-  const validateForm = () => {
-    let formErrors = {};
-    if (!nombre.trim()) {
-      formErrors.nombre = 'El nombre no debe estar vacío.';
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    let hasError = false;
+
+    let errorObject = {
+      nombre: '',
+      bodega: ''
+    }
+
+    if (!nombre) {
+      errorObject.nombre = 'El nombre es obligatorio';
+      hasError = true;
     }
 
     if (!bodega) {
-      formErrors.nombreBodega = 'Debe seleccionar una bodega.';
+      errorObject.bodega = 'La bodega es obligatoria';
+      hasError = true;
     }
 
-    setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!validateForm()) return;
+    if (hasError) {
+      setErrors(errorObject);
+      return;
+    }
 
     try {
       await axiosClient.put(`ubicacion/actualizar/${category.codigo}`, {
         name: nombre,
-        warehouse_id: bodega, 
+        warehouse_id: bodega,
       });
       swal({
         title: "Actualizado",
         text: "Ubicación actualizada con éxito.",
         icon: "success",
         buttons: false,
-        timer: 2000, 
+        timer: 2000,
       });
       onClose();
       Listar();
     } catch (error) {
-      console.log(error);
-      swal("Error", "Hubo un problema al actualizar la ubicación", "error");
+      if (error.response && error.response.data && error.response.data.message === 'Empaque ya existe') {
+        setErrors({ nombre: 'La ubicación ya existe' });
+      } else {
+        setErrors({ nombre: 'El nombre de la ubicación ya existe' });
+      }
     }
   };
 
@@ -85,19 +92,16 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
                 type='text'
                 label='Nombre Ubicación'
                 className="w-[100%]"
+                color={errors.nombre ? 'danger' : ''}
+                errorMessage={errors.nombre}
+                isInvalid={errors.nombre}
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
               />
-              {errors.nombre && (
-                <div className="flex items-center text-red-500 text-xs mt-1 ml-3">
-                  <FaExclamationCircle className="mr-1" />
-                  {errors.nombre}
-                </div>
-              )}
             </div>
             <div className="relative mb-2 justify-center items-center h-[75px]" data-twe-input-wrapper-init>
               <select
-                className="w-[100%] h-[54px] p-2 border rounded-xl text-sm text-[#1c1c1cff] bg-[#f5f5f5ff]"
+                className={`${errors.bodega ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
                 value={bodega}
                 onChange={(e) => setNombreBodega(e.target.value)}
               >
@@ -108,16 +112,11 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
                   </option>
                 ))}
               </select>
-              {errors.nombreBodega && (
-                <div className="flex items-center text-red-500 text-xs mt-2 ml-3">
-                  <FaExclamationCircle className="mr-1" />
-                  {errors.nombreBodega}
-                </div>
-              )}
+              {errors.bodega && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.bodega}</span>}
             </div>
             <div className='flex justify-end gap-3 mb-3'>
-              <ButtonCerrar onClose={onClose}/>
-              <ButtonRegistrar label={"Actualizar"}/>
+              <ButtonCerrar onClose={onClose} />
+              <ButtonRegistrar label={"Actualizar"} />
             </div>
           </form>
         </div>

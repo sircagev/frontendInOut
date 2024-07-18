@@ -44,15 +44,15 @@ const ReportePrestamos = ({ prestamos }) => {
         const receivingMatches = row.user_receiving
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
-        const codeMatches =
-          row.element_id?.toString() === searchTerm.toString();
+        const idMatches =
+          row.movement_id?.toString() === searchTerm.toString();
         const rowDate = convertDateFormat(row.created_at);
         const dateMatches =
           (!startDate || rowDate >= startDate) &&
           (!endDate || rowDate <= endDate);
         return (
           (elementMatches ||
-            codeMatches ||
+            idMatches ||
             applicationMatches ||
             receivingMatches ||
             statusMatches) &&
@@ -66,10 +66,9 @@ const ReportePrestamos = ({ prestamos }) => {
 
   const columns = useMemo(
     () => [
+      { Header: "ID", accessor: "movement_id" },
       { Header: "Estado", accessor: "loan_status" },
-      { Header: "Código", accessor: "element_id" },
-      { Header: "Elemento", accessor: "element_name" },
-      { Header: "Cantidad", accessor: "quantity" },
+      { Header: "Elemento y Cantidad", accessor: "element_name" },
       { Header: "Usuario Solicita", accessor: "user_application" },
       { Header: "Usuario Recibe", accessor: "user_receiving" },
       { Header: "Fecha de Solicitud", accessor: "created_at" },
@@ -86,10 +85,9 @@ const ReportePrestamos = ({ prestamos }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Estado", key: "loan_status", width: 15 },
-      { header: "Código", key: "element_id", width: 8 },
-      { header: "Elemento", key: "element_name", width: 20 },
-      { header: "Cantidad", key: "quantity", width: 10 },
+      { header: "ID", key: "loan_status", width: 10 },
+      { header: "Estado", key: "loan_status", width: 12 },
+      { header: "Elemento y Cantidad", key: "element_name", width: 20 },
       { header: "Usuario Solicita", key: "user_application", width: 20 },
       { header: "Usuario Recibe", key: "user_receiving", width: 20 },
       { header: "Fecha de Solicitud", key: "created_at", width: 15 },
@@ -131,10 +129,9 @@ const ReportePrestamos = ({ prestamos }) => {
     };
 
     const headers = [
+      "ID",
       "Estado",
-      "Código",
       "Elemento",
-      "Cantidad",
       "Usuario Solicita",
       "Usuario Recibe",
       "Fecha de Solicitud",
@@ -153,10 +150,9 @@ const ReportePrestamos = ({ prestamos }) => {
 
     data.forEach((row) => {
       worksheet.addRow([
+        row.movement_id,
         row.loan_status,
-        row.element_id,
         row.element_name,
-        row.quantity,
         row.user_application,
         row.user_receiving,
         row.created_at,
@@ -263,7 +259,7 @@ const ReportePrestamos = ({ prestamos }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {
@@ -360,7 +356,7 @@ const ReportePrestamos = ({ prestamos }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table  text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",
@@ -391,81 +387,138 @@ const ReportePrestamos = ({ prestamos }) => {
                 })}
               </tbody>
             </table>
-            <div className="flex justify-end mt-3">
+            <div className="flex justify-between mt-3">
               <div className="flex items-center">
                 <span className="mr-2 text-gray-400">
                   Página {currentPage + 1} de {pageCount}
                 </span>
               </div>
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="previous page button"
-                onClick={previousPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
-                  !canPreviousPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canPreviousPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
-              {pages.map((page) => (
-                <li
-                  key={page}
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => gotoPage(page)}
-                  className={`flex items-center justify-center w-8 h-8 text-xs ${
-                    currentPage === page
-                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                      : "bg-foreground hover:bg-gray-700 text-white"
-                  }`}
-                >
-                  {page + 1}
-                </li>
-              ))}
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="next page button"
-                onClick={nextPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
-                  !canNextPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canNextPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current rotate-180"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
+              <div className="flex justify-end mt-3">
+                {pageCount > 1 && (
+                  <>
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="previous page button"
+                      onClick={previousPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
+                        !canPreviousPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canPreviousPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                    {currentPage >= 4 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(0)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === 0
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        1
+                      </li>
+                    )}
+                    {currentPage >= 5 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage < 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {pages.slice(currentPage, currentPage + 3).map((page) => (
+                      <li
+                        key={page}
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(page)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === page
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {page + 1}
+                      </li>
+                    ))}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          pageCount - currentPage > 3 ? "bg-gray-300 text-gray-600 cursor-not-allowed" : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(pageCount - 1)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === pageCount - 1
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {pageCount}
+                      </li>
+                    )}
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="next page button"
+                      onClick={nextPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
+                        !canNextPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canNextPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current rotate-180"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                  </>
+                )}
+              </div>
+
             </div>
           </div>
         ) : (

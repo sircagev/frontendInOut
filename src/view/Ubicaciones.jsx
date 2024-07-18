@@ -54,7 +54,7 @@ export const Ubicaciones = () => {
     };
     
     return (
-      <div className="flex gap-2">
+      <div className="flex justify-center item-center gap-2">
         <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
         <Modal1
           title={"Actualizar Ubicación"}
@@ -78,7 +78,7 @@ export const Ubicaciones = () => {
 
 
   return (
-    <div className='w-[95%] ml-[2.5%] mr-[2.5%] mt-10'>
+    <div className='w-[95%] ml-[2.5%] mr-[2.5%]'>
       <NextUITable
         columns={columnslocation}
         rows={data}

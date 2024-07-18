@@ -11,9 +11,12 @@ import { DesactivarElemento } from "../functions/Desactivar";
 import { Categoria } from "./Categoria"; // Asegúrate de importar correctamente
 import { Empaques } from "./Empaques"; // Asegúrate de importar correctamente
 import { Medidas } from "./Medidas"; // Asegúrate de importar correctamente
+import { useAuth } from '../context/AuthProvider';
 
 export const Elemento = () => {
     const [data, setData] = useState([]);
+
+    const { user } = useAuth();
 
     const ListarElementos = async () => {
         try {
@@ -32,14 +35,18 @@ export const Elemento = () => {
         const [isOpen, setIsOpen] = useState(false);
         return (
             <div>
-                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
-                <Modal1
-                    title={"Registrar Elemento"}
-                    size={"md"}
-                    isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    form={<FormDataElemento onClose={() => setIsOpen(false)} listar={ListarElementos} />}
-                />
+                {user.role_id == 1 ? (
+                    <>
+                        <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpen(true)}>Agregar</Button>
+                        <Modal1
+                            title={"Registrar Elemento"}
+                            size={"md"}
+                            isOpen={isOpen}
+                            onClose={() => setIsOpen(false)}
+                            form={<FormDataElemento onClose={() => setIsOpen(false)} listar={ListarElementos} />}
+                        />
+                    </>
+                ) : (null)}
             </div>
         );
     };
@@ -73,23 +80,23 @@ export const Elemento = () => {
 
         const classNames = React.useMemo(
             () => ({
-              wrapper: ["max-h-[382px]", "max-w-3xl"],
-              th: ["bg-transparent", "text-default-500", "border-b", "border-divider", "text-black", "text-center"],
-              td: [
-                // changing the rows border radius
-                // first
-                "group-data-[first=true]:first:before:rounded-none",
-                "group-data-[first=true]:last:before:rounded-none",
-                // middle
-                "group-data-[middle=true]:before:rounded-none",
-                // last
-                "group-data-[last=true]:first:before:rounded-none",
-                "group-data-[last=true]:last:before:rounded-none",
-                "text-center"
-              ],
+                wrapper: ["max-h-[382px]", "max-w-3xl"],
+                th: ["bg-transparent", "text-default-500", "border-b", "border-divider", "text-black", "text-center"],
+                td: [
+                    // changing the rows border radius
+                    // first
+                    "group-data-[first=true]:first:before:rounded-none",
+                    "group-data-[first=true]:last:before:rounded-none",
+                    // middle
+                    "group-data-[middle=true]:before:rounded-none",
+                    // last
+                    "group-data-[last=true]:first:before:rounded-none",
+                    "group-data-[last=true]:last:before:rounded-none",
+                    "text-center"
+                ],
             }),
             [],
-          );
+        );
 
         const columns = [
             {
@@ -103,12 +110,25 @@ export const Elemento = () => {
             {
                 key: "expiration",
                 label: "EXPIRACIÓN"
+            },
+            {
+                key: "location_nanme",
+                label: "UBICACIÓN"
             }
         ];
 
         return (
-            <div className='flex gap-3'>
-                <Button color="primary" variant="bordered" size="sm" className="w-[15px]" onClick={() => setIsOpenupdate(true)}>Actualizar</Button>
+            <div className='flex justify-center items-center gap-3'>
+                <Button
+                    color={user.role_id == 1 ? 'primary' : 'default'}
+                    variant="bordered"
+                    size="sm"
+                    className="w-[15px]"
+                    onClick={() => setIsOpenupdate(true)}
+                    disabled={user.role_id != 1}
+                >
+                    Actualizar
+                </Button>
                 <Modal1
                     title={"Actualizar Elemento"}
                     size={"md"}
@@ -117,11 +137,12 @@ export const Elemento = () => {
                     form={<FormUpdateElemento onClose={() => setIsOpenupdate(false)} category={item} Listar={ListarElementos} />}
                 />
                 <Button
-                    color={item.status == 1 ? 'danger' : 'success'}
+                    color={user.role_id != 1 ? 'default' : item.status === 'Activo' ? 'danger' : 'success'}
                     variant="bordered"
                     size="sm"
                     className="w-[15px]"
                     onClick={() => handleDesactivar(item.codigo, item.status)}
+                    disabled={user.role_id != 1}
                 >
                     {item.status == 1 ? 'Desactivar' : 'Activar'}
                 </Button>

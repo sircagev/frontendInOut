@@ -64,7 +64,6 @@ const NextUITable = ({
                 if (a[column] > b[column]) return direction === 'ascending' ? 1 : -1;
                 return 0;
             });
-            setPage(1)
         }
 
         if (hasSearchFilter) {
@@ -92,29 +91,34 @@ const NextUITable = ({
         return filteredItems.slice(start, end);
     }, [page, filteredItems, rowsPerPage]);
 
-    /* const sortedItems = React.useMemo(() => {
-        return [...items].sort((a, b) => {
-            const first = a[sortDescriptor.column];
-            const second = b[sortDescriptor.column];
-            const cmp = first < second ? -1 : first > second ? 1 : 0;
+    useEffect(() => {
+        setPage(1)
+    }, [sortDescriptor])
 
-            return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        });
-    }, [sortDescriptor, items]); */
+    function formatDateTime(dateTimeString) {
+        const [date, time] = dateTimeString.split('T');
+        const [hours, minutes] = time.split(':');
+        const formattedTime = `${hours}:${minutes}`; // Only keep hours and minutes
+        return { date, time: formattedTime };
+    }
 
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
 
+
+
         switch (columnKey) {
             case "nombre":
                 return (
-                    <User
-                        /* avatarProps={{ radius: "lg", src: user.avatar }} */
-                        description={item.correo}
-                        name={capitalize(cellValue)}
-                    >
-                        {item.correo}
-                    </User>
+                    <div className="w-full flex items-center">
+                        <User
+                            /* avatarProps={{ radius: "lg", src: user.avatar }} */
+                            description={item.correo}
+                            name={capitalize(cellValue)}
+                        >
+                            {item.correo}
+                        </User>
+                    </div>
                 );
             case "usuario_manager":
                 return (
@@ -165,13 +169,26 @@ const NextUITable = ({
                 );
             case "status":
                 return (
-                    <Chip className="capitalize" color={statusColorMap[item.status]} size="sm" variant="flat">
-                        {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
-                    </Chip>
-                );
+                    cellValue ? (
+                        <div className="flex justify-center items-center w-full">
+                            < Chip
+                                className="capitalize"
+                                color={statusColorMap[item.status]}
+                                classNames={{
+                                    content: "w-[80px] text-center"
+                                }}
+                                size="sm" variant="flat"
+                            >
+                                {cellValue == "0" ? "Inactivo" : cellValue == "1" ? "Activo" : cellValue}
+                            </Chip >
+                        </div>) : (
+                        <div className="flex justify-center items-center w-full">---------</div>
+                    ));
             case "actions":
                 return (
-                    <Actions codigo={item}></Actions>
+                    <div className="flex justify-center items-center">
+                        <Actions codigo={item}></Actions>
+                    </div>
                 );
             case "codigo":
                 return (
@@ -183,6 +200,21 @@ const NextUITable = ({
                 return (
                     <div className="flex flex-col w-full">
                         <Actions item={item} />
+                    </div>
+                )
+            case "fecha":
+                let formattedDate = "";
+                let formattedTime = "";
+
+                if (cellValue) {
+                    const { date, time } = formatDateTime(cellValue);
+                    formattedDate = date;
+                    formattedTime = time;
+                }
+                return (
+                    <div className="flex flex-col w-ful">
+                        <div className="text-[14px]">{formattedDate}</div>
+                        <div className="text-[10px] text-gray-600">{formattedTime}</div>
                     </div>
                 )
             default:
@@ -219,7 +251,7 @@ const NextUITable = ({
                             base: "w-full sm:max-w-[44%]",
                             inputWrapper: "border-1",
                         }}
-                        placeholder="Search by name..."
+                        placeholder="Buscar por..."
                         size="sm"
                         startContent={<SearchIcon className="text-default-300" />}
                         variant="bordered"
@@ -238,7 +270,7 @@ const NextUITable = ({
                                     variant="bordered"
                                     color="success"
                                 >
-                                    Status
+                                    Estado
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -270,7 +302,7 @@ const NextUITable = ({
                                     variant="bordered"
                                     color="primary"
                                 >
-                                    Columns
+                                    Columnas
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -299,7 +331,7 @@ const NextUITable = ({
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">Total {filteredItems.length} items</span>
                     <label className="flex items-center text-default-400 text-small">
-                        Rows per page:
+                        Filas por página:
                         <select
                             className="bg-transparent outline-none text-default-400 text-small"
                             onChange={onRowsPerPageChange}
@@ -387,6 +419,7 @@ const NextUITable = ({
             >
                 {(column) => (
                     <TableColumn
+                        className="text-center"
                         key={column.uid}
                         align={column.uid === "actions" ? "center" : column.uid === "tipo" ? "center" : "start"}
                         width={column.uid === "codigo" ? '20px' : ''}
@@ -398,8 +431,8 @@ const NextUITable = ({
             </TableHeader>
             <TableBody items={items} emptyContent={"No hay movimientos"}>
                 {(item) => (
-                    <TableRow key={item.codigo}>
-                        {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                    <TableRow  key={item.codigo}>
+                        {(columnKey) => <TableCell className="text-center">{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
             </TableBody>

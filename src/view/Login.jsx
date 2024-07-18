@@ -1,12 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosClient from '../components/config/axiosClient';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Input, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import Swal from 'sweetalert2';
 import imgLogin from '../assets/imgLogin.png';
-import logo from '../assets/in.png';
+import logo from '../assets/LogoIO.png';
 import { useAuth } from '../context/AuthProvider';
-import { FormUpdatePerfil } from '../functions/Update/UpdatePerfil/FormUpdatePerfil'; // Asegúrate de importar correctamente el componente
+import { CiRead } from "react-icons/ci";
+
+// Componente personalizado para el campo de contraseña con ícono de visualización
+const PasswordInput = ({ value, onChange }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <div className="relative">
+      <input
+        required
+        type={showPassword ? "text" : "password"}
+        value={value}
+        onChange={onChange}
+        className="w-full mb-2 pr-10 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+        placeholder="Password"
+      />
+      <div
+        className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
+        onClick={togglePasswordVisibility}
+      >
+        <CiRead className={`text-gray-500 ${showPassword ? 'opacity-100' : 'opacity-50'}`} />
+      </div>
+    </div>
+  );
+};
 
 function Login() {
   const { login, user } = useAuth();
@@ -16,30 +44,16 @@ function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(!!token);
-
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  useEffect(() => {
-    // Si hay un token en la URL, mostramos automáticamente el formulario de reset
-    if (token) {
-      setShowResetPassword(true);
-    }
-  }, [token]);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axiosClient.post('validate/validar', {
-        email: email,
-        password: password,
-      });
-
-      console.log(response)
-
-      await login({
         email: email,
         password: password,
       });
@@ -47,17 +61,21 @@ function Login() {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userName', response.data.userName);
-        localStorage.setItem('email', response.data.email); // Asegúrate de obtener y guardar el email
+        localStorage.setItem('email', response.data.email);
         localStorage.setItem('role', response.data.role);
         localStorage.setItem('codigo', response.data.codigo);
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('identification', response.data.identification);
 
-
-        console.log(user)
-        navigate('/usuarios')
+        const respo = await login({
+          email: email,
+          password: password,
+        });
+        if (respo.role_id == 1 || respo.role_id == 2) navigate('/estadistica')
+        if (respo.role_id == 3) navigate('/reservas')
       }
     } catch (error) {
+      console.log(error)
       if (error.response) {
         if (error.response.status === 401) {
           Swal.fire({
@@ -69,7 +87,13 @@ function Login() {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Por favor, verifica tus credenciales.',
+            text: 'El correo no se encuentra registrado en la base de datos',
+          });
+        } else if (error.response.status === 403) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Contraseña incorrecta, Acceso denegado',
           });
         } else {
           Swal.fire({
@@ -79,7 +103,6 @@ function Login() {
           });
         }
       } else {
-        console.log(error)
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -108,7 +131,7 @@ function Login() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'No se pudo enviar el correo de recuperación.',
+        text: 'No se pudo enviar el correo de recuperación, Email Incorrecto',
       });
     }
   };
@@ -123,7 +146,7 @@ function Login() {
     const lengthRegex = /^.{8,}$/;
 
     // Verificar que la contraseña cumpla con todos los criterios
-    if (!uppercaseRegex.test(newPassword)) {
+    if (!uppercaseRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -132,7 +155,7 @@ function Login() {
       return;
     }
 
-    if (!numberRegex.test(newPassword)) {
+    if (!numberRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -141,7 +164,7 @@ function Login() {
       return;
     }
 
-    if (!specialCharRegex.test(newPassword)) {
+    if (!specialCharRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -150,7 +173,7 @@ function Login() {
       return;
     }
 
-    if (!lengthRegex.test(newPassword)) {
+    if (!lengthRegex.test(password)) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -159,20 +182,10 @@ function Login() {
       return;
     }
 
-    // Si las contraseñas no coinciden, mostrar mensaje de error
-    if (newPassword !== confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Las contraseñas no coinciden.',
-      });
-      return;
-    }
-
     try {
       const response = await axiosClient.put('/contrasena/cambiar', {
         token,
-        password: newPassword,
+        password: password,
       });
 
       if (response.status === 200) {
@@ -196,11 +209,18 @@ function Login() {
     }
   };
 
+  useEffect(()=> {
+    if(user){
+      if(user.role_id == 1 || user.role_id == 2) navigate('/estadistica')
+      if(user.role_id == 3) navigate('/reservas')
+    }
+  })
+
   return (
     <div className='w-full h-screen relative'>
       <div className='w-full h-[50%] bg-[#39A900] flex' style={{ paddingTop: '1.5rem' }}>
         <div>
-          <h1 className='text-white text-2xl font-bold ml-9'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
+          <h1 className='text-white text-2xl font-bold ml-12'><img src={logo} alt="" className=' h-[70px] w-[auto]' /></h1>
           <div className='ml-[60px] mt-[40px] h-[200px] w-[300px]'>
             <h1 className='text-3xl font-bold text-white'>Ingrese a In-Out</h1>
             <h2 className='mt-2 text-xl text-white font-semibold'>Gestión de inventarios</h2>
@@ -230,14 +250,13 @@ function Login() {
             <form onSubmit={handleForgotPassword}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
-                <Input
+                <input
                   required
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  label="Email"
-                  variant="bordered"
-                  className="w-full mb-[45px]"
+                  className="w-full mb-[45px] p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Email"
                 />
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Enviar
@@ -251,25 +270,13 @@ function Login() {
             <form onSubmit={handleResetPassword}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3'>Ingrese su nueva contraseña:</label>
-                <Input
-                  required
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  label="Nueva Contraseña"
-                  variant="bordered"
-                  className="w-full mb-4"
-                />
+                <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
+
                 <label className='text-[15px] font-semibold mb-3'>Confirme su nueva contraseña:</label>
-                <Input
-                  required
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  label="Confirmar Nueva Contraseña"
-                  variant="bordered"
-                  className="w-full mb-4"
-                />
+                <PasswordInput value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+
+
+
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Restablecer Contraseña
                 </Button>
@@ -279,25 +286,16 @@ function Login() {
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col w-full flex-wrap md:flex-nowrap">
                 <label className='text-[15px] font-semibold mb-3' htmlFor="">Ingrese su Email:</label>
-                <Input
+                <input
                   required
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  label="Email"
-                  variant="bordered"
-                  className="w-full mb-[45px]"
+                  className="w-full mb-[45px] p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                  placeholder="Email"
                 />
                 <label className='text-[15px] font-semibold mb-3'>Ingrese su contraseña:</label>
-                <Input
-                  required
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  label="Password"
-                  variant="bordered"
-                  className="w-full mb-2"
-                />
+                <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
 
                 <div className='flex justify-end items-center mb-[20px] mr-[10px]'>
                   <Link to="#" onClick={() => setShowForgotPassword(true)} className='text-[14px] text-[#39A900] cursor-pointer'>
@@ -308,25 +306,12 @@ function Login() {
                 <Button color="primary" type='submit' className='bg-[#39A900] mb-7 h-[50px] text-base font-medium'>
                   Ingresar
                 </Button>
+
               </div>
             </form>
           )}
         </div>
       </div>
-      {/* <div className='w-full h-[50%] bg-[#fff]'>
-        <FormUpdatePerfil
-          onClose={handleCloseModal}
-          category={{
-            name: localStorage.getItem('userName'),
-            email: localStorage.getItem('email'),
-            lastname: '', // Asegúrate de obtener el apellido si está disponible
-            phone: '', // Asegúrate de obtener el teléfono si está disponible
-            identification: '', // Asegúrate de obtener la identificación si está disponible
-            course_id: '', // Asegúrate de obtener el ID de ficha si está disponible
-          }}
-          onRegisterSuccess={handleRegisterSuccess}
-        />
-      </div> */}
 
     </div>
   );

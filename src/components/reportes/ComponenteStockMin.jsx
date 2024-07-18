@@ -67,13 +67,9 @@ const ReporteStockMin = ({ stockmin }) => {
       { Header: "Elemento", accessor: "element_name" },
       { Header: "Stock", accessor: "stock" },
       { Header: "Cantidad en Préstamo", accessor: "LoanElementsCount" },
-      { Header: "Lote", accessor: "batch_serial" },
       { Header: "Tipo", accessor: "element_type" },
       { Header: "Categoría", accessor: "category" },
       { Header: "Medida", accessor: "measurement" },
-      { Header: "Bodega", accessor: "warehouse" },
-      { Header: "Ubicación", accessor: "wlocation" },
-      { Header: "Cant", accessor: "quantity" },
     ],
     []
   );
@@ -83,17 +79,13 @@ const ReporteStockMin = ({ stockmin }) => {
     const worksheet = workbook.addWorksheet("Report");
 
     worksheet.columns = [
-      { header: "Código", key: "element_id", width: 8 },
+      { header: "Código", key: "element_id", width: 12 },
       { header: "Elemento", key: "element_name", width: 15 },
       { header: "Stock", key: "stock", width: 8 },
-      { header: "Cantidad en Préstamo", key: "LoanElementsCount", width: 20 },
-      { header: "Lote", key: "batch_serial", width: 8 },
+      { header: "Cantidad en Préstamo", key: "LoanElementsCount", width: 24 },
       { header: "Tipo", key: "element_type", width: 15 },
       { header: "Categoría", key: "category", width: 15 },
       { header: "Medida", key: "measurement", width: 15 },
-      { header: "warehouse", key: "warehouse", width: 15 },
-      { header: "Ubicación", key: "wlocation", width: 15 },
-      { header: "Cant", key: "quantity", width: 15 },
     ];
 
     const response = await fetch(logoImg);
@@ -104,7 +96,7 @@ const ReporteStockMin = ({ stockmin }) => {
     });
     worksheet.addImage(imageId, "A1:A2");
 
-    worksheet.mergeCells("B2:I2");
+    worksheet.mergeCells("B2:G2");
     worksheet.getCell("B2").value = "Reporte de Elementos con Bajo Stock";
     worksheet.getCell("B2").alignment = {
       vertical: "middle",
@@ -112,7 +104,7 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B2").font = { size: 16, bold: true };
 
-    worksheet.mergeCells("B1:I1");
+    worksheet.mergeCells("B1:G1");
     worksheet.getCell("B1").value = "INVENTARIO ELEMENTOS INOUT";
     worksheet.getCell("B1").alignment = {
       vertical: "middle",
@@ -120,9 +112,9 @@ const ReporteStockMin = ({ stockmin }) => {
     };
     worksheet.getCell("B1").font = { size: 17, bold: true };
 
-    worksheet.mergeCells("J1:K1");
-    worksheet.getCell("J1").value = "ADSO-2644590";
-    worksheet.getCell("J1").alignment = {
+    worksheet.mergeCells("H1:I1");
+    worksheet.getCell("H1").value = "ADSO-2644590";
+    worksheet.getCell("H1").alignment = {
       vertical: "middle",
       horizontal: "center",
     };
@@ -132,13 +124,9 @@ const ReporteStockMin = ({ stockmin }) => {
       "Elemento",
       "Stock",
       "Cantidad en Préstamo",
-      "Lote",
       "Tipo",
       "Categoría",
       "Medida",
-      "warehouse",
-      "Ubicación",
-      "Cantidad",
     ];
     worksheet.addRow(headers);
 
@@ -154,13 +142,9 @@ const ReporteStockMin = ({ stockmin }) => {
         row.element_name,
         row.stock,
         row.LoanElementsCount,
-        row.batch_serial,
         row.element_type,
         row.category,
         row.measurement,
-        row.warehouse,
-        row.wlocation,
-        row.quantity,
       ]);
     });
 
@@ -224,7 +208,7 @@ const ReporteStockMin = ({ stockmin }) => {
   };
 
   return (
-    <div className="pl-4 pr-4">
+    <div className="pl-4 pr-4 w-full">
       <div className="p-1 text-gray-400 rounded text-s">
         <span>
           {" "}
@@ -250,7 +234,7 @@ const ReporteStockMin = ({ stockmin }) => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search.."
+                      placeholder="Buscar.."
                       value={searchTerm}
                       onChange={handleInputChange}
                       onKeyDown={(e) => {
@@ -262,7 +246,7 @@ const ReporteStockMin = ({ stockmin }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center ml-4 rounded-lg cursor-pointer">
+              <div className="flex items-center ml-4 mr-12 rounded-lg cursor-pointer">
                 <div
                   onClick={handleSearch}
                   className="text-blue-500 hover:text-white py-2 px-2 rounded uppercase transition duration-300"
@@ -271,6 +255,12 @@ const ReporteStockMin = ({ stockmin }) => {
                   }}
                 >
                   <BiSearch className="ml-1 text-lg" />
+                </div>
+              </div>
+              <div className="flex items-center ml-4">
+                <div className="bg-transparent h-8 w-25"></div>
+                <div className="text-transparent rounded p-1 flex-grow ml-2">
+                  <span>Contenido no interactuable</span>
                 </div>
               </div>
             </div>
@@ -331,7 +321,7 @@ const ReporteStockMin = ({ stockmin }) => {
           <div>
             <table
               {...getTableProps()}
-              className="table table-bordered table-striped text-center mt-2"
+              className="table table-fixed text-center mt-2"
               style={{
                 borderRadius: "15px",
                 overflow: "hidden",
@@ -375,81 +365,141 @@ const ReporteStockMin = ({ stockmin }) => {
                 })}
               </tbody>
             </table>
-            <div className="flex justify-end mt-3">
+            <div className="flex justify-between mt-3">
               <div className="flex items-center">
                 <span className="mr-2 text-gray-400">
                   Página {currentPage + 1} de {pageCount}
                 </span>
               </div>
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="previous page button"
-                onClick={previousPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
-                  !canPreviousPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canPreviousPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
-              {pages.map((page) => (
-                <li
-                  key={page}
-                  role="button"
-                  tabIndex="0"
-                  onClick={() => gotoPage(page)}
-                  className={`flex items-center justify-center w-8 h-8 text-xs ${
-                    currentPage === page
-                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                      : "bg-foreground hover:bg-gray-700 text-white"
-                  }`}
-                >
-                  {page + 1}
-                </li>
-              ))}
-              <li
-                role="button"
-                tabIndex="0"
-                aria-label="next page button"
-                onClick={nextPage}
-                className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
-                  !canNextPage
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-foreground hover:bg-gray-700 text-white"
-                }`}
-                disabled={!canNextPage}
-              >
-                <svg
-                  className="w-4 h-4 stroke-current rotate-180"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.5 19l-7-7 7-7"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                  ></path>
-                </svg>
-              </li>
+              <div className="flex justify-end mt-3">
+                {pageCount > 1 && (
+                  <>
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="previous page button"
+                      onClick={previousPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-l-full ${
+                        !canPreviousPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canPreviousPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                    {currentPage >= 4 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(0)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === 0
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        1
+                      </li>
+                    )}
+                    {currentPage >= 5 && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage < 3
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {pages.slice(currentPage, currentPage + 3).map((page) => (
+                      <li
+                        key={page}
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(page)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === page
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {page + 1}
+                      </li>
+                    ))}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          pageCount - currentPage > 3
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        ...
+                      </li>
+                    )}
+                    {currentPage + 3 < pageCount && (
+                      <li
+                        role="button"
+                        tabIndex="0"
+                        onClick={() => gotoPage(pageCount - 1)}
+                        className={`flex items-center justify-center w-8 h-8 text-xs ${
+                          currentPage === pageCount - 1
+                            ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            : "bg-foreground hover:bg-gray-700 text-white"
+                        }`}
+                      >
+                        {pageCount}
+                      </li>
+                    )}
+                    <li
+                      role="button"
+                      tabIndex="0"
+                      aria-label="next page button"
+                      onClick={nextPage}
+                      className={`flex items-center justify-center w-8 h-8 text-xs rounded-r-full ${
+                        !canNextPage
+                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                          : "bg-foreground hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={!canNextPage}
+                    >
+                      <svg
+                        className="w-4 h-4 stroke-current rotate-180"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M15.5 19l-7-7 7-7"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </li>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ) : (
