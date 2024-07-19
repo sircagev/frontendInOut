@@ -352,8 +352,8 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                                 onChange={(e) => {
                                                     const nuevaCantidad = e.target.value;
                                                     // Verificar si el nuevo valor es un número
-                                                        handleDetailChange(index, 'quantity', parseInt(nuevaCantidad))
-                                                    
+                                                    handleDetailChange(index, 'quantity', parseInt(nuevaCantidad))
+
                                                 }}
                                             />
                                         </div>
