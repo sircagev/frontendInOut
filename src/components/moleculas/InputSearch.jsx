@@ -10,13 +10,19 @@ export const InputSearch = ({ setData, funcionListar, funcionBuscar }) => {
             if (codigoMovimiento.trim() !== '') {
                 // Realizar una solicitud específica para obtener un movimiento por su código
                 const items = await funcionBuscar(codigoMovimiento);
-                setData(items) 
+                setData(items)
             } else {
                 const items = await funcionListar();
                 setData(items);
             }
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 

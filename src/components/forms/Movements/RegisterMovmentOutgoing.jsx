@@ -52,7 +52,6 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
     const filteredItems = useMemo(() => {
         if (dataLocations.length > 0) {
             const info = dataLocations.filter(item => item.code_warehouse == warehouse);
-            console.log(info)
             return info;
         };
 
@@ -68,10 +67,16 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
 
             setDataUsers(users)
             setDataElements(elements);
-            setDataWarehouses(warehouses);
-            setDataLocations(locations);
+            setDataWarehouses(warehouses.data);
+            setDataLocations(locations.data);
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 
@@ -84,8 +89,6 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
 
         try {
             const register = await axiosClient.post('movimientos/register-outgoing', outgoingData);
-
-            console.log(register)
 
             const status = register.status >= 200 && register.status <= 210 ? true : false
 
@@ -100,7 +103,6 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
             listarMovements();
             onClose();
         } catch (error) {
-            console.log(error)
             swal({
                 title: "Error",
                 text: error.response.data.message,
@@ -159,7 +161,6 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
     }, [])
 
     useEffect(() => {
-        console.log(outgoingData)
         const num = outgoingData.details.length;
         if (num == 1) {
             setEditIndex(0)
@@ -246,7 +247,6 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                 warehouseLocation_id: null,
             }]
         }));
-        console.log(outgoingData.details.length)
         setEditIndex(outgoingData.details.length)
         // Limpiar los errores al agregar un nuevo detalle correctamente
         setErrors({

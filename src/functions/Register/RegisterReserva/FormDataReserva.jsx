@@ -5,7 +5,6 @@ import { Input, Textarea } from '@nextui-org/react';
 import { ButtonCerrar } from '../../../components/Buttons/ButtonCerrar';
 import { ButtonRegistrar } from '../../../components/Buttons/ButtonRegistrar';
 
-
 export const FormDataReserva = ({onClose}) => {
   return (
     <div className=''>

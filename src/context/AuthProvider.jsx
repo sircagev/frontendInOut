@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
             try {
                 return jwtDecode(token);
             } catch (error) {
-                console.error('Invalid token:', error);
                 return null;
             }
         }
@@ -30,13 +29,18 @@ export const AuthProvider = ({ children }) => {
                     setUser(decoded);
                 }
                 else {
-                    console.log('Token Expire');
                     setExpire(true);
                     setUser(null)
                     Cookies.remove('token');
                 }
             } catch (error) {
-                console.error('Invalid token:', error);
+                swal({
+                    title: "Error",
+                    text: error.response.data.message,
+                    icon: `warning`,
+                    buttons: true,
+                    timer: 2000,
+                });
                 setUser(null);
             }
         }
@@ -51,7 +55,13 @@ export const AuthProvider = ({ children }) => {
             setUser(decoded);
             return decoded
         } catch (error) {
-            console.error(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     };
 
@@ -61,7 +71,13 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setIsLogout(true)
         } catch (error) {
-            console.error(error);
+            swal({
+                title: "Error",
+                text: error.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     };
 

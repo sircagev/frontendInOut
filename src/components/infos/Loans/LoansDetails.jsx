@@ -81,7 +81,6 @@ export const LoanDetails = ({ item, onClose }) => {
 
             const elements = await ListarElementos();
             const details = detailsData.data
-            console.log(users)
             let objectDetails = [];
 
             for (const detail of details) {
@@ -125,14 +124,12 @@ export const LoanDetails = ({ item, onClose }) => {
                 const detailIndex = prevNewStatus.details.indexOf(detail);
                 const currentStatus = detail.loanStatus_id;
                 const newDatum = currentStatus === numState[0] ? numState[1] : numState[0];
-                console.log(newDatum)
                 // Realiza el cambio en el objeto encontrado
                 const updatedDetails = prevNewStatus.details.map((detail, i) =>
                     i === detailIndex ? { ...detail, loanStatus_id: newDatum } : detail
                 );
                 return { ...prevNewStatus, details: updatedDetails };
             } else {
-                console.log("No se encontró el detail con el movementDetail_id especificado.");
                 return prevNewStatus;
             }
         })
@@ -200,7 +197,6 @@ export const LoanDetails = ({ item, onClose }) => {
                                                     );
                                                     return { ...prevData, details: updatedDetails };
                                                 } else {
-                                                    console.log("No se encontró el detail con el movementDetail_id especificado.");
                                                     return prevData;
                                                 }
                                             })}
@@ -230,7 +226,6 @@ export const LoanDetails = ({ item, onClose }) => {
                                                     );
                                                     return { ...prevData, details: updatedDetails };
                                                 } else {
-                                                    console.log("No se encontró el detail con el movementDetail_id especificado.");
                                                     return prevData;
                                                 }
                                             })}
@@ -282,7 +277,6 @@ export const LoanDetails = ({ item, onClose }) => {
                                     );
                                     return { ...prevNewStatus, details: updatedDetails };
                                 } else {
-                                    console.log("No se encontró el detail con el movementDetail_id especificado.");
                                     return prevNewStatus;
                                 }
                             })
@@ -335,12 +329,9 @@ export const LoanDetails = ({ item, onClose }) => {
 
     useEffect(() => {
         list();
-        console.log(user)
     }, [])
 
     useEffect(() => {
-        console.log(newStatus)
-        console.log(movement)
     }, [newStatus, movement])
 
     const classNames = React.useMemo(() => ({
@@ -387,7 +378,6 @@ export const LoanDetails = ({ item, onClose }) => {
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;
-                console.log(error.response);
                 swal({
                     title: "Error",
                     text: error.response.data.message,
@@ -395,9 +385,6 @@ export const LoanDetails = ({ item, onClose }) => {
                     buttons: true
                 });
                 // Puedes manejar el error según el código de estado aquí
-            } else {
-                console.log(`Error: ${error.message}`);
-                // Manejar otros errores, como problemas de red
             }
         }
     };

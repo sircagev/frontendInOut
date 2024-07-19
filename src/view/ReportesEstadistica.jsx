@@ -49,10 +49,8 @@ const ReporteEstadistico = () => {
       setmovementsData(movementsResponse.data.datos);
       setloansEleData(loansResponse.data.datos);
       setloansBarData(loansBarResponse.data.datos);
-      console.log(loansBarResponse.data.datos)
       setconsumableData(consumableResponse.data.datos);
       setconsumableBarData(consumableBarResponse.data.datos);
-      console.log(consumableBarResponse.data.datos)
       setExpiradosData(expiradosResponse.data.datos);
       setVencidosData(vencidosResponse.data.datos);
       setStockMinData(stockMinResponse.data.datos);
@@ -141,8 +139,6 @@ const ReporteEstadistico = () => {
       }))
     : [];
 
-
-
   const coloresPie = [
     "#07597e",
     "#2183b3",
@@ -209,10 +205,10 @@ const ReporteEstadistico = () => {
           </div>
           <div className="flex flex-col items-center pr-10">
             <h2 className="font-bold ">Comparativa Mensual</h2>
-            {datosConsumableBar.length > 0 ? (
+            {datosLoansBar.length > 0 ? (
               <ResponsiveContainer width={200} height={300}>
-                <BarChart
-                  data={datosConsumableBar}
+               <BarChart
+                  data={datosLoansBar}
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
                   <XAxis dataKey="mes" />
@@ -252,7 +248,7 @@ const ReporteEstadistico = () => {
                   innerRadius={70}
                   outerRadius={100}
                   fill="#8884d8"
-                  label
+                  label={({ value }) => `${value.toFixed(2)}%`}
                 >
                   {datosConsumablePie.map((entry, index) => (
                     <Cell
@@ -261,19 +257,19 @@ const ReporteEstadistico = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
+              <Tooltip />
+              <Legend />
+            </PieChart>
             ) : (
               <p>No hay datos para mostrar</p>
             )}
           </div>
           <div className="flex flex-col items-center pr-10">
             <h2 className="font-bold ">Comparativa Mensual</h2>
-            {datosLoansBar.length > 0 ? (
+            {datosConsumableBar.length > 0 ? (
               <ResponsiveContainer width={200} height={300}>
-               <BarChart
-                  data={datosLoansBar}
+                <BarChart
+                  data={datosConsumableBar}
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
                   <XAxis dataKey="mes" />

@@ -69,8 +69,6 @@ const ReporteElementos = ({ elementos }) => {
       { Header: "Total", accessor: "total" },
       { Header: "Fecha Creación", accessor: "created_at" },
       { Header: "Categoría", accessor: "category" },
-      { Header: "Bodega", accessor: "warehouse" },
-      { Header: "Ubicación", accessor: "wlocation" },
     ],
     []
   );
@@ -87,8 +85,6 @@ const ReporteElementos = ({ elementos }) => {
       { header: "Total", key: "total", width: 8 },
       { header: "Fecha Creación", key: "created_at", width: 20 },
       { header: "Categoría", key: "category", width: 15 },
-      { header: "Bodega", key: "warehouse", width: 15 },
-      { header: "Ubicación", key: "wlocation", width: 15 },
     ];
 
     const response = await fetch(logoImg);
@@ -130,8 +126,6 @@ const ReporteElementos = ({ elementos }) => {
       "Total",
       "Fecha Creación",
       "Categoría",
-      "Bodega",
-      "Ubicación",
     ];
     worksheet.addRow(headers);
 
@@ -150,8 +144,6 @@ const ReporteElementos = ({ elementos }) => {
         row.total,
         row.created_at,
         row.category,
-        row.warehouse,
-        row.wlocation,
       ]);
     });
 
@@ -206,10 +198,6 @@ const ReporteElementos = ({ elementos }) => {
   };
 
   const handleSearch = () => {
-    console.log("Search button clicked");
-    console.log("Search term:", searchTerm);
-    console.log("Start date:", startDate);
-    console.log("End date:", endDate);
     setSearchPerformed(true);
     setShowFilters(false);
   };

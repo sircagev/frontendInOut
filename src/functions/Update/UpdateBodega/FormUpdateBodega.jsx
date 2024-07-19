@@ -13,10 +13,8 @@ export const FormUpdateBodega = ({ onClose, category, Listar }) => {
     })
 
     useEffect(() => {
-        console.log(category);
         if (category) {
             setNombre(category.name);
-            console.log(category.name)
         }
     }, []);
 

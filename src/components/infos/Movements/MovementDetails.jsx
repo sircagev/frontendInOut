@@ -41,10 +41,15 @@ export const MovementDetails = ({ movement }) => {
 
             setData(details.data);
             setElements(elements);
-            console.log(details)
 
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 
@@ -100,16 +105,3 @@ export const MovementDetails = ({ movement }) => {
         </div>
     )
 }
-
-/* data.map((datum) => {
-    // Filtrar elementos que coinciden con el código
-    const filteredItems = dataElements.filter(item => item.codigo === datum.element_id);
-    // Obtener el nombre del primer elemento encontrado, si existe
-    const itemName = filteredItems.length > 0 ? filteredItems[0].name : 'Elemento no encontrado';
-
-    return (
-        <div key={datum.movementDetail_id}>
-            {datum.movementDetail_id} {datum.element_id} {itemName} {datum.batch_id} {datum.quantity} {datum.remarks}
-        </div>
-    );
-}) */

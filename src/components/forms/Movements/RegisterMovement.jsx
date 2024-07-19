@@ -53,7 +53,6 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
     const filteredItems = useMemo(() => {
         if (dataLocations.length > 0) {
             const info = dataLocations.filter(item => item.code_warehouse == warehouse);
-            console.log(info)
             return info;
         };
 
@@ -67,9 +66,8 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             return false; // o cualquier valor predeterminado que tenga sentido en tu contexto
         }
 
-        console.log(editIndex)
         const codigo = newRegister.details[editIndex].element_id ? newRegister.details[editIndex].element_id : null
-        const itemEncontrado = dataElements.find(item => item.codigo == codigo);
+        const itemEncontrado = dataElements.length > 0 && dataElements.find(item => item.codigo == codigo);
         if (itemEncontrado && itemEncontrado.code_elementType === 1) {
             return true
         }
@@ -85,10 +83,16 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
 
             setDataUsers(users);
             setDataElements(elements);
-            setDataWarehouses(warehouses);
-            setDataLocations(locations);
+            setDataWarehouses(warehouses.data);
+            setDataLocations(locations.data);
         } catch (error) {
-            console.log(error);
+            swal({
+                title: "Error",
+                text: error.response.data.message,
+                icon: `warning`,
+                buttons: true,
+                timer: 2000,
+            });
         }
     }
 
@@ -114,14 +118,6 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             listarMovimientos();
             onClose();
         } catch (error) {
-            /* console.log(error)
-            swal({
-                title: "Error",
-                text: error.response.data.message,
-                icon: `warning`,
-                buttons: true,
-                timer: 2000,
-            });*/
             const message = error.response.data.message
             swal({
                 title: "Registro exitoso",
@@ -186,7 +182,6 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
     }, [])
 
     useEffect(() => {
-        console.log(newRegister)
         const num = newRegister.details.length;
         if (num == 1) {
             setEditIndex(0)
@@ -252,9 +247,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
             objectError.quantity = 'Debes colocar una cantidad antes de agregar otro detalle';
             hasError = true;
         }
-        console.log(lastDetail)
         const datum = dataElements.find(item => item.codigo == lastDetail.element_id);
-        console.log(datum)
         if (datum && datum.code_elementType === 1 && !lastDetail.expiration) {
             objectError.expiration = 'Debes colocar una Fecha de vencimiento para elementos cosumibles';
             hasError = true;
@@ -434,14 +427,23 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                                                 }}
                                                 defaultSelectedKey={warehouse}
                                             >
-                                                {dataWarehouses.map((item) => (
+                                                {dataWarehouses.length > 0 ? (
+                                                    dataWarehouses.map((item) => (
+                                                        <AutocompleteItem
+                                                            key={item.warehouse_id}
+                                                            value={item.warehouse_id}
+                                                        >
+                                                            {item.warehouse_id + ' - ' + item.name}
+                                                        </AutocompleteItem>
+                                                    ))
+                                                ) : (
                                                     <AutocompleteItem
-                                                        key={item.warehouse_id}
-                                                        value={item.warehouse_id}
+                                                        key={0}
+                                                        value={0}
                                                     >
-                                                        {item.warehouse_id + ' - ' + item.name}
+                                                        No hay elementos
                                                     </AutocompleteItem>
-                                                ))}
+                                                )}
                                             </Autocomplete>
                                         </div>
                                         <div className='w-1/2'>

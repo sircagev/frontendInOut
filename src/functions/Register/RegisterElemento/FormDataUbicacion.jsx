@@ -20,9 +20,15 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
         const fetchBodegas = async () => {
             try {
                 const response = await axiosClient.get('bodega/listar');
-                setBodegas(response.data);
+                setBodegas(response.data.data);
             } catch (error) {
-                console.log(error);
+                swal({
+                    title: "Error",
+                    text: error.response.data.message,
+                    icon: `warning`,
+                    buttons: true,
+                    timer: 2000,
+                });
             }
         };
 
@@ -80,9 +86,9 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
         } catch (error) {
             if (error.response && error.response.data.message.includes('Duplicate entry')) {
                 setErrors({ name: 'El nombre de la categoría ya existe.' });
-              } else {
+            } else {
                 setErrors({ name: 'Ocurrió un error al registrar la categoría. Inténtalo de nuevo.' });
-              }
+            }
         }
     };
 
@@ -90,8 +96,8 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
         <div>
             <div>
                 <form onSubmit={handleForm}>
-                    <div className='flex justify-center items-center'></div>
-                    <div className="relative justify-center items-center h-[70px] mb-2" data-twe-input-wrapper-init>
+                    <div className='flex flex-col justify-center items-center gap-3'>
+                    <div className="w-full" data-twe-input-wrapper-init>
                         <Input
                             type='text'
                             label='Ubicación'
@@ -104,30 +110,33 @@ export const FormDataUbicacion = ({ listar, onClose }) => {
                             className="w-[100%]"
                         />
                     </div>
-                    <div className="relative mb-4 justify-center items-center" data-twe-input-wrapper-init>
-                        <Select
-                            label="Seleccione una bodega"
-                            name='warehouse_id'
-                            color={errors.warehouse_id ? 'danger' : ''}
-                            errorMessage={errors.warehouse_id}
-                            isInvalid={errors.warehouse_id}
+                    <div className="w-full mb-2" data-twe-input-wrapper-init>
+                        <select
+                            name="warehouse_id"
                             value={values.warehouse_id}
                             onChange={handleInputChange}
-                            className="w-[100%]"
+                            className={`${errors.warehouse_id ? 'bg-[#fee7ef] hover:bg-[#fdd0df] text-red-500' : 'bg-[#F4F4F5]'} border border-gray-300 w-[100%] h-[58px] text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-2.5`}
                         >
-                            <SelectItem key="" value="">
-                                Seleccione una bodega
-                            </SelectItem>
-                            {bodegas.map((bodega) => (
-                                <SelectItem key={bodega.warehouse_id} value={bodega.name}>
-                                    {bodega.name}
-                                </SelectItem>
-                            ))}
-                        </Select>
+                            <option value="" disabled>Seleccione una Bodega</option>
+                            {bodegas.length > 0 ? (
+                                bodegas.map(bodega => (
+                                    <option
+                                        value={bodega.warehouse_id}
+                                        key={bodega.name}
+                                    >
+                                        {bodega.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option disabled>No hay Ubicaciones disponibles</option>
+                            )}
+                        </select>
+                        {errors.warehouse_id && <span className='text-[10px] text-left text-xs w-full pl-3 text-red-500'>{errors.warehouse_id}</span>}
                     </div>
-                    <div className='flex justify-end gap-3 mb-3'>
+                    <div className='w-full flex justify-end gap-3 mb-3'>
                         <ButtonCerrar onClose={onClose} />
                         <ButtonRegistrar label={"Registrar"} />
+                    </div>
                     </div>
                 </form>
             </div>
