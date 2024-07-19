@@ -160,6 +160,7 @@ export const Reservas = () => {
       });
       list();
       setNewRegister(objectRegister);
+      window.location.reload()
     } catch (error) {
       swal({
         title: "Error",
@@ -314,8 +315,8 @@ export const Reservas = () => {
   }
 
   return (
-    <div className='flex flex-col lg:flex-row gap-4 lg:gap-96 mt-16 px-4'>
-      <div className='min-w-[330px] bg-white rounded-xl p-4 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400'>
+    <div className='flex items-center justify-center flex-col lg:flex-row gap-4 lg:gap-96 mt-16 px-4'>
+      <div className='w-[350px]  md:w-auto bg-white rounded-xl p-4 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400'>
         <form className='flex flex-col gap-4 mb-1' onSubmit={handleSubmit}>
           <h1 className='text-xl font-bold'>Reservar Elementos</h1>
           {newRegister.details.map((detail, index) => (
