@@ -16,7 +16,7 @@ export const FormUpdateUbicacion = ({ onClose, category, Listar }) => {
   const BodegasListar = async () => {
     try {
       const response = await axiosClient.get('bodega/listar');
-      setBodegas(response.data);
+      setBodegas(response.data.data);
     } catch (error) {
       swal("Error", "Hubo un problema al cargar las bodegas", "error");
     }
