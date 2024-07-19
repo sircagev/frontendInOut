@@ -200,7 +200,12 @@ export const Movimientos3 = () => {
     }
 
     useEffect(() => {
-        list();
+        const interval = setInterval(() => {
+            list();
+        }, 5000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
     }, []);
 
     return (

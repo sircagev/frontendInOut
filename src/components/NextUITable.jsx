@@ -95,12 +95,14 @@ const NextUITable = ({
         setPage(1)
     }, [sortDescriptor])
 
-    function formatDateTime(dateTimeString) {
-        const [date, time] = dateTimeString.split('T');
-        const [hours, minutes] = time.split(':');
-        const formattedTime = `${hours}:${minutes}`; // Only keep hours and minutes
-        return { date, time: formattedTime };
-    }
+    const formatDateTime = (cellValue) => {
+        const dateObj = new Date(cellValue);       
+
+        const formattedDate = dateObj.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Formato HH:MM
+
+        return { date: formattedDate, time: formattedTime };
+    };
 
     const renderCell = React.useCallback((item, columnKey) => {
         const cellValue = item[columnKey];
