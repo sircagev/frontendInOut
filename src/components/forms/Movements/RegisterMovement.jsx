@@ -383,12 +383,7 @@ export const RegisterMovement = ({ onClose, listarMovimientos }) => {
                                                 value={newRegister.details[index].quantity ? newRegister.details[index].quantity : null}
                                                 onChange={(e) => {
                                                     const nuevaCantidad = parseInt(e.target.value);
-                                                    if (!isNaN(nuevaCantidad)) { // Verificar si el nuevo valor es un número
-                                                        handleDetailChange(index, 'quantity', nuevaCantidad)
-                                                    } else {
-                                                        // Aquí puedes manejar el caso cuando el usuario ingresa un valor no válido
-                                                        console.log('Por favor ingrese un número válido para la cantidad.');
-                                                    }
+                                                    handleDetailChange(index, 'quantity', nuevaCantidad)
                                                 }}
                                             />
                                         </div>
