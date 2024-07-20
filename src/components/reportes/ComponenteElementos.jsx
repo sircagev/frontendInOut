@@ -18,7 +18,7 @@ const ReporteElementos = ({ elementos }) => {
   const [endDate, setEndDate] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [showFilters, setShowFilters] = useState(true);
-  const originalData = useMemo(() => elementos?.datos || [], [elementos]); //agregar
+  const originalData = useMemo(() => elementos?.datos || [], [elementos]);
 
   const searchInputRef = useRef(null);
 
@@ -33,6 +33,9 @@ const ReporteElementos = ({ elementos }) => {
     if (searchPerformed) {
       filteredData = filteredData.filter((row) => {
         const elementMatches = row.element_name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const typeMatches = row.type
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
         const categoryMatches = row.category
@@ -51,6 +54,7 @@ const ReporteElementos = ({ elementos }) => {
           (elementMatches ||
             codeMatches ||
             categoryMatches ||
+            typeMatches ||
             warehouseMatches) &&
           dateMatches
         );
@@ -200,6 +204,7 @@ const ReporteElementos = ({ elementos }) => {
   const handleSearch = () => {
     setSearchPerformed(true);
     setShowFilters(false);
+    gotoPage(0);
   };
 
   const handleNewSearch = () => {
