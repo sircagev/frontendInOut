@@ -200,6 +200,9 @@ export const Movimientos3 = () => {
     }
 
     useEffect(() => {
+
+        list();
+
         const interval = setInterval(() => {
             list();
         }, 5000);
