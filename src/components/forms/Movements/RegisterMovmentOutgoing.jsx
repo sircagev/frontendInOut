@@ -367,13 +367,7 @@ export const RegisterMovmentOutgoing = ({ onClose, listarMovements }) => {
                                             labelPlacement="outside"
                                             min={0}
                                             onChange={(e) => {
-                                                setOutgoing(precData => ({
-                                                    ...precData,
-                                                    details: [{
-                                                        ...precData.details[0],
-                                                        remarks: e.target.value
-                                                    }]
-                                                }));
+                                                handleDetailChange(index, 'remarks', e.target.value)
                                             }}
                                         />
                                     </div>
