@@ -344,7 +344,7 @@ const ReporteEstadistico = () => {
                       position="inside"
                     />
                   </Bar>
-                  <Bar dataKey="ingreso" stackId="a" fill={"#37afec"}>
+                  <Bar dataKey="ingreso" stackId="a" fill={"#30a0d9"}>
                     <LabelList
                       fill={coloresBar.text}
                       dataKey="ingreso"

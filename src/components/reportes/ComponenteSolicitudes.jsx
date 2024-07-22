@@ -209,6 +209,7 @@ const ReporteSolicitudes = ({ solicitudes }) => {
   const handleSearch = () => {
     setSearchPerformed(true);
     setShowFilters(false);
+    gotoPage(0);
   };
 
   const handleNewSearch = () => {
