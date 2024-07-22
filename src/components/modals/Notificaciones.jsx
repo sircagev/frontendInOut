@@ -127,7 +127,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
               <div
                 className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
                 style={{ boxShadow: "inset 0 0 0 2px " }}
-                onClick={() => handleViewClick("/reportes/prestamosvencidos")}
+                onClick={() => handleViewClick("/reportes/prestamosvencidos", setShowModal(false))}
               >
                 <div className="text-blue-700 font-bold mr-2 w-[25px]">
                   {vencidosData}
@@ -151,7 +151,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
                 className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
                 style={{ boxShadow: "inset 0 0 0 2px " }}
                 onClick={() =>
-                  handleViewClick("/movimientos")}
+                  handleViewClick("/movimientos", setShowModal(false))}
               >
                 <div className="text-blue-700 font-bold mr-2 w-[25px]">
                   {solicitudesData}
@@ -174,7 +174,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
               <div
                 className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
                 style={{ boxShadow: "inset 0 0 0 2px " }}
-                onClick={() => handleViewClick("/reportes/elementosexpirados")}
+                onClick={() => handleViewClick("/reportes/elementosexpirados", setShowModal(false))}
               >
                 <div className="text-blue-700 font-bold mr-2 w-[25px]">
                   {expiradosData}
@@ -197,7 +197,7 @@ export const NotificationsModal = ({ showModal, setShowModal }) => {
               <div
                 className="flex items-center hover:text-blue-600 p-2 text-sm rounded cursor-pointer transition duration-200"
                 style={{ boxShadow: "inset 0 0 0 2px " }}
-                onClick={() => handleViewClick("/reportes/stockmin")}
+                onClick={() => handleViewClick("/reportes/stockmin", setShowModal(false))}
               >
                 <div className="text-blue-700 font-bold mr-2 w-[25px]">
                   {stockMinData}
